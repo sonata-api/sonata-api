@@ -1,0 +1,40 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "@savitri/web": [
+        "./node_modules/@savitri/web/dist/esm"
+      ],
+      "@savitri/web/types": [
+        "./node_modules/@savitri/web/dist/esm/types"
+      ],
+      "@sonata-api/api": [
+        "../../packages/api/dist"
+      ],
+      "@sonata-api/api/*": [
+        "../../packages/api/dist/*"
+      ],
+      "@sonata-api/access-control": [
+        "../../packages/access-control/dist"
+      ],
+      "@sonata-api/common": [
+        "../../packages/common/dist"
+      ],
+      "@sonata-api/server": [
+        "../../packages/server/dist"
+      ],
+      "@sonata-api/system": [
+        "../../packages/system/dist"
+      ],
+      "@sonata-api/system/*": [
+        "../../packages/system/dist/*"
+      ],
+      "@sonata-api/types": [
+        "../../packages/types/dist"
+      ]
+    },
+    "types": [
+      "../api/sonata-api.d.ts"
+    ]
+  }
+}

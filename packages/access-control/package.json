@@ -1,0 +1,25 @@
+{
+  "name": "@sonata-api/access-control",
+  "version": "0.0.0",
+  "description": "## Instalation",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "peerDependencies": {
+    "@sonata-api/common": "latest",
+    "@sonata-api/server": "latest",
+    "@sonata-api/system": "latest",
+    "@sonata-api/types": "latest"
+  }
+}

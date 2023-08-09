@@ -1,0 +1,10 @@
+{
+  "actions": {
+    "deleteAll": {
+      "name": "action.deleteAll",
+      "ask": true,
+      "selection": true,
+      "translate": true
+    }
+  }
+}

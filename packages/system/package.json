@@ -1,0 +1,33 @@
+{
+  "name": "@sonata-api/system",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "exports": {
+    ".": "./dist/index.js",
+    "./collections": "./dist/collections/index.js",
+    "./algorithms": "./dist/algorithms/index.js",
+    "./*": "./dist/*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0"
+  },
+  "peerDependencies": {
+    "@sonata-api/api": "latest",
+    "@sonata-api/common": "latest",
+    "mongoose": "^7.3.1"
+  }
+}

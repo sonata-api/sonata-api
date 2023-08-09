@@ -1,0 +1,26 @@
+{
+  "name": "@sonata-api/common",
+  "version": "0.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./dist/index.js",
+    "./either": "./dist/either.js",
+    "./string": "./dist/string.js",
+    "./date": "./dist/date.js"
+  },
+  "peerDependencies": {
+    "@sonata-api/system": "latest",
+    "bson": "^5.4.0"
+  }
+}

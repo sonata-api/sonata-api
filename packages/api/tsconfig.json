@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "paths": {
+      "@sonata-api/access-control": [
+        "../access-control/dist"
+      ],
+      "@sonata-api/common": [
+        "../common/dist"
+      ],
+      "@sonata-api/types": [
+        "../types/dist"
+      ]
+    }
+  }
+}

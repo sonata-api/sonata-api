@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noEmitOnError": true,
+    "outDir": "dist",
+    "target": "es2017",
+    "module": "commonjs",
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "paths": {
+      "@sonata-api/access-control": [
+        "./node_modules/@sonata-api/access-control/dist"
+      ],
+      "@sonata-api/api": [
+        "./node_modules/@sonata-api/api/dist"
+      ],
+      "@sonata-api/api/*": [
+        "./node_modules/@sonata-api/api/dist/*"
+      ],
+      "@sonata-api/server": [
+        "./node_modules/@sonata-api/server/dist"
+      ],
+      "@sonata-api/common": [
+        "./node_modules/@sonata-api/common/dist"
+      ],
+      "@sonata-api/types": [
+        "./node_modules/@sonata-api/types/dist"
+      ],
+      "@sonata-api/system": [
+        "./node_modules/@sonata-api/system/dist"
+      ],
+      "@sonata-api/system/*": [
+        "./node_modules/@sonata-api/system/dist/*"
+      ]
+    }
+  }
+}
