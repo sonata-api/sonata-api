@@ -21,7 +21,8 @@
     "./untyped": "./dist/untyped.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "presets"
   ],
   "keywords": [],
   "author": "",
