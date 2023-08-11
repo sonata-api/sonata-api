@@ -7,8 +7,6 @@ export const PROPERTY_TYPES = <const>[
   'boolean',
   'object',
   'array',
-  'time',
-  'month'
 ]
 
 export const PROPERTY_FORMATS = <const>[

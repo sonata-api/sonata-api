@@ -27,7 +27,7 @@ Sonata API is a **REST framework** that focuses on developer experience and simp
 Sonata API lets you define your collections using a `JSON schema` superset called `Description`. The `defineDescription` function is strongely typed, and thanks to the latest TypeScript releases we can catch unintended choices such as setting an unexisting property as required. Trying to define a property that doesn't follow default casing will also result in a TS error as a way to ensure consistency. The function will also build a type from the object literal you can use later in your project.
 
 ```typescript
-import { defineDescription } from '@sonata-api/api'
+import { defineDescription } from 'sonata-api'
 
 const [Pet, description] = defineDescription({
   $id: 'pet',
@@ -94,7 +94,7 @@ const get = (name: string, context: Context<typeof description>) => {
 You have your resources set up, now you have to handle the access to them. Sonata API comes with Authentication and RBAC (Role-based Access Control) out of the box, so this can easily be done (and typed) in a monolithic and declarative fashion instead of having middlewares.
 
 ```typescript
-import { defineAccessControl } from '@sonata-api/access-control'
+import { defineAccessControl } from 'sonata-api'
 
 export const accessControl = defineAccessControl<Collections, Algorithms>()({
   roles: {
@@ -123,7 +123,7 @@ export const accessControl = defineAccessControl<Collections, Algorithms>()({
 Now you just have to put it all together and start listening on a webserver. You could use your own, but Sonata API ships its own made on top of Hapi for convenience. Being like that all the server layer is compatible with Hapi.
 
 ```typescript
-import { initWithDatabaseThenStart } from '@sonata-api/server'
+import { initWithDatabaseThenStart } from 'sonata-api'
 import pet from './collections/pet'
 
 // Motice how for the sake of typing we don't pass our config down to the API

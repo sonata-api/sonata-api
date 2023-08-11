@@ -2,7 +2,7 @@ import type { Context, MongoDocument } from '../types'
 import type { Projection, What } from './types'
 import { LEAN_OPTIONS } from '../constants'
 import { useAccessControl } from '@sonata-api/access-control'
-import { isError, unpack } from '..'
+import { isError, unpack } from '@sonata-api/common'
 import { normalizeProjection, prepareInsert } from '../collection/utils'
 
 export const insert = <TDocument extends MongoDocument>() => async (payload: {

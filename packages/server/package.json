@@ -4,6 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -16,6 +19,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "devDependencies": {
     "@types/hapi__inert": "^5.2.5"
   },

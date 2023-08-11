@@ -1,7 +1,8 @@
 import type { Request } from '@hapi/hapi'
 import type { Context, ResourceType } from '@sonata-api/api'
 import type { HandlerRequest, } from '../types'
-import { getResourceAsset, unsafe } from '@sonata-api/api'
+import { getResourceAsset } from '@sonata-api/api'
+import { unsafe } from '@sonata-api/common'
 
 type PostHookParams = {
   redirected?: boolean

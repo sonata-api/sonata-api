@@ -1,7 +1,7 @@
 import type { Context, MongoDocument } from '../types'
 import type { Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
-import { unsafe } from '..'
+import { unsafe } from '@sonata-api/common'
 import { LEAN_OPTIONS, DEFAULT_SORT } from '../constants'
 import { normalizeProjection } from '../collection/utils'
 

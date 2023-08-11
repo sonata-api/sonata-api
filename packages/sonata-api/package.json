@@ -4,17 +4,25 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
-    "@sonata-api/access-control": "latest",
-    "@sonata-api/api": "latest",
-    "@sonata-api/common": "latest",
-    "@sonata-api/server": "latest",
-    "@sonata-api/types": "latest"
+    "@sonata-api/access-control": "file:../access-control",
+    "@sonata-api/api": "file:../api",
+    "@sonata-api/common": "file:../common",
+    "@sonata-api/server": "file:../server",
+    "@sonata-api/types": "file:../types"
   }
 }

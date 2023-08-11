@@ -17,6 +17,10 @@
     ".": "./dist",
     "./config/*": "./dist/config/*"
   },
+  "files": [
+    "bin",
+    "dist"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",

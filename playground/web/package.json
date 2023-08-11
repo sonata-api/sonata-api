@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@savitri/web": "file:../../../savitri/packages/web"
+    "waltz-ui": "file:../../../waltz-ui/packages/waltz-ui"
   }
 }

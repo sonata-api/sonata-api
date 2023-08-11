@@ -4,6 +4,9 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
@@ -19,6 +22,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "dependencies": {
     "bcrypt": "^5.1.0"
   },
