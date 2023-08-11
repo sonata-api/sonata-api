@@ -24,7 +24,7 @@ export type AccessControlLayerProps<TPayload extends Record<string, any>=any> = 
 export type AccessControlLayer<
   TCollections extends Record<string, CollectionStructure>,
   TAlgorithms extends Record<string, Awaited<ReturnType<Algorithm>>>,
-  TAccessControl extends AccessControl<TCollections, TAlgorithms>=any
+  TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>=any
 > = (context: Context<any, TCollections, TAlgorithms, TAccessControl>, props: AccessControlLayerProps) => Promise<Either<
   ACErrors,
   ReadPayload | WritePayload

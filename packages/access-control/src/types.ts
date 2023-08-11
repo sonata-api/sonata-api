@@ -54,7 +54,7 @@ export type InternalAccessControl<
 export type AccessControl<
   TCollections extends Record<string, CollectionStructure>,
   TAlgorithms extends Record<string, AlgorithmStructure>,
-  TAccessControl extends AccessControl<TCollections, TAlgorithms>=any
+  TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>=any
 > = InternalAccessControl<TCollections, TAlgorithms, TAccessControl> & {
   layers?: Partial<Record<ValidAccessControlLayer, AccessControlLayer<TCollections, TAlgorithms, TAccessControl>>>
 }

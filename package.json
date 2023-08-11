@@ -1,6 +1,11 @@
 {
+  "name": "sonata-api-monorepo",
+  "private": true,
   "dependencies": {
     "tsc": "^2.0.4",
     "typescript": "^5.1.6"
+  },
+  "devDependencies": {
+    "lerna": "^7.1.5"
   }
 }

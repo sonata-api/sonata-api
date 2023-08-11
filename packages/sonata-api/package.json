@@ -19,10 +19,10 @@
     "dist"
   ],
   "dependencies": {
-    "@sonata-api/access-control": "file:../access-control",
-    "@sonata-api/api": "file:../api",
-    "@sonata-api/common": "file:../common",
-    "@sonata-api/server": "file:../server",
-    "@sonata-api/types": "file:../types"
+    "@sonata-api/access-control": "latest",
+    "@sonata-api/api": "latest",
+    "@sonata-api/common": "latest",
+    "@sonata-api/server": "latest",
+    "@sonata-api/types": "latest"
   }
 }
