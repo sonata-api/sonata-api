@@ -2,13 +2,11 @@
   "name": "sonata-api-monorepo",
   "private": true,
   "scripts": {
+    "install:all": "npx lerna exec -- \"npm i\"",
     "build:all": "npx lerna exec -- \"npm run build\""
   },
-  "dependencies": {
-    "tsc": "^2.0.4",
-    "typescript": "^5.1.6"
-  },
   "devDependencies": {
-    "lerna": "^7.1.5"
+    "lerna": "^7.1.5",
+    "typescript": "^5.1.6"
   }
 }
