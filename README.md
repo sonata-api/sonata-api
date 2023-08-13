@@ -16,7 +16,7 @@ Sonata API is a **REST framework** that focuses on developer experience and simp
 
 ## The 15-seconds example
 
-The below example will do just what you think it does.
+The code below implements a fully-fledged RESTful API within a single JavaScript file. It will do just what you think it does.
 If the code surface is minimal, readability is inevitably easy.
 
 ```javascript
