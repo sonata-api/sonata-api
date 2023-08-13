@@ -32,11 +32,11 @@
     "mongoose": "^7.3.1"
   },
   "peerDependencies": {
-    "@sonata-api/access-control": "latest",
-    "@sonata-api/api": "latest",
-    "@sonata-api/common": "latest",
-    "@sonata-api/server": "latest",
-    "@sonata-api/system": "latest",
-    "@sonata-api/types": "latest"
+    "@sonata-api/access-control": "*",
+    "@sonata-api/api": "*",
+    "@sonata-api/common": "*",
+    "@sonata-api/server": "*",
+    "@sonata-api/system": "*",
+    "@sonata-api/types": "*"
   }
 }

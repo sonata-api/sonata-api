@@ -26,7 +26,7 @@
     "dist"
   ],
   "peerDependencies": {
-    "@sonata-api/system": "latest",
+    "@sonata-api/system": "*",
     "bson": "^5.4.0"
   }
 }

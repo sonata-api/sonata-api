@@ -32,8 +32,8 @@
     "@types/bcrypt": "^5.0.0"
   },
   "peerDependencies": {
-    "@sonata-api/api": "latest",
-    "@sonata-api/common": "latest",
+    "@sonata-api/api": "*",
+    "@sonata-api/common": "*",
     "mongoose": "^7.3.1"
   }
 }

@@ -23,10 +23,10 @@
     "dist"
   ],
   "dependencies": {
-    "@sonata-api/access-control": "latest",
-    "@sonata-api/api": "latest",
-    "@sonata-api/common": "latest",
-    "@sonata-api/server": "latest",
-    "@sonata-api/types": "latest"
+    "@sonata-api/access-control": "*",
+    "@sonata-api/api": "*",
+    "@sonata-api/common": "*",
+    "@sonata-api/server": "*",
+    "@sonata-api/types": "*"
   }
 }

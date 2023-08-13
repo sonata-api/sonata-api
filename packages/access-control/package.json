@@ -23,9 +23,9 @@
     "dist"
   ],
   "peerDependencies": {
-    "@sonata-api/common": "latest",
-    "@sonata-api/server": "latest",
-    "@sonata-api/system": "latest",
-    "@sonata-api/types": "latest"
+    "@sonata-api/common": "*",
+    "@sonata-api/server": "*",
+    "@sonata-api/system": "*",
+    "@sonata-api/types": "*"
   }
 }

@@ -20,7 +20,7 @@ export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetResources = async () => {
+const internalGetResources = async (): Promise<any> => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
     return {
       collections: {},

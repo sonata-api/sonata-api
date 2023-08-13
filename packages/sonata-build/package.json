@@ -35,7 +35,7 @@
     "tslib": "^2.5.0"
   },
   "peerDependencies": {
-    "@sonata-api/common": "latest"
+    "@sonata-api/common": "*"
   },
   "devDependencies": {
     "@types/node": "^18.15.3"

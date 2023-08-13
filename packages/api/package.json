@@ -12,7 +12,7 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "postinstall": "node dist/__scripts__/postinstall.js"
+    "postinstall": "node dist/__scripts__/postinstall.js || true"
   },
   "exports": {
     ".": "./dist/index.js",
@@ -34,10 +34,10 @@
     "@types/sharp": "^0.31.1"
   },
   "peerDependencies": {
-    "@sonata-api/access-control": "latest",
-    "@sonata-api/common": "latest",
-    "@sonata-api/system": "latest",
-    "@sonata-api/types": "latest",
+    "@sonata-api/access-control": "*",
+    "@sonata-api/common": "*",
+    "@sonata-api/system": "*",
+    "@sonata-api/types": "*",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^7.3.1",
     "mongoose-autopopulate": "^1.0.1",
