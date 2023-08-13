@@ -21,4 +21,7 @@ jobs:
       - name: Install packages
         run: npm run install:all
       - name: Build packages
-        run: npm run build:all
+        run: |
+          npx lerna exec -- "npm run build" || true 2>/dev/null
+          npx lerna exec -- "npm run build"
+
