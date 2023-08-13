@@ -20,9 +20,8 @@ jobs:
         run: npm i
       - name: Install packages
         run: npm run install:all
-      - name: Build packages
+      - name: Prepare package building
         run: |
-          # this first round is to make cyclic dependencies work
           npm run build \
             --workspace=packages/common \
             --workspace=packages/types \
@@ -30,5 +29,5 @@ jobs:
             --workspace=packages/access-control \
             --workspace=packages/api \
             --workspace=packages/server 2>&1 > /dev/null
-          # actually build the packages
-          npm run build --workspaces
+      - name: Actually build packages
+        run: npm run build --workspaces
