@@ -15,6 +15,10 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "exports": {
+    ".": "./dist/index.js",
+    "./untyped": "./dist/untyped.js"
+  },
   "files": [
     "dist"
   ],

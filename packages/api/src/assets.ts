@@ -1,7 +1,6 @@
 import type { ResourceType, AssetType, Context } from './types'
 import { unsafe, left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
 import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
-import { preloadDescription } from './collection/preload'
 
 const __cachedResources: Awaited<ReturnType<typeof internalGetResources>> & {
   _cached: boolean
@@ -17,9 +16,8 @@ const __cachedAssets: {
   assets: {}
 }
 
-export const requireWrapper = (path: string) => {
-  const content = require(path)
-  return content.default || content
+export const getEntrypoint = () => {
+  return import(process.argv[1])
 }
 
 const internalGetResources = async () => {
@@ -32,7 +30,7 @@ const internalGetResources = async () => {
   
   // @ts-ignore
   const { collections, algorithms } = await import('@sonata-api/system')
-  const userConfig = await import(process.cwd() + '/index.js')
+  const userConfig = await getEntrypoint()
   const resources = {
     collections,
     algorithms
@@ -49,7 +47,7 @@ export const getAccessControl = async () => {
     return {} as AccessControl<Collections, Algorithms>
   }
 
-  const userConfig = await import(process.cwd() + '/index.js')
+  const userConfig = await getEntrypoint()
   return userConfig.accessControl as AccessControl<Collections, Algorithms>
 }
 

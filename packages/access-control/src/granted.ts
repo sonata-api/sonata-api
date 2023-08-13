@@ -1,11 +1,12 @@
 import type { AccessControl, Role } from './types'
+import { getEntrypoint } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
 
 let __accessControl: AccessControl<any, any>|null = null
 
 const getAccessControl = async () => {
   if ( !__accessControl ) {
-    __accessControl = (await import(process.cwd() + '/index.js')).accessControl
+    __accessControl = (await getEntrypoint()).accessControl
   }
 
   return __accessControl!

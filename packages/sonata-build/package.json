@@ -14,7 +14,7 @@
     "sonata-build": "bin/index.js"
   },
   "exports": {
-    ".": "./dist",
+    ".": "./dist/index.js",
     "./config/*": "./dist/config/*"
   },
   "files": [

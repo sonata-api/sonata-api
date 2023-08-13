@@ -7,7 +7,7 @@ import { defaultApiConfig } from './constants'
 import { warmup } from './warmup'
 import getRoutes from './routes'
 
-export const init = async (_apiConfig?: ApiConfig) => {
+export const dryInit = async (_apiConfig?: ApiConfig) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, defaultApiConfig)
   Object.assign(apiConfig, _apiConfig)
@@ -53,21 +53,21 @@ export const init = async (_apiConfig?: ApiConfig) => {
 }
 
 // #region initWithDatabase
-export const initWithDatabase = async (...args: Parameters<typeof init>) => {
+export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
   await connectDatabase()
-  return init(...args)
+  return dryInit(...args)
 }
 // #endregion initWithDatabase
 
 // #region initThenStart
-export const initThenStart = async (...args: Parameters<typeof init>) => {
-  const server = await init(...args)
+export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
+  const server = await dryInit(...args)
   server.start()
 }
 // #endregion initThenStart
 
 // #region initWithDatabaseThenStart
-export const initWithDatabaseThenStart = async (...args: Parameters<typeof init>) => {
+export const init = async (...args: Parameters<typeof dryInit>) => {
   const server = await initWithDatabase(...args)
   server.start()
 }
