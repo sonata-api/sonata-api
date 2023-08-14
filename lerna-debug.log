@@ -1,15 +1,10 @@
-58 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
-58 error npm ERR! code E404
-58 error npm ERR! 404 Not Found - GET https://registry.npmjs.org/@abc%2fanother-package - Not found
-58 error npm ERR! 404
-58 error npm ERR! 404  '@abc/another-package@^0.0.2' is not in this registry.
-58 error npm ERR! 404
-58 error npm ERR! 404 Note that you can also install from a
-58 error npm ERR! 404 tarball, folder, http url, or git url.
-58 error
-58 error npm ERR! A complete log of this run can be found in: /home/mega/.npm/_logs/2023-08-14T06_19_37_164Z-debug-0.log
-58 error     at makeError (/home/mega/sonata-api/node_modules/execa/lib/error.js:59:11)
-58 error     at handlePromise (/home/mega/sonata-api/node_modules/execa/index.js:114:26)
-58 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-58 error     at async VersionCommand.updatePackageVersions (/home/mega/sonata-api/node_modules/lerna/dist/index.js:8300:13)
-58 error     at async Promise.all (index 0)
+68 warn complete Waiting for 1 child process to exit. CTRL-C to exit immediately.
+69 error Error: Command failed with exit code 128: git tag @sonata-api/server@0.0.3 -m @sonata-api/server@0.0.3
+69 error fatal: tag '@sonata-api/server@0.0.3' already exists
+69 error     at makeError (/home/mega/sonata-api/node_modules/execa/lib/error.js:59:11)
+69 error     at handlePromise (/home/mega/sonata-api/node_modules/execa/index.js:114:26)
+69 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+69 error     at async Promise.all (index 1)
+69 error     at async VersionCommand.gitCommitAndTagVersionForUpdates (/home/mega/sonata-api/node_modules/lerna/dist/index.js:8358:9)
+69 error     at async VersionCommand.commitAndTagUpdates (/home/mega/sonata-api/node_modules/lerna/dist/index.js:8338:18)
+69 error     at async Promise.all (index 0)
