@@ -4,20 +4,29 @@
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "build": "tsc"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "exports": {
     ".": "./dist/index.js",
-    "./blabla": "./dist/blabla.js"
+    "./untyped": "./dist/untyped.js"
   },
   "files": [
     "dist"
   ],
   "dependencies": {
-    "@abc/another-package": "^0.0.2"
+    "@sonata-api/access-control": "^0.0.2",
+    "@sonata-api/api": "^0.0.3",
+    "@sonata-api/common": "^0.0.2",
+    "@sonata-api/server": "^0.0.3",
+    "@sonata-api/types": "^0.0.2"
   }
 }
