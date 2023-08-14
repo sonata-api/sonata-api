@@ -28,6 +28,6 @@ jobs:
             --workspace=packages/system \
             --workspace=packages/access-control \
             --workspace=packages/api \
-            --workspace=packages/server 2>&1 > /dev/null
+            --workspace=packages/server 2>&1 > /dev/null || true
       - name: Actually build packages
         run: npm run build --workspaces
