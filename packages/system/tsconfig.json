@@ -8,6 +8,9 @@
       ],
       "@sonata-api/common": [
         "../common/dist"
+      ],
+      "@sonata-api/types": [
+        "../types/dist"
       ]
     }
   }
