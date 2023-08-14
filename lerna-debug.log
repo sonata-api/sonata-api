@@ -1,84 +1,15 @@
-0 silly argv {
-0 silly argv   _: [ 'version' ],
-0 silly argv   lernaVersion: '7.1.5',
-0 silly argv   '$0': '/home/mega/.npm/_npx/d5cad42883f80c04/node_modules/.bin/lerna'
-0 silly argv }
-1 notice cli v7.1.5
-2 verbose packageConfigs Explicit "packages" configuration found in lerna.json. Resolving packages using the configured glob(s): ["packages/*"]
-3 verbose rootPath /home/mega/sonata-api
-4 info versioning independent
-5 silly isAnythingCommitted
-6 verbose isAnythingCommitted 1
-7 silly getCurrentBranch
-8 verbose currentBranch master
-9 silly remoteBranchExists
-10 silly isBehindUpstream
-11 silly isBehindUpstream master is behind origin/master by 0 commit(s) and ahead by 1
-12 silly hasTags
-13 verbose hasTags false
-14 info Assuming all packages changed
-15 verbose updated @sonata-api/access-control
-16 verbose updated @sonata-api/api
-17 verbose updated @sonata-api/common
-18 verbose updated @sonata-api/server
-19 verbose updated sonata-api
-20 verbose updated sonata-build
-21 verbose updated @sonata-api/system
-22 verbose updated @sonata-api/types
-23 verbose git-describe undefined => "be74031"
-24 silly git-describe parsed => {"refCount":"3","sha":"be74031","isDirty":false}
-25 info execute Skipping releases
-26 silly lifecycle No script for "preversion" in "sonata-api-monorepo", continuing
-27 silly lifecycle No script for "preversion" in "@sonata-api/access-control", continuing
-28 silly lifecycle No script for "preversion" in "@sonata-api/api", continuing
-29 silly lifecycle No script for "preversion" in "@sonata-api/common", continuing
-30 silly lifecycle No script for "preversion" in "@sonata-api/server", continuing
-31 silly lifecycle No script for "preversion" in "sonata-api", continuing
-32 silly lifecycle No script for "preversion" in "sonata-build", continuing
-33 silly lifecycle No script for "preversion" in "@sonata-api/system", continuing
-34 silly lifecycle No script for "preversion" in "@sonata-api/types", continuing
-35 silly lifecycle No script for "version" in "@sonata-api/api", continuing
-36 silly lifecycle No script for "version" in "@sonata-api/access-control", continuing
-37 silly lifecycle No script for "version" in "@sonata-api/common", continuing
-38 silly lifecycle No script for "version" in "sonata-build", continuing
-39 silly lifecycle No script for "version" in "@sonata-api/server", continuing
-40 silly lifecycle No script for "version" in "@sonata-api/types", continuing
-41 silly lifecycle No script for "version" in "sonata-api", continuing
-42 silly lifecycle No script for "version" in "@sonata-api/system", continuing
-43 silly lifecycle No script for "version" in "sonata-api-monorepo", continuing
-44 silly gitAdd [
-44 silly gitAdd   'packages/api/package.json',
-44 silly gitAdd   'packages/api/package-lock.json',
-44 silly gitAdd   'packages/access-control/package.json',
-44 silly gitAdd   'packages/access-control/package-lock.json',
-44 silly gitAdd   'packages/common/package.json',
-44 silly gitAdd   'packages/common/package-lock.json',
-44 silly gitAdd   'packages/sonata-build/package.json',
-44 silly gitAdd   'packages/sonata-build/package-lock.json',
-44 silly gitAdd   'packages/server/package.json',
-44 silly gitAdd   'packages/server/package-lock.json',
-44 silly gitAdd   'packages/types/package.json',
-44 silly gitAdd   'packages/types/package-lock.json',
-44 silly gitAdd   'packages/sonata-api/package.json',
-44 silly gitAdd   'packages/sonata-api/package-lock.json',
-44 silly gitAdd   'packages/system/package.json',
-44 silly gitAdd   'packages/system/package-lock.json'
-44 silly gitAdd ]
-45 error Error: Command failed with exit code 1: git add -- packages/api/package.json packages/api/package-lock.json packages/access-control/package.json packages/access-control/package-lock.json packages/common/package.json packages/common/package-lock.json packages/sonata-build/package.json packages/sonata-build/package-lock.json packages/server/package.json packages/server/package-lock.json packages/types/package.json packages/types/package-lock.json packages/sonata-api/package.json packages/sonata-api/package-lock.json packages/system/package.json packages/system/package-lock.json
-45 error The following paths are ignored by one of your .gitignore files:
-45 error packages/access-control/package-lock.json
-45 error packages/api/package-lock.json
-45 error packages/common/package-lock.json
-45 error packages/server/package-lock.json
-45 error packages/sonata-api/package-lock.json
-45 error packages/sonata-build/package-lock.json
-45 error packages/system/package-lock.json
-45 error packages/types/package-lock.json
-45 error hint: Use -f if you really want to add them.
-45 error hint: Turn this message off by running
-45 error hint: "git config advice.addIgnoredFile false"
-45 error     at makeError (/home/mega/.npm/_npx/d5cad42883f80c04/node_modules/execa/lib/error.js:59:11)
-45 error     at handlePromise (/home/mega/.npm/_npx/d5cad42883f80c04/node_modules/execa/index.js:114:26)
-45 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-45 error     at async VersionCommand.updatePackageVersions (/home/mega/.npm/_npx/d5cad42883f80c04/node_modules/lerna/dist/index.js:8312:11)
-45 error     at async Promise.all (index 0)
+58 error Error: Command failed with exit code 1: npm install --package-lock-only --ignore-scripts
+58 error npm ERR! code E404
+58 error npm ERR! 404 Not Found - GET https://registry.npmjs.org/@abc%2fanother-package - Not found
+58 error npm ERR! 404
+58 error npm ERR! 404  '@abc/another-package@^0.0.2' is not in this registry.
+58 error npm ERR! 404
+58 error npm ERR! 404 Note that you can also install from a
+58 error npm ERR! 404 tarball, folder, http url, or git url.
+58 error
+58 error npm ERR! A complete log of this run can be found in: /home/mega/.npm/_logs/2023-08-14T06_16_08_131Z-debug-0.log
+58 error     at makeError (/home/mega/sonata-api/node_modules/execa/lib/error.js:59:11)
+58 error     at handlePromise (/home/mega/sonata-api/node_modules/execa/index.js:114:26)
+58 error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+58 error     at async VersionCommand.updatePackageVersions (/home/mega/sonata-api/node_modules/lerna/dist/index.js:8300:13)
+58 error     at async Promise.all (index 0)
