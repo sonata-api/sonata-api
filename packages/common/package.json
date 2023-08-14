@@ -16,15 +16,28 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "files": [
+    "dist"
+  ],
   "exports": {
     ".": "./dist/index.js",
     "./either": "./dist/either.js",
     "./string": "./dist/string.js",
     "./date": "./dist/date.js"
   },
-  "files": [
-    "dist"
-  ],
+  "typesVersions": {
+    "*": {
+      "either": [
+        "dist/either.d.ts"
+      ],
+      "string": [
+        "dist/string.d.ts"
+      ],
+      "date": [
+        "dist/date.d.ts"
+      ]
+    }
+  },
   "peerDependencies": {
     "@sonata-api/system": "*",
     "bson": "^5.4.0"
