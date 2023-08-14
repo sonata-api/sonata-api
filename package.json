@@ -2,8 +2,8 @@
   "name": "sonata-api-monorepo",
   "private": true,
   "scripts": {
-    "install:all": "npm i; for d in $(find node_modules/@sonata-api -mindepth 1); do r=$(realpath $d); unlink $d; cp -r $r $d; done",
-    "build:all": "npx lerna exec -- \"npm run build\""
+    "build:all": "npx lerna exec -- \"npm run build\"",
+    "postinstall": "for d in $(find node_modules/@sonata-api -mindepth 1); do r=$(realpath $d); unlink $d; cp -r $r $d; done"
   },
   "workspaces": [
     "packages/*"

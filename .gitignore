@@ -4,3 +4,4 @@ __pycache__
 production.env
 dist
 sonata-api.d.ts
+lerna-debug.log
