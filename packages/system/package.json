@@ -13,15 +13,25 @@
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "exports": {
     ".": "./dist/index.js",
     "./collections": "./dist/collections/index.js",
     "./algorithms": "./dist/algorithms/index.js",
     "./*": "./dist/*"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "typesVersions": {
+    "*": {
+      "collections": [
+        "dist/collections/index.d.ts"
+      ],
+      "string": [
+        "dist/algorithms/index.d.ts"
+      ]
+    }
+  },
   "files": [
     "dist"
   ],

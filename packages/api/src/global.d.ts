@@ -1,5 +1,5 @@
 import type { mongoose } from 'mongoose'
-import type { Description } from '../types'
+import type { Description } from '@sonata-api/types'
 import type { Config, Collection, Algorithm, AccessControl } from './types'
 import * as SystemCollections from '@sonata-api/system/collections'
 import * as SystemAlgorithms from '@sonata-api/system/algorithms'
