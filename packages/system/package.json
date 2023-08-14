@@ -65,6 +65,7 @@
   "peerDependencies": {
     "@sonata-api/api": "*",
     "@sonata-api/common": "*",
+    "@sonata-api/types": "*",
     "mongoose": "^7.3.1"
   }
 }
