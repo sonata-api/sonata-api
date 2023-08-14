@@ -63,6 +63,7 @@ export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
 export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
   const server = await dryInit(...args)
   server.start()
+  return server
 }
 // #endregion initThenStart
 
@@ -70,5 +71,6 @@ export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
 export const init = async (...args: Parameters<typeof dryInit>) => {
   const server = await initWithDatabase(...args)
   server.start()
+  return server
 }
 // #endregion initWithDatabaseThenStart
