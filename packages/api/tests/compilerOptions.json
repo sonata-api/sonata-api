@@ -1,16 +1,9 @@
 {
   "noEmit": true,
   "module": "commonjs",
+  "moduleResolution": "node",
   "strict": true,
   "declaration": true,
   "skipLibCheck": true,
-  "esModuleInterop": true,
-  "paths": {
-    "@sonata-api/common": [
-      "../common/dist"
-    ],
-    "@sonata-api/types": [
-      "../types/dist"
-    ]
-  }
+  "esModuleInterop": true
 }
