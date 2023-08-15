@@ -4,5 +4,10 @@
   "strict": true,
   "declaration": true,
   "skipLibCheck": true,
-  "esModuleInterop": true
+  "esModuleInterop": true,
+  "paths": {
+    "@sonata-api/common": [
+      "../../common/dist"
+    ]
+  }
 }

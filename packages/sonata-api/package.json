@@ -8,7 +8,7 @@
     "access": "public"
   },
   "scripts": {
-    "test": "echo skipping && true",
+    "test": "echo skipping",
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },
