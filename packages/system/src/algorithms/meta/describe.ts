@@ -19,7 +19,7 @@ const describe = async (props: Props, context: Context): Promise<any> => {
   for( const collection of collections ) {
     const { description: rawDescription } = await collection()
     const description = await preloadDescription(rawDescription)
-    await getResourceAsset(description.$id, 'model')
+    await getResourceAsset(description.$id as any, 'model')
 
     descriptions[description.$id] = description
   }

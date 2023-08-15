@@ -8,6 +8,18 @@ export enum ValidationErrors {
   InvalidProperties = 'INVALID_PROPERTIES'
 }
 
+export type DetailedErrors = Record<string, {
+  type: 'extraneous'
+  | 'missing'
+  | 'unmatching'
+  | 'extraneous_element'
+  | 'numeric_constraint'
+  details: {
+    expected: string
+    got: string
+  }
+}>
+
 const isValidReference = (property: CollectionProperty, value: any) => {
   if( !property.s$isReference ) {
     return false
@@ -41,7 +53,8 @@ export const validateFromDescription = async <
 
   if( !what ) {
     return left({
-      code: ValidationErrors.EmptyTarget as ValidationErrors
+      code: ValidationErrors.EmptyTarget as ValidationErrors,
+      errors: {} as DetailedErrors
     })
   }
 
@@ -55,17 +68,7 @@ export const validateFromDescription = async <
       : typeof value
   }
 
-  const errors: Record<string, {
-    type: 'extraneous'
-      | 'missing'
-      | 'unmatching'
-      | 'extraneous_element'
-      | 'numeric_constraint'
-    details: {
-      expected: string
-      got: string
-    }
-  }> = {}
+  const errors: DetailedErrors = {}
 
   for( const _prop of propsSet ) {
     const prop = _prop as Lowercase<string>

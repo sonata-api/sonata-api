@@ -15,7 +15,7 @@
       ]
     }
   },
-  "exclude": [
-    "dist"
+  "include": [
+    "src"
   ]
 }

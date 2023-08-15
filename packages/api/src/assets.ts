@@ -66,8 +66,12 @@ export const getResources = async () => {
 }
 
 export const internalGetResourceAsset = async <
-  ResourceName extends keyof Collections,
-  AssetName extends (keyof Collections[ResourceName] & AssetType) | 'model',
+  ResourceName extends keyof Collections | keyof Algorithms,
+  AssetName extends ResourceName extends keyof Collections
+    ? (keyof Collections[ResourceName] & AssetType) | 'model'
+    : ResourceName extends keyof Algorithms
+      ? keyof Algorithms[ResourceName]
+      : never,
   TResourceType extends `${ResourceType}s`
 >(
   resourceName: ResourceName,

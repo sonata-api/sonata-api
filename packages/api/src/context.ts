@@ -1,7 +1,7 @@
 import type { Description } from '@sonata-api/types'
 import type { AccessControl } from '@sonata-api/access-control'
 import type { Schema } from './collection'
-import type { FunctionPath, DecodedToken, ResourceType, ApiConfig } from './types'
+import type { FunctionPath, DecodedToken, ResourceType, ApiConfig, CollectionStructure } from './types'
 import mongoose, { type Model } from 'mongoose'
 import { validateFromDescription } from './collection/validate'
 import { limitRate, type RateLimitingParams } from './rateLimiting'
@@ -41,7 +41,9 @@ export type Context<
 > & {
   description: TDescription
   model:  CollectionModel<TDescription>
-  collection: TCollections[TDescription['$id']]
+  collection: TDescription['$id'] extends keyof Collections
+    ? TCollections[TDescription['$id']]
+    : CollectionStructure
   collections: TCollections
   functionPath: FunctionPath
   token: DecodedToken<TAccessControl>
