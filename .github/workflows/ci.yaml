@@ -31,6 +31,6 @@ jobs:
         run: |
           npm run build --workspaces
           find packages -mindepth 1 -maxdepth 1 \
-            -exec sh -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
+            -exec bash -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
       - name: Run tests
         run: npm run test --workspaces
