@@ -7,7 +7,7 @@
   "esModuleInterop": true,
   "paths": {
     "@sonata-api/common": [
-      "../../common/dist"
+      "../common/dist"
     ]
   }
 }
