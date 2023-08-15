@@ -12,10 +12,14 @@
       ],
       "@sonata-api/types": [
         "../types/dist"
+      ],
+      "@sonata-api/system": [
+        "../system/dist"
       ]
     }
   },
   "include": [
+    "@types/*.d.ts",
     "src"
   ]
 }

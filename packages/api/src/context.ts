@@ -72,7 +72,7 @@ export const internalCreateContext = async <
     apiConfig,
     token
 
-  } = options||{}
+  } = options || {}
 
   const { getResources, getResourceAsset, getAccessControl } = await import('./assets')
   const { collections, algorithms } = await getResources()
@@ -81,8 +81,8 @@ export const internalCreateContext = async <
   const context = {
     resourceName,
     accessControl,
-    description: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName, 'description')),
-    model: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName, 'model'), resourceName),
+    description: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName as any, 'description')),
+    model: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName as any, 'model'), resourceName),
     collection: (resourceName && resourceType === 'collection') && await collections[resourceName](),
     algorithms: new Proxy<Algorithms>({}, {
       get: <TResourceName extends keyof typeof algorithms>(_: unknown, resourceName: TResourceName) => {

@@ -23,7 +23,7 @@ export const upload = <_TDocument extends MongoDocument>() => async (
     }
   )
 
-  const file = await context.collections.file.functions.insert(props as any, await createContext({
+  const file = await context.collections.file.functions!.insert(props as any, await createContext({
     resourceName: 'file',
     parentContext: context
   }))

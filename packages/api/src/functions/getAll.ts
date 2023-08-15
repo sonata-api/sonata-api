@@ -18,7 +18,7 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
     filters = {},
     project = {},
     offset = 0,
-    limit = process.env.PAGINATION_LIMIT || 35,
+    limit = +(process.env.PAGINATION_LIMIT || 35),
   } = payload || {}
 
 

@@ -66,7 +66,7 @@ export const getResources = async () => {
 }
 
 export const internalGetResourceAsset = async <
-  ResourceName extends keyof Collections | keyof Algorithms,
+  ResourceName extends string,
   AssetName extends ResourceName extends keyof Collections
     ? (keyof Collections[ResourceName] & AssetType) | 'model'
     : ResourceName extends keyof Algorithms
@@ -85,13 +85,17 @@ export const internalGetResourceAsset = async <
   const resources = await getResources()
   const resourceType = _resourceType || 'collections'
 
-  const asset = (await resources[resourceType][resourceName]?.())?.[assetName] as Collections[ResourceName][AssetName]
+  const asset = (await resources[resourceType][resourceName]?.())?.[assetName] as ResourceName extends keyof Collections
+    ? AssetName extends keyof Collections[ResourceName]
+      ? Collections[ResourceName][AssetName]
+      : never
+    : never
 
   const result = right(await (async () => {
     switch( assetName ) {
       case 'model': {
         if( !asset ) {
-          const description = unsafe(await getResourceAsset(resourceName, 'description'), `${String(resourceName)} description`) as any
+          const description = unsafe(await getResourceAsset(resourceName as string, 'description'), `${String(resourceName)} description`) as any
           const { createModel } = await import('./collection/schema')
           return createModel(description)
         }
@@ -115,8 +119,12 @@ export const internalGetResourceAsset = async <
 }
 
 export const getResourceAsset = async <
-  ResourceName extends keyof Collections,
-  AssetName extends (keyof Collections[ResourceName] & AssetType) | 'model',
+  ResourceName extends string,
+  AssetName extends ResourceName extends keyof Collections
+    ? (keyof Collections[ResourceName] & AssetType) | 'model'
+    : ResourceName extends keyof Algorithms
+      ? keyof Algorithms[ResourceName]
+      : string,
   TResourceType extends `${ResourceType}s`
 >(
   resourceName: ResourceName,
@@ -125,10 +133,14 @@ export const getResourceAsset = async <
 ) => {
   const cached = __cachedAssets.assets[resourceName as string]
   if( cached?.[assetName] ) {
-    return cached[assetName] as Exclude<Collections[ResourceName][AssetName], unknown>
+    return cached[assetName] as ResourceName extends keyof Collections
+      ? AssetName extends keyof Collections[ResourceName]
+        ? Exclude<Collections[ResourceName][AssetName], unknown>
+        : never
+      : never
   }
 
-  const asset = await internalGetResourceAsset(resourceName, assetName, _resourceType)
+  const asset = await internalGetResourceAsset(resourceName, assetName as any, _resourceType)
 
   __cachedAssets.assets[resourceName as string] ??= {}
   __cachedAssets.assets[resourceName as string][assetName] = asset
@@ -139,14 +151,9 @@ export const getResourceAsset = async <
 export const get = internalGetResourceAsset
 
 export const getFunction = async <
-  ResourceName extends keyof Collections,
-  FunctionName extends keyof Collections[ResourceName]['functions'],
-  TResourceType extends `${ResourceType}s` & keyof UserConfig,
-  ReturnedFunction=ResourceName extends keyof UserConfig[TResourceType]
-      ? FunctionName extends keyof Collections[ResourceName][TResourceType]
-        ? Collections[ResourceName]['functions'][FunctionName]
-        : never
-        : never
+  ResourceName extends string,
+  FunctionName extends string,
+  TResourceType extends `${ResourceType}s`
 >(
   resourceName: ResourceName,
   functionName: FunctionName,
@@ -159,7 +166,7 @@ export const getFunction = async <
     }
   }
 
-  const functionsEither = await getResourceAsset(resourceName, 'functions', resourceType || 'collections')
+  const functionsEither = await getResourceAsset(resourceName as string, 'functions', resourceType || 'collections')
   if( isLeft(functionsEither) ) {
     return functionsEither
   }
@@ -176,8 +183,8 @@ export const getFunction = async <
       return functions[functionName](payload, context)
     }
 
-    return right(fn as ReturnedFunction)
+    return right(fn)
   }
 
-  return right(functions[functionName] as ReturnedFunction)
+  return right(functions[functionName])
 }

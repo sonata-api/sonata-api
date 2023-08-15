@@ -24,7 +24,7 @@ export const removeFile = <_TDocument extends MongoDocument>() => async (payload
     }
   )
 
-  return context.collections.file.functions.remove(props, await createContext({
+  return context.collections.file.functions!.remove(props, await createContext({
     resourceName: 'file',
     parentContext: context
   }))
