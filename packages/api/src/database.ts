@@ -8,12 +8,8 @@ export const options = {
   }
 }
 
-type Connections = {
+export type Connections = {
   default: Awaited<ReturnType<typeof mongoose.connect>>
-}
-
-declare global {
-  var sonataapi__Connections: Connections
 }
 
 const isDevelopment = process.env.NODE_ENV === 'development'
