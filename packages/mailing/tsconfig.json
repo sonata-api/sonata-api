@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "paths": {
+      "@sonata-api/common": [
+        "../common/dist"
+      ]
+    }
+  },
+  "include": [
+    "@types/*.d.ts",
+    "src"
+  ]
+}

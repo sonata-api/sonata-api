@@ -1,4 +1,5 @@
-import { type Context, sendTransactionalEmail } from '@sonata-api/api'
+import { type Context } from '@sonata-api/api'
+import { sendTransactionalEmail  } from '@sonata-api/mailing'
 import { isLeft, unwrapEither } from '@sonata-api/common'
 import { description, type User } from './description'
 import bcrypt from 'bcrypt'

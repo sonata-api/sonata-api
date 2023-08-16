@@ -10,11 +10,14 @@
       "@sonata-api/common": [
         "../common/dist"
       ],
-      "@sonata-api/types": [
-        "../types/dist"
+      "@sonata-api/mailing": [
+        "../mailing/dist"
       ],
       "@sonata-api/system": [
         "../system/dist"
+      ],
+      "@sonata-api/types": [
+        "../types/dist"
       ]
     }
   },

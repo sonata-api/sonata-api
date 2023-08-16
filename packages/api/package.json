@@ -36,6 +36,7 @@
   "peerDependencies": {
     "@sonata-api/access-control": "*",
     "@sonata-api/common": "*",
+    "@sonata-api/mailing": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*",
     "jsonwebtoken": "^8.5.1",
@@ -46,7 +47,6 @@
     "sharp": "^0.31.3"
   },
   "optionalDependencies": {
-    "mongodb-memory-server": "^8.10.2",
-    "nodemailer": "^6.9.4"
+    "mongodb-memory-server": "^8.10.2"
   }
 }
