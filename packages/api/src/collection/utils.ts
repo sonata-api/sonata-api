@@ -1,5 +1,6 @@
 import type { Description } from '@sonata-api/types'
 import type { MongoDocument } from '../types'
+import { freshItem } from '@sonata-api/common'
 
 export const normalizeProjection = <T>(
   projection: T,
@@ -27,24 +28,9 @@ export const normalizeProjection = <T>(
 
 export const fill = <T extends MongoDocument>(
   item: T & Record<string, any>,
-  description: Pick<Description, 'properties'>
+  description: Pick<Description, 'properties' | 'freshItem'>
 ) => {
-  if( !item ) {
-    return {}
-  }
-
-  const missing = Object.entries(description.properties).reduce((a: any, [key, value]) => {
-    if( item[key] && !value.s$meta ) {
-      return a
-    }
-
-    return {
-      ...a,
-      [key]: null
-    }
-  }, {})
-
-  return Object.assign(missing, item)
+  return Object.assign(freshItem(description), item)
 }
 
 export const prepareInsert = (

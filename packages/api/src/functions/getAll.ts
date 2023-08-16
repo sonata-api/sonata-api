@@ -3,7 +3,7 @@ import type { Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { LEAN_OPTIONS, DEFAULT_SORT } from '../constants'
-import { normalizeProjection } from '../collection/utils'
+import { normalizeProjection, fill } from '../collection/utils'
 
 export const getAll = <TDocument extends MongoDocument>() => async (payload: {
   filters?: Filters<TDocument>
@@ -38,9 +38,11 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
     ? payload.sort
     : query.sort || DEFAULT_SORT
 
-  return context.model.find(query.filters, normalizeProjection(project, context.description))
+  const result = await context.model.find(query.filters, normalizeProjection(project, context.description))
     .sort(sort)
     .skip(offset)
     .limit(limit)
-    .lean(LEAN_OPTIONS) as Promise<Array<TDocument>>
+    .lean(LEAN_OPTIONS) as Array<TDocument>
+
+  return result.map((result) => fill(result, context.description))
 }
