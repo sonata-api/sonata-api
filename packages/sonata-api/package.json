@@ -1,6 +1,6 @@
 {
   "name": "sonata-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -23,10 +23,10 @@
     "dist"
   ],
   "dependencies": {
-    "@sonata-api/access-control": "^0.0.2",
+    "@sonata-api/access-control": "^0.0.3",
     "@sonata-api/api": "^0.0.3",
-    "@sonata-api/common": "^0.0.2",
-    "@sonata-api/server": "^0.0.4",
-    "@sonata-api/types": "^0.0.2"
+    "@sonata-api/common": "^0.0.3",
+    "@sonata-api/server": "^0.0.5",
+    "@sonata-api/types": "^0.0.3"
   }
 }
