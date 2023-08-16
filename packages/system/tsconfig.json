@@ -9,6 +9,9 @@
       "@sonata-api/common": [
         "../common/dist"
       ],
+      "@sonata-api/mailing": [
+        "../mailing/dist"
+      ],
       "@sonata-api/types": [
         "../types/dist"
       ]
