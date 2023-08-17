@@ -1,7 +1,7 @@
 {
   "actions": {
-    "deleteAll": {
-      "name": "action.deleteAll",
+    "removeAll": {
+      "name": "action.removeAll",
       "ask": true,
       "selection": true,
       "translate": true

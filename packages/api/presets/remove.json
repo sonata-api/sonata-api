@@ -1,7 +1,7 @@
 {
   "individualActions": {
-    "delete": {
-      "name": "action.delete",
+    "remove": {
+      "name": "action.remove",
       "icon": "trash-alt",
       "ask": true,
       "translate": true
