@@ -15,14 +15,11 @@ type Models = {
 }
 
 // #region ContextOptions
-export type ContextOptions<
-  TCollections extends Collections,
-  TAlgorithms extends Algorithms
-> = {
+export type ContextOptions = {
   apiConfig?: ApiConfig
-  parentContext?: Context<any, TCollections, TAlgorithms>,
+  parentContext?: Context,
   resourceType?: ResourceType
-  resourceName?: keyof TCollections | keyof TAlgorithms
+  resourceName?: string
   token?: DecodedToken
 }
 // #endregion ContextOptions
@@ -57,10 +54,7 @@ export type Context<
 }
 // #endregion Context
 
-export const internalCreateContext = async <
-  TCollections extends Collections,
-  TAlgorithms extends Algorithms
->(options?: Pick<ContextOptions<TCollections, TAlgorithms>,
+export const internalCreateContext = async(options?: Pick<ContextOptions,
   'resourceName'
   | 'resourceType'
   | 'apiConfig'
@@ -135,9 +129,9 @@ export const createContext = async <
   TDescription extends Description,
   TCollections extends Collections,
   TAlgorithms extends Algorithms
->(options?: ContextOptions<TCollections, TAlgorithms>) => {
+>(options?: ContextOptions) => {
  const context = Object.assign({}, options?.parentContext || {})
- Object.assign(context, await internalCreateContext<TCollections, TAlgorithms>(options))
+ Object.assign(context, await internalCreateContext(options))
 
  if( options?.parentContext ) {
    Object.assign(context, {
