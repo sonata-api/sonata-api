@@ -1,4 +1,4 @@
-import { Token, type Context } from '@sonata-api/api'
+import { signToken, type Context } from '@sonata-api/api'
 import { description, type ApiKey } from './description'
 
 type Props = {
@@ -29,7 +29,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     ]
   }))._id
 
-  const content = await Token.sign({
+  const content = await signToken({
     user: context.token.user,
     extra: context.token.extra,
     allowed_functions: props.what.allowed_functions,

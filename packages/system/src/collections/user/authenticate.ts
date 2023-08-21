@@ -1,4 +1,4 @@
-import { type Context, Token } from '@sonata-api/api'
+import { signToken, type Context } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 
@@ -66,7 +66,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
     Object.assign(tokenContent.user, pick(leanUser, context.apiConfig.tokenUserProperties))
   }
 
-  const token = await Token.sign(tokenContent)
+  const token = await signToken(tokenContent)
 
   return {
     user: leanUser,
@@ -90,7 +90,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     props.email === process.env.GODMODE_USERNAME
   && props.password === process.env.GODMODE_PASSWORD
   ) {
-    const token = await Token.sign({
+    const token = await signToken({
       user: {
         _id: null,
         roles: ['root']

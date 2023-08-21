@@ -2,7 +2,8 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv extends Record<
       | 'SONATA_API_SHALLOW_IMPORT'
-      | 'MONGODB_URI',
+      | 'MONGODB_URI'
+      | 'APPLICATION_SECRET',
     string
     > {}
   }

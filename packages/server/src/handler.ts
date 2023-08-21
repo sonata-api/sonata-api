@@ -1,4 +1,4 @@
-import { createContext, getFunction, Token } from '@sonata-api/api'
+import { createContext, getFunction, decodeToken } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
 import { right, left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import type { Request, ResponseToolkit } from '@hapi/hapi'
@@ -30,7 +30,7 @@ const postPipe = pipe(
 export const getDecodedToken = async (request: Request) => {
   try {
     const decodedToken: DecodedToken = request.headers.authorization
-      ? await Token.decode(request.headers.authorization.split('Bearer ').pop() || '')
+      ? await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
       : { user: {} }
 
     return right(decodedToken)
