@@ -26,6 +26,7 @@
     "@sonata-api/access-control": "^0.0.4",
     "@sonata-api/api": "^0.0.3",
     "@sonata-api/common": "^0.0.4",
+    "@sonata-api/mailing": "*",
     "@sonata-api/server": "^0.0.6",
     "@sonata-api/types": "^0.0.4"
   },

@@ -1,5 +1,5 @@
 import { type Context, Token } from '@sonata-api/api'
-import { left } from '@sonata-api/common'
+import { left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 
 type Props = {
@@ -79,7 +79,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
 
 const authenticate = async (props: Props, context: Context<typeof description>) => {
   if( 'revalidate' in props ) {
-    return getUser(context.token.user, context)
+    return right(await getUser(context.token.user, context))
   }
 
   if( !props?.email ) {
@@ -97,7 +97,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
       },
     })
 
-    return {
+    return right({
       user: {
         first_name: 'God',
         last_name: 'Mode',
@@ -109,7 +109,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
         type: 'bearer',
         token
       }
-    }
+    })
   }
 
   const user = await context.model.findOne(
@@ -130,7 +130,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     return left(AuthenticationErrors.InactiveUser)
   }
 
-  return getUser(user, context)
+  return right(await getUser(user, context))
 }
 
 export default authenticate
