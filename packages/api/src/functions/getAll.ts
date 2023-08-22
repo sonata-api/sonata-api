@@ -25,7 +25,9 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
   const entries = Object.entries(filters)
     .map(([key, value]) => [
       key,
-      value && typeof value === 'object' && '_id' in value ? value._id : value
+      value && typeof value === 'object' && '_id' in value
+        ? value._id
+        : value
     ])
 
   const parsedFilters = Object.fromEntries(entries) || {}

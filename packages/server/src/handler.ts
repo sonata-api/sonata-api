@@ -35,6 +35,10 @@ export const getDecodedToken = async (request: Request) => {
 
     return right(decodedToken)
   } catch( e: any ) {
+    if( process.env.NODE_ENV === 'development' ) {
+      console.trace(e)
+    }
+
     return left('AUTHENTICATION_ERROR')
   }
 }

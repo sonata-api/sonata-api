@@ -8,6 +8,13 @@ export enum ValidationErrors {
   InvalidProperties = 'INVALID_PROPERTIES'
 }
 
+export type ValidateOptions<TDescription extends Omit<Description, '$id'>> = {
+  required?: Array<keyof TDescription['properties']>|null
+  extraneous?: Array<string>|boolean
+  throwOnError?: boolean
+}
+
+
 export type DetailedErrors = Record<string, {
   type: 'extraneous'
   | 'missing'
@@ -39,15 +46,12 @@ export const validateFromDescription = async <
 >(
   description: TDescription,
   what: TWhat,
-  options?: {
-    required?: Array<keyof TDescription['properties']>|null
-    extraneous?: Array<string>|boolean
-
-  }
+  options?: ValidateOptions<TDescription>
 ) => {
   const { 
     required,
-    extraneous
+    extraneous,
+    throwOnError
 
   } = options || {}
 
@@ -168,6 +172,12 @@ export const validateFromDescription = async <
   }
 
   if( Object.keys(errors).length > 0 ) {
+    if( throwOnError ) {
+      const error = new TypeError(ValidationErrors.InvalidProperties)
+      Object.assign(error, { errors })
+      throw error
+
+    }
     return left({
       code: ValidationErrors.InvalidProperties,
       errors
