@@ -1,6 +1,6 @@
 {
   "name": "sonata-api",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
     "@sonata-api/api": "^0.0.3",
     "@sonata-api/common": "^0.0.5",
     "@sonata-api/mailing": "*",
-    "@sonata-api/server": "^0.0.6",
+    "@sonata-api/server": "^0.0.7",
     "@sonata-api/types": "^0.0.4"
   },
   "gitHead": "017cdae59b1891628f3a11371081c0a845980599"
