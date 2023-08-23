@@ -22,7 +22,7 @@
   "files": [
     "dist"
   ],
-  "dependencies": {
+  "peerDependencies": {
     "@sonata-api/access-control": "^0.0.4",
     "@sonata-api/api": "^0.0.3",
     "@sonata-api/common": "^0.0.5",
