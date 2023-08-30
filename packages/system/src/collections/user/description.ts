@@ -106,11 +106,6 @@ export const [User, description] = defineDescription({
       name: 'Mudar senha',
       icon: 'key-skeleton',
       fetchItem: true
-    },
-    delete: {
-      name: 'Remover',
-      icon: 'trash-alt',
-      ask: true
     }
   },
   icon: 'users-alt',
