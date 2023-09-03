@@ -1,6 +1,6 @@
 import { description, ResourceUsage } from './description'
 
-export default () => ({
+export const resourceUsage = () => ({
   item: ResourceUsage,
   description
 })

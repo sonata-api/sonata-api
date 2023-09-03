@@ -190,7 +190,6 @@ type CollectionPropertyAux = {
   referencedCollection?: string
   preventPopulate?: boolean
   noId?: boolean
-  prefetch?: boolean|number
 
   array?: boolean
   limit?: number
@@ -198,5 +197,4 @@ type CollectionPropertyAux = {
   select?: ReadonlyArray<string>
   maxDepth?: number
   inline?: boolean
-  inlineEditing?: boolean
 }

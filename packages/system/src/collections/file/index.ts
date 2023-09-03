@@ -5,7 +5,7 @@ import insert from './insert'
 import download from './download'
 import remove from './remove'
 
-export default () => ({
+export const file = () => ({
   item: File,
   description,
   model,

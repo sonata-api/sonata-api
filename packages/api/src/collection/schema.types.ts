@@ -1,4 +1,4 @@
-import type { ValuesOf, JsonSchema } from '@sonata-api/types'
+import type { JsonSchema } from '@sonata-api/types'
 import type { MongoDocument, Reference } from '../types'
 
 export type Schema<T extends JsonSchema> = CaseOwned<T>
@@ -35,7 +35,7 @@ type IsRequired<
 > = keyof {
   [
     P in keyof F as
-    P extends ValuesOf<ExplicitlyRequired>
+    P extends ExplicitlyRequired[keyof ExplicitlyRequired]
       ? P
       : never
   ]: F[P]

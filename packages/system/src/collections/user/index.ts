@@ -11,7 +11,7 @@ import ping from './ping'
 
 export { schemaCallback as userSchemaCallback } from './model'
 
-export default () => ({
+export const user = () => ({
   item: User,
   description,
   model,

@@ -32,8 +32,8 @@ const internalGetResources = async (): Promise<any> => {
   const { collections, algorithms } = await import('@sonata-api/system')
   const userConfig = await getEntrypoint()
   const resources = {
-    collections,
-    algorithms
+    collections: Object.assign({}, collections),
+    algorithms: Object.assign({}, algorithms)
   }
 
   Object.assign(resources.collections, userConfig.collections)

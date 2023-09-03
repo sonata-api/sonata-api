@@ -1,6 +1,6 @@
 import describe from './describe'
 
-export default () => ({
+export const meta = () => ({
   functions: {
     describe
   }
