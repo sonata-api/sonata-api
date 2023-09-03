@@ -37,7 +37,7 @@ export type Context<
   | 'accessControl'
 > & {
   description: TDescription
-  model:  CollectionModel<TDescription>
+  model: CollectionModel<TDescription>
   collection: TDescription['$id'] extends keyof Collections
     ? TCollections[TDescription['$id']]
     : CollectionStructure
