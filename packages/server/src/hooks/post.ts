@@ -1,7 +1,8 @@
 import type { Request } from '@hapi/hapi'
 import type { Context, ResourceType } from '@sonata-api/api'
 import type { HandlerRequest, } from '../types'
-import { getResourceAsset } from '@sonata-api/api'
+import { getResourceAsset, createContext } from '@sonata-api/api'
+import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 
 type PostHookParams = {
@@ -31,20 +32,26 @@ export const appendPagination = async (params: PostHookParams) => {
 
   if( Array.isArray(result) && resourceType === 'collection' ) {
     const model = unsafe(await getResourceAsset(resourceName, 'model'))
-     const recordsTotal = await model.countDocuments(request.payload?.filters || {})
+
+    const context = await createContext({ resourceName })
+    const accessControl = useAccessControl(context)
+
+    const countPayload = await accessControl.beforeRead(request.payload)
+
+    const recordsTotal = await model.countDocuments(countPayload)
 
     const limit = request.payload?.limit
-      ? +request.payload.limit
-      : +(process.env.PAGINATION_LIMIT || 35)
+      ? request.payload.limit
+      : Number(process.env.PAGINATION_LIMIT || 35)
 
-    Object.assign(response, {
-      pagination: {
-        recordsCount: result.length,
-        recordsTotal,
-        offset: request.payload?.offset || 0,
-        limit
-      }
-    })
+      Object.assign(response, {
+        pagination: {
+          recordsCount: result.length,
+          recordsTotal,
+          offset: request.payload?.offset || 0,
+          limit
+        }
+      })
   }
 
   return response

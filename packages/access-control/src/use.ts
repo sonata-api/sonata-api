@@ -46,7 +46,7 @@ export const useAccessControl = <
 
   const accessControl = context?.accessControl||{}
 
-  const beforeRead = async <const Payload extends Partial<ReadPayload>>(payload: Payload) => {
+  const beforeRead = async <const Payload extends Partial<ReadPayload>>(payload?: Payload) => {
     const newPayload = Object.assign({}, {
       filters: payload?.filters||{},
       sort: payload?.sort,
@@ -58,10 +58,6 @@ export const useAccessControl = <
         newPayload,
         options.queryPreset
       ))
-    }
-
-    if( newPayload.limit||0 > 150 ) {
-      newPayload.limit = 150
     }
 
     const props = {
@@ -76,7 +72,7 @@ export const useAccessControl = <
     )
   }
 
-  const beforeWrite = async <const Payload extends Partial<WritePayload>>(payload: Payload) => {
+  const beforeWrite = async <const Payload extends Partial<WritePayload>>(payload?: Payload) => {
     const newPayload = Object.assign({ what: {} }, payload)
     const props = {
       payload: newPayload

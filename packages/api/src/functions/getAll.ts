@@ -18,9 +18,13 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
     filters = {},
     project = {},
     offset = 0,
-    limit = +(process.env.PAGINATION_LIMIT || 35),
   } = payload || {}
 
+  const limit = payload.limit
+    ? payload.limit > 150
+      ? 100
+      : payload.limit
+    : Number(process.env.PAGINATION_LIMIT || 35)
 
   const entries = Object.entries(filters)
     .map(([key, value]) => [
