@@ -35,8 +35,8 @@ export const appendPagination = async (params: PostHookParams) => {
     const model = unsafe(await getResourceAsset(resourceName, 'model'))
     const accessControl = useAccessControl(context)
 
-    const countPayload = await accessControl.beforeRead(request.payload)
-    const recordsTotal = await model.countDocuments(countPayload)
+    const countPayload = unsafe(await accessControl.beforeRead(request.payload))
+    const recordsTotal = await model.countDocuments(countPayload.filters)
 
     const limit = request.payload?.limit
       ? request.payload.limit
