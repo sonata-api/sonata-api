@@ -46,6 +46,9 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   }
 
   user.group = context.apiConfig.group
+  if( context.apiConfig.signupDefaults ) {
+    Object.assign(user, context.apiConfig.signupDefaults)
+  }
 
   if( user.password ) {
     user.password = await bcrypt.hash(user.password, 10)

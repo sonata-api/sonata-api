@@ -23,9 +23,7 @@ const activate = async (props: Props, context: Context<typeof description>) => {
     return left(ActivationErrors.InvalidLink)
   }
 
-  const user = await context.model.findOne({
-    _id: userId
-  })
+  const user = await context.model.findOne({ _id: userId }, { password: 1 })
 
   if( !user ) return left(ActivationErrors.UserNotFound)
   if( user.active ) return left(ActivationErrors.AlreadyActiveUser)
