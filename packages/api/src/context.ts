@@ -114,7 +114,7 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
   }
 
 
-  if( token ) {
+  if( token.user ) {
     Object.assign(context, { token })
   }
 
