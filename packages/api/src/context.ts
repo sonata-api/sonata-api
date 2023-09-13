@@ -64,7 +64,7 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
     resourceName,
     resourceType = 'collection',
     apiConfig,
-    token = {}
+    token = {} as DecodedToken
 
   } = options || {}
 
