@@ -29,7 +29,6 @@ export const defineDescription = <const TDescription extends Omit<Description<TD
 ]
 
 export const defineAliasDescription = <TDescription extends Partial<Description>>(description: TDescription) => {
-  description.properties ??= {}
   return defineDescription(description as any)[1] as TDescription & {
     properties: TDescription['properties'] extends object
       ? TDescription['properties']

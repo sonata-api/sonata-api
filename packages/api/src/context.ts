@@ -5,6 +5,7 @@ import type { FunctionPath, DecodedToken, ResourceType, ApiConfig, CollectionStr
 import mongoose, { type Model } from 'mongoose'
 import { validateFromDescription } from './collection/validate'
 import { limitRate, type RateLimitingParams } from './rateLimiting'
+import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
 type CollectionModel<TDescription extends Description> =
@@ -75,7 +76,7 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
   const context = {
     resourceName,
     accessControl,
-    description: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName as any, 'description')),
+    description: {} as Description | null,
     model: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName as any, 'model'), resourceName),
     collection: (resourceName && resourceType === 'collection') && await collections[resourceName](),
     algorithms: new Proxy<Algorithms>({}, {
@@ -113,6 +114,12 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
     },
   }
 
+  if( resourceName && resourceType === 'collection' ) {
+    const description = unsafe(await getResourceAsset(resourceName as any, 'description'))
+    context.description = description.alias
+      ? await preloadDescription(description)
+      : description
+  }
 
   if( token.user ) {
     Object.assign(context, { token })
