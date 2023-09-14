@@ -65,7 +65,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   await sendTransactionalEmail({
     receiverName: newUser.full_name,
     receiverEmail: newUser.email,
-    subject: 'Sua senha aew, papai',
+    subject: 'Falta pouco para completar o seu cadastro',
     html: `<div>
       <div>Clique no link abaixo ou copie e cole na barra do navegador para ativar o seu usuário</div>
       <a href="${link}">${link}</a>
