@@ -12,6 +12,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   ask?: boolean
   selection?: boolean
   effect?: StoreEffect
+  button?: boolean
 
   // route namespace
   fetchItem?: boolean
@@ -190,6 +191,7 @@ type CollectionPropertyAux = {
   referencedCollection?: string
   preventPopulate?: boolean
   noId?: boolean
+  noForm?: boolean
 
   array?: boolean
   limit?: number

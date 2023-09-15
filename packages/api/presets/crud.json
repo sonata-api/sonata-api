@@ -3,7 +3,8 @@
     "ui:spawnAdd": {
       "name": "action.add",
       "icon": "plus",
-      "translate": true
+      "translate": true,
+      "button": true
     }
   },
   "individualActions": {
