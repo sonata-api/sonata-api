@@ -23,6 +23,9 @@ export const [User, description] = defineDescription({
   indexes: [
     'full_name'
   ],
+  freshItem: {
+    active: true
+  },
   properties: {
     full_name: {
       type: 'string'

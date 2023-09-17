@@ -26,7 +26,6 @@ type Return = {
 export enum AuthenticationErrors {
   InvalidCredentials = 'INVALID_CREDENTIALS',
   InactiveUser = 'INACTIVE_USER',
-  EmptyCredentials = 'EMPTY_CREDENTIALS'
 }
 
 const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
@@ -82,8 +81,8 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     return right(await getUser(context.token.user, context))
   }
 
-  if( !props?.email ) {
-    return left(AuthenticationErrors.EmptyCredentials)
+  if( typeof props?.email !== 'string' ) {
+    return left(AuthenticationErrors.InvalidCredentials)
   }
 
   if(
