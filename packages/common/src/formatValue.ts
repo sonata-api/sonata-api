@@ -8,7 +8,7 @@ export const formatValue = (
   index?: string
 ): string => {
   if( Array.isArray(value) ) {
-    return value.map(v => formatValue(v, key, property)).join(', ')
+    return value.map(v => formatValue(v, key, property, index)).join(', ')
   }
   
   const firstValue = (() => {
