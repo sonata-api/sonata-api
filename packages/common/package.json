@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "echo skipping",
-    "build": "tsc",
+    "build": "tsc -p tsconfig.json; tsc -p tsconfig.esm.json",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
   },
@@ -20,10 +20,13 @@
     "dist"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./either": "./dist/either.js",
-    "./string": "./dist/string.js",
-    "./date": "./dist/date.js"
+    ".": {
+      "require": "./dist/cjs/index.js",
+      "import": "./dist/esm/index.js"
+    },
+    "./either": "./dist/cjs/either.js",
+    "./string": "./dist/cjs/string.js",
+    "./date": "./dist/cjs/date.js"
   },
   "typesVersions": {
     "*": {
