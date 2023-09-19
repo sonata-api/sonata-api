@@ -1,11 +1,11 @@
-import type { CollectionStructure, AlgorithmStructure } from '@sonata-api/api'
+import type { Collections, Algorithms } from '@sonata-api/api'
 import type { AccessControl, AccessControlLayer, ValidAccessControlLayer } from './types'
 import { baseRoles } from './baseRoles'
 
 // #region defineAccessControl
 export const defineAccessControl = <
-  TCollections extends Record<string, CollectionStructure>,
-  TAlgorithms extends Record<string, AlgorithmStructure>,
+  TCollections extends Collections,
+  TAlgorithms extends Algorithms,
 >() => <const TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>>(accessControl: TAccessControl) =>
   (layers?: Partial<Record<ValidAccessControlLayer, AccessControlLayer<TCollections, TAlgorithms, TAccessControl>>>) => {
   const roles = {}

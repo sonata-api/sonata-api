@@ -1,5 +1,6 @@
-import type { ResourceType, AssetType, Context } from './types'
+import type { ResourceType, AssetType, Context, Collection, Algorithm, ResourceBase } from './types'
 import { unsafe, left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
+import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
 
 const __cachedResources: Awaited<ReturnType<typeof internalGetResources>> & {
@@ -20,7 +21,10 @@ export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetResources = async (): Promise<any> => {
+const internalGetResources = async (): Promise<{
+    collections: Record<string, Collection>,
+    algorithms: Record<string, Algorithm>
+}> => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
     return {
       collections: {},
@@ -85,7 +89,7 @@ export const internalGetResourceAsset = async <
   const resources = await getResources()
   const resourceType = _resourceType || 'collections'
 
-  const asset = (await resources[resourceType][resourceName]?.())?.[assetName] as ResourceName extends keyof Collections
+  const asset = (await resources[resourceType][resourceName]?.())?.[assetName as keyof ResourceBase] as ResourceName extends keyof Collections
     ? AssetName extends keyof Collections[ResourceName]
       ? Collections[ResourceName][AssetName]
       : never
@@ -176,15 +180,22 @@ export const getFunction = async <
     return left(ACErrors.FunctionNotFound)
   }
 
-  const accessControl = await getAccessControl()
-  if( accessControl.layers?.call ) {
-    const fn = async (payload: any, context: Context<any, Collections, Algorithms>) => {
-      await accessControl.layers!.call!(context, { payload })
-      return functions[functionName](payload, context)
+  const fn = async (payload: any, context: Context<any, Collections, Algorithms>) => {
+    const resource = await (await getResources()).collections[resourceName]()
+    if( resource.security?.rateLimiting ) {
+      const rateLimitingEither = await limitRate(context, resource.security.rateLimiting)
+      if( isLeft(rateLimitingEither) ) {
+        return unwrapEither(rateLimitingEither)
+      }
     }
 
-    return right(fn)
+    const accessControl = await getAccessControl()
+    if( accessControl.layers?.call ) {
+      await accessControl.layers.call!(context, { payload })
+    }
+
+    return functions[functionName](payload, context)
   }
 
-  return right(functions[functionName])
+  return right(fn)
 }

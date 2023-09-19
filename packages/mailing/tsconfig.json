@@ -5,7 +5,7 @@
     "rootDir": "src",
     "paths": {
       "@sonata-api/common": [
-        "../common/dist"
+        "../common/dist/cjs"
       ]
     }
   },

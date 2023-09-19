@@ -1,4 +1,4 @@
-import type { CollectionStructure, AlgorithmStructure } from '@sonata-api/api'
+import type { Collections, Algorithms } from '@sonata-api/api'
 import type { AccessControlLayer } from './layers/types'
 import type { baseRoles } from './baseRoles'
 export { AccessControlLayer }
@@ -12,8 +12,8 @@ export type ValidAccessControlLayer =
 
 // #region Role
 export type Role<
-  TCollections extends Record<string, CollectionStructure>,
-  TAlgorithms extends Record<string, AlgorithmStructure>,
+  TCollections extends Collections,
+  TAlgorithms extends Algorithms,
   TAccessControl extends AccessControl<TCollections, TAlgorithms>=any
 > = {
   inherit?: Array<keyof TAccessControl['roles'] | keyof typeof baseRoles>
@@ -35,15 +35,15 @@ export type Role<
 // #endregion Role
 
 export type Roles<
-  TCollections extends Record<string, CollectionStructure>,
-  TAlgorithms extends Record<string, AlgorithmStructure>,
+  TCollections extends Collections,
+  TAlgorithms extends Algorithms,
   TAccessControl extends AccessControl<TCollections, TAlgorithms>=any
 > = Record<string, Role<TCollections, TAlgorithms, TAccessControl>>
 
 // #region AccessControl
 export type InternalAccessControl<
-  TCollections extends Record<string, CollectionStructure>,
-  TAlgorithms extends Record<string, AlgorithmStructure>,
+  TCollections extends Collections,
+  TAlgorithms extends Algorithms,
   TAccessControl extends AccessControl<TCollections, TAlgorithms>=any
 > = {
   roles?: Roles<TCollections, TAlgorithms, TAccessControl>
@@ -52,8 +52,8 @@ export type InternalAccessControl<
 }
 
 export type AccessControl<
-  TCollections extends Record<string, CollectionStructure>,
-  TAlgorithms extends Record<string, AlgorithmStructure>,
+  TCollections extends Collections,
+  TAlgorithms extends Algorithms,
   TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>=any
 > = InternalAccessControl<TCollections, TAlgorithms, TAccessControl> & {
   layers?: Partial<Record<ValidAccessControlLayer, AccessControlLayer<TCollections, TAlgorithms, TAccessControl>>>

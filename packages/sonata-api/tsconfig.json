@@ -13,7 +13,7 @@
         "../api/dist/*"
       ],
       "@sonata-api/common": [
-        "../common/dist"
+        "../common/dist/cjs"
       ],
       "@sonata-api/server": [
         "../server/dist"

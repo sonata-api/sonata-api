@@ -1,7 +1,7 @@
 {
   "name": "@sonata-api/system",
   "version": "0.0.18",
-  "description": "",
+  "description": "## Installation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
@@ -25,31 +25,31 @@
   "typesVersions": {
     "*": {
       "collections": [
-        "./dist/collections/index.d.ts"
+        "dist/collections/index.d.ts"
       ],
       "algorithms": [
-        "./dist/algorithms/index.d.ts"
+        "dist/algorithms/index.d.ts"
       ],
       "collections/*": [
-        "./dist/collections/*/index.d.ts"
+        "dist/collections/*/index.d.ts"
       ],
       "collections/apiKey/index.js": [
-        "./dist/collections/apiKey/index.d.ts"
+        "dist/collections/apiKey/index.d.ts"
       ],
       "collections/file/index.js": [
-        "./dist/collections/file/index.d.ts"
+        "dist/collections/file/index.d.ts"
       ],
       "collections/log/index.js": [
-        "./dist/collections/log/index.d.ts"
+        "dist/collections/log/index.d.ts"
       ],
       "collections/resourceUsage/index.js": [
-        "./dist/collections/resourceUsage/index.d.ts"
+        "dist/collections/resourceUsage/index.d.ts"
       ],
       "collections/user/index.js": [
-        "./dist/collections/user/index.d.ts"
+        "dist/collections/user/index.d.ts"
       ],
       "algorithms/*": [
-        "./dist/algorithms/*/index.d.ts"
+        "dist/algorithms/*/index.d.ts"
       ]
     }
   },
@@ -67,6 +67,5 @@
     "@sonata-api/common": "*",
     "@sonata-api/types": "*",
     "mongoose": "^7.3.1"
-  },
-  "gitHead": "017cdae59b1891628f3a11371081c0a845980599"
+  }
 }

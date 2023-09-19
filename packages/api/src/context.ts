@@ -1,10 +1,17 @@
 import type { Description } from '@sonata-api/types'
 import type { AccessControl } from '@sonata-api/access-control'
 import type { Schema } from './collection'
-import type { FunctionPath, DecodedToken, ResourceType, ApiConfig, CollectionStructure } from './types'
+import type {
+  FunctionPath,
+  DecodedToken,
+  ResourceType,
+  ApiConfig,
+  CollectionStructure,
+
+} from './types'
+
 import mongoose, { type Model } from 'mongoose'
 import { validateFromDescription } from './collection/validate'
-import { limitRate, type RateLimitingParams } from './rateLimiting'
 import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
@@ -107,10 +114,6 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
           || options?.parentContext?.token.user._id,
         created_at: new Date
       })
-    },
-    limitRate: (params: RateLimitingParams): any => {
-      // @ts-ignore
-      return limitRate(options?.parentContext, params)
     },
   }
 

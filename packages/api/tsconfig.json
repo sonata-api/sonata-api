@@ -8,13 +8,16 @@
         "../access-control/dist"
       ],
       "@sonata-api/common": [
-        "../common/dist"
+        "../common/dist/cjs"
       ],
       "@sonata-api/mailing": [
         "../mailing/dist"
       ],
       "@sonata-api/system": [
         "../system/dist"
+      ],
+      "@sonata-api/security": [
+        "../security/dist"
       ],
       "@sonata-api/types": [
         "../types/dist"

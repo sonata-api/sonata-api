@@ -1,12 +1,17 @@
 import type { Description } from '@sonata-api/types'
-import type { Context } from './context'
-import { mongoose } from './database'
-import { left } from '@sonata-api/common'
+import type { Context, Collections, Algorithms } from '@sonata-api/api'
+import { mongoose } from '@sonata-api/api/database'
+import { left, right } from '@sonata-api/common'
 
 export type RateLimitingParams = {
   limit?: number
   scale?: number
   increment?: number
+}
+
+export enum RateLimitingErrors {
+  Unauthenticated = 'UNAUTHENTICATED',
+  LimitReached = 'LIMIT_REACHED'
 }
 
 export const limitRate = async <const T extends Description>(context: Context<T, Collections, Algorithms>, params: RateLimitingParams) => {
@@ -20,7 +25,7 @@ export const limitRate = async <const T extends Description>(context: Context<T,
 
   if( !user ) {
     return left({
-      error: 'No user found',
+      error: RateLimitingErrors.Unauthenticated,
       httpCode: 429
     })
   }
@@ -38,17 +43,14 @@ export const limitRate = async <const T extends Description>(context: Context<T,
     const entry = await ResourceUsageModel.create({ hits: increment })
     return UserModel.updateOne(
       { _id: user._id },
-      {
-        $set: {
-          [`resources_usage.${context.functionPath}`]: entry._id
-        }
+      { $set: { [`resources_usage.${context.functionPath}`]: entry._id }
       }
     )
   }
 
   if( params.scale && (new Date().getTime()/1000 - usage.updated_at.getTime()/1000 < params.scale) ) {
     return left({
-      error: 'limit reached',
+      error: RateLimitingErrors.LimitReached,
       httpCode: 429
     })
   }
@@ -59,8 +61,10 @@ export const limitRate = async <const T extends Description>(context: Context<T,
     }
   }
 
-  return ResourceUsageModel.updateOne(
+  await ResourceUsageModel.updateOne(
     { _id: usage._id },
     payload
   )
+
+  return right(null)
 }

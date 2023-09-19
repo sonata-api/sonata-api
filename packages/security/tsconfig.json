@@ -6,11 +6,14 @@
       "@sonata-api/api": [
         "../api/dist"
       ],
+      "@sonata-api/api/*": [
+        "../api/dist/*"
+      ],
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],
-      "@sonata-api/types": [
-        "../types/dist"
+      "@sonata-api/access-control": [
+        "../mailing/dist"
       ]
     }
   }

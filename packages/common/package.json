@@ -2,8 +2,8 @@
   "name": "@sonata-api/common",
   "version": "0.0.6",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "types": "dist/cjs/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
@@ -21,8 +21,8 @@
   ],
   "exports": {
     ".": {
-      "require": "./dist/cjs/index.js",
-      "import": "./dist/esm/index.js"
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./either": "./dist/cjs/either.js",
     "./string": "./dist/cjs/string.js",
@@ -31,13 +31,13 @@
   "typesVersions": {
     "*": {
       "either": [
-        "dist/either.d.ts"
+        "dist/cjs/either.d.ts"
       ],
       "string": [
-        "dist/string.d.ts"
+        "dist/cjs/string.d.ts"
       ],
       "date": [
-        "dist/date.d.ts"
+        "dist/cjs/date.d.ts"
       ]
     }
   },

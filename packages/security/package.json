@@ -1,0 +1,34 @@
+{
+  "name": "@sonata-api/security",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo skipping",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "peerDependencies": {
+    "@sonata-api/api": "*",
+    "@sonata-api/common": "*",
+    "@sonata-api/access-control": "*"
+  },
+  "files": [
+    "dist"
+  ]
+}
