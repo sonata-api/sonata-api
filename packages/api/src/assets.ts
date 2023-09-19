@@ -182,8 +182,8 @@ export const getFunction = async <
 
   const fn = async (payload: any, context: Context<any, Collections, Algorithms>) => {
     const resource = await (await getResources()).collections[resourceName]()
-    if( resource.security?.rateLimiting ) {
-      const rateLimitingEither = await limitRate(context, resource.security.rateLimiting)
+    if( resource.security?.rateLimiting?.[functionName] ) {
+      const rateLimitingEither = await limitRate(context, resource.security.rateLimiting.functionName)
       if( isLeft(rateLimitingEither) ) {
         return left({
           error: unwrapEither(rateLimitingEither),
