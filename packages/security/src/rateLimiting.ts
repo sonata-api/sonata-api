@@ -1,6 +1,6 @@
 import type { Description } from '@sonata-api/types'
 import type { Context, Collections, Algorithms } from '@sonata-api/api'
-import { mongoose } from '@sonata-api/api/database'
+import type { User } from '@sonata-api/system'
 import { left, right } from '@sonata-api/common'
 
 export type RateLimitingParams = {
@@ -14,23 +14,29 @@ export enum RateLimitingErrors {
   LimitReached = 'LIMIT_REACHED'
 }
 
-export const limitRate = async <const T extends Description>(context: Context<T, Collections, Algorithms>, params: RateLimitingParams) => {
-  const UserModel = mongoose.models.user
-  const ResourceUsageModel = mongoose.models.resourceUsage
-
-  const user = await UserModel.findOne(
-    { _id: context.token?.user._id },
+const getUser = (context: Context<any, Collections, Algorithms>) => {
+  return context.models.user.findOne(
+    { _id: context.token.user._id },
     { resources_usage: 1 }
-  )
+  ) as Promise<User>
+}
 
-  if( !user ) {
-    return left({
-      error: RateLimitingErrors.Unauthenticated,
-      httpCode: 429
-    })
+export const limitRate = async <const T extends Description>(
+  context: Context<T, Collections, Algorithms>,
+  params: RateLimitingParams
+) => {
+  let user: Awaited<ReturnType<typeof getUser>> | undefined
+
+  if( !context.token.user?._id || !(user = await getUser(context)) ) {
+    return left(RateLimitingErrors.Unauthenticated)
   }
 
-  const increment = params.increment || 1
+  const {
+    increment = 1,
+    limit,
+    scale
+  } = params
+
   const payload = {
     $inc: {
       hits: increment
@@ -40,28 +46,27 @@ export const limitRate = async <const T extends Description>(context: Context<T,
 
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
-    const entry = await ResourceUsageModel.create({ hits: increment })
-    return UserModel.updateOne(
+    const entry = await context.models.resourceUsage.create({ hits: increment })
+    await context.models.User.updateOne(
       { _id: user._id },
       { $set: { [`resources_usage.${context.functionPath}`]: entry._id }
       }
     )
+
+    return right(null)
   }
 
-  if( params.scale && (new Date().getTime()/1000 - usage.updated_at.getTime()/1000 < params.scale) ) {
-    return left({
-      error: RateLimitingErrors.LimitReached,
-      httpCode: 429
-    })
+  if( scale && (new Date().getTime()/1000 - usage.updated_at!.getTime()/1000 < scale) ) {
+    return left(RateLimitingErrors.LimitReached)
   }
 
-  if( params.limit && (usage.hits % params.limit === 0) ) {
+  if( limit && (usage.hits! % limit === 0) ) {
     payload.$set = {
       last_maximum_reach: new Date()
     }
   }
 
-  await ResourceUsageModel.updateOne(
+  await context.models.resourceUsage.updateOne(
     { _id: usage._id },
     payload
   )

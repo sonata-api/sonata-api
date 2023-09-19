@@ -1,8 +1,9 @@
 import { defineDescription } from '@sonata-api/api'
+import type { ResourceUsage } from '../resourceUsage/description'
 
-export type User = Omit<typeof User, 'roles'> & {
+export type User = Omit<typeof User, 'roles' | 'resources_usage'> & {
   roles: Array<string>
-  owner: User
+  resources_usage: Map<string, typeof ResourceUsage>
 }
 
 export const [User, description] = defineDescription({

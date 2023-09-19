@@ -25,6 +25,7 @@ jobs:
             --workspace=packages/types \
             --workspace=packages/system \
             --workspace=packages/access-control \
+            --workspace=packages/security \
             --workspace=packages/mailing \
             --workspace=packages/api \
             --workspace=packages/server 2>&1 > /dev/null || true

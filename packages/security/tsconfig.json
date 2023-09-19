@@ -13,7 +13,10 @@
         "../common/dist/cjs"
       ],
       "@sonata-api/access-control": [
-        "../mailing/dist"
+        "../access-control/dist"
+      ],
+      "@sonata-api/system": [
+        "../system/dist"
       ]
     }
   }

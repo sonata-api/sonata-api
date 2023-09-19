@@ -185,7 +185,10 @@ export const getFunction = async <
     if( resource.security?.rateLimiting ) {
       const rateLimitingEither = await limitRate(context, resource.security.rateLimiting)
       if( isLeft(rateLimitingEither) ) {
-        return unwrapEither(rateLimitingEither)
+        return left({
+          error: unwrapEither(rateLimitingEither),
+          httpCode: 429
+        })
       }
     }
 
