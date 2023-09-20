@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/security",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,9 +17,9 @@
   "author": "",
   "license": "ISC",
   "peerDependencies": {
+    "@sonata-api/access-control": "*",
     "@sonata-api/api": "*",
-    "@sonata-api/common": "*",
-    "@sonata-api/access-control": "*"
+    "@sonata-api/common": "*"
   },
   "files": [
     "dist"
