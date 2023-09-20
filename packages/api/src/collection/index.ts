@@ -1,3 +1,4 @@
+export * from './define'
 export * from './description'
 export * from './preload'
 export * from './schema'

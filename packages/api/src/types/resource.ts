@@ -36,7 +36,7 @@ export type ResourceType =
 
 export type FunctionPath = `${string}@${string}`
 
-export type UnpackFunction<T extends () => any> = Required<Awaited<ReturnType<T>>>
+export type UnpackFunction<T extends () => any> = Awaited<ReturnType<T>>
 
 export type Collections = Record<string, UnpackFunction<Collection>>
 export type Algorithms = Record<string, UnpackFunction<Algorithm>>

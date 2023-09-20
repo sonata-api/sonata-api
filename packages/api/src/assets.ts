@@ -162,15 +162,17 @@ export const getFunction = async <
   resourceName: ResourceName,
   functionName: FunctionName,
   acProfile?: UserACProfile,
-  resourceType?: TResourceType
+  _resourceType?: TResourceType
 ) => {
+  const resourceType = _resourceType || 'collections'
+
   if( acProfile ) {
     if( !await isGranted(String(resourceName), String(functionName), acProfile as any) ) {
       return left(ACErrors.AuthorizationError)
     }
   }
 
-  const functionsEither = await getResourceAsset(resourceName as string, 'functions', resourceType || 'collections')
+  const functionsEither = await getResourceAsset(resourceName as string, 'functions', resourceType)
   if( isLeft(functionsEither) ) {
     return functionsEither
   }
@@ -181,7 +183,7 @@ export const getFunction = async <
   }
 
   const fn = async (payload: any, context: Context<any, Collections, Algorithms>) => {
-    const resource = await (await getResources()).collections[resourceName]()
+    const resource = await (await getResources())[resourceType][resourceName]()
     if( resource.security?.rateLimiting?.[functionName] ) {
       const rateLimitingEither = await limitRate(context, resource.security.rateLimiting.functionName)
       if( isLeft(rateLimitingEither) ) {

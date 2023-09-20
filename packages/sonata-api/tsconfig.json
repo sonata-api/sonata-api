@@ -15,6 +15,12 @@
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],
+      "@sonata-api/mailing": [
+        "../mailing/dist"
+      ],
+      "@sonata-api/security": [
+        "../security/dist"
+      ],
       "@sonata-api/server": [
         "../server/dist"
       ],

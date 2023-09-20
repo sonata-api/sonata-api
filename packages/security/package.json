@@ -2,7 +2,6 @@
   "name": "@sonata-api/security",
   "version": "0.0.0",
   "description": "",
-  "main": "index.js",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "publishConfig": {
@@ -13,12 +12,6 @@
     "build": "tsc",
     "watch": "tsc --watch",
     "prepublishOnly": "npm run build"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "exports": {
-    ".": "./dist/index.js"
   },
   "keywords": [],
   "author": "",

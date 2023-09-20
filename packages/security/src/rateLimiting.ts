@@ -25,7 +25,7 @@ export const limitRate = async <const T extends Description>(
   context: Context<T, Collections, Algorithms>,
   params: RateLimitingParams
 ) => {
-  let user: Awaited<ReturnType<typeof getUser>> | undefined
+  let user: Awaited<ReturnType<typeof getUser>>
 
   if( !context.token.user?._id || !(user = await getUser(context)) ) {
     return left(RateLimitingErrors.Unauthenticated)
