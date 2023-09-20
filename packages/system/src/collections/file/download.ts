@@ -1,28 +1,20 @@
+import type { Context } from '@sonata-api/api'
 import { readFile } from 'fs/promises'
-import { type Context, useFunctions } from '@sonata-api/api'
-import { description, type File } from './description'
+import { left } from '@sonata-api/common'
+import { description } from './description'
 
 const download = async (_id: string, context: Context<typeof description>) => {
-  const { get } = useFunctions<File>()()
-  const file = await get({
-    filters: {
-      _id,
-    },
-    project: [
-      'absolute_path'
-    ]
-  }, context)
+  const file = await context.model.findOne(
+    { _id },
+    { absolute_path: 1 }
+  )
 
   if( !file ) {
-    throw new Error('file not found')
+    return left('FILE_NOT_FOUND')
   }
 
-  const content = await readFile(file.absolute_path!) as unknown
-
-  return {
-    ...file,
-    content: Buffer.from(content as string, 'base64')
-  }
+  file.content = await readFile(file.absolute_path)
+  return file
 }
 
 export default download

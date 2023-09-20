@@ -17,10 +17,11 @@ export const insert = <TDocument extends MongoDocument>() => async (payload: {
     throw new Error(error)
   }
 
-  const { what } = payload
+  const { what } = unpack(queryEither)
   const { _id } = what
 
   const readyWhat = prepareInsert(what, context.description)
+
   const projection = payload.project
     && normalizeProjection(payload.project, context.description)
 

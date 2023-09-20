@@ -14,19 +14,7 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
 }, context: Context<any, Collections, Algorithms>) => {
   const accessControl = useAccessControl(context)
 
-  const {
-    filters = {},
-    project = {},
-    offset = 0,
-  } = payload || {}
-
-  const limit = payload.limit
-    ? payload.limit > 150
-      ? 100
-      : payload.limit
-    : Number(process.env.PAGINATION_LIMIT || 35)
-
-  const entries = Object.entries(filters)
+  const entries = Object.entries(payload.filters || {})
     .map(([key, value]) => [
       key,
       value && typeof value === 'object' && '_id' in value
@@ -34,15 +22,25 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
         : value
     ])
 
-  const parsedFilters = Object.fromEntries(entries) || {}
-  const query = unsafe(await accessControl.beforeRead({
+  const newPayload = Object.assign({}, {
     ...payload,
-    filters: parsedFilters
-  }))
+    filters: Object.fromEntries(entries),
+    limit: payload.limit
+      ? payload.limit > 150
+        ? 100
+        : payload.limit
+      : Number(process.env.PAGINATION_LIMIT || 35)
+  })
 
-  const sort = payload?.sort
-    ? payload.sort
-    : query.sort || DEFAULT_SORT
+  const query = unsafe(await accessControl.beforeRead(newPayload))
+
+  const {
+    limit,
+    sort = DEFAULT_SORT,
+    project = {},
+    offset = 0
+
+  } = query
 
   const result = await context.model.find(query.filters, normalizeProjection(project, context.description))
     .sort(sort)

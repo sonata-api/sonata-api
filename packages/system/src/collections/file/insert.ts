@@ -23,14 +23,10 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     throw new Error('filename lacks extension')
   }
 
-  const oldFile = await context.collection.functions.get({
-    filters: {
-      _id: props.what._id 
-    },
-    project: [
-      'absolute_path'
-    ]
-  }, context)
+  const oldFile = await context.model.findOne(
+    { _id: props.what._id },
+    { absolute_path: 1 }
+  )
 
   if( oldFile ) {
     await unlink(oldFile.absolute_path!).catch(console.trace)

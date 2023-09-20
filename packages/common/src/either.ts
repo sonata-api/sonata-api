@@ -20,11 +20,11 @@ export const right = <const T>(value: T): Right<T> => <const>({
   value
 })
 
-export const isLeft = <L, R>(either: Either<L, R>): either is Left<L> => {
+export const isLeft = <L>(either: Either<L, any>): either is Left<L> => {
   return either._tag === 'Left'
 }
 
-export const isRight = <L, R>(either: Either<L, R>): either is Right<R> => {
+export const isRight = <R>(either: Either<any, R>): either is Right<R> => {
   return either._tag === 'Right'
 }
 

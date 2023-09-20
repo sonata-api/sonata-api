@@ -176,8 +176,8 @@ export const validateFromDescription = async <
       const error = new TypeError(ValidationErrors.InvalidProperties)
       Object.assign(error, { errors })
       throw error
-
     }
+
     return left({
       code: ValidationErrors.InvalidProperties,
       errors
