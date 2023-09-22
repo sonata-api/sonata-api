@@ -29,7 +29,7 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
 
   const {
     limit,
-    sort,
+    sort = DEFAULT_SORT,
     project,
     offset
 
