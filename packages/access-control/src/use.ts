@@ -47,11 +47,13 @@ export const useAccessControl = <
   const accessControl = context?.accessControl||{}
 
   const beforeRead = async <const Payload extends Partial<ReadPayload>>(payload?: Payload) => {
-    const newPayload = Object.assign({}, {
-      filters: payload?.filters||{},
-      sort: payload?.sort,
-      limit: payload?.limit
-    }) as ReadPayload
+    const newPayload = Object.assign({}, payload) as ReadPayload
+    newPayload.filters ??= {}
+    newPayload.limit = newPayload.limit
+      ? newPayload.limit > 150
+        ? 100
+        : newPayload.limit
+      : Number(process.env.PAGINATION_LIMIT || 35)
 
     if( options.queryPreset ) {
       Object.assign(newPayload, deepMerge(

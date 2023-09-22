@@ -7,6 +7,7 @@ export type ReadPayload = {
   filters: Record<string, any>
   sort?: Record<string, any>
   limit?: number
+  offset?: number
 }
 
 export type WritePayload = {

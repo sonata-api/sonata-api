@@ -22,23 +22,16 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
         : value
     ])
 
-  const newPayload = Object.assign({}, {
-    ...payload,
-    filters: Object.fromEntries(entries),
-    limit: payload.limit
-      ? payload.limit > 150
-        ? 100
-        : payload.limit
-      : Number(process.env.PAGINATION_LIMIT || 35)
-  })
+  const newPayload = Object.assign({}, payload)
+  newPayload.filters = Object.fromEntries(entries)
 
   const query = unsafe(await accessControl.beforeRead(newPayload))
 
   const {
     limit,
-    sort = DEFAULT_SORT,
-    project = {},
-    offset = 0
+    sort,
+    project,
+    offset
 
   } = query
 

@@ -64,6 +64,7 @@ export type FiltersPreset<TDescription extends Description> = {
   filters: Partial<Record<keyof TDescription['properties'] | `$${string}`, any>>
   table?: Array<keyof TDescription['properties']>
   badgeFunction?: string
+  default?: boolean
 }
 
 export type CollectionOptions<TDescription extends Description> = {
