@@ -11,7 +11,7 @@
     "test": "echo skipping",
     "build": "tsc -p tsconfig.json; tsc -p tsconfig.esm.json",
     "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",
@@ -44,5 +44,8 @@
   "peerDependencies": {
     "@sonata-api/system": "*",
     "bson": "^5.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.4"
   }
 }

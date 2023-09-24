@@ -8,7 +8,7 @@
     "test": "echo skipping",
     "build": "tsc",
     "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm build"
   },
   "bin": {
     "sonata-build": "bin/index.js"

@@ -22,20 +22,18 @@ jobs:
         run: pnpm i
       - name: Prepare package building
         run: |
-          pnpm build \
-            --workspace-concurrency=1 \
-            --filter='./packages/common' \
-            --filter='./packages/types' \
-            --filter='./packages/system' \
-            --filter='./packages/access-control' \
-            --filter='./packages/security' \
-            --filter='./packages/mailing' \
-            --filter='./packages/api' \
-            --filter='./packages/server' 2>&1 > /dev/null || true
+          pnpm --no-bail --filter='./packages/common' build
+          pnpm --no-bail --filter='./packages/types' build
+          pnpm --no-bail --filter='./packages/system' build
+          pnpm --no-bail --filter='./packages/access-control' build
+          pnpm --no-bail --filter='./packages/security' build
+          pnpm --no-bail --filter='./packages/mailing' build
+          pnpm --no-bail --filter='./packages/api' build
+          pnpm --no-bail --filter='./packages/server' build
       - name: Actually build packages
         run: |
-          pnpm --filter '*' build
+          pnpm -r build
           find packages -mindepth 1 -maxdepth 1 \
             -exec bash -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
       - name: Run tests
-        run: pnpm --filter '*' test
+        run: pnpm -r test

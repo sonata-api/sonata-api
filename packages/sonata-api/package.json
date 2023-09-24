@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo skipping",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",

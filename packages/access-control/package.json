@@ -11,7 +11,7 @@
     "test": "echo skipping",
     "build": "tsc",
     "watch": "tsc --watch",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",
@@ -23,9 +23,13 @@
     "dist"
   ],
   "peerDependencies": {
+    "@sonata-api/api": "*",
     "@sonata-api/common": "*",
     "@sonata-api/server": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.6.4"
   }
 }

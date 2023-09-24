@@ -11,7 +11,7 @@
     "test": "env TS_NODE_COMPILER_OPTIONS=\"$(cat ../../compilerOptions.json)\" mocha -r ts-node/register tests/**/*.spec.ts",
     "build": "tsc",
     "watch": "tsc --watch",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "pnpm build",
     "postinstall": "node dist/__scripts__/postinstall.js || true"
   },
   "exports": {
