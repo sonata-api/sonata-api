@@ -15,24 +15,25 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 20
-          cache: npm
+          cache: pnpm
       - name: Install dependencies
-        run: npm i
+        run: pnpm i
       - name: Prepare package building
         run: |
-          npm run build \
-            --workspace=packages/common \
-            --workspace=packages/types \
-            --workspace=packages/system \
-            --workspace=packages/access-control \
-            --workspace=packages/security \
-            --workspace=packages/mailing \
-            --workspace=packages/api \
-            --workspace=packages/server 2>&1 > /dev/null || true
+          pnpm build \
+            --workspace-concurrency=1 \
+            --filter='./packages/common' \
+            --filter='./packages/types' \
+            --filter='./packages/system' \
+            --filter='./packages/access-control' \
+            --filter='./packages/security' \
+            --filter='./packages/mailing' \
+            --filter='./packages/api' \
+            --filter='./packages/server' 2>&1 > /dev/null || true
       - name: Actually build packages
         run: |
-          npm run build --workspaces
+          pnpm --filter '*' build
           find packages -mindepth 1 -maxdepth 1 \
             -exec bash -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
       - name: Run tests
-        run: npm run test --workspaces
+        run: pnpm --filter '*' test
