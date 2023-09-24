@@ -1,6 +1,7 @@
 {
   "name": "sonata-api-monorepo",
   "private": true,
+  "packageManager": "pnpm@8.7.6",
   "scripts": {
     "build:all": "npx lerna exec -- \"npm run build\"",
     "postinstall": "for d in $(find node_modules/@sonata-api -mindepth 1); do r=$(realpath $d); unlink $d; cp -r $r $d; done"
