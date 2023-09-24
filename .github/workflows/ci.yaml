@@ -19,17 +19,20 @@ jobs:
           node-version: 20
           cache: pnpm
       - name: Install dependencies
-        run: pnpm i
+        run: pnpm install
       - name: Prepare package building
         run: |
-          pnpm --no-bail --filter='./packages/common' build
-          pnpm --no-bail --filter='./packages/types' build
-          pnpm --no-bail --filter='./packages/system' build
-          pnpm --no-bail --filter='./packages/access-control' build
-          pnpm --no-bail --filter='./packages/security' build
-          pnpm --no-bail --filter='./packages/mailing' build
-          pnpm --no-bail --filter='./packages/api' build
-          pnpm --no-bail --filter='./packages/server' build
+          {
+            pnpm --no-bail --filter='./packages/common' build
+            pnpm --no-bail --filter='./packages/types' build
+            pnpm --no-bail --filter='./packages/system' build
+            pnpm --no-bail --filter='./packages/access-control' build
+            pnpm --no-bail --filter='./packages/security' build
+            pnpm --no-bail --filter='./packages/mailing' build
+            pnpm --no-bail --filter='./packages/api' build
+            pnpm --no-bail --filter='./packages/server' build
+        } 2>&/dev/null || true
+
       - name: Actually build packages
         run: |
           pnpm -r build
