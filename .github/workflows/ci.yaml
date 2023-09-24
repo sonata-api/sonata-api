@@ -31,7 +31,7 @@ jobs:
             pnpm --no-bail --filter='./packages/mailing' build
             pnpm --no-bail --filter='./packages/api' build
             pnpm --no-bail --filter='./packages/server' build
-        } 2>&/dev/null || true
+          } 2>&/dev/null || true
 
       - name: Actually build packages
         run: |
