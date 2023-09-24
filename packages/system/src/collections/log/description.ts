@@ -9,7 +9,8 @@ export const [Log, description] = defineDescription({
   properties: {
     owner: {
       // don't use "owned: true", we want it this way
-      $ref: 'user'
+      $ref: 'user',
+      s$noForm: true
     },
     context: {
       type: 'string'

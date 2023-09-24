@@ -24,6 +24,5 @@
   },
   "optionalDependencies": {
     "nodemailer": "^6.9.4"
-  },
-  "gitHead": "017cdae59b1891628f3a11371081c0a845980599"
+  }
 }

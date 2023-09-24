@@ -49,6 +49,5 @@
   },
   "optionalDependencies": {
     "mongodb-memory-server": "^8.10.2"
-  },
-  "gitHead": "263492e35560904ca8552f16cad2a6d6d281f132"
+  }
 }

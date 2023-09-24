@@ -38,6 +38,5 @@
     "@sonata-api/server": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*"
-  },
-  "gitHead": "263492e35560904ca8552f16cad2a6d6d281f132"
+  }
 }

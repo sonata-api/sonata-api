@@ -47,7 +47,7 @@ export const limitRate = async <const T extends Description>(
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
     const entry = await context.models.resourceUsage.create({ hits: increment })
-    await context.models.User.updateOne(
+    await context.models.user.updateOne(
       { _id: user._id },
       { $set: { [`resources_usage.${context.functionPath}`]: entry._id }
       }
