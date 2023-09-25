@@ -77,9 +77,3 @@ export const registerServer = (options: ServerOptions, cb: (req: GenericRequest,
   }
 }
 
-
-// registerServer({ host: '0.0.0.0', port: 8080 }, (req, res) => {
-
-//   res.end(JSON.stringify(req.payload))
-
-// }).listen()
