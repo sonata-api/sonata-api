@@ -1,5 +1,6 @@
 import type { Description } from '@sonata-api/types'
 import type { AccessControl } from '@sonata-api/access-control'
+import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { Schema } from './collection'
 import type {
   FunctionPath,
@@ -54,8 +55,8 @@ export type Context<
   token: DecodedToken<TAccessControl>
 
   resourceName?: keyof TCollections | keyof TAlgorithms
-  request: any
-  h: any
+  request: MatchedRequest
+  response: GenericResponse
 
   apiConfig: ApiConfig
   accessControl: TAccessControl

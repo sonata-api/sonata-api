@@ -20,6 +20,12 @@
       ],
       "@sonata-api/types": [
         "../types/dist"
+      ],
+      "@sonata-api/http": [
+        "../http/dist"
+      ],
+      "@sonata-api/node-http": [
+        "../node-http/dist"
       ]
     }
   }

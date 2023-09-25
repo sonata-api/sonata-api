@@ -36,6 +36,7 @@
   "peerDependencies": {
     "@sonata-api/access-control": "*",
     "@sonata-api/common": "*",
+    "@sonata-api/http": "*",
     "@sonata-api/mailing": "*",
     "@sonata-api/security": "*",
     "@sonata-api/system": "*",

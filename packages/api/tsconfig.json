@@ -2,7 +2,6 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src",
     "paths": {
       "@sonata-api/access-control": [
         "../access-control/dist"
@@ -21,6 +20,9 @@
       ],
       "@sonata-api/types": [
         "../types/dist"
+      ],
+      "@sonata-api/http": [
+        "../http/dist"
       ]
     }
   },

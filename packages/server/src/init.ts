@@ -1,11 +1,11 @@
-import Hapi from '@hapi/hapi'
-import Inert from '@hapi/inert'
+import { defineServerOptions } from '@sonata-api/http'
+import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, type ApiConfig } from '@sonata-api/api'
 import { connectDatabase } from '@sonata-api/api'
 import { defaultApiConfig } from './constants'
 import { warmup } from './warmup'
-import getRoutes from './routes'
+import { registerRoutes } from './routes'
 
 export const dryInit = async (_apiConfig?: ApiConfig) => {
   const apiConfig: ApiConfig = {}
@@ -22,32 +22,11 @@ export const dryInit = async (_apiConfig?: ApiConfig) => {
   console.log()
   console.timeEnd('warmup')
 
-  const server = Hapi.server({
-    port: apiConfig.port,
-    host: '0.0.0.0',
-    routes: {
-      cors: {
-        origin: ['*'],
-        headers: [
-          'Accept', 
-          'Accept-Version',
-          'Authorization', 
-          'Content-Length', 
-          'Content-MD5', 
-          'Content-Type', 
-          'Date', 
-          'X-Api-Version'
-        ]
-      }
-    }
+  const serverOptions = defineServerOptions()
+
+  const server = registerServer(serverOptions, (req, res) => {
+    registerRoutes(req, res, context)
   })
-
-  await server.register(Inert)
-
-  const routes = getRoutes(context)
-  for( const route of routes ) {
-    server.route(route)
-  }
 
   return server
 }
@@ -62,13 +41,13 @@ export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
 // #region initThenStart
 export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
   const server = await dryInit(...args)
-  server.start()
+  server.listen()
 }
 // #endregion initThenStart
 
 // #region initWithDatabaseThenStart
 export const init = async (...args: Parameters<typeof dryInit>) => {
   const server = await initWithDatabase(...args)
-  server.start()
+  server.listen()
 }
 // #endregion initWithDatabaseThenStart

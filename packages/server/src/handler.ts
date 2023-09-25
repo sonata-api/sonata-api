@@ -1,12 +1,10 @@
 import { createContext, getFunction, decodeToken } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
-import { right, left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
-import type { Request, ResponseToolkit } from '@hapi/hapi'
-import type { HandlerRequest } from './types'
+import { right, left, isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
+import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { DecodedToken, Context, ResourceType, } from '@sonata-api/api'
 
 import { Error as MongooseError } from 'mongoose'
-import { pipe } from './utils'
 import { sanitizeRequest, prependPagination } from './hooks/pre'
 import { appendPagination } from './hooks/post'
 
@@ -18,19 +16,19 @@ export type RegularVerb =
   | 'removeAll'
   | 'upload'
 
-const prePipe = pipe(
+const prePipe = pipe([
   sanitizeRequest,
   prependPagination
-)
+])
 
-const postPipe = pipe(
+const postPipe = pipe([
   appendPagination
-)
+])
 
-export const getDecodedToken = async (request: Request) => {
+export const getDecodedToken = async (request: MatchedRequest) => {
   try {
-    const decodedToken: DecodedToken = request.headers.authorization
-      ? await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
+    const decodedToken: DecodedToken = request.req.headers.authorization
+      ? await decodeToken(request.req.headers.authorization.split('Bearer ').pop() || '')
       : { user: {} }
 
     return right(decodedToken)
@@ -44,11 +42,11 @@ export const getDecodedToken = async (request: Request) => {
 }
 
 export const safeHandle = (
-  fn: (request: HandlerRequest, h: ResponseToolkit, context: Context<any, any, any>) => Promise<object>,
-  context: Context<any, any, any>
-) => async (request: HandlerRequest, h: ResponseToolkit) => {
+  fn: (request: MatchedRequest, res: GenericResponse, context: Context) => Promise<object>,
+  context: Context
+) => async (request: MatchedRequest, res: GenericResponse) => {
   try {
-    const response = await fn(request, h, context)
+    const response = await fn(request, res, context)
     if( !response ) {
       throw new Error('empty response')
     }
@@ -89,27 +87,27 @@ export const safeHandle = (
       }, {})
     }
 
-    if( request.headers['sec-fetch-mode'] === 'cors' ) {
+    if( request.req.headers['sec-fetch-mode'] === 'cors' ) {
       return response
     }
 
     error.httpCode ??= 500
-    return h.response(response).code(error.httpCode)
+    res.writeHead(error.httpCode)
+    res.end(response)
   }
 }
 
 export const customVerbs = (resourceType: ResourceType) => async (
-  request: HandlerRequest,
-  h: ResponseToolkit,
-  parentContext: Context<any, any, any>
+  request: MatchedRequest,
+  response: GenericResponse,
+  parentContext: Context
 ) => {
   const {
-    params: {
+    fragments: [
       resourceName,
       functionName
-    }
+    ]
   } = request
-
 
   const tokenEither = await getDecodedToken(request)
   if( isLeft(tokenEither) ) {
@@ -121,7 +119,7 @@ export const customVerbs = (resourceType: ResourceType) => async (
   Object.assign(parentContext, {
     token,
     resourceName,
-    h,
+    response,
     request
   })
 
@@ -135,7 +133,7 @@ export const customVerbs = (resourceType: ResourceType) => async (
     prePipe({
       request,
       token,
-      response: h,
+      response,
       context
     })
   ])
@@ -152,7 +150,7 @@ export const customVerbs = (resourceType: ResourceType) => async (
   }
 
   const fn = unwrapEither(fnEither)
-  const result = await fn(request.payload, context)
+  const result = await fn(request.req.payload, context)
 
   return postPipe({
     request,
@@ -164,15 +162,15 @@ export const customVerbs = (resourceType: ResourceType) => async (
 }
 
 export const regularVerb = (functionName: RegularVerb) => async (
-  request: HandlerRequest,
-  h: ResponseToolkit,
-  parentContext: Context<any, any, any>
+  request: MatchedRequest,
+  response: GenericResponse,
+  parentContext: Context
 ) => {
   const {
-    params: {
+    fragments: [
       resourceName,
       id
-    }
+    ]
   } = request
 
   const tokenEither = await getDecodedToken(request)
@@ -185,7 +183,7 @@ export const regularVerb = (functionName: RegularVerb) => async (
   Object.assign(parentContext, {
     token,
     resourceName,
-    h,
+    response,
     request
   })
 
@@ -198,22 +196,21 @@ export const regularVerb = (functionName: RegularVerb) => async (
     prePipe({
       request,
       token,
-      response: h,
+      response,
       context
     })
   ])
 
   const requestCopy = Object.assign({}, request)
-  requestCopy.payload ||= {}
 
   if( id ) {
-    requestCopy.payload.filters = {
-      ...requestCopy.payload.filters||{},
+    requestCopy.req.payload.filters = {
+      ...requestCopy.req.payload.filters||{},
       _id: id
     }
 
-    if( 'what' in requestCopy.payload ) {
-      requestCopy.payload.what._id = id
+    if( 'what' in requestCopy.req.payload ) {
+      requestCopy.req.payload.what._id = id
     }
   }
 
@@ -226,7 +223,7 @@ export const regularVerb = (functionName: RegularVerb) => async (
   }
 
   const fn = unwrapEither(fnEither)
-  const result = await fn(request.payload, context)
+  const result = await fn(request.req.payload, context)
 
   return postPipe({
     request,
@@ -238,9 +235,9 @@ export const regularVerb = (functionName: RegularVerb) => async (
 }
 
 export const fileDownload = async (
-  request: HandlerRequest,
-  h: ResponseToolkit,
-  parentContext: Context<any, any, any>
+  request: MatchedRequest,
+  response: GenericResponse,
+  parentContext: Context
 ) => {
   const tokenEither = await getDecodedToken(request)
   if( isLeft(tokenEither) ) {
@@ -255,12 +252,12 @@ export const fileDownload = async (
     parentContext
   })
 
-  const { hash, options } = request.params
+  const [hash, options] = request.fragments
   const { filename, content, mime } = await (unsafe(await getFunction('file', 'download')))(hash, context)
 
   const has = (opt: string) => options?.split('/').includes(opt)
 
-  return h.response(content)
-    .header('content-type', mime)
-    .header('content-disposition', `${has('download') ? 'attachment; ' : ''}filename=${filename}`)
+  // return h.response(content)
+  //   .header('content-type', mime)
+  //   .header('content-disposition', `${has('download') ? 'attachment; ' : ''}filename=${filename}`)
 }

@@ -35,7 +35,9 @@ const activate = async (props: Props, context: Context<typeof description>) => {
 
   if( !user.password ) {
     if( !props?.password ) {
-      return context.h.redirect(`/user/activation?step=password&u=${userId}&t=${token}`)
+      return context.response.writeHead(302, {
+        location: `/user/activation?step=password&u=${userId}&t=${token}`
+      })
     }
 
     await context.model.updateOne(
@@ -56,7 +58,9 @@ const activate = async (props: Props, context: Context<typeof description>) => {
     { $set: { active: true } }
   )
 
-  return context.h.redirect('/user/activation')
+  return context.response.writeHead(302, {
+    location: '/user/activation'
+  })
 }
 
 export default activate
