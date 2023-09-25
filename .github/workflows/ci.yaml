@@ -25,6 +25,8 @@ jobs:
           {
             pnpm --no-bail --filter='./packages/common' build
             pnpm --no-bail --filter='./packages/types' build
+            pnpm --no-bail --filter='./packages/http' build
+            pnpm --no-bail --filter='./packages/node-http' build
             pnpm --no-bail --filter='./packages/system' build
             pnpm --no-bail --filter='./packages/access-control' build
             pnpm --no-bail --filter='./packages/security' build
