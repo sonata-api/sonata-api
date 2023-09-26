@@ -1,4 +1,5 @@
-import { defineServerOptions, cors } from '@sonata-api/http'
+import type { GenericRequest, GenericResponse } from '@sonata-api/http'
+import { defineServerOptions, cors, makeRouter } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, type ApiConfig } from '@sonata-api/api'
@@ -7,7 +8,10 @@ import { defaultApiConfig } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
 
-export const dryInit = async (_apiConfig?: ApiConfig) => {
+export const dryInit = async (
+  _apiConfig?: ApiConfig,
+  cb?: (req: GenericRequest, res: GenericResponse, route: ReturnType<typeof makeRouter>) => any
+) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, defaultApiConfig)
   Object.assign(apiConfig, _apiConfig)
@@ -24,12 +28,19 @@ export const dryInit = async (_apiConfig?: ApiConfig) => {
 
   const serverOptions = defineServerOptions()
 
-  const server = registerServer(serverOptions, (req, res) => {
+  const server = registerServer(serverOptions, async (req, res) => {
     if( cors(req, res) === null ) {
       return
     }
 
-    registerRoutes(req, res, context)
+    const route = makeRouter(req, res)
+    if( cb ) {
+      if( await cb(req, res, route) !== undefined ) {
+        return
+      }
+    }
+
+    registerRoutes(res, route, context)
   })
 
   return server

@@ -1,12 +1,6 @@
 import type { Context } from '@sonata-api/api'
+import type { GenericResponse, MatchedRequest, makeRouter } from '@sonata-api/http'
 import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
-import {
-  type GenericRequest,
-  type GenericResponse,
-  type MatchedRequest,
-  makeRouter
-
-} from '@sonata-api/http'
 
 import {
   safeHandle,
@@ -17,12 +11,10 @@ import {
 } from './handler'
 
 
-export const registerRoutes = async (req: GenericRequest, res: GenericResponse, context: Context) => {
+export const registerRoutes = async (res: GenericResponse, route: ReturnType<typeof makeRouter>, context: Context) => {
   const defaultHandler = (fn: ReturnType<typeof regularVerb>) => {
     return (matchedRequest: MatchedRequest) => safeHandle(fn, context)(matchedRequest, res)
   }
-
-  const route = makeRouter(req, res)
 
   try {
     const resultPipe = pipe([

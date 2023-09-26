@@ -68,7 +68,7 @@ export const registerRoute = <TCallback extends (req: MatchedRequest) => any>(
 }
 
 export const makeRouter = (req: GenericRequest, res: GenericResponse) => {
-  return <TCallback extends (req: MatchedRequest) => any>(
+  return <TCallback extends (req: MatchedRequest) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
     exp: string,
     cb: TCallback,
