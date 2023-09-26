@@ -18,6 +18,7 @@ export const registerRoutes = async (res: GenericResponse, route: ReturnType<typ
 
   try {
     const resultPipe = pipe([
+      () => route('GET', '/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload)),
       () => route('GET', '/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get'))),
       () => route('GET', '/api/(\\w+)$', defaultHandler(regularVerb('getAll'))),
       () => route('POST', '/api/(\\w+)$', defaultHandler(regularVerb('insert'))),
@@ -25,7 +26,6 @@ export const registerRoutes = async (res: GenericResponse, route: ReturnType<typ
       () => route('POST', '/api/(\\w+)/upload$', defaultHandler(regularVerb('upload'))),
       () => route(['POST', 'GET'], '/api/(\\w+)/(\\w+)$', defaultHandler(customVerbs('collection'))),
       () => route(['POST', 'GET'], '/api/_/(\\w+)/(\\w+)$', defaultHandler(customVerbs('algorithm'))),
-      () => route('GET', '/api/file/(\\w+)/(\\w+)$', defaultHandler(fileDownload)),
       () => left({
         httpCode: 404,
         message: 'Not found'

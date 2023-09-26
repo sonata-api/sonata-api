@@ -18,6 +18,7 @@ export type GenericRequest = {
   method: RequestMethod
   headers: Record<string, any>
   body?: string
+  query: Record<string, any>
   payload: Record<string, any>
 }
 

@@ -29,6 +29,11 @@ export const baseRoles = <const>{
           'describe'
         ]
       },
+      file: {
+        functions: [
+          'download'
+        ]
+      },
       user: {
         functions: [
           'createAccount',

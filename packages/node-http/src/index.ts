@@ -1,4 +1,5 @@
-import http from 'node:http'
+import http from 'http'
+import { parse as parseUrl } from 'url'
 import type {
   ServerOptions,
   GenericRequest,
@@ -24,11 +25,16 @@ const getBody = ($req: http.IncomingMessage) => {
 }
 
 export const abstractRequest = async (request: http.IncomingMessage) => {
+  const url = request.url || '/'
+
   const req: GenericRequest = {
-    url: request.url || '',
+    url,
     method: (request.method || '') as RequestMethod,
     headers: request.headers || {},
     body: await getBody(request),
+    query: url.includes('?')
+      ? parseUrl(url, true)
+      : {},
     payload: {}
   }
 

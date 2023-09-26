@@ -3,20 +3,29 @@ import { readFile } from 'fs/promises'
 import { left, right } from '@sonata-api/common'
 import { description } from './description'
 
-const download = async (_id: string, context: Context<typeof description>) => {
-  const file = await context.model.findOne(
-    { _id },
-    {
-      absolute_path: 1,
-      mime: 1
-    }
-  )
+export enum FileReadError {
+  DocumentNotFound = 'DOCUMENT_NOT_FOUND',
+  FileNotFound = 'FILE_NOT_FOUND',
+}
 
-  if( !file ) {
-    return left('FILE_NOT_FOUND')
+const download = async (_id: string, context: Context<typeof description>) => {
+  const file = await context.model.findOne({ _id }, {
+    absolute_path: 1,
+    mime: 1
+  })
+
+  try {
+    if( !file ) {
+      return left(FileReadError.DocumentNotFound)
+    }
+
+    const content = await readFile(file.absolute_path)
+    file.content = content
+
+  } catch( e ) {
+    return left(FileReadError.FileNotFound)
   }
 
-  file.content = await readFile(file.absolute_path)
   return right(file)
 }
 
