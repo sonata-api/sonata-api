@@ -26,7 +26,7 @@ export const matches = <TRequest extends GenericRequest>(
   }
 
   if( method !== req.method ) {
-    if( Array.isArray(method) && !method.includes(req.method as RequestMethod) ) {
+    if( !Array.isArray(method) || !method.includes(req.method) ) {
       return
     }
   }
@@ -43,11 +43,8 @@ export const matches = <TRequest extends GenericRequest>(
   }
 }
 
-export const route = <
-  TRequest extends GenericRequest,
-  TCallback extends (req: MatchedRequest) => any
->(
-  req: TRequest,
+export const registerRoute = <TCallback extends (req: MatchedRequest) => any>(
+  req: GenericRequest,
   res: GenericResponse,
   method: RequestMethod | RequestMethod[],
   exp: string,
@@ -70,3 +67,11 @@ export const route = <
   }
 }
 
+export const makeRouter = (req: GenericRequest, res: GenericResponse) => {
+  return <TCallback extends (req: MatchedRequest) => any>(
+    method: RequestMethod | RequestMethod[],
+    exp: string,
+    cb: TCallback,
+    options?: RouteOptions
+  ) => registerRoute(req, res, method, exp, cb, options)
+}

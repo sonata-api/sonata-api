@@ -167,7 +167,7 @@ export const getFunction = async <
   const resourceType = _resourceType || 'collections'
 
   if( acProfile ) {
-    if( !await isGranted(String(resourceName), String(functionName), acProfile as any) ) {
+    if( !await isGranted(String(resourceName), String(functionName), acProfile) ) {
       return left(ACErrors.AuthorizationError)
     }
   }

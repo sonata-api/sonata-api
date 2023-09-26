@@ -22,10 +22,6 @@ export const appendPagination = async (params: PostHookParams) => {
     resourceType
   } = params
 
-  if( result?.constructor?.name === 'Response' ) {
-    return result
-  }
-
   const response = result?._tag
     ? result
     : { result }

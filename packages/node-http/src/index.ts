@@ -1,8 +1,9 @@
 import http from 'node:http'
-import {
-  type ServerOptions,
-  type GenericRequest,
-  type GenericResponse
+import type {
+  ServerOptions,
+  GenericRequest,
+  GenericResponse,
+  RequestMethod
 
 } from '@sonata-api/http'
 
@@ -25,7 +26,7 @@ const getBody = ($req: http.IncomingMessage) => {
 export const abstractRequest = async (request: http.IncomingMessage) => {
   const req: GenericRequest = {
     url: request.url || '',
-    method: request.method || '',
+    method: (request.method || '') as RequestMethod,
     headers: request.headers || {},
     body: await getBody(request),
     payload: {}
@@ -37,18 +38,23 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
 export const abstractResponse = (response: http.ServerResponse): GenericResponse => {
   const { end } = response
 
-  return Object.assign(response, {
+  return Object.assign(response, <GenericResponse>{
     writeHead: response.writeHead.bind(response),
     setHeader: response.setHeader.bind(response),
     end: (value) => {
       if( value?.constructor === Object ) {
-        response.setHeader('content-type', 'application/json')
-        return end.bind(response)(JSON.parse(value))
+        if( !response.headersSent ) {
+          response.writeHead(200, {
+            'content-type': 'application/json'
+          })
+        }
+
+        return end.bind(response)(JSON.stringify(value))
       }
 
       return end.bind(response)(value)
     }
-  } as GenericResponse)
+  })
 }
 
 const abstractTransaction = async ($req: http.IncomingMessage, $res: http.ServerResponse) => {

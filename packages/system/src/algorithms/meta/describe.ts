@@ -39,7 +39,7 @@ const describe = async (props: Props, context: Context): Promise<any> => {
     return result
   }
 
-  context.response.setHeader('content-type', 'application/json')
+  context.response.setHeader('content-type', 'application/bson')
   return context.response.end(serialize(result))
 
   // return context.

@@ -55,7 +55,7 @@ export const safeHandle = (
 
   } catch(error: any) {
     if( context.apiConfig.errorHandler ) {
-      return context.apiConfig.errorHandler(error)
+      return context.apiConfig.errorHandler(request, res, error)
     }
 
     if( process.env.NODE_ENV !== 'production' ) {
@@ -92,7 +92,10 @@ export const safeHandle = (
     }
 
     error.httpCode ??= 500
-    res.writeHead(error.httpCode)
+    res.writeHead(error.httpCode, {
+      'content-type': 'application/json'
+    })
+
     res.end(response)
   }
 }
@@ -252,12 +255,20 @@ export const fileDownload = async (
     parentContext
   })
 
-  const [hash, options] = request.fragments
-  const { filename, content, mime } = await (unsafe(await getFunction('file', 'download')))(hash, context)
+  const [ hash, ...options ] = request.fragments
 
-  const has = (opt: string) => options?.split('/').includes(opt)
+  const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
+  if( isLeft(fileEither) ) {
+    const error = unwrapEither(fileEither)
+    return error
+  }
 
-  // return h.response(content)
-  //   .header('content-type', mime)
-  //   .header('content-disposition', `${has('download') ? 'attachment; ' : ''}filename=${filename}`)
+  const { filename, content, mime } = unwrapEither(fileEither) as any
+
+  response.writeHead(200, {
+    'content-type': mime,
+    'content-disposition': `${options.includes('download') ? 'attachment; ' : ''}filename=${filename}`
+  })
+
+  return content
 }

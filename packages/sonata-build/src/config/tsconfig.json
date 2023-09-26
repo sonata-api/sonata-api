@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "noEmitOnError": true,
-    "target": "es2017",
+    "target": "esnext",
     "module": "commonjs",
     "skipLibCheck": true,
     "resolveJsonModule": true,

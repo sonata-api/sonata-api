@@ -1,4 +1,4 @@
-import { defineServerOptions } from '@sonata-api/http'
+import { defineServerOptions, cors } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, type ApiConfig } from '@sonata-api/api'
@@ -25,6 +25,10 @@ export const dryInit = async (_apiConfig?: ApiConfig) => {
   const serverOptions = defineServerOptions()
 
   const server = registerServer(serverOptions, (req, res) => {
+    if( cors(req, res) === null ) {
+      return
+    }
+
     registerRoutes(req, res, context)
   })
 

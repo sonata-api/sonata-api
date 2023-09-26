@@ -1,4 +1,5 @@
 import type { AccessControl } from '@sonata-api/access-control'
+import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { FunctionPath } from './resource'
 
 type User = {
@@ -31,6 +32,10 @@ export type ApiConfig = {
   logSuccessfulAuthentications?: boolean
   tokenUserProperties?: Array<string>
 
-  errorHandler?: <TError extends Error>(error?: TError) => any|Promise<any>
+  errorHandler?: <TError extends Error>(
+    req: MatchedRequest,
+    res: GenericResponse,
+    error?: TError
+  ) => any|Promise<any>
 }
 // #endregion ApiConfig

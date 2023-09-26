@@ -9,12 +9,13 @@ export type RequestMethod =
   | 'POST'
   | 'PUT'
   | 'DELETE'
+  | 'OPTIONS'
   | 'TRACE'
   | 'SEARCH'
 
 export type GenericRequest = {
   url: string
-  method: string
+  method: RequestMethod
   headers: Record<string, any>
   body?: string
   payload: Record<string, any>
@@ -22,9 +23,10 @@ export type GenericRequest = {
 
 export type GenericResponse = {
   headersSent?: boolean
+  writableEnded?: boolean
   setHeader: (header: string, value: string) => void
-  writeHead: (status: number) => void
-  end: (content: any) => void
+  writeHead: (status: number, headers?: Record<string, any>) => void
+  end: (content?: any) => void
 }
 
 export type MatchedRequest = NonNullable<ReturnType<typeof matches>>
