@@ -41,6 +41,7 @@
     "@sonata-api/security": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*",
+    "@sonata-api/validation": "*",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^6.1.0"
   },

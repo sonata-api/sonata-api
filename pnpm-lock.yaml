@@ -81,6 +81,9 @@ importers:
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
+      '@sonata-api/validation':
+        specifier: '*'
+        version: link:../validation
       jsonwebtoken:
         specifier: ^8.5.1
         version: 8.5.1
@@ -288,6 +291,22 @@ importers:
     devDependencies:
       '@types/node':
         specifier: ^20.4.2
+        version: 20.7.0
+
+  packages/validation:
+    dependencies:
+      '@sonata-api/common':
+        specifier: '*'
+        version: link:../common
+      '@sonata-api/types':
+        specifier: '*'
+        version: link:../types
+      mongodb:
+        specifier: '*'
+        version: 6.1.0
+    devDependencies:
+      '@types/node':
+        specifier: ^20.6.5
         version: 20.7.0
 
 packages:

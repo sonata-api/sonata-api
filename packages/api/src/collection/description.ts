@@ -1,5 +1,5 @@
 import type { Description } from '@sonata-api/types'
-import type { Schema } from './schema.types'
+import type { Schema } from './schema'
 
 type PropertyDependent =
   | 'required'

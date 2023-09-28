@@ -12,8 +12,8 @@ import type {
 
 } from './types'
 
+import { validateFromDescription } from '@sonata-api/validation'
 import { getCollection } from './database'
-import { validateFromDescription } from './collection/validate'
 import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 

@@ -23,6 +23,9 @@
       ],
       "@sonata-api/http": [
         "../http/dist"
+      ],
+      "@sonata-api/validation": [
+        "../validation/dist"
       ]
     }
   },
