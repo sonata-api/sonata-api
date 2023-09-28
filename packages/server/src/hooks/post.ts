@@ -1,6 +1,6 @@
 import type { Context, ResourceType } from '@sonata-api/api'
 import type { MatchedRequest } from '@sonata-api/http'
-import { getResourceAsset } from '@sonata-api/api'
+import { getCollection } from '@sonata-api/api'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 
@@ -27,7 +27,7 @@ export const appendPagination = async (params: PostHookParams) => {
     : { result }
 
   if( Array.isArray(result) && resourceType === 'collection' ) {
-    const model = unsafe(await getResourceAsset(resourceName, 'model'))
+    const model = getCollection(resourceName)
     const accessControl = useAccessControl(context)
 
     const countPayload = unsafe(await accessControl.beforeRead(request.req.payload))

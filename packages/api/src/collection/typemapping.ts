@@ -1,4 +1,4 @@
-import { Types } from 'mongoose'
+import { ObjectId } from 'mongodb'
 import { Description, CollectionProperty } from '@sonata-api/types'
 
 export const getTypeConstructor = async (property: CollectionProperty, recurse: (description: Pick<Description, 'properties'>) => any): Promise<any> => {
@@ -10,7 +10,7 @@ export const getTypeConstructor = async (property: CollectionProperty, recurse: 
   if( property.$ref ) {
     return property.s$noId
       ? Object
-      : Types.ObjectId
+      : ObjectId
   }
 
   if( property.enum ) {

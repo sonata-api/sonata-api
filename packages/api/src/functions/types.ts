@@ -1,13 +1,11 @@
+import type { FilterOperators } from 'mongodb'
+
 export type UploadAuxProps = {
   parentId: string
-  propertyName: string
+  propertyName: Lowercase<string>
 }
 
-export type Filters<T> = Record<`$${string}`, any> & {
-  [P in keyof T]?: '_id' extends keyof T[P]
-    ? T[P] | Record<`$${string}`, any> | string
-    : T[P] | Record<`$${string}`, any>
-}
+export type Filters<TDocument> = FilterOperators<TDocument>
 
 export type What<T> = Record<`$${string}`, any> & {
   [P in keyof T]?: '_id' extends keyof T[P]

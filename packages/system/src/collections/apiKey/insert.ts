@@ -1,8 +1,8 @@
-import { signToken, type Context } from '@sonata-api/api'
+import { signToken, type Context, type WithId } from '@sonata-api/api'
 import { description, type ApiKey } from './description'
 
 type Props = {
-  what: Partial<ApiKey>
+  what: WithId<Partial<ApiKey>>
 }
 
 const insert = async (props: Props, context: Context<typeof description>) => {

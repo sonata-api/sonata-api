@@ -1,6 +1,5 @@
 import type { Description } from '@sonata-api/types'
 import type { Context, Collections, Algorithms } from '@sonata-api/api'
-import type { User } from '@sonata-api/system'
 import { left, right } from '@sonata-api/common'
 
 export type RateLimitingParams = {
@@ -14,15 +13,15 @@ export enum RateLimitingErrors {
   LimitReached = 'LIMIT_REACHED'
 }
 
-const getUser = (context: Context<any, Collections, Algorithms>) => {
+const getUser = <const TDescription extends Description>(context: Context<TDescription, Collections, Algorithms>) => {
   return context.models.user.findOne(
     { _id: context.token.user._id },
     { resources_usage: 1 }
-  ) as Promise<User>
+  )
 }
 
-export const limitRate = async <const T extends Description>(
-  context: Context<T, Collections, Algorithms>,
+export const limitRate = async <const TDescription extends Description>(
+  context: Context<TDescription, Collections, Algorithms>,
   params: RateLimitingParams
 ) => {
   let user: Awaited<ReturnType<typeof getUser>>
@@ -46,10 +45,10 @@ export const limitRate = async <const T extends Description>(
 
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
-    const entry = await context.models.resourceUsage.create({ hits: increment })
+    const entry = await context.models.resourceUsage.insertOne({ hits: increment })
     await context.models.user.updateOne(
       { _id: user._id },
-      { $set: { [`resources_usage.${context.functionPath}`]: entry._id }
+      { $set: { [`resources_usage.${context.functionPath}`]: entry.insertedId }
       }
     )
 

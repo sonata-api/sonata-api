@@ -1,4 +1,5 @@
-import { signToken, type Context } from '@sonata-api/api'
+import { compare as bcryptCompare } from 'bcrypt'
+import { signToken, type Context, type WithId } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 
@@ -28,12 +29,13 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
-  const { _password, ...leanUser } = await context.model
-    .findOne({ _id: user._id }, {}, { autopopulate: false })
-    .lean({
-      virtuals: true
-    })
+const getUser = async (user: Pick<WithId<User>, '_id'>, context: Context<typeof description>) => {
+  const leanUser = await context.model
+    .findOne({ _id: user._id })
+
+    if( !leanUser ) {
+      return
+    }
 
   const tokenContent = {
     user: {
@@ -117,11 +119,10 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
       email: 1,
       password: 1,
       active: 1
-    },
-    { autopopulate: false }
+    }
   )
 
-  if( !user || !await user.testPassword!(props.password) ) {
+  if( !user || !await bcryptCompare(props.password, user.password!) ) {
     return left(AuthenticationErrors.InvalidCredentials)
   }
 

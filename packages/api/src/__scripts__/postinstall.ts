@@ -6,7 +6,6 @@ const DTS_FILENAME = 'sonata-api.d.ts'
 const dts = `// this file will be overwritten
 import type { AssetType, ResourceErrors, Schema, Context as Context_ } from '@sonata-api/api'
 import type { Description } from '@sonata-api/types'
-import type { Model } from 'mongoose'
 import type { Either } from '@sonata-api/common'
 
 declare global {
@@ -37,14 +36,12 @@ declare global {
 declare module '@sonata-api/api' {
   export async function getResourceAsset<
     const ResourceName extends keyof Collections,
-    const AssetName extends (keyof Collections[ResourceName] & AssetType) | 'model',
+    const AssetName extends keyof Collections[ResourceName] & AssetType,
     ReturnedAsset=ResourceName extends keyof Collections
-        ? AssetName extends keyof Collections[ResourceName] | 'model'
-          ? AssetName extends 'model'
-            ? Model<Schema<Collections[ResourceName]['description']>>
-            : Collections[ResourceName][AssetName]
+        ? AssetName extends keyof Collections[ResourceName]
+          ? Collections[ResourceName][AssetName]
           : never
-          : never
+        : never
   >(
     resourceName: ResourceName,
     assetName: AssetName,

@@ -1,14 +1,16 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { Filters, Projection } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { normalizeProjection, fill } from '../collection/utils'
-import { LEAN_OPTIONS } from '../constants'
 
-export const get = <TDocument extends MongoDocument>() => async (payload: {
+export const get = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>,
   project?: Projection<TDocument>
-}, context: Context<any, Collections, Algorithms>) => {
+}, context: TContext extends Context<infer Description>
+    ? TContext
+    : never
+) => {
   const accessControl = useAccessControl(context)
 
   const {
@@ -19,7 +21,7 @@ export const get = <TDocument extends MongoDocument>() => async (payload: {
   const result = await context.model.findOne(
     filters,
     normalizeProjection(project, context.description)
-  ).lean(LEAN_OPTIONS)
+  )
 
   if( !result ) {
     return result

@@ -1,7 +1,6 @@
 import type { AccessControl } from '@sonata-api/access-control'
 import type { Description } from '@sonata-api/types'
 import type { SecurityPolicy } from '@sonata-api/security'
-import type { createModel } from '../collection/schema'
 
 export type ResourceBase = {
   security?: SecurityPolicy
@@ -12,7 +11,6 @@ export type ResourceBase = {
 export type CollectionStructure = ResourceBase & {
   item: any
   description: Description
-  model?: () => ReturnType<typeof createModel>
 }
 
 export type Collection = () => CollectionStructure|Promise<CollectionStructure>
@@ -25,6 +23,7 @@ export type AlgorithmStructure = ResourceBase & {
 export type Algorithm = () => AlgorithmStructure|Promise<AlgorithmStructure>
 // #endregion Algorithm
 
+export type Resource = CollectionStructure & AlgorithmStructure
 
 export type AssetType =
   keyof CollectionStructure

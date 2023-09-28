@@ -1,7 +1,7 @@
-import type { MongoDocument } from '../types'
+import type { OptionalId } from '../types'
 import * as collFunctions from '.'
 
-const getFunctions = <TDocument extends MongoDocument>() => ({
+const getFunctions = <TDocument extends OptionalId<any>>() => ({
   count: collFunctions.count<TDocument>(),
   get: collFunctions.get<TDocument>(),
   getAll: collFunctions.getAll<TDocument>(),
@@ -18,7 +18,7 @@ type SelectFunctions<
   ? K
   : keyof typeof collFunctions
 
-export const useFunctions = <TDocument extends MongoDocument>() => <TSelectedFunctions extends Array<keyof typeof collFunctions>>(
+export const useFunctions = <TDocument extends OptionalId<any>>() => <TSelectedFunctions extends Array<keyof typeof collFunctions>>(
   selectedFunctions?: TSelectedFunctions
 ): {
   [P in SelectFunctions<TSelectedFunctions>]: ReturnType<typeof getFunctions<TDocument>>[P]

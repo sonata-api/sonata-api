@@ -4,7 +4,7 @@ import { right, left, isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/com
 import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { DecodedToken, Context, ResourceType, } from '@sonata-api/api'
 
-import { Error as MongooseError } from 'mongoose'
+import { ObjectId } from 'mongodb'
 import { sanitizeRequest, prependPagination } from './hooks/pre'
 import { appendPagination } from './hooks/post'
 
@@ -30,6 +30,10 @@ export const getDecodedToken = async (request: MatchedRequest) => {
     const decodedToken: DecodedToken = request.req.headers.authorization
       ? await decodeToken(request.req.headers.authorization.split('Bearer ').pop() || '')
       : { user: {} }
+
+      if( decodedToken.user._id ) {
+        decodedToken.user._id = ObjectId(decodedToken.user._id)
+      }
 
     return right(decodedToken)
   } catch( e: any ) {
@@ -74,18 +78,18 @@ export const safeHandle = (
       }
     }
 
-    if( error instanceof MongooseError.ValidationError ) {
-      const errors = Object.values(error.errors)
-      response.error.validation = errors.reduce((a, error: any) => {
-        return {
-          ...a,
-          [error.path]: {
-            type: error.kind,
-            detail: null
-          },
-        }
-      }, {})
-    }
+    // if( error instanceof MongooseError.ValidationError ) {
+    //   const errors = Object.values(error.errors)
+    //   response.error.validation = errors.reduce((a, error: any) => {
+    //     return {
+    //       ...a,
+    //       [error.path]: {
+    //         type: error.kind,
+    //         detail: null
+    //       },
+    //     }
+    //   }, {})
+    // }
 
     if( request.req.headers['sec-fetch-mode'] === 'cors' ) {
       return response

@@ -1,14 +1,12 @@
 import { useFunctions } from '@sonata-api/api'
 import { description, File } from './description'
-import model from './model'
 import insert from './insert'
 import download from './download'
 import remove from './remove'
 
 export const file = () => ({
-  item: File,
+  item: {} as File,
   description,
-  model,
   functions: {
     ...useFunctions<typeof File>()([
       'get'

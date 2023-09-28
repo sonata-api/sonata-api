@@ -1,43 +1,44 @@
-import mongoose from 'mongoose'
-export { mongoose }
+import { MongoClient } from 'mongodb'
 
-export const options = {
-  timestamps: {
-    createdAt: 'created_at',
-    updatedAt: 'updated_at'
+let __database: ReturnType<MongoClient['db']> | undefined
+
+export const getDatabase = async () => {
+  if( !__database ) {
+    const mongodbUri = await (async () => {
+      const envUri = process.env.MONGODB_URI
+      if( !envUri ) {
+        console.warn(
+          `mongo URI wasn't supplied, fallbacking to memory storage (this means your data will only be alive during runtime)`
+        )
+
+        const { MongoMemoryServer } = require('mongodb-memory-server')
+        const mongod = await MongoMemoryServer.create()
+        return mongod.getUri()
+      }
+
+      return envUri
+    })()
+
+    const client = new MongoClient(mongodbUri)
+    __database = client.db()
   }
+
+  return __database
 }
 
-export type Connections = {
-  default: Awaited<ReturnType<typeof mongoose.connect>>
+export const getDatabaseSync = () => {
+  if( !__database ) {
+    throw new Error('getDatabaseSync() called with no active database')
+  }
+
+  return __database
 }
 
-const isDevelopment = process.env.NODE_ENV === 'development'
+export const getCollection = <TDocument extends Record<string, any>>(collectionName: string) => {
+  const pluralized = collectionName.endsWith('s')
+    ? `${collectionName}es`
+    : `${collectionName}s`
 
-mongoose.set('strictQuery', true)
-mongoose.set('bufferCommands', false)
-mongoose.set('debug', isDevelopment)
-
-export const connectDatabase = async () => {
-  const mongodbUri = await (async () => {
-    const envUri = process.env.MONGODB_URI
-    if( !envUri ) {
-      console.warn(
-        `mongo URI wasn't supplied, fallbacking to memory storage (this means your data will only be alive during runtime)`
-      )
-
-      const { MongoMemoryServer } = require('mongodb-memory-server')
-      const mongod = await MongoMemoryServer.create()
-      return mongod.getUri()
-    }
-
-    return envUri
-  })()
-
-  global.sonataapi__Connections ??= {
-    default: {}
-  } as Connections
-
-  const connection = global.sonataapi__Connections.default = await mongoose.connect(mongodbUri)
-  return connection
+  const db = getDatabaseSync()
+  return db.collection<TDocument>(pluralized)
 }

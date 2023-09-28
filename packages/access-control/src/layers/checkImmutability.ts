@@ -1,5 +1,6 @@
 import type { AccessControlLayerProps, ReadPayload, WritePayload } from './types'
 import type { Context } from '@sonata-api/api'
+import { ObjectId } from 'mongodb'
 import { left, right, isLeft } from '@sonata-api/common'
 import { ACErrors } from '../errors'
 
@@ -27,7 +28,7 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
     || (Array.isArray(description.immutable) && description.immutable.includes(propertyName) )
   )
 
-  const currentDocument = await context.model.findOne({ _id: parentId })
+  const currentDocument = await context.model.findOne({ _id: ObjectId(parentId) })
   if( !currentDocument ) {
     return left(ACErrors.ImmutabilityParentNotFound)
   }

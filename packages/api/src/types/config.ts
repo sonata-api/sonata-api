@@ -1,9 +1,10 @@
 import type { AccessControl } from '@sonata-api/access-control'
 import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { FunctionPath } from './resource'
+import type { ObjectId } from './database'
 
 type User = {
-  _id: string
+  _id: ObjectId
   roles: Array<string>
 }
 

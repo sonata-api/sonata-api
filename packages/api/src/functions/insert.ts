@@ -1,14 +1,16 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId, WithId } from '../types'
 import type { Projection, What } from './types'
-import { LEAN_OPTIONS } from '../constants'
 import { useAccessControl } from '@sonata-api/access-control'
 import { isError, unpack } from '@sonata-api/common'
 import { normalizeProjection, prepareInsert } from '../collection/utils'
 
-export const insert = <TDocument extends MongoDocument>() => async (payload: {
-  what: What<TDocument>,
+export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
+  what: What<WithId<TDocument>>,
   project?: Projection<TDocument>
-}, context: Context<any, Collections, Algorithms>) => {
+}, context: TContext extends Context<infer Description>
+  ? TContext
+  : never
+) => {
   const accessControl = useAccessControl(context)
 
   const queryEither = await accessControl.beforeWrite(payload)
@@ -23,20 +25,19 @@ export const insert = <TDocument extends MongoDocument>() => async (payload: {
   const readyWhat = prepareInsert(what, context.description)
 
   const projection = payload.project
-    && normalizeProjection(payload.project, context.description)
+    ? normalizeProjection(payload.project, context.description)
+    : {}
 
-  if( !_id ) {
-    const newDoc = await context.model.create(readyWhat)
-    return context.model.findOne({ _id: newDoc._id }, projection)
-    .lean(LEAN_OPTIONS)
-  }
+    if( !_id ) {
+      const newDoc = await context.model.insertOne(readyWhat)
+      return context.model.findOne({ _id: newDoc.insertedId }, projection)
+    }
 
-  const options = {
-    new: true,
-    runValidators: true,
-    projection
-  }
+    const options = {
+      new: true,
+      runValidators: true,
+      projection
+    }
 
-  return context.model.findOneAndUpdate({ _id }, readyWhat, options)
-    .lean(LEAN_OPTIONS) as Promise<TDocument>
+    return context.model.findOneAndUpdate({ _id }, readyWhat, options)
 }

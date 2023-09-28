@@ -23,8 +23,7 @@
     "dist"
   ],
   "dependencies": {
-    "dotenv": "^10.0.0",
-    "mongoose": "^7.3.1"
+    "dotenv": "^10.0.0"
   },
   "peerDependencies": {
     "@sonata-api/access-control": "*",
@@ -33,9 +32,13 @@
     "@sonata-api/http": "*",
     "@sonata-api/server": "*",
     "@sonata-api/system": "*",
-    "@sonata-api/types": "*"
+    "@sonata-api/types": "*",
+    "mongodb": "^6.1.0"
   },
   "optionalDependencies": {
     "@sonata-api/node-http": "*"
+  },
+  "devDependencies": {
+    "mongodb": "^6.1.0"
   }
 }

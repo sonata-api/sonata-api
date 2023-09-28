@@ -41,14 +41,12 @@
     "@sonata-api/security": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^7.3.1",
-    "mongoose-autopopulate": "^1.0.1",
-    "mongoose-lean-getters": "^0.3.5",
-    "mongoose-lean-virtuals": "^0.9.1",
-    "sharp": "^0.31.3"
+    "jsonwebtoken": "^8.5.1"
   },
   "optionalDependencies": {
     "mongodb-memory-server": "^8.10.2"
+  },
+  "dependencies": {
+    "mongodb": "^6.1.0"
   }
 }

@@ -1,9 +1,9 @@
-import { type Context, useFunctions } from '@sonata-api/api'
+import { type Context, type WithId, useFunctions } from '@sonata-api/api'
 import * as bcrypt from 'bcrypt'
 import { description, type User } from './description'
 
 type Props = {
-  what: Partial<User>
+  what: WithId<Partial<User>>
 }
 
 const insert = async (props: Props, context: Context<typeof description>) => {

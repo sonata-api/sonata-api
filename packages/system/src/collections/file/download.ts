@@ -19,8 +19,10 @@ const download = async (_id: string, context: Context<typeof description>) => {
       return left(FileReadError.DocumentNotFound)
     }
 
-    const content = await readFile(file.absolute_path)
-    file.content = content
+    const content = await readFile(file.absolute_path!)
+    Object.assign(file, {
+      content
+    })
 
   } catch( e ) {
     return left(FileReadError.FileNotFound)

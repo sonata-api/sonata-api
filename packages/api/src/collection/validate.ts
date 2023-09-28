@@ -1,6 +1,6 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
-import { Types } from 'mongoose'
+import { ObjectId } from 'mongodb'
 import { getTypeConstructor } from './typemapping'
 
 export enum ValidationErrors {
@@ -33,7 +33,7 @@ const isValidReference = (property: CollectionProperty, value: any) => {
   }
 
   try {
-    new Types.ObjectId(value)
+    new ObjectId(value)
     return true
   } catch(e) {
     return false

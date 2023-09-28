@@ -4,7 +4,7 @@ import { left, isLeft } from '@sonata-api/common'
 import { description, type User } from './description'
 import bcrypt from 'bcrypt'
 
-type Props = Partial<User>
+type Props = Omit<User, 'roles'>
 
 const createAccount = async (props: Props, context: Context<typeof description>) => {
   const user = Object.assign({}, props)
@@ -58,13 +58,13 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     user.self_registered = true
   }
 
-  const newUser = await context.model.create(user)
-  const activationToken = await bcrypt.hash(newUser._id.toString(), 10)
-  const link = `${process.env.API_URL}/user/activate?u=${newUser._id}&t=${activationToken}`
+  const newUser = await context.model.insertOne(user as any)
+  const activationToken = await bcrypt.hash(newUser.insertedId.toString(), 10)
+  const link = `${process.env.API_URL}/user/activate?u=${newUser.insertedId.toString()}&t=${activationToken}`
 
   await sendTransactionalEmail({
-    receiverName: newUser.full_name,
-    receiverEmail: newUser.email,
+    receiverName: user.full_name,
+    receiverEmail: user.email,
     subject: 'Falta pouco para completar o seu cadastro',
     html: `<div>
       <div>Clique no link abaixo ou copie e cole na barra do navegador para ativar o seu usuário</div>

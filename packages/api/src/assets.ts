@@ -1,5 +1,14 @@
-import type { ResourceType, AssetType, Context, Collection, Algorithm, ResourceBase } from './types'
-import { unsafe, left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
+import type {
+  AssetType,
+  Context,
+  Collection,
+  Algorithm,
+  Resource,
+  ResourceType,
+  ResourceBase
+} from './types'
+
+import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
 
@@ -72,7 +81,7 @@ export const getResources = async () => {
 export const internalGetResourceAsset = async <
   ResourceName extends string,
   AssetName extends ResourceName extends keyof Collections
-    ? (keyof Collections[ResourceName] & AssetType) | 'model'
+    ? keyof Collections[ResourceName] & AssetType
     : ResourceName extends keyof Algorithms
       ? keyof Algorithms[ResourceName]
       : never,
@@ -83,84 +92,61 @@ export const internalGetResourceAsset = async <
   _resourceType?: TResourceType
 ) => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as Right<{}>
+    return {} as Right<Resource[AssetName]>
   }
 
   const resources = await getResources()
   const resourceType = _resourceType || 'collections'
 
-  const asset = (await resources[resourceType][resourceName]?.())?.[assetName as keyof ResourceBase] as ResourceName extends keyof Collections
-    ? AssetName extends keyof Collections[ResourceName]
-      ? Collections[ResourceName][AssetName]
-      : never
-    : never
+  const asset = (await resources[resourceType][resourceName]?.())?.[assetName as keyof ResourceBase] as Resource[AssetName]
 
-  const result = right(await (async () => {
-    switch( assetName ) {
-      case 'model': {
-        if( !asset ) {
-          const description = unsafe(await getResourceAsset(resourceName as string, 'description'), `${String(resourceName)} description`) as any
-          const { createModel } = await import('./collection/schema')
-          return createModel(description)
-        }
-
-        return typeof asset === 'function'
-          ? asset()
-          : asset
-      }
-
-      default:
-        return asset
-    }
-  })())
-
-  if( !result.value ) {
+  if( !asset ) {
     if( !(resourceName in resources[resourceType]) ) return left(ACErrors.ResourceNotFound)
-    if( !(assetName in resources[resourceType][resourceName]()) ) return left(ACErrors.AssetNotFound)
+    return left(ACErrors.AssetNotFound)
   }
 
-  return result as Exclude<typeof result, Right<never>>
+  return right(asset)
 }
 
 export const getResourceAsset = async <
-  ResourceName extends string,
-  AssetName extends ResourceName extends keyof Collections
-    ? (keyof Collections[ResourceName] & AssetType) | 'model'
-    : ResourceName extends keyof Algorithms
-      ? keyof Algorithms[ResourceName]
-      : string,
+  TResourceName extends string,
+  TAssetName extends TResourceName extends keyof Collections
+    ? keyof Collections[TResourceName] & AssetType
+    : TResourceName extends keyof Algorithms
+      ? keyof Algorithms[TResourceName]
+      : never,
   TResourceType extends `${ResourceType}s`
 >(
-  resourceName: ResourceName,
-  assetName: AssetName,
+  resourceName: TResourceName,
+  assetName: TAssetName,
   _resourceType?: TResourceType
 ) => {
-  const cached = __cachedAssets.assets[resourceName as string]
+  const cached = __cachedAssets.assets[resourceName]
   if( cached?.[assetName] ) {
-    return cached[assetName] as ResourceName extends keyof Collections
-      ? AssetName extends keyof Collections[ResourceName]
-        ? Exclude<Collections[ResourceName][AssetName], unknown>
-        : never
-      : never
+    return right(cached[assetName] as NonNullable<Resource[TAssetName]>)
   }
 
-  const asset = await internalGetResourceAsset(resourceName, assetName as any, _resourceType)
+  const assetEither = await internalGetResourceAsset(resourceName, assetName as any, _resourceType)
+  if( isLeft(assetEither) ) {
+    return assetEither
+  }
 
+  const asset = unwrapEither(assetEither) as NonNullable<Resource[TAssetName]>
   __cachedAssets.assets[resourceName as string] ??= {}
   __cachedAssets.assets[resourceName as string][assetName] = asset
 
-  return asset
+  return right(asset)
 }
 
 export const get = internalGetResourceAsset
 
 export const getFunction = async <
-  ResourceName extends string,
-  FunctionName extends string,
+  TResourceName extends string,
+  TFunctionName extends string,
   TResourceType extends `${ResourceType}s`
 >(
-  resourceName: ResourceName,
-  functionName: FunctionName,
+  resourceName: TResourceName,
+  functionName: TFunctionName,
   acProfile?: UserACProfile,
   _resourceType?: TResourceType
 ) => {

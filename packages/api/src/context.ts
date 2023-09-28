@@ -1,6 +1,7 @@
 import type { Description } from '@sonata-api/types'
 import type { AccessControl } from '@sonata-api/access-control'
 import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
+import type { Collection } from 'mongodb'
 import type { Schema } from './collection'
 import type {
   FunctionPath,
@@ -11,13 +12,13 @@ import type {
 
 } from './types'
 
-import mongoose, { type Model } from 'mongoose'
+import { getCollection } from './database'
 import { validateFromDescription } from './collection/validate'
 import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
 type CollectionModel<TDescription extends Description> =
-  Model<Schema<TDescription>>
+  Collection<Schema<TDescription>>
 
 type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
@@ -44,6 +45,7 @@ export type Context<
   | 'collection'
   | 'collections'
   | 'accessControl'
+  | 'model'
 > & {
   description: TDescription
   model: CollectionModel<TDescription>
@@ -84,8 +86,10 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
   const context = {
     resourceName,
     accessControl,
-    description: {} as Description | null,
-    model: (resourceName && resourceType === 'collection') && unsafe(await getResourceAsset(resourceName as any, 'model'), resourceName),
+    description: {},
+    model: resourceName && resourceType === 'collection'
+      ? getCollection(resourceName)
+      : {},
     collection: (resourceName && resourceType === 'collection') && await collections[resourceName](),
     algorithms: new Proxy<Algorithms>({}, {
       get: <TResourceName extends keyof typeof algorithms>(_: unknown, resourceName: TResourceName) => {
@@ -99,14 +103,13 @@ export const internalCreateContext = async(options?: Pick<ContextOptions,
     }),
     models: new Proxy<Models>({} as Models, {
       get: (_, key: keyof Collections) => {
-        return mongoose.models[String(key)]
+        return getCollection(key)
       }
     }),
 
     validate: validateFromDescription,
     log: async (message: string, details?: any) => {
-      const LogModel = unsafe(await getResourceAsset('log', 'model'))
-      return LogModel.create({
+      return getCollection('log').insertOne({
         message,
         details,
         context: resourceName,

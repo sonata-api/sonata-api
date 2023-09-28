@@ -35,7 +35,6 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
 
     const {
       $id: collectionName,
-      strict,
       ...aliasedCollection
 
     } = aliasedCollDescription

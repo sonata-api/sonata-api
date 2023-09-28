@@ -12,9 +12,16 @@ import {
 } from './layers'
 
 const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() => async <
+  TContext,
   TFunction extends AccessControlLayer<any, any, any>|undefined,
   TProps extends AccessControlLayerProps<TPayload>
->(context: Context<any, any, any>, _props: TProps, ...functions: TFunction[]) => {
+>(
+  context: TContext extends Context<infer _Description>
+    ? TContext
+    : never,
+  _props: TProps,
+  functions: TFunction[]
+) => {
   const props = Object.assign({ filters: {} }, _props)
 
   for( const fn of functions ) {
@@ -66,12 +73,12 @@ export const useAccessControl = <
       payload: newPayload
     }
 
-    return chainFunctions<Payload>()(
+    return chainFunctions<Required<Payload>>()(
       context,
-      props as any,
-      (accessControl.layers?.read && context.token) && accessControl.layers.read,
-      checkOwnershipRead
-    )
+      props as any, [
+        (accessControl.layers?.read && context.token) && accessControl.layers.read,
+        checkOwnershipRead
+    ])
   }
 
   const beforeWrite = async <const Payload extends Partial<WritePayload>>(payload?: Payload) => {
@@ -82,11 +89,11 @@ export const useAccessControl = <
 
     return chainFunctions<Payload>()(
       context,
-      props,
-      (accessControl.layers?.write && context.token) && accessControl.layers.write,
-      checkOwnershipWrite,
-      checkImmutability
-    )
+      props, [
+        (accessControl.layers?.write && context.token) && accessControl.layers.write,
+        checkOwnershipWrite,
+        checkImmutability
+    ])
   }
 
   return {

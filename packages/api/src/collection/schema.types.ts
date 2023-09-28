@@ -1,10 +1,10 @@
 import type { JsonSchema } from '@sonata-api/types'
-import type { MongoDocument, Reference } from '../types'
+import type { ObjectId } from '../types'
 
 export type Schema<T extends JsonSchema> = CaseOwned<T>
 
 type Owned = {
-  owner?: Reference
+  owner?: ObjectId
 }
 
 type TestType<T> = T & Record<string, any>
@@ -17,10 +17,10 @@ type MapType<T> = T extends TestType<{ format: 'date'|'date-time' }>
   ? Schema<T & { $id: '' }> : T extends TestType<{ type: 'object' }>
   ? object      : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ $ref: string }>
-  ? Reference   : never
+  ? ObjectId    : never
 
 type CaseReference<T> = T extends { $id: string }
-  ? Reference
+  ? ObjectId
   : T extends TestType<{ type: 'array', items: { properties: any } }>
     ? Array<MapType<T['items']>>
     : T extends TestType<{ type: 'array', items: infer K }>
@@ -59,7 +59,7 @@ type MapTypes<
   S extends JsonSchema,
   F=S['properties'],
   ExplicitlyRequired=S['required']
-> = MongoDocument &
+> = 
   { [P in OptionalProperties<F, ExplicitlyRequired>]?: Type<F[P]> } &
   { -readonly [P in RequiredProperties<F, ExplicitlyRequired>]: Type<F[P]> } &
   { readonly [P in ReadonlyProperties<F>]?: Type<F[P]> }

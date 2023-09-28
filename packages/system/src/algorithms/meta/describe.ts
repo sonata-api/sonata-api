@@ -1,5 +1,5 @@
 import type { Description } from '@sonata-api/types'
-import { type Context, type Collection, getResources, getResourceAsset, preloadDescription } from '@sonata-api/api'
+import { type Context, type Collection, getResources, preloadDescription } from '@sonata-api/api'
 import { serialize } from '@sonata-api/common'
 
 type Props = {
@@ -19,8 +19,6 @@ const describe = async (props: Props, context: Context): Promise<any> => {
   for( const collection of collections ) {
     const { description: rawDescription } = await collection()
     const description = await preloadDescription(rawDescription)
-    await getResourceAsset(description.$id as any, 'model')
-
     descriptions[description.$id] = description
   }
 
@@ -41,10 +39,6 @@ const describe = async (props: Props, context: Context): Promise<any> => {
 
   context.response.setHeader('content-type', 'application/bson')
   return context.response.end(serialize(result))
-
-  // return context.
-  //   .response(serialize(result))
-  //   .header('content-type', 'application/bson')
 }
 
 export default describe

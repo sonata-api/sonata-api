@@ -1,15 +1,18 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
 
-export const removeAll = <TDocument extends MongoDocument>() => (payload: {
+export const removeAll = <TDocument extends OptionalId<any>>() => <TContext>(payload: {
   filters: Filters<TDocument>
-}, context: Context<any, Collections, Algorithms>) => {
+}, context: TContext extends Context<infer Description>
+  ? TContext
+  : never
+) => {
   const filters = {
     ...payload.filters,
-    _id: { $in: payload.filters._id }
+    _id: {
+      $in: payload.filters._id
+    }
   }
 
-  return context.model.deleteMany(filters, {
-    strict: 'throw'
-  }) as unknown
+  return context.model.deleteMany(filters as any)
 }

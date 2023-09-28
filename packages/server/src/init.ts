@@ -3,7 +3,7 @@ import { defineServerOptions, cors, makeRouter } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, type ApiConfig } from '@sonata-api/api'
-import { connectDatabase } from '@sonata-api/api'
+import { getDatabase } from '@sonata-api/api'
 import { defaultApiConfig } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
@@ -48,7 +48,7 @@ export const dryInit = async (
 
 // #region initWithDatabase
 export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
-  await connectDatabase()
+  await getDatabase()
   return dryInit(...args)
 }
 // #endregion initWithDatabase

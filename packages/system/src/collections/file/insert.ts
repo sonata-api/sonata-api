@@ -1,10 +1,10 @@
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
-import { type Context, useFunctions } from '@sonata-api/api'
+import { type Context, type WithId, useFunctions } from '@sonata-api/api'
 import { description, type File } from './description'
 
 type Props = {
-  what: { content: string } & Pick<File,
+  what: { content: string } & Pick<WithId<File>,
     '_id'
     | 'filename'
     | 'owner'

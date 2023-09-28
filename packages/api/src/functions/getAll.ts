@@ -1,17 +1,20 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
-import { LEAN_OPTIONS, DEFAULT_SORT } from '../constants'
+import { DEFAULT_SORT } from '../constants'
 import { normalizeProjection, fill } from '../collection/utils'
 
-export const getAll = <TDocument extends MongoDocument>() => async (payload: {
+export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>
   project?: Projection<TDocument>
   offset?: number
   limit?: number
   sort?: QuerySort<TDocument>
-}, context: Context<any, Collections, Algorithms>) => {
+}, context: TContext extends Context<infer Description>
+  ? TContext
+  : never
+) => {
   const accessControl = useAccessControl(context)
 
   const entries = Object.entries(payload.filters || {})
@@ -39,7 +42,7 @@ export const getAll = <TDocument extends MongoDocument>() => async (payload: {
     .sort(sort)
     .skip(offset)
     .limit(limit)
-    .lean(LEAN_OPTIONS) as Array<TDocument>
+    .toArray()
 
   return result.map((result) => fill(result, context.description))
 }

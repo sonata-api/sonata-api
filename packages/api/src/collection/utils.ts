@@ -1,5 +1,5 @@
 import type { Description } from '@sonata-api/types'
-import type { MongoDocument } from '../types'
+import type { OptionalId } from '../types'
 import { freshItem } from '@sonata-api/common'
 
 export const normalizeProjection = <T>(
@@ -26,8 +26,8 @@ export const normalizeProjection = <T>(
   }, {})
 }
 
-export const fill = <T extends MongoDocument>(
-  item: T & Record<string, any>,
+export const fill = <TDocument extends OptionalId<any>>(
+  item: TDocument & Record<string, any>,
   description: Pick<Description, 'properties' | 'freshItem'>
 ) => {
   return Object.assign(freshItem(description), item)

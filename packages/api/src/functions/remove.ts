@@ -1,14 +1,15 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
 
-export const remove = <TDocument extends MongoDocument>() => (payload: {
+export const remove = <TDocument extends OptionalId<any>>() => <TContext>(payload: {
   filters: Filters<TDocument>
-}, context: Context<any, Collections, Algorithms>) => {
+}, context: TContext extends Context<infer Description>
+  ? TContext
+  : never
+) => {
   if( !payload.filters._id ) {
     throw new Error('you must pass an _id as filter')
   }
 
-  return context.model.findOneAndDelete(payload.filters, {
-    strict: 'throw'
-  })
+  return context.model.findOneAndDelete(payload.filters)
 }

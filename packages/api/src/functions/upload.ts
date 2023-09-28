@@ -1,11 +1,14 @@
-import type { Context, MongoDocument } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { UploadAuxProps } from './types'
+import { ObjectId } from 'mongodb'
 import { checkImmutability } from '@sonata-api/access-control'
 import { createContext } from '../context'
 
-export const upload = <_TDocument extends MongoDocument>() => async (
+export const upload = <_TDocument extends OptionalId<any>>() => async <TContext>(
   payload: UploadAuxProps & { what: { _id?: string } },
-  context: Context<any, Collections, Algorithms>
+  context: TContext extends Context<infer Description>
+    ? TContext
+    : never
 ) => {
   const {
     propertyName,
@@ -33,7 +36,7 @@ export const upload = <_TDocument extends MongoDocument>() => async (
     : { $set: { [propertyName]: file._id } }
 
   await context.model.updateOne(
-    { _id: parentId },
+    { _id: ObjectId(parentId) },
     insertPayload
   )
 
