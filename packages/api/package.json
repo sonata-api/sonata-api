@@ -41,12 +41,10 @@
     "@sonata-api/security": "*",
     "@sonata-api/system": "*",
     "@sonata-api/types": "*",
-    "jsonwebtoken": "^8.5.1"
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^6.1.0"
   },
   "optionalDependencies": {
     "mongodb-memory-server": "^8.10.2"
-  },
-  "dependencies": {
-    "mongodb": "^6.1.0"
   }
 }
