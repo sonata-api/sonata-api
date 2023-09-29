@@ -1,9 +1,8 @@
 import type { Context, OptionalId, WithId } from '../types'
 import type { Filters, Projection } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
-import { traverseReferences } from '@sonata-api/validation'
 import { unsafe } from '@sonata-api/common'
-import { normalizeProjection, fill } from '../collection/utils'
+import { traverseReferences, normalizeProjection, fill } from '../collection'
 
 export const get = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>,

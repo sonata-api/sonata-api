@@ -1,9 +1,8 @@
 import type { Context, OptionalId, WithId } from '../types'
 import type { Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
-import { traverseReferences } from '@sonata-api/validation'
 import { isError, unpack } from '@sonata-api/common'
-import { normalizeProjection, prepareInsert } from '../collection/utils'
+import { traverseReferences, normalizeProjection, prepareInsert } from '../collection'
 
 export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   what: What<WithId<TDocument>>,

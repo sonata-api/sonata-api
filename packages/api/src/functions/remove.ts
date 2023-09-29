@@ -1,5 +1,6 @@
 import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
+import { traverseReferences } from '../collection'
 
 export const remove = <TDocument extends OptionalId<any>>() => <TContext>(payload: {
   filters: Filters<TDocument>
@@ -11,5 +12,6 @@ export const remove = <TDocument extends OptionalId<any>>() => <TContext>(payloa
     throw new Error('you must pass an _id as filter')
   }
 
-  return context.model.findOneAndDelete(payload.filters)
+
+  return context.model.findOneAndDelete(traverseReferences(payload.filters, context.description))
 }

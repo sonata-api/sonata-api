@@ -36,7 +36,7 @@ export const upload = <_TDocument extends OptionalId<any>>() => async <TContext>
     : { $set: { [propertyName]: file._id } }
 
   await context.model.updateOne(
-    { _id: ObjectId(parentId) },
+    { _id: new ObjectId(parentId) },
     insertPayload
   )
 

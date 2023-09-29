@@ -1,5 +1,6 @@
 import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
+import { traverseReferences } from '../collection'
 
 export const removeAll = <TDocument extends OptionalId<any>>() => <TContext>(payload: {
   filters: Filters<TDocument>
@@ -14,5 +15,5 @@ export const removeAll = <TDocument extends OptionalId<any>>() => <TContext>(pay
     }
   }
 
-  return context.model.deleteMany(filters as any)
+  return context.model.deleteMany(traverseReferences(filters as any, context.description))
 }

@@ -3,7 +3,7 @@ import type { Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { DEFAULT_SORT } from '../constants'
-import { normalizeProjection, fill } from '../collection/utils'
+import { traverseReferences, normalizeProjection, fill } from '../collection'
 
 export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>
@@ -38,7 +38,10 @@ export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(
 
   } = query
 
-  const result = await context.model.find(query.filters, normalizeProjection(project, context.description))
+  const result = await context.model.find(
+    traverseReferences(query.filters, context.description),
+    normalizeProjection(project, context.description)
+  )
     .sort(sort)
     .skip(offset)
     .limit(limit)
