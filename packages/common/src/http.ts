@@ -25,7 +25,7 @@ export const request = async <Return=any>(
         error?: any
       }
 
-      if( data.error ) {
+      if( data.error && data.error instanceof Object ) {
         const error = new Error(data.error.message)
         Object.assign(error, data.error)
         throw error

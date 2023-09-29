@@ -22,10 +22,6 @@ export const appendPagination = async (params: PostHookParams) => {
     resourceType
   } = params
 
-  const response = result?._tag
-    ? result
-    : { result }
-
   if( Array.isArray(result) && resourceType === 'collection' ) {
     const model = getCollection(resourceName)
     const accessControl = useAccessControl(context)
@@ -37,16 +33,17 @@ export const appendPagination = async (params: PostHookParams) => {
       ? request.req.payload.limit
       : Number(process.env.PAGINATION_LIMIT || 35)
 
-      Object.assign(response, {
-        pagination: {
-          recordsCount: result.length,
-          recordsTotal,
-          offset: request.req.payload.offset || 0,
-          limit
-        }
-      })
+    return {
+      data: result,
+      pagination: {
+        recordsCount: result.length,
+        recordsTotal,
+        offset: request.req.payload.offset || 0,
+        limit
+      }
+    }
   }
 
-  return response
+  return result
 }
 

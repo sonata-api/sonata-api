@@ -1,6 +1,5 @@
-import type { Description, CollectionProperty } from '@sonata-api/types'
+import type { Description } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
-import { ObjectId } from 'mongodb'
 import { getTypeConstructor } from './typemapping'
 
 export enum ValidationErrors {
@@ -14,7 +13,6 @@ export type ValidateOptions<TDescription extends Omit<Description, '$id'>> = {
   throwOnError?: boolean
 }
 
-
 export type DetailedErrors = Record<string, {
   type: 'extraneous'
   | 'missing'
@@ -27,25 +25,12 @@ export type DetailedErrors = Record<string, {
   }
 }>
 
-const isValidReference = (property: CollectionProperty, value: any) => {
-  if( !property.s$isReference ) {
-    return false
-  }
-
-  try {
-    new ObjectId(value)
-    return true
-  } catch(e) {
-    return false
-  }
-}
-
 export const validateFromDescription = async <
   const TDescription extends Omit<Description, '$id'>,
   const TWhat extends Record<string, any>
 >(
   description: TDescription,
-  what: TWhat,
+  what: TWhat | undefined,
   options?: ValidateOptions<TDescription>
 ) => {
   const { 
@@ -142,7 +127,6 @@ export const validateFromDescription = async <
     if(
       actualConstructor !== expectedConstructor
       && !(Array.isArray(expectedConstructor) && actualConstructor === Array)
-      && !(isValidReference(property, value))
     ) {
       errors[prop] = {
         type: 'unmatching',
@@ -154,16 +138,13 @@ export const validateFromDescription = async <
     }
 
     if( Array.isArray(expectedConstructor) ) {
-      const extraneous = (value as Array<any>).find((v) => (
-        v.constructor !== expectedConstructor[0]
-          && !isValidReference(property, v)
-      ))
+      const extraneous = value.find((v: any) => (v.constructor !== expectedConstructor[0]))
 
       if( extraneous ) {
         errors[prop] = {
           type: 'extraneous_element',
           details: {
-            expected: getType(expectedConstructor[0]()),
+            expected: getType(new expectedConstructor[0]()),
             got: getType(extraneous)
           }
         }

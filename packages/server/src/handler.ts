@@ -32,7 +32,7 @@ export const getDecodedToken = async (request: MatchedRequest) => {
       : { user: {} }
 
       if( decodedToken.user._id ) {
-        decodedToken.user._id = ObjectId(decodedToken.user._id)
+        decodedToken.user._id = new ObjectId(decodedToken.user._id)
       }
 
     return right(decodedToken)
@@ -246,14 +246,6 @@ export const fileDownload = async (
   response: GenericResponse,
   parentContext: Context
 ) => {
-  const tokenEither = await getDecodedToken(request)
-  if( isLeft(tokenEither) ) {
-    return tokenEither
-  }
-
-  const token = unwrapEither(tokenEither)
-  parentContext.token = token
-
   const context = await createContext({
     resourceName: 'file',
     parentContext

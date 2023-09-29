@@ -4,11 +4,14 @@
     "outDir": "dist",
     "paths": {
       "@sonata-api/common": [
-        "../common/dist"
+        "../common/dist/cjs"
       ],
       "@sonata-api/types": [
         "../types/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "src"
+  ]
 }

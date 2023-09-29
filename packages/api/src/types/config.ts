@@ -25,10 +25,10 @@ export type ApiConfig = {
   group?: string
 
   allowSignup?: boolean
-  signupDefaults?: {
+  signupDefaults?: Partial<{
     roles: Array<string>
     active: boolean
-  }
+  }>
 
   logSuccessfulAuthentications?: boolean
   tokenUserProperties?: Array<string>

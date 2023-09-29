@@ -51,12 +51,19 @@ export const registerRoutes = async (res: GenericResponse, route: ReturnType<typ
 
   } catch( e ) {
     if( !res.headersSent ) {
+      if( process.env.NODE_ENV !== 'production' ) {
+        console.trace(e)
+      }
+
+      res.writeHead(500)
+    }
+
+    if( !res.writableEnded ) {
       const error = left({
         httpCode: 500,
         message: 'Internal server error'
       })
 
-      res.writeHead(500)
       res.end(error)
     }
   }

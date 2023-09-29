@@ -96,7 +96,7 @@ export const prepareInsert = (
     }
   }, description.defaults || {})
 
-  const what = typeof _id === 'string'
+  const what = _id
     ? prepareUpdate()
     : prepareCreate()
 

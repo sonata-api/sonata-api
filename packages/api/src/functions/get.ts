@@ -1,6 +1,7 @@
-import type { Context, OptionalId } from '../types'
+import type { Context, OptionalId, WithId } from '../types'
 import type { Filters, Projection } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
+import { traverseReferences } from '@sonata-api/validation'
 import { unsafe } from '@sonata-api/common'
 import { normalizeProjection, fill } from '../collection/utils'
 
@@ -19,13 +20,13 @@ export const get = <TDocument extends OptionalId<any>>() => async <TContext>(pay
   } = unsafe(await accessControl.beforeRead(payload))
 
   const result = await context.model.findOne(
-    filters,
+    traverseReferences(filters, context.description),
     normalizeProjection(project, context.description)
   )
 
   if( !result ) {
-    return result
+    return null
   }
 
-  return fill(result, context.description)
+  return fill(result, context.description) as WithId<TDocument>
 }

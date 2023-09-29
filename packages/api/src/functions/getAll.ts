@@ -1,4 +1,4 @@
-import type { Context, OptionalId } from '../types'
+import type { Context, OptionalId, WithId } from '../types'
 import type { Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
@@ -44,5 +44,7 @@ export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(
     .limit(limit)
     .toArray()
 
-  return result.map((result) => fill(result, context.description))
+  return result.map((result) => {
+    return fill(result, context.description) as WithId<TDocument>
+  })
 }

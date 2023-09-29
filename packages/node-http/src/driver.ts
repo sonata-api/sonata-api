@@ -58,7 +58,11 @@ export const abstractResponse = (response: http.ServerResponse): GenericResponse
         return end.bind(response)(JSON.stringify(value))
       }
 
-      return end.bind(response)(value)
+      const endVal = value instanceof Buffer
+        ? value
+        : String(value)
+
+      return end.bind(response)(endVal)
     }
   })
 }

@@ -1,6 +1,7 @@
 import type { Context, OptionalId, WithId } from '../types'
 import type { Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
+import { traverseReferences } from '@sonata-api/validation'
 import { isError, unpack } from '@sonata-api/common'
 import { normalizeProjection, prepareInsert } from '../collection/utils'
 
@@ -19,8 +20,12 @@ export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(
     throw new Error(error)
   }
 
-  const { what } = unpack(queryEither)
-  const { _id } = what
+  const query = unpack(queryEither)
+  const what = traverseReferences(query.what, context.description)
+
+  const _id = '_id' in what
+    ? what._id
+    : null
 
   const readyWhat = prepareInsert(what, context.description)
 
@@ -28,16 +33,13 @@ export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(
     ? normalizeProjection(payload.project, context.description)
     : {}
 
-    if( !_id ) {
-      const newDoc = await context.model.insertOne(readyWhat)
-      return context.model.findOne({ _id: newDoc.insertedId }, projection)
-    }
+  if( !_id ) {
+    const newDoc = await context.model.insertOne(readyWhat)
+    return context.model.findOne({ _id: newDoc.insertedId }, projection)
+  }
 
-    const options = {
-      new: true,
-      runValidators: true,
-      projection
-    }
-
-    return context.model.findOneAndUpdate({ _id }, readyWhat, options)
+  return context.model.findOneAndUpdate({ _id }, readyWhat, {
+    returnDocument: 'after',
+    projection
+  })
 }

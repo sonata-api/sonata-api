@@ -35,6 +35,9 @@
       ],
       "@sonata-api/types": [
         "../types/dist"
+      ],
+      "@sonata-api/validation": [
+        "../validation/dist"
       ]
     }
   }

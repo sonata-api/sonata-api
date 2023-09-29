@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongodb'
 import { Description, CollectionProperty } from '@sonata-api/types'
+import { ObjectId } from 'mongodb'
 
 export const getTypeConstructor = async (property: CollectionProperty, recurse: (description: Pick<Description, 'properties'>) => any): Promise<any> => {
   if( property.type === 'array' ) {
