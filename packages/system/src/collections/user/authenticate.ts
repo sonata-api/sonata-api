@@ -37,7 +37,7 @@ const getUser = async (user: Pick<WithId<User>, '_id'>, context: Context<typeof 
   }, context)
 
   if( !leanUser ) {
-    return
+    throw new Error()
   }
 
   const tokenContent = {
@@ -106,7 +106,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
         first_name: 'God',
         last_name: 'Mode',
         email: '',
-        roles: ['root'],
+        roles: ['root'] as string[],
         active: true,
       },
       token: {

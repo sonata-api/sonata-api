@@ -6,7 +6,6 @@ import activate from './activate'
 import insert from './insert'
 import createAccount from './createAccount'
 import getInfo from './getInfo'
-import ping from './ping'
 
 export const user = () => ({
   item: User,
@@ -24,6 +23,5 @@ export const user = () => ({
     createAccount,
     getInfo,
     activate,
-    ping,
   }
 })

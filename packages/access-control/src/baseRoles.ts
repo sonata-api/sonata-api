@@ -16,7 +16,6 @@ export const baseRoles = <const>{
         functions: [
           'insert',
           'authenticate',
-          'ping',
           'upload'
         ]
       }
@@ -26,8 +25,7 @@ export const baseRoles = <const>{
     capabilities: {
       meta: {
         functions: [
-          'describe',
-          'test'
+          'describe'
         ]
       },
       file: {
@@ -39,7 +37,6 @@ export const baseRoles = <const>{
         functions: [
           'createAccount',
           'authenticate',
-          'ping',
           'activate',
           'getInfo'
         ]

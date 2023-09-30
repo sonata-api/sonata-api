@@ -1,14 +1,47 @@
+import type { Context, Collection } from '@sonata-api/api'
 import type { Description } from '@sonata-api/types'
-import { type Context, type Collection, getResources, preloadDescription } from '@sonata-api/api'
-import { serialize } from '@sonata-api/common'
+import { createContext, getResources, preloadDescription } from '@sonata-api/api'
+import { serialize, isLeft, left, unwrapEither, Either } from '@sonata-api/common'
+import { default as authenticate } from '../../collections/user/authenticate'
 
 type Props = {
   collections?: Array<string>
   noSerialize?: boolean
   roles?: boolean
+  revalidate?: boolean
 }
 
-const describe = async (props: Props, context: Context): Promise<any> => {
+const describe = async (props: Props | undefined, context: Context): Promise<any> => {
+  const result = {} as {
+    descriptions: typeof descriptions
+    roles?: typeof context.accessControl.roles
+    user?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
+      ? Right extends { token: infer Token }
+        ? { token: Token }
+        : never
+      : never
+  }
+
+  if( props?.revalidate ) {
+    const authEither  = await authenticate({ revalidate: true }, await createContext({
+      resourceName: 'user',
+      parentContext: context
+    }) as any)
+
+    if( isLeft(authEither) ) {
+      const error = unwrapEither(authEither)
+      return left(error)
+    }
+
+    const auth = unwrapEither(authEither)
+    result.user = {
+      token: {
+        type: 'bearer',
+        token: auth.token.token
+      }
+    }
+  }
+
   const resources = await getResources()
 
   const collections = (props?.collections?.length
@@ -16,17 +49,12 @@ const describe = async (props: Props, context: Context): Promise<any> => {
     : Object.values(resources.collections)) as Array<Collection>
 
   const descriptions: Record<string, Description> = {}
+  result.descriptions = {}
+
   for( const collection of collections ) {
     const { description: rawDescription } = await collection()
     const description = await preloadDescription(rawDescription)
     descriptions[description.$id] = description
-  }
-
-  const result: {
-    descriptions: typeof descriptions
-    roles?: typeof context.accessControl.roles
-  } = {
-    descriptions,
   }
 
   if( props?.roles ) {
