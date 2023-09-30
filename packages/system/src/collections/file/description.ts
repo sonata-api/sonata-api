@@ -1,4 +1,12 @@
-import { defineDescription } from '@sonata-api/api'
+import { defineDescription, WithId } from '@sonata-api/api'
+
+const link = (_id: WithId<File>['_id']) => {
+  return `${process.env.API_URL}/file/${_id}`
+}
+
+const timestamp = (last_modified: Date) => last_modified
+  ? new Date(last_modified).getTime()
+  : 'fresh'
 
 export type File = typeof File
 
@@ -43,11 +51,15 @@ export const [File, description] = defineDescription({
     },
     link: {
       type: 'string',
-      s$meta: true
+      s$getter: (value: any) => {
+        return `${link(value._id)}/download/${timestamp(value.last_modified)}`
+      }
     },
     download_link: {
       type: 'string',
-      s$meta: true
+      s$getter: (value: any) => {
+        return `${link(value._id)}/download/${timestamp(value.last_modified)}`
+      }
     }
   },
   actions: {

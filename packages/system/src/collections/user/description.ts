@@ -33,11 +33,15 @@ export const [User, description] = defineDescription({
     },
     first_name: {
       type: 'string',
-      s$meta: true
+      s$getter: (document: any) => {
+        return `${document.full_name.split(' ')[0] || 'N/A'}`
+      }
     },
     last_name: {
       type: 'string',
-      s$meta: true
+      s$getter: (document: any) => {
+        return `${document.full_name.split(' ')[1]}`
+      }
     },
     active: {
       type: 'boolean',
@@ -85,8 +89,7 @@ export const [User, description] = defineDescription({
     },
     updated_at: {
       type: 'string',
-      format: 'date-time',
-      s$meta: true
+      format: 'date-time'
     },
   },
   presets: [

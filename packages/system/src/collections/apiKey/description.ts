@@ -30,7 +30,6 @@ export const [ApiKey, description] = defineDescription({
     created_at: {
       type: 'string',
       format: 'date-time',
-      s$meta: true
     }
   },
   icon: 'brackets-curly',

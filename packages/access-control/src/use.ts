@@ -29,7 +29,7 @@ const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() 
       continue
     }
 
-    const resultEither = await fn(context, props)
+    const resultEither = await fn(context as any, props)
     if( isLeft(resultEither) ) {
       return resultEither
     }

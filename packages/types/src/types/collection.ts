@@ -173,7 +173,6 @@ type CollectionPropertyAux = {
   placeholder?: string
   hint?: string
   translate?: boolean
-  meta?: boolean
 
   mask?: string|ReadonlyArray<string>
   form?: ReadonlyArray<string>
@@ -201,4 +200,6 @@ type CollectionPropertyAux = {
   select?: ReadonlyArray<string>
   maxDepth?: number
   inline?: boolean
+
+  getter?: (value: any) => any
 }

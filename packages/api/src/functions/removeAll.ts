@@ -1,8 +1,8 @@
 import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
-import { traverseReferences } from '../collection'
+import { traverseDocument } from '../collection'
 
-export const removeAll = <TDocument extends OptionalId<any>>() => <TContext>(payload: {
+export const removeAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
   filters: Filters<TDocument>
 }, context: TContext extends Context<infer Description>
   ? TContext
@@ -15,5 +15,7 @@ export const removeAll = <TDocument extends OptionalId<any>>() => <TContext>(pay
     }
   }
 
-  return context.model.deleteMany(traverseReferences(filters as any, context.description))
+  return context.model.deleteMany(await traverseDocument(filters as any, context.description, {
+    autoCast: true
+  }))
 }

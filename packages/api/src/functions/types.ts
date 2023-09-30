@@ -13,8 +13,19 @@ export type What<TDocument> = UpdateFilter<TDocument> & {
     : TDocument[P]
 }
 
-export type Projection<TDocument> =
-  | Array<keyof WithId<TDocument>>
-  | Record<keyof WithId<TDocument>, number>
+export type Projection<TDocument extends Record<Lowercase<string>, any>> =
+  keyof TDocument | '_id' extends infer DocumentProp
+    ? DocumentProp extends Lowercase<string>
+      ? 
+        | Array<DocumentProp>
+        | Record<DocumentProp, number>
+      : never
+    : never
 
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>
+
+export type Document<TDocument> = Pick<
+  TDocument,
+  Extract<keyof TDocument, Lowercase<string>>
+>
+

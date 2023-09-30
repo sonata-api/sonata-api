@@ -45,7 +45,10 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     return validationEither
   }
 
-  user.group = context.apiConfig.group
+  if( context.apiConfig.group ) {
+    user.group = context.apiConfig.group
+  }
+
   if( context.apiConfig.signupDefaults ) {
     Object.assign(user, context.apiConfig.signupDefaults)
   }

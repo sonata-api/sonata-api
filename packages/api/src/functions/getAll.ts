@@ -1,11 +1,11 @@
 import type { Context, OptionalId, WithId } from '../types'
-import type { Filters, Projection, QuerySort } from './types'
+import type { Document,Filters, Projection, QuerySort } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { DEFAULT_SORT } from '../constants'
-import { traverseReferences, normalizeProjection, fill } from '../collection'
+import { traverseDocument, normalizeProjection, fill } from '../collection'
 
-export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
+export const getAll = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>
   project?: Projection<TDocument>
   offset?: number
@@ -39,15 +39,24 @@ export const getAll = <TDocument extends OptionalId<any>>() => async <TContext>(
   } = query
 
   const result = await context.model.find(
-    traverseReferences(query.filters, context.description),
-    normalizeProjection(project, context.description)
+    await traverseDocument(query.filters, context.description, { autoCast: true }), {
+      projection: normalizeProjection(project, context.description)
+    }
   )
     .sort(sort)
     .skip(offset)
     .limit(limit)
     .toArray()
 
-  return result.map((result) => {
-    return fill(result, context.description) as WithId<TDocument>
-  })
+  const documents: typeof result = []
+  for( const document of result ) {
+    documents.push(
+      await traverseDocument(fill(document, context.description), context.description, {
+        getters: true,
+        fromProperties: true
+      }) as WithId<TDocument>
+    )
+  }
+
+  return documents
 }

@@ -2,26 +2,36 @@ import type { Description } from '@sonata-api/types'
 import type { OptionalId } from '../types'
 import { freshItem } from '@sonata-api/common'
 
-export const normalizeProjection = <T>(
-  projection: T,
-  description: Pick<Description, 'properties'>
+export const normalizeProjection = <
+  TDescription extends Pick<Description, 'properties'>,
+  TProjectedProperties extends (keyof TDescription['properties'])[] | Record<
+    keyof TDescription['properties'],
+    1|0
+  >
+>(
+  projection: TProjectedProperties,
+  description: TDescription
 ) => {
   if( !projection ) {
     return {}
   }
 
-  const target = Array.isArray(projection)
-    ? projection.map(prop => [prop, 1])
-    : Object.entries(projection)
+  const target: Array<any> = Array.isArray(projection)
+    ? projection
+    : Object.keys(projection)
 
-  return target.reduce((a, [key, value]) => {
+  if( target.length === 0 ) {
+    target.push(...Object.keys(description.properties))
+  }
+
+  return target.reduce((a, key) => {
     if( description.properties[key]?.s$hidden ) {
       return a
     }
 
     return {
       ...a,
-      [key]: value
+      [key]: 1
     }
   }, {})
 }

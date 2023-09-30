@@ -1,4 +1,8 @@
-type PipeOptions = {
+type Rest<T extends any[]> = T extends [infer _First, ...infer Tail]
+  ? Tail
+  : []
+
+export type PipeOptions = {
   returnFirst?: boolean | ((value: any) => boolean)
 }
 
@@ -7,10 +11,11 @@ export const pipe = <TFunction extends (...args: any) => any>(functions: TFuncti
     returnFirst
   } = options || {}
 
-  return async (value: Parameters<TFunction>[0]) => {
+  return async (value: Parameters<TFunction>[0], ...args: Rest<Parameters<TFunction>>) => {
     let ret: ReturnType<TFunction> = value
+
     for( const fn of functions ) {
-      ret = await fn(ret)
+      ret = await fn(ret, ...args)
       if( returnFirst && ret !== undefined ) {
         switch( typeof returnFirst ) {
           case 'function': {
@@ -25,22 +30,5 @@ export const pipe = <TFunction extends (...args: any) => any>(functions: TFuncti
     }
 
     return ret
-    // return functions.reduce(async (a, fn) => {
-    //   const lastRet = await a
-    //   if( returnFirst && lastRet !== undefined ) {
-    //     switch( typeof returnFirst ) {
-    //       case 'function': {
-    //         if( returnFirst(lastRet) ) {
-    //           return lastRet
-    //         }
-    //       }
-    //       default:
-    //         return lastRet
-    //     }
-    //   }
-
-    //   return fn(lastRet)
-
-    // }, value) as Promise<ReturnType<TFunction>>
   }
 }

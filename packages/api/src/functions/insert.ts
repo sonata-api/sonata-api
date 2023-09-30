@@ -1,10 +1,10 @@
 import type { Context, OptionalId, WithId } from '../types'
-import type { Projection, What } from './types'
+import type { Document, Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { isError, unpack } from '@sonata-api/common'
-import { traverseReferences, normalizeProjection, prepareInsert } from '../collection'
+import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
-export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
+export const insert = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
   what: What<WithId<TDocument>>,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
@@ -20,7 +20,11 @@ export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(
   }
 
   const query = unpack(queryEither)
-  const what = traverseReferences(query.what, context.description)
+  const what = await traverseDocument(query.what, context.description, {
+    autoCast: true
+  })
+
+  console.log(what)
 
   const _id = '_id' in what
     ? what._id
@@ -40,7 +44,11 @@ export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(
     })
 
     const newDoc = await context.model.insertOne(readyWhat)
-    return context.model.findOne({ _id: newDoc.insertedId }, projection)
+    const result = context.model.findOne({ _id: newDoc.insertedId }, projection)
+
+    return traverseDocument(result, context.description, {
+      autoCast: true
+    })
   }
 
   readyWhat.$set.updated_at = new Date()

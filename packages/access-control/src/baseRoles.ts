@@ -26,7 +26,8 @@ export const baseRoles = <const>{
     capabilities: {
       meta: {
         functions: [
-          'describe'
+          'describe',
+          'test'
         ]
       },
       file: {

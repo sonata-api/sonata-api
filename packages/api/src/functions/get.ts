@@ -1,10 +1,10 @@
 import type { Context, OptionalId, WithId } from '../types'
-import type { Filters, Projection } from './types'
+import type { Document, Filters, Projection } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
-import { traverseReferences, normalizeProjection, fill } from '../collection'
+import { traverseDocument, normalizeProjection, fill } from '../collection'
 
-export const get = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
+export const get = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
@@ -19,13 +19,20 @@ export const get = <TDocument extends OptionalId<any>>() => async <TContext>(pay
   } = unsafe(await accessControl.beforeRead(payload))
 
   const result = await context.model.findOne(
-    traverseReferences(filters, context.description),
-    normalizeProjection(project, context.description)
+    await traverseDocument(filters, context.description, { autoCast: true }), {
+      projection: normalizeProjection(project, context.description)
+    }
   )
 
   if( !result ) {
     return null
   }
 
-  return fill(result, context.description) as WithId<TDocument>
+  return fill(
+    await traverseDocument(result, context.description, {
+      getters: true,
+      fromProperties: true
+    }),
+    context.description
+  ) as WithId<TDocument>
 }
