@@ -20,6 +20,7 @@ export const COLLECTION_PRESETS = <const>[
   'delete',
   'deleteAll',
   'owned',
+  'timestamped',
   'toggleActive',
   'view',
 ]

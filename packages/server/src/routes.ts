@@ -10,13 +10,36 @@ import {
 
 } from './handler'
 
+export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Promise<any>) => {
+  try {
+    return cb()
+
+  } catch( e ) {
+    if( !res.headersSent ) {
+      if( process.env.NODE_ENV !== 'production' ) {
+        console.trace(e)
+      }
+
+      res.writeHead(500)
+    }
+
+    if( !res.writableEnded ) {
+      const error = left({
+        httpCode: 500,
+        message: 'Internal server error'
+      })
+
+      res.end(error)
+    }
+  }
+}
 
 export const registerRoutes = async (res: GenericResponse, route: ReturnType<typeof makeRouter>, context: Context) => {
   const defaultHandler = (fn: ReturnType<typeof regularVerb>) => {
     return (matchedRequest: MatchedRequest) => safeHandle(fn, context)(matchedRequest, res)
   }
 
-  try {
+  return wrapRouteExecution(res, async () => {
     const resultPipe = pipe([
       () => route('GET', '/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload)),
       () => route('GET', '/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get'))),
@@ -48,25 +71,7 @@ export const registerRoutes = async (res: GenericResponse, route: ReturnType<typ
     }
 
     return result
-
-  } catch( e ) {
-    if( !res.headersSent ) {
-      if( process.env.NODE_ENV !== 'production' ) {
-        console.trace(e)
-      }
-
-      res.writeHead(500)
-    }
-
-    if( !res.writableEnded ) {
-      const error = left({
-        httpCode: 500,
-        message: 'Internal server error'
-      })
-
-      res.end(error)
-    }
-  }
+  })
 
   //   {
   //     method: 'GET',

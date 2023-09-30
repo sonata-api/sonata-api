@@ -33,10 +33,17 @@ export const insert = <TDocument extends OptionalId<any>>() => async <TContext>(
     : {}
 
   if( !_id ) {
+    const now = new Date()
+    Object.assign(readyWhat, {
+      created_at: now,
+      updated_at: now,
+    })
+
     const newDoc = await context.model.insertOne(readyWhat)
     return context.model.findOne({ _id: newDoc.insertedId }, projection)
   }
 
+  readyWhat.$set.updated_at = new Date()
   return context.model.findOneAndUpdate({ _id }, readyWhat, {
     returnDocument: 'after',
     projection

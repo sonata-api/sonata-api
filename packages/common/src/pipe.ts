@@ -8,22 +8,39 @@ export const pipe = <TFunction extends (...args: any) => any>(functions: TFuncti
   } = options || {}
 
   return async (value: Parameters<TFunction>[0]) => {
-    return functions.reduce(async (a, fn) => {
-      const lastRet = await a
-      if( returnFirst && lastRet !== undefined ) {
+    let ret: ReturnType<TFunction> = value
+    for( const fn of functions ) {
+      ret = await fn(ret)
+      if( returnFirst && ret !== undefined ) {
         switch( typeof returnFirst ) {
           case 'function': {
-            if( returnFirst(lastRet) ) {
-              return lastRet
+            if( returnFirst(ret) ) {
+              return ret
             }
           }
           default:
-            return lastRet
+            return ret
         }
       }
+    }
 
-      return fn(lastRet)
+    return ret
+    // return functions.reduce(async (a, fn) => {
+    //   const lastRet = await a
+    //   if( returnFirst && lastRet !== undefined ) {
+    //     switch( typeof returnFirst ) {
+    //       case 'function': {
+    //         if( returnFirst(lastRet) ) {
+    //           return lastRet
+    //         }
+    //       }
+    //       default:
+    //         return lastRet
+    //     }
+    //   }
 
-    }, value) as Promise<ReturnType<TFunction>>
+    //   return fn(lastRet)
+
+    // }, value) as Promise<ReturnType<TFunction>>
   }
 }

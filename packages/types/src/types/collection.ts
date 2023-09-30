@@ -111,6 +111,7 @@ export type Description<TDescription extends Description=any> = {
 
   // modifiers
   owned?: boolean | 'always'
+  timestamps?: false
   immutable?: boolean|ReadonlyArray<string>
 
   // takes an array of something

@@ -66,7 +66,7 @@ export const safeHandle = (
       console.trace(error)
     }
 
-    const response: { error: any, validation?: any } = {
+    const response = {
       error: {
         name: error.name,
         code: error.code,
@@ -136,14 +136,12 @@ export const customVerbs = (resourceType: ResourceType) => async (
     resourceName
   })
 
-  await Promise.all([
-    prePipe({
-      request,
-      token,
-      response,
-      context
-    })
-  ])
+  await prePipe({
+    request,
+    token,
+    response,
+    context
+  })
 
   const fnEither = await getFunction(resourceName, functionName, token.user, `${resourceType}s`)
   if( isLeft(fnEither) ) {
@@ -199,14 +197,12 @@ export const regularVerb = (functionName: RegularVerb) => async (
     resourceName
   })
 
-  await Promise.all([
-    prePipe({
-      request,
-      token,
-      response,
-      context
-    })
-  ])
+  await prePipe({
+    request,
+    token,
+    response,
+    context
+  })
 
   const requestCopy = Object.assign({}, request)
 

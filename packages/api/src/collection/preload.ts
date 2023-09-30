@@ -48,6 +48,10 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
     presets.push('owned')
   }
 
+  if( description.timestamps !== false ) {
+    presets.push('timestamped')
+  }
+
   if( presets.length > 0 ) {
     const merge = presets?.reduce(
       (a, presetName: string) => applyPreset(a, presetName),
