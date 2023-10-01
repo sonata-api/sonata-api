@@ -24,8 +24,6 @@ export const insert = <TDocument extends Document<OptionalId<any>>>() => async <
     autoCast: true
   })
 
-  console.log(what)
-
   const _id = '_id' in what
     ? what._id
     : null

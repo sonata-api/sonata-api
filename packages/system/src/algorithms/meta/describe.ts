@@ -15,10 +15,8 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
   const result = {} as {
     descriptions: typeof descriptions
     roles?: typeof context.accessControl.roles
-    user?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
-      ? Right extends { token: infer Token }
-        ? { token: Token }
-        : never
+    auth?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
+      ? Right
       : never
   }
 
@@ -34,12 +32,7 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     }
 
     const auth = unwrapEither(authEither)
-    result.user = {
-      token: {
-        type: 'bearer',
-        token: auth.token.token
-      }
-    }
+    result.auth = auth
   }
 
   const resources = await getResources()
@@ -49,7 +42,7 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     : Object.values(resources.collections)) as Array<Collection>
 
   const descriptions: Record<string, Description> = {}
-  result.descriptions = {}
+  result.descriptions = descriptions
 
   for( const collection of collections ) {
     const { description: rawDescription } = await collection()

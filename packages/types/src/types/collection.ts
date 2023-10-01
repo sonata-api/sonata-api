@@ -191,7 +191,6 @@ type CollectionPropertyAux = {
   isFile?: boolean
   referencedCollection?: string
   preventPopulate?: boolean
-  noId?: boolean
   noForm?: boolean
 
   array?: boolean

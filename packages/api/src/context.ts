@@ -12,7 +12,7 @@ import type {
 
 } from './types'
 
-import { validateFromDescription } from '@sonata-api/validation'
+import { validate } from '@sonata-api/validation'
 import { getCollection } from './database'
 import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
@@ -107,7 +107,7 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
       }
     }),
 
-    validate: validateFromDescription,
+    validate,
     log: async (message: string, details?: any) => {
       return getCollection('log').insertOne({
         message,

@@ -1,12 +1,20 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { getReferencedCollection, pipe } from '@sonata-api/common'
+import { validateProperty } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
 
 export type TraverseOptions = {
   autoCast?: boolean
   getters?: boolean
+  validate?: boolean
   fromProperties?: boolean
-  pipe?: (value: any, target: any, property: CollectionProperty, options: TraverseOptions) => any
+  pipe?: (
+    value: any,
+    target: any,
+    propName: string,
+    property: CollectionProperty,
+    options: TraverseOptions
+  ) => any
 }
 
 const getProperty = (propertyName: string, parentProperty: CollectionProperty) => {
@@ -21,7 +29,7 @@ const getProperty = (propertyName: string, parentProperty: CollectionProperty) =
     || parentProperty.additionalProperties
 }
 
-const autoCast = (value: any, target: any, property: CollectionProperty, options: TraverseOptions): any => {
+const autoCast = (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): any => {
   switch( typeof value ) {
     case 'string': {
       return ObjectId.isValid(value) && getReferencedCollection(property)
@@ -31,7 +39,7 @@ const autoCast = (value: any, target: any, property: CollectionProperty, options
 
     case 'object': {
       if( Array.isArray(value) ) {
-        return value.map((v) => autoCast(v, target, property, options))
+        return value.map((v) => autoCast(v, target, propName, property, options))
       }
 
       if( value instanceof Object ) {
@@ -39,14 +47,22 @@ const autoCast = (value: any, target: any, property: CollectionProperty, options
       }
     }
   }
+
+  return value
 }
 
-const getters = (value: any, target: any, property: CollectionProperty): any => {
+const getters = (value: any, target: any, _propName: string, property: CollectionProperty) => {
   if( property.s$getter ) {
     return property.s$getter(target)
   }
 
   return value
+}
+
+const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
+  return validateProperty(propName as Lowercase<string>, value, property, {
+
+  })
 }
 
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
@@ -88,13 +104,13 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
         for( const [k, v] of Object.entries(value) ) {
           operatorEntries.push([
             k,
-            await options.pipe!(v, target, property, options)
+            await options.pipe!(v, target, key, property, options)
           ])
         }
 
         entries.push([
           key,
-          Object.entries(operatorEntries)
+          Object.fromEntries(operatorEntries)
         ])
         continue
       }
@@ -102,7 +118,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
     entries.push([
       key,
-      await options.pipe!(value, target, property, options)
+      await options.pipe!(value, target, key, property, options)
     ])
   }
 
@@ -121,6 +137,10 @@ export const traverseDocument = <const TWhat extends Record<string, any>>(
 
   if( options.getters ) {
     functions.push(getters)
+  }
+
+  if( options.validate ) {
+    functions.push(validate)
   }
 
   options.pipe = pipe(functions)

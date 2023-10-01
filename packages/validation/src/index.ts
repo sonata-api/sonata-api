@@ -1,2 +1,1 @@
-export * from './typemapping'
-export * from './validation'
+export * from './validate'
