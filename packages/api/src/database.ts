@@ -1,9 +1,9 @@
 import { MongoClient } from 'mongodb'
 
-let __database: ReturnType<MongoClient['db']> | undefined
+let dbMemo: ReturnType<MongoClient['db']> | undefined
 
 export const getDatabase = async () => {
-  if( !__database ) {
+  if( !dbMemo ) {
     const mongodbUri = await (async () => {
       const envUri = process.env.MONGODB_URI
       if( !envUri ) {
@@ -20,25 +20,29 @@ export const getDatabase = async () => {
     })()
 
     const client = new MongoClient(mongodbUri)
-    __database = client.db()
+    dbMemo = client.db()
   }
 
-  return __database
+  return dbMemo
 }
 
 export const getDatabaseSync = () => {
-  if( !__database ) {
+  if( !dbMemo ) {
     throw new Error('getDatabaseSync() called with no active database')
   }
 
-  return __database
+  return dbMemo
 }
 
-export const getCollection = <TDocument extends Record<string, any>>(collectionName: string) => {
+export const prepareCollectionName = (collectionName: string) => {
   const pluralized = collectionName.endsWith('s')
     ? `${collectionName}es`
     : `${collectionName}s`
 
+  return pluralized.toLowerCase()
+}
+
+export const getCollection = <TDocument extends Record<string, any>>(collectionName: string) => {
   const db = getDatabaseSync()
-  return db.collection<TDocument>(pluralized)
+  return db.collection<TDocument>(prepareCollectionName(collectionName))
 }

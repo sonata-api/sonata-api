@@ -2,14 +2,14 @@ import type { AccessControl, Role } from './types'
 import { getEntrypoint } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
 
-let __accessControl: AccessControl<any, any>|null = null
+let acMemo: AccessControl<any, any>|null = null
 
 const getAccessControl = async () => {
-  if ( !__accessControl ) {
-    __accessControl = (await getEntrypoint()).accessControl
+  if ( !acMemo ) {
+    acMemo = (await getEntrypoint()).accessControl
   }
 
-  return __accessControl!
+  return acMemo!
 }
 
 const applyInheritance = async (accessControl: AccessControl<any, any>, targetRole: Role<any, any>) => {

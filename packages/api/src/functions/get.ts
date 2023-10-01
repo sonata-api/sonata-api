@@ -1,10 +1,17 @@
 import type { Context, OptionalId, WithId } from '../types'
-import type { Document, Filters, Projection } from './types'
+import type { CollectionDocument, Filters, Projection } from './types'
+import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
-import { traverseDocument, normalizeProjection, fill } from '../collection'
+import {
+  traverseDocument,
+  normalizeProjection,
+  getReferences,
+  buildLookupPipeline,
+  fill
+} from '../collection'
 
-export const get = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
+export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
@@ -18,11 +25,22 @@ export const get = <TDocument extends Document<OptionalId<any>>>() => async <TCo
     project = {}
   } = unsafe(await accessControl.beforeRead(payload))
 
-  const result = await context.model.findOne(unsafe(
-    await traverseDocument(filters, context.description, { autoCast: true }), {
-      projection: normalizeProjection(project, context.description)
+  const pipeline: Document[] = []
+  const references = getReferences(context.description.properties, {
+    memoize: context.description.$id
+  })
+
+  pipeline.push({ $match: unsafe(await traverseDocument(filters, context.description, { autoCast: true })) })
+
+  const projection = normalizeProjection(project, context.description)
+  if( projection ) {
+    pipeline.push({ $project: projection })
+  }
+  pipeline.push(...buildLookupPipeline(references, {
+    memoize: context.description.$id
   }))
 
+  const result = await context.model.aggregate(pipeline).next()
   if( !result ) {
     return null
   }

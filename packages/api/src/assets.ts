@@ -12,7 +12,7 @@ import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/commo
 import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
 
-const __cachedResources: Awaited<ReturnType<typeof internalGetResources>> & {
+const resourcesMemo: Awaited<ReturnType<typeof internalGetResources>> & {
   _cached: boolean
 } = {
   _cached: false,
@@ -20,7 +20,7 @@ const __cachedResources: Awaited<ReturnType<typeof internalGetResources>> & {
   algorithms: {}
 }
 
-const __cachedAssets: {
+const assetsMemo: {
   assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetResourceAsset>>>> 
 } = {
   assets: {}
@@ -65,12 +65,12 @@ export const getAccessControl = async () => {
 }
 
 export const getResources = async () => {
-  if( __cachedResources._cached ) {
-    return __cachedResources
+  if( resourcesMemo._cached ) {
+    return resourcesMemo
   }
 
   const resources = await internalGetResources()
-  Object.assign(__cachedResources, {
+  Object.assign(resourcesMemo, {
     ...resources,
     _cached: true
   })
@@ -121,7 +121,7 @@ export const getResourceAsset = async <
   assetName: TAssetName,
   _resourceType?: TResourceType
 ) => {
-  const cached = __cachedAssets.assets[resourceName]
+  const cached = assetsMemo.assets[resourceName]
   if( cached?.[assetName] ) {
     return right(cached[assetName] as NonNullable<Resource[TAssetName]>)
   }
@@ -132,8 +132,8 @@ export const getResourceAsset = async <
   }
 
   const asset = unwrapEither(assetEither) as NonNullable<Resource[TAssetName]>
-  __cachedAssets.assets[resourceName as string] ??= {}
-  __cachedAssets.assets[resourceName as string][assetName] = asset
+  assetsMemo.assets[resourceName as string] ??= {}
+  assetsMemo.assets[resourceName as string][assetName] = asset
 
   return right(asset)
 }

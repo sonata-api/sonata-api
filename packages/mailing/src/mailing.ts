@@ -1,7 +1,7 @@
 import type { createTransport } from 'nodemailer'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 
-const __cached: {
+const memo: {
   transporter?: ReturnType<typeof createTransport>
 } = {}
 
@@ -20,12 +20,12 @@ export type TransactionalEmail = {
 
 export const getMailingTransporter = async () => {
   try {
-    if( __cached.transporter ) {
-      return right(__cached.transporter)
+    if( memo.transporter ) {
+      return right(memo.transporter)
     }
 
     const nodemailer = await import('nodemailer')
-    __cached.transporter = nodemailer.createTransport({
+    memo.transporter = nodemailer.createTransport({
       host: process.env.MAILING_SMTP_HOST,
       port: Number(process.env.MAILING_SMTP_PORT),
       auth: {
@@ -34,7 +34,7 @@ export const getMailingTransporter = async () => {
       }
     })
 
-    return right(__cached.transporter)
+    return right(memo.transporter)
 
   } catch( err: any ) {
     if( err.code === 'ERR_MODULE_NOT_FOUND' ) {

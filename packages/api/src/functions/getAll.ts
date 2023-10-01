@@ -1,11 +1,18 @@
 import type { Context, OptionalId, WithId } from '../types'
-import type { Document,Filters, Projection, QuerySort } from './types'
+import type { CollectionDocument, Filters, Projection, QuerySort } from './types'
+import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { DEFAULT_SORT } from '../constants'
-import { traverseDocument, normalizeProjection, fill } from '../collection'
+import {
+  traverseDocument,
+  normalizeProjection,
+  getReferences,
+  buildLookupPipeline,
+  fill
+} from '../collection'
 
-export const getAll = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
+export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
   filters?: Filters<TDocument>
   project?: Projection<TDocument>
   offset?: number
@@ -28,24 +35,41 @@ export const getAll = <TDocument extends Document<OptionalId<any>>>() => async <
   const newPayload = Object.assign({}, payload)
   newPayload.filters = Object.fromEntries(entries)
 
-  const query = unsafe(await accessControl.beforeRead(newPayload))
-
   const {
+    filters,
     limit,
-    sort = DEFAULT_SORT,
+    sort,
     project,
-    offset
+    offset = 0
 
-  } = query
+  } = unsafe(await accessControl.beforeRead(newPayload))
 
-  const result = await context.model.find(unsafe(
-    await traverseDocument(query.filters, context.description, { autoCast: true }), {
-      projection: normalizeProjection(project, context.description)
+  const pipeline: Document[] = []
+  const references = getReferences(context.description.properties, {
+    memoize: context.description.$id
+  })
+
+  if( sort ) {
+    pipeline.push({ $sort: sort })
+  }
+
+  if( context.description.timestamps !== false ) {
+    pipeline.push({ $sort: DEFAULT_SORT })
+  }
+
+  pipeline.push({ $match: unsafe(await traverseDocument(filters, context.description, { autoCast: true })) })
+  pipeline.push({ $skip: offset })
+  pipeline.push({ $limit: limit })
+  const projection = normalizeProjection(project, context.description)
+  if( projection ) {
+    pipeline.push({ $project: projection })
+  }
+
+  pipeline.push(...buildLookupPipeline(references, {
+    memoize: context.description.$id
   }))
-    .sort(sort)
-    .skip(offset)
-    .limit(limit)
-    .toArray()
+
+  const result = await context.model.aggregate(pipeline).toArray()
 
   const documents: typeof result = []
   for( const document of result ) {

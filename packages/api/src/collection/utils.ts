@@ -9,22 +9,22 @@ export const normalizeProjection = <
     1|0
   >
 >(
-  projection: TProjectedProperties,
+  properties: TProjectedProperties,
   description: TDescription
 ) => {
-  if( !projection ) {
-    return {}
+  if( !properties ) {
+    return null
   }
 
-  const target: Array<any> = Array.isArray(projection)
-    ? projection
-    : Object.keys(projection)
+  const target: Array<any> = Array.isArray(properties)
+    ? properties
+    : Object.keys(properties)
 
   if( target.length === 0 ) {
     target.push(...Object.keys(description.properties))
   }
 
-  return target.reduce((a, key) => {
+  const projection = target.reduce((a, key) => {
     if( description.properties[key]?.s$hidden ) {
       return a
     }
@@ -34,6 +34,10 @@ export const normalizeProjection = <
       [key]: 1
     }
   }, {})
+
+  return Object.keys(projection).length === 0
+    ? null
+    : projection
 }
 
 export const fill = <TDocument extends OptionalId<any>>(

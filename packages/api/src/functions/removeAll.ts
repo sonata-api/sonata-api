@@ -1,9 +1,9 @@
 import type { Context, OptionalId } from '../types'
-import type { Filters } from './types'
+import type { CollectionDocument, Filters } from './types'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
-export const removeAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
+export const removeAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
   filters: Filters<TDocument>
 }, context: TContext extends Context<infer Description>
   ? TContext

@@ -24,7 +24,7 @@ export type Projection<TDocument extends Record<Lowercase<string>, any>> =
 
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>
 
-export type Document<TDocument> = Pick<
+export type CollectionDocument<TDocument> = Pick<
   TDocument,
   Extract<keyof TDocument, Lowercase<string>>
 >
