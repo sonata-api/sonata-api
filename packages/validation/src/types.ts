@@ -1,4 +1,4 @@
-export enum ValidationErrors {
+export enum ValidationErrorCodes {
   EmptyTarget = 'EMPTY_TARGET',
   MissingProperties = 'MISSING_PROPERTIES',
   InvalidProperties = 'INVALID_PROPERTIES'
@@ -24,8 +24,8 @@ export type PropertyValidationError = {
   }
 }
 
-export type ValidationError = { code: ValidationErrors } & (
-  | { errors: Record<string, PropertyValidationError | ValidationError> | {} }
-  | { missing: string[] }
-)
-
+export type ValidationError = {
+  code: ValidationErrorCodes
+  errors?: Record<string, PropertyValidationError | ValidationError> | {} 
+  missing?: string[]
+}

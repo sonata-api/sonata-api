@@ -13,7 +13,7 @@ export const count = <TDocument extends OptionalId<any>>() => async <TContext>(
   const accessControl = useAccessControl(context)
   const newPayload = unsafe(await accessControl.beforeRead(payload))
 
-  return context.model.countDocuments(await traverseDocument(newPayload.filters, context.description, {
+  return context.model.countDocuments(unsafe(await traverseDocument(newPayload.filters, context.description, {
     autoCast: true
-  }))
+  })))
 }

@@ -1,5 +1,6 @@
 import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
+import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
 export const removeAll = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
@@ -15,7 +16,7 @@ export const removeAll = <TDocument extends OptionalId<any>>() => async <TContex
     }
   }
 
-  return context.model.deleteMany(await traverseDocument(filters as any, context.description, {
+  return context.model.deleteMany(unsafe(await traverseDocument(filters as any, context.description, {
     autoCast: true
-  }))
+  })))
 }

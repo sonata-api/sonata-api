@@ -1,12 +1,20 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
-import { getReferencedCollection, pipe } from '@sonata-api/common'
-import { validateProperty } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
+import { left, right, getReferencedCollection, pipe } from '@sonata-api/common'
+import {
+  validateProperty,
+  validateWholeness,
+  makeValidationError,
+  ValidationErrorCodes,
+  type ValidationError
+
+} from '@sonata-api/validation'
 
 export type TraverseOptions = {
   autoCast?: boolean
   getters?: boolean
   validate?: boolean
+  validateRequired?: string[]
   fromProperties?: boolean
   pipe?: (
     value: any,
@@ -39,7 +47,7 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
 
     case 'object': {
       if( Array.isArray(value) ) {
-        return value.map((v) => autoCast(v, target, propName, property, options))
+        return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
       }
 
       if( value instanceof Object ) {
@@ -53,16 +61,25 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
 
 const getters = (value: any, target: any, _propName: string, property: CollectionProperty) => {
   if( property.s$getter ) {
+    if( !value ) {
+      return null
+    }
+
     return property.s$getter(target)
   }
 
   return value
 }
 
-const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
-  return validateProperty(propName as Lowercase<string>, value, property, {
+const validate = async (value: any, _target: any, propName: string, property: CollectionProperty) => {
+  const error = await validateProperty(propName as Lowercase<string>, value, property)
+  if( error ) {
+    return left({
+      [propName]: error
+    })
+  }
 
-  })
+  return value
 }
 
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
@@ -125,12 +142,14 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   return Object.fromEntries(entries)
 }
 
-export const traverseDocument = <const TWhat extends Record<string, any>>(
+export const traverseDocument = async <const TWhat extends Record<string, any>>(
   what: TWhat,
   description: Description,
   options: TraverseOptions
 ) => {
   const functions = []
+  let validationError: ValidationError | null = null
+
   if( options.autoCast ) {
     functions.push(autoCast)
   }
@@ -140,9 +159,34 @@ export const traverseDocument = <const TWhat extends Record<string, any>>(
   }
 
   if( options.validate ) {
+    const descriptionCopy = Object.assign({}, description)
+    if( options.validateRequired ) {
+      descriptionCopy.required = options.validateRequired
+    }
+
+    const wholenessError = validateWholeness(descriptionCopy, what)
+    if( wholenessError ) {
+      return left(wholenessError)
+    }
+
     functions.push(validate)
   }
 
-  options.pipe = pipe(functions)
-  return recurse(what, description, options)
+  options.pipe = pipe(functions, {
+    returnFirst: (value) => {
+      if( value?._tag === 'Left' ) {
+        validationError = value.value
+        return value
+      }
+    }
+  })
+
+  const result = await recurse(what, description, options)
+
+  return validationError
+    ? left(makeValidationError({
+      code: ValidationErrorCodes.InvalidProperties,
+      errors: validationError
+    }))
+    : right(result)
 }

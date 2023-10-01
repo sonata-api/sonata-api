@@ -1,5 +1,6 @@
 import type { Context, OptionalId } from '../types'
 import type { Filters } from './types'
+import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
 export const remove = <TDocument extends OptionalId<any>>() => async <TContext>(payload: {
@@ -13,7 +14,7 @@ export const remove = <TDocument extends OptionalId<any>>() => async <TContext>(
   }
 
 
-  return context.model.findOneAndDelete(await traverseDocument(payload.filters, context.description, {
+  return context.model.findOneAndDelete(unsafe(await traverseDocument(payload.filters, context.description, {
     autoCast: true
-  }))
+  })))
 }

@@ -1,7 +1,7 @@
 import type { Context, OptionalId, WithId } from '../types'
 import type { Document, Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
-import { isError, unpack } from '@sonata-api/common'
+import { left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
 export const insert = <TDocument extends Document<OptionalId<any>>>() => async <TContext>(payload: {
@@ -14,15 +14,26 @@ export const insert = <TDocument extends Document<OptionalId<any>>>() => async <
   const accessControl = useAccessControl(context)
 
   const queryEither = await accessControl.beforeWrite(payload)
-  if( isError(queryEither) ) {
-    const error = unpack(queryEither)
+  if( isLeft(queryEither) ) {
+    const error = unsafe(queryEither)
     throw new Error(error)
   }
 
-  const query = unpack(queryEither)
-  const what = await traverseDocument(query.what, context.description, {
-    autoCast: true
+  const query = unsafe(queryEither)
+  const whatEither = await traverseDocument(query.what, context.description, {
+    autoCast: true,
+    validate: true,
+    validateRequired: payload.what._id
+      ? []
+      : context.description.required as string[]
   })
+
+  if( isLeft(whatEither) ) {
+    const error = unwrapEither(whatEither)
+    return left(error)
+  }
+
+  const what = unwrapEither(whatEither)
 
   const _id = '_id' in what
     ? what._id
@@ -44,9 +55,9 @@ export const insert = <TDocument extends Document<OptionalId<any>>>() => async <
     const newDoc = await context.model.insertOne(readyWhat)
     const result = context.model.findOne({ _id: newDoc.insertedId }, projection)
 
-    return traverseDocument(result, context.description, {
+    return unsafe(await traverseDocument(result, context.description, {
       autoCast: true
-    })
+    }))
   }
 
   readyWhat.$set.updated_at = new Date()

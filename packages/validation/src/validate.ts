@@ -1,7 +1,7 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither } from '@sonata-api/common'
 import {
-  ValidationErrors,
+  ValidationErrorCodes,
   ValidateOptions,
   PropertyValidationErrorType,
   PropertyValidationError,
@@ -42,13 +42,17 @@ const makePropertyError = <
   } satisfies PropertyValidationError
 }
 
+export const makeValidationError = <TValidationError extends ValidationError> (error: TValidationError) => {
+  return error as ValidationError
+}
+
 export const validateProperty = async (
   propName: Lowercase<string>,
   what: Record<string, any>,
   property: CollectionProperty,
-  options: ValidateOptions
+  options: ValidateOptions = {}
 ) => {
-  const value = typeof what === 'object'
+  const value = what && typeof what === 'object' && propName in what
     ? what[propName]
     : what
 
@@ -65,15 +69,6 @@ export const validateProperty = async (
 
   const expectedType = getPropertyType(property)!
   const actualType = getValueType(value)
-
-  // if( !value ) {
-  //   if( (!required && description!.required?.includes(propName)) || (required && required.includes(propName)) ) {
-  //     return makePropertyError('missing', {
-  //       expected: expectedType,
-  //       got: 'undefined'
-  //     })
-  //   }
-  // }
 
   if( options.recurse && expectedType === 'object' ) {
     const resultEither = await validate(property as Required<Description>, what[propName], options)
@@ -124,32 +119,39 @@ export const validateProperty = async (
   }
 }
 
-export const validate = async <TWhat extends Record<Lowercase<string>, any>>(
-  description: Omit<Description, '$id'>,
-  what: TWhat | undefined,
-  options: ValidateOptions = {}
-) => {
-  if( !what ) {
-    return left(<ValidationError>{
-      code: ValidationErrors.EmptyTarget,
-      errors: {}
-    })
-  }
-
-  const errors: Record<string, PropertyValidationError | ValidationError> = {}
-
+export const validateWholeness = (description: Omit<Description, '$id'>, what: Record<Lowercase<string>, any>) => {
   const required = description.required
     ? description.required
     : Object.keys(description.properties)
 
   for( const propName of required ) {
     if( !what[propName as Lowercase<string>] ) {
-      return left(<ValidationError>{
-        code: ValidationErrors.MissingProperties,
-        missing: required
+      return makeValidationError({
+        code: ValidationErrorCodes.MissingProperties,
+        missing: required.filter((prop) => !Object.keys(what).includes(prop as string)) as string[]
       })
     }
   }
+}
+
+export const validate = async <TWhat extends Record<Lowercase<string>, any>>(
+  description: Omit<Description, '$id'>,
+  what: TWhat | undefined,
+  options: ValidateOptions = {}
+) => {
+  if( !what ) {
+    return left(makeValidationError({
+      code: ValidationErrorCodes.EmptyTarget,
+      errors: {}
+    }))
+  }
+
+  const wholenessError = validateWholeness(description, what)
+  if( wholenessError ) {
+    return left(wholenessError)
+  }
+
+  const errors: Record<string, PropertyValidationError | ValidationError> = {}
 
   for( const propName in what ) {
     const result = await validateProperty(
@@ -166,15 +168,15 @@ export const validate = async <TWhat extends Record<Lowercase<string>, any>>(
 
   if( Object.keys(errors).length > 0 ) {
     if( options.throwOnError ) {
-      const error = new TypeError(ValidationErrors.InvalidProperties)
+      const error = new TypeError(ValidationErrorCodes.InvalidProperties)
       Object.assign(error, { errors })
       throw error
     }
 
-    return left(<ValidationError>{
-      code: ValidationErrors.InvalidProperties,
+    return left(makeValidationError({
+      code: ValidationErrorCodes.InvalidProperties,
       errors
-    })
+    }))
   }
 
   return right(what)

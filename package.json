@@ -4,7 +4,7 @@
   "packageManager": "pnpm@8.7.6",
   "scripts": {
     "build": "pnpm --no-bail -r build",
-    "postinstall": "cp -r packages/ node_modules/@sonata-api; rm -rf packages/*/node_modules/@sonata-api"
+    "postinstall": "rm -rf packages/*/node_modules/@sonata-api"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",

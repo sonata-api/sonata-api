@@ -38,11 +38,10 @@ export const getAll = <TDocument extends Document<OptionalId<any>>>() => async <
 
   } = query
 
-  const result = await context.model.find(
+  const result = await context.model.find(unsafe(
     await traverseDocument(query.filters, context.description, { autoCast: true }), {
       projection: normalizeProjection(project, context.description)
-    }
-  )
+  }))
     .sort(sort)
     .skip(offset)
     .limit(limit)
@@ -51,10 +50,10 @@ export const getAll = <TDocument extends Document<OptionalId<any>>>() => async <
   const documents: typeof result = []
   for( const document of result ) {
     documents.push(
-      await traverseDocument(fill(document, context.description), context.description, {
+      unsafe(await traverseDocument(fill(document, context.description), context.description, {
         getters: true,
         fromProperties: true
-      }) as WithId<TDocument>
+      }))as WithId<TDocument>
     )
   }
 

@@ -18,21 +18,20 @@ export const get = <TDocument extends Document<OptionalId<any>>>() => async <TCo
     project = {}
   } = unsafe(await accessControl.beforeRead(payload))
 
-  const result = await context.model.findOne(
+  const result = await context.model.findOne(unsafe(
     await traverseDocument(filters, context.description, { autoCast: true }), {
       projection: normalizeProjection(project, context.description)
-    }
-  )
+  }))
 
   if( !result ) {
     return null
   }
 
   return fill(
-    await traverseDocument(result, context.description, {
+    unsafe(await traverseDocument(result, context.description, {
       getters: true,
       fromProperties: true
-    }),
+    })),
     context.description
   ) as WithId<TDocument>
 }

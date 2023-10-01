@@ -19,12 +19,16 @@ export const pipe = <TFunction extends (...args: any) => any>(functions: TFuncti
       if( returnFirst && ret !== undefined ) {
         switch( typeof returnFirst ) {
           case 'function': {
-            if( returnFirst(ret) ) {
-              return ret
+            const result = returnFirst(ret)
+            if( result ) {
+              return result
             }
+            break
           }
-          default:
+
+          default: {
             return ret
+          }
         }
       }
     }
