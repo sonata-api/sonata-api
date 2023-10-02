@@ -61,10 +61,6 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
 
 const getters = (value: any, target: any, _propName: string, property: CollectionProperty) => {
   if( property.s$getter ) {
-    if( !value ) {
-      return null
-    }
-
     return property.s$getter(target)
   }
 

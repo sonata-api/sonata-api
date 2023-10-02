@@ -10,13 +10,6 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     return context.collection.insert(props)
   }
 
-  context.validate(description, props?.what, {
-    required: [
-      'name',
-      'allowed_functions'
-    ]
-  })
-
   props.what.content = '/'
 
   const key_id = (await context.collection.insert({

@@ -46,12 +46,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   }
 
   const { insert } = useFunctions<User>()()
-  try {
-    const r = await insert(props, context)
-    return r
-  } catch( e ) {
-    console.trace(e)
-  }
+  return insert(props, context)
 }
 
 export default insert

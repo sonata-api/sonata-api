@@ -34,13 +34,13 @@ export const [User, description] = defineDescription({
     first_name: {
       type: 'string',
       s$getter: (document: any) => {
-        return `${document.full_name.split(' ')[0] || 'N/A'}`
+        return `${document.full_name?.split(' ')[0] || 'N/A'}`
       }
     },
     last_name: {
       type: 'string',
       s$getter: (document: any) => {
-        return `${document.full_name.split(' ')[1]}`
+        return `${document.full_name?.split(' ')[1]}`
       }
     },
     active: {

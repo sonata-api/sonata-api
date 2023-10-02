@@ -14,6 +14,11 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   }
 
   const validationEither = await context.validate({
+    required: [
+      'full_name',
+      'email',
+      'phone'
+    ],
     properties: {
       full_name: {
         type: 'string'
@@ -29,11 +34,6 @@ const createAccount = async (props: Props, context: Context<typeof description>)
       }
     }
   }, user, {
-    required: [
-      'full_name',
-      'email',
-      'phone'
-    ],
     extraneous: [
       '_id',
       'roles',

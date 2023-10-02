@@ -78,19 +78,6 @@ export const safeHandle = (
       }
     }
 
-    // if( error instanceof MongooseError.ValidationError ) {
-    //   const errors = Object.values(error.errors)
-    //   response.error.validation = errors.reduce((a, error: any) => {
-    //     return {
-    //       ...a,
-    //       [error.path]: {
-    //         type: error.kind,
-    //         detail: null
-    //       },
-    //     }
-    //   }, {})
-    // }
-
     if( request.req.headers['sec-fetch-mode'] === 'cors' ) {
       return response
     }
