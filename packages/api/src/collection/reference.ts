@@ -20,8 +20,8 @@ export type Reference = {
 
 export type ReferenceMap = Record<string, Reference>
 
-export const referenceMemo: Record<string, ReferenceMap | {}> = {}
-export const lookupMemo: Record<string, ReturnType<typeof buildLookupPipeline>> = {}
+const referenceMemo: Record<string, ReferenceMap | {}> = {}
+const lookupMemo: Record<string, ReturnType<typeof buildLookupPipeline>> = {}
 
 export const getReferences = (
   properties: NonNullable<CollectionProperty['properties']>,

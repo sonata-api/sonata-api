@@ -22,7 +22,6 @@ export const baseRoles = <const>{
     }
   },
   unauthenticated: {
-    grantEverything: true,
     capabilities: {
       meta: {
         functions: [
