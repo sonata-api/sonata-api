@@ -32,6 +32,7 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     }
 
     const auth = unwrapEither(authEither)
+    auth.user._id = auth.user._id.toString()
     result.auth = auth
   }
 

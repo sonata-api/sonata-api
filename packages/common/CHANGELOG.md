@@ -1,5 +1,17 @@
 # @sonata-api/common
 
+## 0.0.12
+
+### Patch Changes
+
+- Version bump
+
+## 0.0.11
+
+### Patch Changes
+
+- Update version
+
 ## 0.0.10
 
 ### Patch Changes

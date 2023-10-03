@@ -1,5 +1,33 @@
 # @sonata-api/server
 
+## 0.0.17
+
+### Patch Changes
+
+- Version bump
+- Updated dependencies
+  - @sonata-api/access-control@0.0.13
+  - @sonata-api/common@0.0.12
+  - @sonata-api/server@0.0.17
+  - @sonata-api/system@0.0.25
+  - @sonata-api/types@0.0.10
+  - @sonata-api/http@0.0.6
+  - @sonata-api/api@0.0.29
+
+## 0.0.16
+
+### Patch Changes
+
+- Update version
+- Updated dependencies
+  - @sonata-api/access-control@0.0.12
+  - @sonata-api/api@0.0.28
+  - @sonata-api/common@0.0.11
+  - @sonata-api/http@0.0.5
+  - @sonata-api/server@0.0.16
+  - @sonata-api/system@0.0.24
+  - @sonata-api/types@0.0.9
+
 ## 0.0.15
 
 ### Patch Changes

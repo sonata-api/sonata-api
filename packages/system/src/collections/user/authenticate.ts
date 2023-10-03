@@ -11,8 +11,9 @@ type Props = {
 }
 
 type Return = {
-  user: Pick<User,
-    'first_name'
+  user: Pick<WithId<User>,
+    '_id'
+    | 'first_name'
     | 'last_name'
     | 'email'
     | 'roles'
@@ -103,6 +104,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
 
     return right({
       user: {
+        _id: null,
         first_name: 'God',
         last_name: 'Mode',
         email: '',
