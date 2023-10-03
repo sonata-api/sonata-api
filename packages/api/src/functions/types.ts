@@ -15,11 +15,9 @@ export type What<TDocument> = UpdateFilter<TDocument> & {
 
 export type Projection<TDocument extends Record<Lowercase<string>, any>> =
   keyof TDocument | '_id' extends infer DocumentProp
-    ? DocumentProp extends Lowercase<string>
-      ? 
-        | Array<DocumentProp>
-        | Record<DocumentProp, number>
-      : never
+    ? TDocument extends Lowercase<string>
+      ? Array<DocumentProp>
+      : Lowercase<string>[]
     : never
 
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>

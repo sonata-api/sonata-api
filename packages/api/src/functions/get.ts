@@ -22,7 +22,7 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
 
   const {
     filters = {},
-    project = {}
+    project = []
   } = unsafe(await accessControl.beforeRead(payload))
 
   const pipeline: Document[] = []

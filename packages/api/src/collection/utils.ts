@@ -4,10 +4,7 @@ import { freshItem } from '@sonata-api/common'
 
 export const normalizeProjection = <
   TDescription extends Pick<Description, 'properties'>,
-  TProjectedProperties extends (keyof TDescription['properties'])[] | Record<
-    keyof TDescription['properties'],
-    1|0
-  >
+  TProjectedProperties extends (keyof TDescription['properties'])[]
 >(
   properties: TProjectedProperties,
   description: TDescription
@@ -16,16 +13,13 @@ export const normalizeProjection = <
     return null
   }
 
-  const target: Array<any> = Array.isArray(properties)
-    ? properties
-    : Object.keys(properties)
-
+  const target = properties
   if( target.length === 0 ) {
-    target.push(...Object.keys(description.properties))
+    target.push(...Object.keys(description.properties) as (keyof TDescription['properties'])[])
   }
 
   const projection = target.reduce((a, key) => {
-    if( description.properties[key]?.s$hidden ) {
+    if( description.properties[key as Lowercase<string>]?.s$hidden ) {
       return a
     }
 

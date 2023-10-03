@@ -77,9 +77,9 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
       unsafe(await traverseDocument(fill(document, context.description), context.description, {
         getters: true,
         fromProperties: true
-      })) as WithId<TDocument>
+      }))
     )
   }
 
-  return documents
+  return documents as WithId<TDocument>[]
 }

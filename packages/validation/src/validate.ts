@@ -117,6 +117,13 @@ export const validateProperty = async (
       }
     }
   }
+
+  else if( property.s$getter ) {
+    return makePropertyError('unmatching', {
+      expected: 'getters are read-only',
+      got: actualType
+    })
+  }
 }
 
 export const validateWholeness = (description: Omit<Description, '$id'>, what: Record<Lowercase<string>, any>) => {

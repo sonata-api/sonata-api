@@ -51,10 +51,6 @@ export const safeHandle = (
 ) => async (request: MatchedRequest, res: GenericResponse) => {
   try {
     const response = await fn(request, res, context)
-    if( !response ) {
-      throw new Error('empty response')
-    }
-
     return response
 
   } catch(error: any) {

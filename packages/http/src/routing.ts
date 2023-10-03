@@ -7,7 +7,12 @@ import type {
 
 } from './types'
 
+import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { safeJson } from './payload'
+
+export type RouterOptions = {
+  exhaust?: boolean
+}
 
 export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
@@ -43,7 +48,7 @@ export const matches = <TRequest extends GenericRequest>(
   }
 }
 
-export const registerRoute = <TCallback extends (req: MatchedRequest) => any>(
+export const registerRoute = <TCallback extends (req: MatchedRequest, res: GenericResponse) => any>(
   req: GenericRequest,
   res: GenericResponse,
   method: RequestMethod | RequestMethod[],
@@ -63,15 +68,94 @@ export const registerRoute = <TCallback extends (req: MatchedRequest) => any>(
       }
     }
 
-    return cb(match)
+    return cb(match, res)
   }
 }
 
-export const makeRouter = (req: GenericRequest, res: GenericResponse) => {
-  return <TCallback extends (req: MatchedRequest) => any|Promise<any>>(
+export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Promise<any>) => {
+  try {
+    const result = await cb()
+    if( result === undefined ) {
+      res.writeHead(204)
+      res.end()
+      return
+    }
+
+    if( !res.headersSent && isLeft(result) ) {
+      const error: any = unwrapEither(result)
+      if( error.httpCode ) {
+        res.writeHead(error.httpCode)
+      }
+    }
+
+    if( !res.writableEnded ) {
+      res.end(result)
+    }
+
+    return result
+
+  } catch( e ) {
+    if( !res.headersSent ) {
+      if( process.env.NODE_ENV !== 'production' ) {
+        console.trace(e)
+      }
+
+      res.writeHead(500)
+    }
+
+    if( !res.writableEnded ) {
+      const error = left({
+        httpCode: 500,
+        message: 'Internal server error'
+      })
+
+      res.end(error)
+    }
+  }
+}
+
+export const makeRouter = (options?: RouterOptions) => {
+  const {
+    exhaust
+  } = options || {}
+
+  const routes: ((_: unknown, req: GenericRequest, res: GenericResponse) => ReturnType<typeof registerRoute>)[] = []
+
+  const route = <TCallback extends (req: MatchedRequest, res: GenericResponse) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
     exp: string,
     cb: TCallback,
     options?: RouteOptions
-  ) => registerRoute(req, res, method, exp, cb, options)
+  ) => {
+    routes.push((_, req, res) => {
+      return registerRoute(req, res, method, exp, cb, options)
+    })
+  }
+
+  const routerPipe = pipe(routes, {
+    returnFirst: true
+  })
+
+  const router = {
+    route,
+    routes,
+    install: (_req: GenericRequest, _res: GenericResponse) => {
+      return {} as ReturnType<typeof routerPipe>
+    }
+  }
+
+  router.install = async (req: GenericRequest, res: GenericResponse) => {
+    const result = await routerPipe(null, req, res)
+    if( exhaust && result === undefined ) {
+      return left({
+        httpCode: 404,
+        message: 'Not found'
+      })
+    }
+
+    return result
+  }
+  
+  return router
 }
+

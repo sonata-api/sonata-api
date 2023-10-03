@@ -81,3 +81,4 @@ type CaseTimestamped<
 > = TSchema extends { timestamps: false }
   ? TType
   : TType & Timestamped
+

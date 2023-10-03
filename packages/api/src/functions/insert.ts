@@ -43,7 +43,7 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
 
   const projection = payload.project
     ? normalizeProjection(payload.project, context.description)
-    : {}
+    : []
 
   if( !_id ) {
     const now = new Date()
@@ -53,7 +53,7 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
 
     const newDoc = await context.model.insertOne(readyWhat)
-    const result = context.model.findOne({ _id: newDoc.insertedId }, projection)
+    const result = context.model.findOne({ _id: newDoc.insertedId }, { projection })
 
     return unsafe(await traverseDocument(result, context.description, {
       autoCast: true
