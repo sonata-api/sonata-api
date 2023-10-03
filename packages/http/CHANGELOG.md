@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.4
+
+### Patch Changes
+
+- Ergonomic HTTP routing
+
 ## 0.0.3
 
 ### Patch Changes
