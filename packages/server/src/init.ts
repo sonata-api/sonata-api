@@ -1,5 +1,5 @@
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
-import { defineServerOptions, cors, makeRouter, wrapRouteExecution } from '@sonata-api/http'
+import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, type ApiConfig } from '@sonata-api/api'

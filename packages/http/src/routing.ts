@@ -84,7 +84,7 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
       return
     }
 
-    if( !res.headersSent && isLeft(result) ) {
+    if( !res.headersSent && result && isLeft(result) ) {
       const error: any = unwrapEither(result)
       if( error.httpCode ) {
         res.writeHead(error.httpCode)

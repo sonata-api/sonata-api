@@ -60,7 +60,9 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     }))
   }
 
+  readyWhat.$set ??= {}
   readyWhat.$set.updated_at = new Date()
+
   return context.model.findOneAndUpdate({ _id }, readyWhat, {
     returnDocument: 'after',
     projection
