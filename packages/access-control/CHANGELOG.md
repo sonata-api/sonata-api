@@ -1,5 +1,15 @@
 # @sonata-api/access-control
 
+## 0.0.11
+
+### Patch Changes
+
+- Native MongoDB
+- Updated dependencies
+  - @sonata-api/api@0.0.27
+  - @sonata-api/common@0.0.10
+  - @sonata-api/system@0.0.23
+
 ## 0.0.10
 
 ### Patch Changes

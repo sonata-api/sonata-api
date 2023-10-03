@@ -1,9 +1,9 @@
-import { COLLECTION_PRESETS, STORE_EFFECTS, } from '../constants'
+import { COLLECTION_PRESETS } from '../constants'
 import type { Property } from './jsonschema'
 
 export type CollectionPresets = typeof COLLECTION_PRESETS[number]
 
-export type StoreEffect = keyof typeof STORE_EFFECTS
+export type StoreEffect = string
 export type CollectionId = string
 
 export type CollectionAction<TDescription extends Description> = Readonly<{

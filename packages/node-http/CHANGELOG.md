@@ -1,5 +1,11 @@
 # @sonata-api/node-http
 
+## 0.0.3
+
+### Patch Changes
+
+- Native MongoDB
+
 ## 0.0.2
 
 ### Patch Changes

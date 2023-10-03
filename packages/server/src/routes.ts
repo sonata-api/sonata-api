@@ -1,7 +1,6 @@
 import type { Context } from '@sonata-api/api'
 import type { GenericResponse, MatchedRequest } from '@sonata-api/http'
 import { makeRouter } from '@sonata-api/http'
-
 import {
   safeHandle,
   regularVerb,

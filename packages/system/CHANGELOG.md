@@ -1,5 +1,14 @@
 # @sonata-api/system
 
+## 0.0.23
+
+### Patch Changes
+
+- Native MongoDB
+- Updated dependencies
+  - @sonata-api/api@0.0.27
+  - @sonata-api/common@0.0.10
+
 ## 0.0.22
 
 ### Patch Changes

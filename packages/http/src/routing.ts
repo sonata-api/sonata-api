@@ -63,7 +63,10 @@ export const registerRoute = <TCallback extends (req: MatchedRequest, res: Gener
         req.payload = safeJson(req.body)
       } catch( err ) {
         res.writeHead(500)
-        res.end('invalid json')
+        res.end(left({
+          httpCode: 500,
+          message: 'Invalid JSON'
+        }))
         return null
       }
     }
