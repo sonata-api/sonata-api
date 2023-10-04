@@ -1,5 +1,23 @@
 # @sonata-api/api
 
+## 0.0.33
+
+### Patch Changes
+
+- Fix $text queries
+
+## 0.0.32
+
+### Patch Changes
+
+- Bug on count function
+
+## 0.0.31
+
+### Patch Changes
+
+- Fix traverseDocument bug when subject is an array of MongoDB operators
+
 ## 0.0.30
 
 ### Patch Changes

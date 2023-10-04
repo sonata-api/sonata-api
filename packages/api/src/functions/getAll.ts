@@ -44,10 +44,16 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
 
   } = unsafe(await accessControl.beforeRead(newPayload))
 
+  const textQuery = !!filters.$text
+
   const pipeline: Document[] = []
   const references = getReferences(context.description.properties, {
     memoize: context.description.$id
   })
+
+  if( textQuery ) {
+    pipeline.push({ $match: filters })
+  }
 
   if( sort ) {
     pipeline.push({ $sort: sort })
@@ -57,12 +63,14 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     pipeline.push({ $sort: DEFAULT_SORT })
   }
 
-  pipeline.push({
-    $match: unsafe(await traverseDocument(filters, context.description, {
-      autoCast: true,
-      allowOperators: true
-    }))
-  })
+  if( !textQuery ) {
+    pipeline.push({
+      $match: unsafe(await traverseDocument(filters, context.description, {
+        autoCast: true,
+        allowOperators: true
+      }))
+    })
+  }
 
   pipeline.push({ $skip: offset })
   pipeline.push({ $limit: limit })

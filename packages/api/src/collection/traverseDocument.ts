@@ -114,6 +114,14 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     if( !property && value && typeof value === 'object' ) {
       // if first key is preceded by '$' we assume
       // it contains MongoDB query operators
+      if( Object.keys(value)[0].startsWith('$') ) {
+        entries.push([
+          key,
+          value
+        ])
+        continue
+      }
+
       if( Array.isArray(value) ) {
         const operations = []
         for( const operation of value ) {
