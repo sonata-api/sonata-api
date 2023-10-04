@@ -1,10 +1,10 @@
-import { useFunctions } from '@sonata-api/api'
+import { defineCollection, useFunctions } from '@sonata-api/api'
 import { description, File } from './description'
 import insert from './insert'
 import download from './download'
 import remove from './remove'
 
-export const file = () => ({
+export const file = defineCollection(() => ({
   item: {} as File,
   description,
   functions: {
@@ -15,4 +15,4 @@ export const file = () => ({
     download,
     remove
   }
-})
+}))

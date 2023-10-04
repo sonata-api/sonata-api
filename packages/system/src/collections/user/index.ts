@@ -1,4 +1,4 @@
-import { useFunctions } from '@sonata-api/api'
+import { defineCollection, useFunctions } from '@sonata-api/api'
 import { description, User } from './description'
 
 import authenticate from './authenticate'
@@ -7,7 +7,7 @@ import insert from './insert'
 import createAccount from './createAccount'
 import getInfo from './getInfo'
 
-export const user = () => ({
+export const user = defineCollection(() => ({
   item: User,
   description,
   functions: {
@@ -24,4 +24,4 @@ export const user = () => ({
     getInfo,
     activate,
   }
-})
+}))
