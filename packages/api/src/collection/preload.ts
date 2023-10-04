@@ -6,6 +6,8 @@ export type PreloadOptions = {
   serialize?: boolean
 }
 
+const preloadMemo: Record<string, Partial<Description>> = {}
+
 export const applyPreset = (entry: Description | Description['properties'], presetName:string, parentName?:string) => {
   const preset = require(`@sonata-api/api/presets/${presetName}.json`)
   const presetObject = Object.assign({}, parentName ? (preset[parentName]||{}) : preset)
@@ -23,6 +25,13 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
   ? Buffer
   : Description
 >(originalDescription: Partial<Description>, options?: Options) => {
+  if( preloadMemo[originalDescription.$id!] ) {
+    const description =  preloadMemo[originalDescription.$id!]
+    return (options?.serialize
+      ? serialize(description)
+      : description) as Return
+  }
+
   const description = Object.assign({}, originalDescription)
 
   if( description.alias ) {
@@ -106,6 +115,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
     }, {} as Promise<Record<Lowercase<string>, CollectionProperty>>)
   }
 
+  preloadMemo[originalDescription.$id!] = description
   return (options?.serialize
     ? serialize(description)
     : description) as Return

@@ -1,4 +1,4 @@
-export * from './cascadingDelete'
+export * from './cascadingRemove'
 export * from './define'
 export * from './description'
 export * from './preload'

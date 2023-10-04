@@ -21,7 +21,7 @@ export const removeAll = <TDocument extends CollectionDocument<OptionalId<any>>>
   }))
 
   for( const document of await context.model.find(filters).toArray() ) {
-    await cascadingRemove(document, context.description)
+    await cascadingRemove(document, context)
   }
 
   return context.model.deleteMany(filters)

@@ -26,6 +26,6 @@ export const remove = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
   }
 
-  await cascadingRemove(target, context.description)
+  await cascadingRemove(target, context)
   return context.model.findOneAndDelete(filters)
 }

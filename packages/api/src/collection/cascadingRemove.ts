@@ -2,6 +2,7 @@ import type { CollectionProperty, Description } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
 import type { Context } from '../context'
 import { isRight, unwrapEither } from '@sonata-api/common'
+import { preloadDescription } from '../collection'
 import { getFunction } from '../assets'
 import { getCollection } from '../database'
 
@@ -65,10 +66,17 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
   })
 }
 
-export const cascadingRemove = async (doc: Record<string, any>, context: Context) => {
-  const cascade = getCascade(context.description)
+export const cascadingRemove = async <TContext>(
+  doc: Record<string, any>,
+  context: TContext extends Context<infer Description>
+    ? TContext
+    : never
+) => {
+  const cascade = getCascade(await preloadDescription(context.description))
   for( const subject of cascade ) {
     const targetId = doc[subject.propertyName]
-    await preferredRemove(subject, targetId, context)
+    if( targetId && (!Array.isArray(targetId) || targetId.length > 0) ) {
+      await preferredRemove(subject, targetId, context as Context)
+    }
   }
 }
