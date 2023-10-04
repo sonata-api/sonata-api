@@ -115,16 +115,31 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       // if first key is preceded by '$' we assume
       // it contains MongoDB query operators
       if( Array.isArray(value) ) {
+        const operations = []
+        for( const operation of value ) {
+          const operatorEither = await recurse(operation, parent, options)
+          if( isLeft(operatorEither) ) {
+            return left(unwrapEither(operatorEither))
+          }
+
+          operations.push(unwrapEither(operatorEither))
+        }
+
         entries.push([
           key,
-          await Promise.all(value.map((elem) => recurse(elem, parent, options)))
+          operations
         ])
         continue
       }
 
+      const operatorEither = await recurse(value as any, parent, options)
+      if( isLeft(operatorEither) ) {
+        return left(unwrapEither(operatorEither))
+      }
+
       entries.push([
         key,
-        await recurse(value as any, parent, options)
+        unwrapEither(operatorEither)
       ])
     }
 

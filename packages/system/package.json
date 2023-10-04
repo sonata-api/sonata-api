@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/system",
-  "version": "0.0.27",
+  "version": "0.0.28",
   "description": "## Installation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

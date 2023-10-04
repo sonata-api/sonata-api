@@ -1,5 +1,14 @@
 # @sonata-api/api
 
+## 0.0.30
+
+### Patch Changes
+
+- Improve deep document recursion
+- Updated dependencies
+  - @sonata-api/access-control@0.0.14
+  - @sonata-api/system@0.0.28
+
 ## 0.0.29
 
 ### Patch Changes
