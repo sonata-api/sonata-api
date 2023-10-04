@@ -1,3 +1,4 @@
+import type { ObjectId } from 'mongodb'
 import type { Context, OptionalId, WithId } from '../types'
 import type { CollectionDocument, Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
@@ -40,10 +41,11 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     : null
 
   const readyWhat = prepareInsert(what, context.description)
-
   const projection = payload.project
     ? normalizeProjection(payload.project, context.description)
-    : []
+    : {}
+
+  let docId: ObjectId = _id
 
   if( !_id ) {
     const now = new Date()
@@ -52,19 +54,27 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
       updated_at: now,
     })
 
-    const newDoc = await context.model.insertOne(readyWhat)
-    const result = context.model.findOne({ _id: newDoc.insertedId }, { projection })
+    docId = (await context.model.insertOne(readyWhat)).insertedId
 
-    return unsafe(await traverseDocument(result, context.description, {
-      autoCast: true
-    }))
+  } else {
+    readyWhat.$set ??= {}
+    readyWhat.$set.updated_at = new Date()
+    await context.model.updateOne({ _id }, readyWhat)
+
   }
 
-  readyWhat.$set ??= {}
-  readyWhat.$set.updated_at = new Date()
+  if( context.collection.functions?.get ) {
+    return context.collection.functions.get({
+      filters: {
+        _id: docId
+      }
+    }, context)
+  }
 
-  return context.model.findOneAndUpdate({ _id }, readyWhat, {
-    returnDocument: 'after',
-    projection
-  })
+  const result = await context.model.findOne({ _id: docId }, { projection })
+  return unsafe(await traverseDocument(result!, context.description, {
+    getters: true,
+    fromProperties: true,
+    recurseReferences: true
+  }))
 }

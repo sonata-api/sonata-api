@@ -30,7 +30,12 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
     memoize: context.description.$id
   })
 
-  pipeline.push({ $match: unsafe(await traverseDocument(filters, context.description, { autoCast: true })) })
+  pipeline.push({
+    $match: unsafe(await traverseDocument(filters, context.description, {
+      autoCast: true,
+      allowOperators: true
+    }))
+  })
 
   const projection = normalizeProjection(project, context.description)
   if( projection ) {
@@ -48,7 +53,8 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
   return fill(
     unsafe(await traverseDocument(result, context.description, {
       getters: true,
-      fromProperties: true
+      fromProperties: true,
+      recurseReferences: true,
     })),
     context.description
   ) as WithId<TDocument>

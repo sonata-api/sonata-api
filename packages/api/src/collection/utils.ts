@@ -75,12 +75,7 @@ export const prepareInsert = (
       return a
     }
 
-    if(
-        !(value instanceof Date)
-        && ( [undefined, null].includes(value) || (typeof value === 'object' && !Object.keys(value).length) )
-        && !Array.isArray(value)
-        && !(key in (description.defaults||{}))
-    ) {
+    if( [undefined, null].includes(value) ) {
       a.$unset[key] = 1
       return a
     }

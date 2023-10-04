@@ -28,15 +28,15 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
     || (Array.isArray(description.immutable) && description.immutable.includes(propertyName) )
   )
 
-  const currentDocument = await context.model.findOne({ _id: ObjectId(parentId) })
+  const currentDocument = await context.model.findOne({ _id: new ObjectId(parentId) })
   if( !currentDocument ) {
     return left(ACErrors.ImmutabilityParentNotFound)
   }
 
   if( childId ) {
     if(
-      (Array.isArray(currentDocument[propertyName]) && !currentDocument[propertyName].some((child: { _id: string }) => child?._id?.toString() === childId))
-      || (!Array.isArray(currentDocument[propertyName]) && currentDocument[propertyName] && currentDocument[propertyName]?._id.toString() !== childId)
+      (Array.isArray(currentDocument[propertyName]) && !currentDocument[propertyName].some((child) => child.toString() === childId))
+      || (!Array.isArray(currentDocument[propertyName]) && currentDocument[propertyName] && currentDocument[propertyName] !== childId.toString())
     ) {
       return left(ACErrors.ImmutabilityIncorrectChild)
     }
@@ -48,10 +48,7 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
   if(
     immutable
     && fulfilled
-    && (
-      property.s$inline
-        || currentDocument[propertyName]?._id.toString() !== source[propertyName]
-    )
+    && ( property.s$inline || currentDocument[propertyName].toString() !== source[propertyName] )
   ) {
     return left(ACErrors.ImmutabilityTargetImmutable)
   }

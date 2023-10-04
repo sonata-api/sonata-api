@@ -10,12 +10,17 @@ type Props = {
 
 const remove = async (props: Props, context: Context<typeof description>) => {
   const { remove } = useFunctions<File>()()
-  const file = await context.collection.functions.get(props, context)
+  const file = await context.collection.functions.get({
+    filters: props.filters
+  }, context)
+
   if( !file ) {
     throw new Error('file not found')
   }
 
-  await unlink(file.absolute_path!).catch(() => null)
+  if( file.absolute_path ) {
+    await unlink(file.absolute_path).catch(() => null)
+  }
   return remove(props, context)
 }
 

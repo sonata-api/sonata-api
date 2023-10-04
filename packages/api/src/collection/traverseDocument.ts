@@ -1,6 +1,9 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
+import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
-import { left, right, getReferencedCollection, pipe } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, getReferencedCollection, pipe, type Either } from '@sonata-api/common'
+import { getResourceAsset } from '../assets'
+import { preloadDescription } from './preload'
 import {
   validateProperty,
   validateWholeness,
@@ -16,6 +19,8 @@ export type TraverseOptions = {
   validate?: boolean
   validateRequired?: string[]
   fromProperties?: boolean
+  allowOperators?: boolean
+  recurseReferences?: boolean
   pipe?: (
     value: any,
     target: any,
@@ -50,7 +55,7 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
         return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
       }
 
-      if( value instanceof Object ) {
+      if( value && Object.keys(value).length > 0 ) {
         return recurse(value, property, options)
       }
     }
@@ -83,14 +88,14 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   parent: CollectionProperty | undefined,
   options: TraverseOptions
 
-): Promise<TRecursionTarget> => {
+): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
   const entrypoint = options.fromProperties
     ? { _id: null, ...parent!.properties! }
     : target
 
   if( !parent ) {
-    return {} as TRecursionTarget
+    return right({} as TRecursionTarget)
   }
 
   for( const key in entrypoint ) {
@@ -105,37 +110,82 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     }
 
     const property = getProperty(key, parent)
-    if( !property ) {
-      continue
-    }
 
-    if( value && typeof value === 'object' ) {
+    if( !property && value && typeof value === 'object' ) {
       // if first key is preceded by '$' we assume
       // it contains MongoDB query operators
-      if( options.autoCast && Object.keys(value)[0]?.startsWith('$') ) {
-        const operatorEntries = []
-        for( const [k, v] of Object.entries(value) ) {
-          operatorEntries.push([
-            k,
-            await options.pipe!(v, target, key, property, options)
-          ])
-        }
-
+      if( Array.isArray(value) ) {
         entries.push([
           key,
-          Object.fromEntries(operatorEntries)
+          await Promise.all(value.map((elem) => recurse(elem, parent, options)))
         ])
         continue
       }
+
+      entries.push([
+        key,
+        await recurse(value as any, parent, options)
+      ])
     }
 
-    entries.push([
-      key,
-      await options.pipe!(value, target, key, property, options)
-    ])
+    if( property ) {
+      if( options.allowOperators && value && typeof value === 'object' && Object.keys(value).length > 0 ) {
+        entries.push([
+          key,
+          value
+        ])
+        continue
+      }
+
+      if( options.recurseReferences ) {
+        const propCast = property as CollectionProperty
+        if( propCast.s$isReference && value && !(value instanceof ObjectId) ) {
+          const targetDescriptionEither = await getResourceAsset(propCast.s$referencedCollection!, 'description')
+          if( isLeft(targetDescriptionEither) ) {
+            return left(unwrapEither(targetDescriptionEither))
+          }
+
+          const targetDescription = unwrapEither(targetDescriptionEither)
+          if( Array.isArray(value) ) {
+            const documents = []
+
+            for( const elem of value ) {
+              const documentEither = await traverseDocument(elem, targetDescription, options)
+              if( isLeft(documentEither) ) {
+                return left(unwrapEither(documentEither))
+              }
+
+              documents.push(unwrapEither(documentEither))
+            }
+
+            entries.push([
+              key,
+              documents
+            ])
+            continue
+          }
+
+          const documentEither = await traverseDocument(value as any, targetDescription, options)
+          if( isLeft(documentEither) ) {
+            return left(unwrapEither(documentEither))
+          }
+
+          entries.push([
+            key,
+            unwrapEither(documentEither)
+          ])
+          continue
+        }
+      }
+
+      entries.push([
+        key,
+        await options.pipe!(value, target, key, property, options)
+      ])
+    }
   }
 
-  return Object.fromEntries(entries)
+  return right(Object.fromEntries(entries))
 }
 
 export const traverseDocument = async <const TWhat extends Record<string, any>>(
@@ -145,6 +195,10 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
 ) => {
   const functions = []
   let validationError: ValidationError | null = null
+
+  if( Object.keys(what).length === 0 ) {
+    return right({})
+  }
 
   if( options.autoCast ) {
     functions.push(autoCast)
@@ -177,7 +231,12 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     }
   })
 
-  const result = await recurse(what, description, options)
+  const resultEither = await recurse(what, await preloadDescription(description), options)
+  if( isLeft(resultEither) ) {
+    return left(unwrapEither(resultEither))
+  }
+
+  const result = unwrapEither(resultEither)
 
   return validationError
     ? left(makeValidationError({

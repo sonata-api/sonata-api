@@ -57,7 +57,13 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     pipeline.push({ $sort: DEFAULT_SORT })
   }
 
-  pipeline.push({ $match: unsafe(await traverseDocument(filters, context.description, { autoCast: true })) })
+  pipeline.push({
+    $match: unsafe(await traverseDocument(filters, context.description, {
+      autoCast: true,
+      allowOperators: true
+    }))
+  })
+
   pipeline.push({ $skip: offset })
   pipeline.push({ $limit: limit })
   const projection = normalizeProjection(project, context.description)
@@ -76,7 +82,8 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     documents.push(
       unsafe(await traverseDocument(fill(document, context.description), context.description, {
         getters: true,
-        fromProperties: true
+        fromProperties: true,
+        recurseReferences: true,
       }))
     )
   }
