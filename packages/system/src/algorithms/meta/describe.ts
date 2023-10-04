@@ -16,7 +16,7 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     descriptions: typeof descriptions
     roles?: typeof context.accessControl.roles
     auth?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
-      ? Right
+      ? Partial<Right>
       : never
   }
 
@@ -32,8 +32,9 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     }
 
     const auth = unwrapEither(authEither)
-    auth.user._id = auth.user._id.toString()
-    result.auth = auth
+    result.auth = {
+      token: auth.token
+    }
   }
 
   const resources = await getResources()

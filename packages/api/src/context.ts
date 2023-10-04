@@ -56,7 +56,7 @@ export type Context<
   functionPath: FunctionPath
   token: DecodedToken<TAccessControl>
 
-  resourceName?: keyof TCollections | keyof TAlgorithms
+  resourceName?: (keyof TCollections | keyof TAlgorithms) & string
   request: MatchedRequest
   response: GenericResponse
 

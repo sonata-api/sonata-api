@@ -3,7 +3,6 @@ import type { Property } from './jsonschema'
 
 export type CollectionPresets = typeof COLLECTION_PRESETS[number]
 
-export type StoreEffect = string
 export type CollectionId = string
 
 export type CollectionAction<TDescription extends Description> = Readonly<{
@@ -11,7 +10,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   icon?: string
   ask?: boolean
   selection?: boolean
-  effect?: StoreEffect
+  effect?: string
   button?: boolean
 
   // route namespace

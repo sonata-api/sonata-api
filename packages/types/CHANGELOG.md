@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.11
+
+### Patch Changes
+
+- Fix describe revalidate
+
 ## 0.0.10
 
 ### Patch Changes

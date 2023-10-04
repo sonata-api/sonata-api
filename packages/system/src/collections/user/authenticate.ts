@@ -21,7 +21,7 @@ type Return = {
   >
   token: {
     type: 'bearer'
-    token: string
+    content: string
   }
 }
 
@@ -77,7 +77,7 @@ const getUser = async (user: Pick<WithId<User>, '_id'>, context: Context<typeof 
     user: leanUser,
     token: {
       type: 'bearer',
-      token
+      content: token
     }
   } as Return
 }
@@ -113,7 +113,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
       },
       token: {
         type: 'bearer',
-        token
+        content: token
       }
     })
   }
