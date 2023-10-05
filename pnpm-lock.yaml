@@ -101,12 +101,6 @@ importers:
       '@types/node':
         specifier: ^17.0.1
         version: 17.0.45
-      '@types/nodemailer':
-        specifier: ^6.4.9
-        version: 6.4.11
-      '@types/sharp':
-        specifier: ^0.31.1
-        version: 0.31.1
 
   packages/common:
     dependencies:
@@ -119,6 +113,10 @@ importers:
         version: 20.8.0
 
   packages/http:
+    dependencies:
+      '@sonata-api/common':
+        specifier: '*'
+        version: link:../common
     devDependencies:
       '@types/node':
         specifier: ^20.6.5
@@ -1938,12 +1936,6 @@ packages:
 
   /@types/semver@7.5.3:
     resolution: {integrity: sha512-OxepLK9EuNEIPxWNME+C6WwbRAOOI2o2BaQEGzz5Lu2e4Z5eDnEo+/aVEDMIXywoJitJ7xWd641wrGLZdtwRyw==}
-    dev: true
-
-  /@types/sharp@0.31.1:
-    resolution: {integrity: sha512-5nWwamN9ZFHXaYEincMSuza8nNfOof8nmO+mcI+Agx1uMUk4/pQnNIcix+9rLPXzKrm1pS34+6WRDbDV0Jn7ag==}
-    dependencies:
-      '@types/node': 20.8.0
     dev: true
 
   /@types/webidl-conversions@7.0.1:
