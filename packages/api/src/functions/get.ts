@@ -1,4 +1,4 @@
-import type { Context, OptionalId, WithId } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { CollectionDocument, Filters, Projection } from './types'
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
@@ -58,5 +58,5 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
       recurseReferences: true,
     })),
     context.description
-  ) as WithId<TDocument>
+  ) as TDocument
 }

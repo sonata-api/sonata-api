@@ -51,7 +51,6 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
     }
 
     case 'object': {
-      console.log(value, propName)
       if( Array.isArray(value) ) {
         return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
       }

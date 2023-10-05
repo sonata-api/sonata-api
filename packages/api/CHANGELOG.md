@@ -1,5 +1,23 @@
 # @sonata-api/api
 
+## 0.0.37
+
+### Patch Changes
+
+- Fix server post hook
+
+## 0.0.36
+
+### Patch Changes
+
+- Remove residual console.log
+
+## 0.0.35
+
+### Patch Changes
+
+- Fix autocast
+
 ## 0.0.34
 
 ### Patch Changes

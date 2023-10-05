@@ -1,5 +1,5 @@
 import { compare as bcryptCompare } from 'bcrypt'
-import { signToken, type Context, type WithId } from '@sonata-api/api'
+import { signToken, type Context } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 
@@ -11,7 +11,7 @@ type Props = {
 }
 
 type Return = {
-  user: Pick<WithId<User>,
+  user: Pick<User,
     '_id'
     | 'first_name'
     | 'last_name'
@@ -30,7 +30,7 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (user: Pick<WithId<User>, '_id'>, context: Context<typeof description>) => {
+const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
   const leanUser = await context.collection.functions.get({
     filters: {
       _id: user._id 

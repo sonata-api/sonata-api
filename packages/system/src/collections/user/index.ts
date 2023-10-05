@@ -8,10 +8,10 @@ import createAccount from './createAccount'
 import getInfo from './getInfo'
 
 export const user = defineCollection(() => ({
-  item: User,
+  item: {} as User,
   description,
   functions: {
-    ...useFunctions<typeof User>()([
+    ...useFunctions<User>()([
       'get',
       'getAll',
       'remove',

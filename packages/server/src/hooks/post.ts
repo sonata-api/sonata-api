@@ -1,8 +1,6 @@
 import type { Context, ResourceType } from '@sonata-api/api'
 import type { MatchedRequest } from '@sonata-api/http'
-import { getCollection } from '@sonata-api/api'
-import { useAccessControl } from '@sonata-api/access-control'
-import { unsafe } from '@sonata-api/common'
+import { useFunctions } from '@sonata-api/api'
 
 type PostHookParams = {
   redirected?: boolean
@@ -18,16 +16,12 @@ export const appendPagination = async (params: PostHookParams) => {
     context,
     request,
     result,
-    resourceName,
     resourceType
   } = params
 
   if( Array.isArray(result) && resourceType === 'collection' ) {
-    const model = getCollection(resourceName)
-    const accessControl = useAccessControl(context)
-
-    const countPayload = unsafe(await accessControl.beforeRead(request.req.payload))
-    const recordsTotal = await model.countDocuments(countPayload.filters)
+    const { count } = useFunctions()()
+    const recordsTotal = await count(request.req.payload, context)
 
     const limit = request.req.payload.limit
       ? request.req.payload.limit

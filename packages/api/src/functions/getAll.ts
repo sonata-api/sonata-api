@@ -70,8 +70,6 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
         allowOperators: true
       }))
     })
-
-    console.log(pipeline[pipeline.length - 1].$match.products)
   }
 
   pipeline.push({ $skip: offset })
@@ -99,5 +97,5 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     )
   }
 
-  return documents as WithId<TDocument>[]
+  return documents as TDocument[]
 }

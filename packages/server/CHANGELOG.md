@@ -1,5 +1,14 @@
 # @sonata-api/server
 
+## 0.0.18
+
+### Patch Changes
+
+- Fix server post hook
+- Updated dependencies
+  - @sonata-api/server@0.0.18
+  - @sonata-api/api@0.0.37
+
 ## 0.0.17
 
 ### Patch Changes

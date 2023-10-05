@@ -1,6 +1,6 @@
-import { defineDescription, WithId } from '@sonata-api/api'
+import { defineDescription } from '@sonata-api/api'
 
-const link = (_id: WithId<File>['_id']) => {
+const link = (_id: File['_id']) => {
   return `${process.env.API_URL}/file/${_id}`
 }
 

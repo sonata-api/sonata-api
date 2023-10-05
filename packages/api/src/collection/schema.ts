@@ -1,12 +1,14 @@
 import type { JsonSchema } from '@sonata-api/types'
 import type { ObjectId } from '../types'
 
-export type Schema<TSchema extends JsonSchema> = CaseTimestamped<
+export type Schema<TSchema extends Subschema> = { _id: ObjectId } & CaseTimestamped<
   TSchema,
   CaseOwned<
     TSchema,
     MapTypes<TSchema>
   >>
+
+type Subschema = Omit<JsonSchema, '$id'>
 
 type Owned = {
   owner?: ObjectId
@@ -24,7 +26,7 @@ type MapType<T> = T extends TestType<{ format: 'date'|'date-time' }>
   ? string      : T extends TestType<{ type: 'number' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
   ? boolean     : T extends TestType<{ properties: any }>
-  ? Schema<T & { $id: '' }> : T extends TestType<{ type: 'object' }>
+  ? Omit<Schema<T>, '_id'>   : T extends TestType<{ type: 'object' }>
   ? object      : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ $ref: string }>
   ? ObjectId    : never
@@ -53,7 +55,7 @@ type CombineProperties<TProperties> = FilterReadonlyProperties<TProperties> exte
   : never
 
 type MapTypes<
-  TSchema extends JsonSchema,
+  TSchema extends Subschema,
   Properties=TSchema['properties']
 > = 
   CombineProperties<Properties> extends infer MappedTypes
@@ -69,14 +71,14 @@ type MapTypes<
       : never
 
 type CaseOwned<
-  TSchema extends JsonSchema,
+  TSchema extends Subschema,
   TType
 > = TSchema extends { owned: true | string }
   ? TType & Owned
   : TType
 
 type CaseTimestamped<
-  TSchema extends JsonSchema,
+  TSchema extends Subschema,
   TType
 > = TSchema extends { timestamps: false }
   ? TType

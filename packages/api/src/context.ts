@@ -18,7 +18,7 @@ import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
 type CollectionModel<TDescription extends Description> =
-  Collection<Schema<TDescription>>
+  Collection<Omit<Schema<TDescription>, '_id'>>
 
 type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
