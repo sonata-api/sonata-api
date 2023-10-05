@@ -196,7 +196,6 @@ type CollectionPropertyAux = {
   limit?: number
   indexes?: ReadonlyArray<string>
   select?: ReadonlyArray<string>
-  maxDepth?: number
   inline?: boolean
 
   getter?: (value: any) => any

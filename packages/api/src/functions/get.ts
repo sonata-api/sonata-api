@@ -26,7 +26,7 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
   } = unsafe(await accessControl.beforeRead(payload))
 
   const pipeline: Document[] = []
-  const references = getReferences(context.description.properties, {
+  const references = await getReferences(context.description.properties, {
     memoize: context.description.$id
   })
 
@@ -42,7 +42,8 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
     pipeline.push({ $project: projection })
   }
   pipeline.push(...buildLookupPipeline(references, {
-    memoize: context.description.$id
+    memoize: context.description.$id,
+    project
   }))
 
   const result = await context.model.aggregate(pipeline).next()

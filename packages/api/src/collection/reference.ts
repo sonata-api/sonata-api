@@ -1,8 +1,11 @@
 import type { CollectionProperty } from '@sonata-api/types'
+import { unsafe } from '@sonata-api/common'
+import { getResourceAsset } from '../assets'
 import { prepareCollectionName } from '../database'
 
 export type GetReferenceOptions = {
   memoize?: string
+  depth?: number
 }
 
 export type BuildLookupOptions = {
@@ -10,6 +13,7 @@ export type BuildLookupOptions = {
   depth?: number
   maxDepth?: number
   memoize?: string
+  project?: string[]
 }
 
 export type Reference = {
@@ -23,12 +27,19 @@ export type ReferenceMap = Record<string, Reference>
 const referenceMemo: Record<string, ReferenceMap | {}> = {}
 const lookupMemo: Record<string, ReturnType<typeof buildLookupPipeline>> = {}
 
-export const getReferences = (
+const narrowLookupPipelineProjection = (pipeline: Array<Record<string, any>>, projection: string[]) => {
+  return pipeline.filter((stage) => {
+    return !stage.$lookup || projection.includes(stage.$lookup.as)
+  })
+}
+
+export const getReferences = async (
   properties: NonNullable<CollectionProperty['properties']>,
   options?: GetReferenceOptions
 ) => {
   const {
-    memoize
+    memoize,
+    depth = 0
   } = options || {}
 
   if( memoize ) {
@@ -43,6 +54,10 @@ export const getReferences = (
     const referencedCollection = property.$ref || property.items?.$ref
     let deepReferences: Reference['deepReferences']
 
+    if( depth === 2 ) {
+      continue
+    }
+
     if( !referencedCollection ) {
       const entrypoint = property.items || property
       // if( property.additionalProperties ) {
@@ -53,12 +68,18 @@ export const getReferences = (
 
       if( entrypoint.properties ) {
         deepReferences ??= {}
-        deepReferences[propName] = getReferences(entrypoint.properties)
+        deepReferences[propName] = await getReferences(entrypoint.properties)
       }
 
-      if( !deepReferences ) {
-        continue
-      }
+    } else {
+      const description = unsafe(await getResourceAsset(referencedCollection, 'description'))
+      deepReferences = await getReferences(description.properties, {
+        depth: depth + 1
+      })
+    }
+
+    if( !referencedCollection && !deepReferences ) {
+      continue
     }
 
     const reference: Reference = {}
@@ -88,11 +109,15 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
     parent,
     depth = 0,
     maxDepth = 3,
-    memoize
+    memoize,
+    project
   } = options || {}
 
   if( memoize && lookupMemo[memoize] ) {
-    return lookupMemo[memoize]
+    const result = lookupMemo[memoize]
+    return project
+      ? narrowLookupPipelineProjection(result, project)
+      : result
   }
 
   const withParent = (propName: string) => {
@@ -104,27 +129,69 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
   const result = Object.entries(referenceMap).reduce((a, [propName, reference]) => {
     const pipeline = a
     if( reference.referencedCollection ) {
-      pipeline.push({
-        $lookup: {
-          from: prepareCollectionName(reference.referencedCollection),
-          foreignField: '_id',
-          localField: withParent(propName),
-          as: withParent(propName)
+      if( reference.deepReferences ) {
+        const subPipeline = buildLookupPipeline(reference.deepReferences)
+        if( subPipeline.length > 0 ) {
+          pipeline.push({
+            $lookup: {
+              from: prepareCollectionName(reference.referencedCollection),
+              let: {
+                'ids': !reference.isArray
+                  ? `$${withParent(propName)}`
+                  : {
+                    $ifNull: [
+                      `$${withParent(propName)}`,
+                      []
+                    ]
+                  }
+              },
+              as: withParent(propName),
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      [
+                        reference.isArray
+                          ? '$in'
+                          : '$eq'
+                      ]: [
+                        '$_id',
+                        '$$ids'
+                      ]
+                    }
+                  }
+                },
+                ...subPipeline
+              ]
+            }
+          })
         }
-      })
+
+        else {
+          pipeline.push({
+            $lookup: {
+              from: prepareCollectionName(reference.referencedCollection),
+              foreignField: '_id',
+              localField: withParent(propName),
+              as: withParent(propName)
+            }
+          })
+        }
+      }
 
       if( !reference.isArray ) {
         pipeline.push({
           $unwind: {
             path: `$${withParent(propName)}`,
             preserveNullAndEmptyArrays: true
-
           }
         })
       }
+
+      return pipeline
     }
 
-    else if( reference.deepReferences && depth <= maxDepth ) {
+    if( reference.deepReferences && depth <= maxDepth ) {
       Object.entries(reference.deepReferences).forEach(([refName, refMap]) => {
         pipeline.push(...buildLookupPipeline(refMap, {
           ...options,
@@ -142,5 +209,7 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
     lookupMemo[memoize] = result
   }
 
-  return result
+  return project
+    ? narrowLookupPipelineProjection(result, project)
+    : result
 }
