@@ -42,7 +42,7 @@ const getProperty = (propertyName: string, parentProperty: CollectionProperty) =
     || parentProperty.additionalProperties
 }
 
-const autoCast = (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): any => {
+const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): Promise<any> => {
   switch( typeof value ) {
     case 'string': {
       return ObjectId.isValid(value) && getReferencedCollection(property)
@@ -51,12 +51,21 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
     }
 
     case 'object': {
+      console.log(value, propName)
       if( Array.isArray(value) ) {
         return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
       }
 
       if( value && Object.keys(value).length > 0 ) {
-        return recurse(value, property, options)
+        const entries: Array<any> = []
+        for( const [k, v] of Object.entries(value) ) {
+          entries.push([
+            k,
+            await autoCast(v, target, propName, property, options)
+          ])
+        }
+
+        return Object.fromEntries(entries)
       }
     }
   }
@@ -117,7 +126,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       if( options.allowOperators && Object.keys(value)[0].startsWith('$') ) {
         entries.push([
           key,
-          value
+          'eae'
         ])
         continue
       }
@@ -152,13 +161,20 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     }
 
     if( property ) {
-      if( options.allowOperators && value && typeof value === 'object' && Object.keys(value).length > 0 ) {
-        entries.push([
-          key,
-          value
-        ])
-        continue
-      }
+      // if( options.allowOperators && value && typeof value === 'object' && Object.keys(value).length > 0 ) {
+      //   console.log(JSON.stringify({
+      //     value,
+      //     parent: getProperty(key, parent),
+      //     result: await recurse(target, getProperty(key, parent), options)
+      //   }, null, 2))
+
+      //   console.log((await recurse(target, getProperty(key, parent), options) as any).value.products)
+      //   entries.push([
+      //     key,
+      //     value
+      //   ])
+      //   continue
+      // }
 
       if( options.recurseReferences ) {
         const propCast = property as CollectionProperty

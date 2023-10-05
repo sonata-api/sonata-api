@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.34
+
+### Patch Changes
+
+- Deep autopopulate
+
 ## 0.0.33
 
 ### Patch Changes
