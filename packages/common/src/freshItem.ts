@@ -14,6 +14,10 @@ export const freshItem = (description: Pick<Description, 'properties' | 'freshIt
       }
     })()
 
+    if( !value ) {
+      return a
+    }
+
     return {
       ...a,
       [key]: value

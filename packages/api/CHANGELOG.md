@@ -1,5 +1,13 @@
 # @sonata-api/api
 
+## 0.0.40
+
+### Patch Changes
+
+- Reduce network traffic
+- Updated dependencies
+  - @sonata-api/common@0.0.13
+
 ## 0.0.39
 
 ### Patch Changes

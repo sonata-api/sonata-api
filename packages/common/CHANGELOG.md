@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.0.13
+
+### Patch Changes
+
+- Reduce network traffic
+
 ## 0.0.12
 
 ### Patch Changes

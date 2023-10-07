@@ -21,7 +21,6 @@ export type Reference = {
   deepReferences?: Record<string, ReferenceMap>
   referencedCollection?: string
   populatedProperties?: string[]
-  indexes?: string[]
 }
 
 export type ReferenceMap = Record<string, Reference>
@@ -88,12 +87,8 @@ export const getReferences = async (
       })
 
       if( !property.s$inline ) {
-        reference.indexes = [
-          ...property.s$indexes || description.indexes!
-        ]
-
         reference.populatedProperties = [
-          ...reference.indexes,
+          ...property.s$indexes || description.indexes!,
           ...property.s$populate || []
         ]
       }
@@ -146,96 +141,63 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
   const result = Object.entries(referenceMap).reduce((a, [propName, reference]) => {
     const pipeline = a
     if( reference.referencedCollection ) {
-      if( reference.deepReferences ) {
-        const subPipeline = buildLookupPipeline(reference.deepReferences, {
-          project: reference.populatedProperties!
+      if( !reference.populatedProperties ) {
+        pipeline.push({
+          $lookup: {
+            from: prepareCollectionName(reference.referencedCollection),
+            foreignField: '_id',
+            localField: withParent(propName),
+            as: withParent(propName)
+          }
         })
 
-        if( subPipeline.length > 0 ) {
-          pipeline.push({
-            $lookup: {
-              from: prepareCollectionName(reference.referencedCollection),
-              let: {
-                'ids': !reference.isArray
-                  ? `$${withParent(propName)}`
-                  : {
-                    $ifNull: [
-                      `$${withParent(propName)}`,
-                      []
+      } else {
+        const subPipeline: any[] = []
+        if( reference.deepReferences ) {
+          subPipeline.push(...buildLookupPipeline(reference.deepReferences, {
+            project: reference.populatedProperties
+          }))
+        }
+
+        subPipeline.push({
+          $project: Object.fromEntries(reference.populatedProperties.map((index) => [index, 1]))
+        })
+
+        pipeline.push({
+          $lookup: {
+            from: prepareCollectionName(reference.referencedCollection),
+            let: {
+              'ids': !reference.isArray
+                ? `$${withParent(propName)}`
+                : {
+                  $ifNull: [
+                    `$${withParent(propName)}`,
+                    []
+                  ]
+                }
+            },
+            as: withParent(propName),
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    [
+                      reference.isArray
+                        ? '$in'
+                        : '$eq'
+                    ]: [
+                      '$_id',
+                      '$$ids'
                     ]
                   }
+                }
               },
-              as: withParent(propName),
-              pipeline: [
-                {
-                  $match: {
-                    $expr: {
-                      [
-                        reference.isArray
-                          ? '$in'
-                          : '$eq'
-                      ]: [
-                        '$_id',
-                        '$$ids'
-                      ]
-                    }
-                  }
-                },
-                ...subPipeline
-              ]
-            }
-          })
-
-        } else {
-          if( !reference.indexes ) {
-            pipeline.push({
-              $lookup: {
-                from: prepareCollectionName(reference.referencedCollection),
-                foreignField: '_id',
-                localField: withParent(propName),
-                as: withParent(propName)
-              }
-            })
-
-          } else {
-            pipeline.push({
-              $lookup: {
-                from: prepareCollectionName(reference.referencedCollection),
-                let: {
-                  'ids': !reference.isArray
-                    ? `$${withParent(propName)}`
-                    : {
-                      $ifNull: [
-                        `$${withParent(propName)}`,
-                        []
-                      ]
-                    }
-                },
-                as: withParent(propName),
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        [
-                          reference.isArray
-                            ? '$in'
-                            : '$eq'
-                        ]: [
-                          '$_id',
-                          '$$ids'
-                        ]
-                      }
-                    }
-                  },
-                  {
-                    $project: Object.fromEntries(reference.indexes!.map((index) => [index, 1]))
-                  }
-                ]
-              }
-            })
+              ...subPipeline
+            ]
           }
-        }
+        })
       }
+        // }
 
       if( !reference.isArray ) {
         pipeline.push({
