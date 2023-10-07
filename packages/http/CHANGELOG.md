@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.7
+
+### Patch Changes
+
+- Optimize autopopulate
+
 ## 0.0.6
 
 ### Patch Changes

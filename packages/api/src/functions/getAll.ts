@@ -1,4 +1,4 @@
-import type { Context, OptionalId, WithId } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { CollectionDocument, Filters, Projection, QuerySort } from './types'
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
@@ -63,7 +63,7 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     pipeline.push({ $sort: DEFAULT_SORT })
   }
 
-  if( !textQuery ) {
+  if( !textQuery && Object.keys(filters).length > 0 ) {
     pipeline.push({
       $match: unsafe(await traverseDocument(filters, context.description, {
         autoCast: true,

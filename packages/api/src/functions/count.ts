@@ -11,10 +11,14 @@ export const count = <TDocument extends CollectionDocument<OptionalId<any>>>() =
     : never
 ) => {
   const accessControl = useAccessControl(context)
-  const newPayload = unsafe(await accessControl.beforeRead(payload))
+  const { filters } = unsafe(await accessControl.beforeRead(payload))
 
-  return context.model.countDocuments(unsafe(await traverseDocument(newPayload.filters, context.description, {
-    autoCast: true,
-    allowOperators: true
-  })))
+  const newFilters = !!filters.$text
+    ? filters
+    : unsafe(await traverseDocument(filters, context.description, {
+      autoCast: true,
+      allowOperators: true
+    }))
+
+  return context.model.countDocuments(newFilters)
 }

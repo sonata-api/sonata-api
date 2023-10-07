@@ -1,5 +1,20 @@
 # @sonata-api/api
 
+## 0.0.39
+
+### Patch Changes
+
+- Optimize autopopulate
+- Updated dependencies
+  - @sonata-api/types@0.0.12
+  - @sonata-api/http@0.0.7
+
+## 0.0.38
+
+### Patch Changes
+
+- Fix problem with $text queries
+
 ## 0.0.37
 
 ### Patch Changes

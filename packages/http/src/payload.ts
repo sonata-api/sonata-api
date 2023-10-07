@@ -4,8 +4,10 @@ export const safeJson = (candidate: any) => {
   }
 
   const json = JSON.parse(candidate)
-  delete json.constructor
-  delete json.__proto__
+  if( json && typeof json === 'object' ) {
+    delete json.constructor
+    delete json.__proto__
+  }
   return json
 }
 

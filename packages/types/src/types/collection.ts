@@ -195,6 +195,7 @@ type CollectionPropertyAux = {
   array?: boolean
   limit?: number
   indexes?: ReadonlyArray<string>
+  populate?: ReadonlyArray<string>
   select?: ReadonlyArray<string>
   inline?: boolean
 
