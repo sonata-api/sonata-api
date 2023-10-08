@@ -60,7 +60,7 @@ export const validateProperty = async (
     extraneous
   } = options
 
-  if( (Array.isArray(extraneous) && extraneous.includes(propName)) || (!property && !extraneous) ) {
+  if( (Array.isArray(extraneous) && extraneous.includes(propName)) || !property ) {
     return makePropertyError('extraneous', {
       expected: 'undefined',
       got: getValueType(value)

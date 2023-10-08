@@ -1,5 +1,23 @@
 # @sonata-api/api
 
+## 0.0.42
+
+### Patch Changes
+
+- Autocast datetime
+- Updated dependencies
+  - @sonata-api/validation@0.0.7
+  - @sonata-api/types@0.0.14
+
+## 0.0.41
+
+### Patch Changes
+
+- Optimize autopopulate
+- Updated dependencies
+  - @sonata-api/validation@0.0.6
+  - @sonata-api/types@0.0.13
+
 ## 0.0.40
 
 ### Patch Changes

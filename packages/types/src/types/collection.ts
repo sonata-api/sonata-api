@@ -14,6 +14,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   button?: boolean
 
   // route namespace
+  setItem?: boolean
   fetchItem?: boolean
   clearItem?: boolean
   params?: Record<string, any>
@@ -189,7 +190,6 @@ type CollectionPropertyAux = {
   isReference?: boolean
   isFile?: boolean
   referencedCollection?: string
-  preventPopulate?: boolean
   noForm?: boolean
 
   array?: boolean

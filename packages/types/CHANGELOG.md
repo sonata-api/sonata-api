@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.0.14
+
+### Patch Changes
+
+- Autocast datetime
+
+## 0.0.13
+
+### Patch Changes
+
+- Optimize autopopulate
+
 ## 0.0.12
 
 ### Patch Changes

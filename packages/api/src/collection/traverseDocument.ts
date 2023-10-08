@@ -45,17 +45,32 @@ const getProperty = (propertyName: string, parentProperty: CollectionProperty) =
 const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): Promise<any> => {
   switch( typeof value ) {
     case 'string': {
-      return ObjectId.isValid(value) && getReferencedCollection(property)
-        ? new ObjectId(value)
-        : value
+      if( property.s$isReference ) {
+        return ObjectId.isValid(value) && getReferencedCollection(property)
+          ? new ObjectId(value)
+          : value
+      }
+
+      if( property.format === 'date' || property.format === 'date-time' ) {
+        const timestamp = Date.parse(value)
+        return !Number.isNaN(timestamp)
+          ? new Date(timestamp)
+          : null
+      }
+
+      return value
     }
 
     case 'object': {
+      if( !value ) {
+        return value
+      }
+
       if( Array.isArray(value) ) {
         return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
       }
 
-      if( value && Object.keys(value).length > 0 ) {
+      if( Object.keys(value).length > 0 ) {
         const entries: Array<any> = []
         for( const [k, v] of Object.entries(value) ) {
           entries.push([
@@ -160,21 +175,6 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     }
 
     if( property ) {
-      // if( options.allowOperators && value && typeof value === 'object' && Object.keys(value).length > 0 ) {
-      //   console.log(JSON.stringify({
-      //     value,
-      //     parent: getProperty(key, parent),
-      //     result: await recurse(target, getProperty(key, parent), options)
-      //   }, null, 2))
-
-      //   console.log((await recurse(target, getProperty(key, parent), options) as any).value.products)
-      //   entries.push([
-      //     key,
-      //     value
-      //   ])
-      //   continue
-      // }
-
       if( options.recurseReferences ) {
         const propCast = property as CollectionProperty
         if( propCast.s$isReference && value && !(value instanceof ObjectId) ) {

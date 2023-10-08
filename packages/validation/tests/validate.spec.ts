@@ -1,7 +1,7 @@
 import type { Description } from '@sonata-api/types'
 import assert from 'assert'
 import { unwrapEither, isLeft, isRight } from '@sonata-api/common'
-import { validateFromDescription } from '../dist'
+import { validate } from '../dist'
 
 const description: Omit<Description, '$id'> = {
   properties: {
@@ -21,7 +21,7 @@ describe('Validate', () => {
       age: 50
     }
 
-    const validationEither = await validateFromDescription(description, candidate)
+    const validationEither = await validate(description, candidate)
     assert(isRight(validationEither))
     assert(JSON.stringify(candidate) === JSON.stringify(unwrapEither(validationEither)))
   })
@@ -32,7 +32,7 @@ describe('Validate', () => {
       age: '50'
     }
 
-    const validationEither = await validateFromDescription(description, candidate)
+    const validationEither = await validate(description, candidate)
 
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)

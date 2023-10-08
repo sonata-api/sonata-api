@@ -63,7 +63,7 @@ export const getReferences = async (
     const referencedCollection = property.$ref || property.items?.$ref
     const reference: Reference = {}
 
-    if( depth === 2 ) {
+    if( depth === 2 || (property.s$populate && property.s$populate.length === 0) ) {
       continue
     }
 
@@ -197,7 +197,6 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
           }
         })
       }
-        // }
 
       if( !reference.isArray ) {
         pipeline.push({
