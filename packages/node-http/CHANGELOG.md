@@ -1,5 +1,11 @@
 # @sonata-api/node-http
 
+## 0.0.6
+
+### Patch Changes
+
+- Fix bug in JSON serialization
+
 ## 0.0.5
 
 ### Patch Changes
