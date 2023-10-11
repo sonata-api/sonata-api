@@ -1,5 +1,13 @@
 # @sonata-api/api
 
+## 0.0.43
+
+### Patch Changes
+
+- Bug fixes and optimizations
+- Updated dependencies
+  - @sonata-api/system@0.0.32
+
 ## 0.0.42
 
 ### Patch Changes

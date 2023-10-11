@@ -1,5 +1,29 @@
 # @sonata-api/node-http
 
+## 0.0.10
+
+### Patch Changes
+
+- Bug fixes and optimizations
+
+## 0.0.9
+
+### Patch Changes
+
+- Fix dependencies
+
+## 0.0.8
+
+### Patch Changes
+
+- Fix warmup bug
+
+## 0.0.7
+
+### Patch Changes
+
+- Fix serialization bug
+
 ## 0.0.6
 
 ### Patch Changes

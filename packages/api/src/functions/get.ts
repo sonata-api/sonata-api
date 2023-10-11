@@ -43,7 +43,8 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
   }
   pipeline.push(...buildLookupPipeline(references, {
     memoize: context.description.$id,
-    project
+    project,
+    properties: context.description.properties
   }))
 
   const result = await context.model.aggregate(pipeline).next()

@@ -1,5 +1,42 @@
 # @sonata-api/server
 
+## 0.0.22
+
+### Patch Changes
+
+- Bug fixes and optimizations
+- Updated dependencies
+  - @sonata-api/server@0.0.22
+  - @sonata-api/system@0.0.32
+  - @sonata-api/api@0.0.43
+
+## 0.0.21
+
+### Patch Changes
+
+- Fix dependencies
+- Updated dependencies
+  - @sonata-api/server@0.0.21
+  - @sonata-api/system@0.0.31
+
+## 0.0.20
+
+### Patch Changes
+
+- Fix warmup bug
+- Updated dependencies
+  - @sonata-api/server@0.0.20
+  - @sonata-api/system@0.0.30
+
+## 0.0.19
+
+### Patch Changes
+
+- Fix serialization bug
+- Updated dependencies
+  - @sonata-api/server@0.0.19
+  - @sonata-api/system@0.0.29
+
 ## 0.0.18
 
 ### Patch Changes

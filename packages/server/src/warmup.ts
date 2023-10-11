@@ -1,7 +1,7 @@
 import { getResources, type Collection, type Algorithm } from '@sonata-api/api'
 import { grantedFor } from '@sonata-api/access-control'
 
-if( process.env.MODE !== 'PRODUCTION' ) {
+if( process.env.NODE_ENV !== 'production' ) {
   require('dotenv').config()
 }
 

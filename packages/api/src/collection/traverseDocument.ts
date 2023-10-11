@@ -73,9 +73,14 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
       if( Object.keys(value).length > 0 ) {
         const entries: Array<any> = []
         for( const [k, v] of Object.entries(value) ) {
+          const subProperty = getProperty(k, property)
+          if( !subProperty ) {
+            return value
+          }
+
           entries.push([
             k,
-            await autoCast(v, target, propName, property, options)
+            await autoCast(v, target, propName, subProperty, options)
           ])
         }
 
@@ -140,7 +145,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       if( options.allowOperators && Object.keys(value)[0].startsWith('$') ) {
         entries.push([
           key,
-          'eae'
+          value
         ])
         continue
       }

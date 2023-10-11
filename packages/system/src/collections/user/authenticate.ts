@@ -31,11 +31,9 @@ export enum AuthenticationErrors {
 }
 
 const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
-  const leanUser = await context.collection.functions.get({
-    filters: {
-      _id: user._id 
-    }
-  }, context)
+  const leanUser = await context.model.findOne({
+    _id: user._id 
+  })
 
   if( !leanUser ) {
     throw new Error()

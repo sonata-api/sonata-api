@@ -3,7 +3,6 @@ import type { CollectionDocument, Filters, Projection, QuerySort } from './types
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
-import { DEFAULT_SORT } from '../constants'
 import {
   traverseDocument,
   normalizeProjection,
@@ -59,8 +58,12 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     pipeline.push({ $sort: sort })
   }
 
-  if( context.description.timestamps !== false ) {
-    pipeline.push({ $sort: DEFAULT_SORT })
+  else if( context.description.timestamps !== false ) {
+    pipeline.push({
+      $sort: {
+        _id: -1
+      }
+    })
   }
 
   if( !textQuery && Object.keys(filters).length > 0 ) {
@@ -81,7 +84,8 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
 
   pipeline.push(...buildLookupPipeline(references, {
     memoize: context.description.$id,
-    project
+    project,
+    properties: context.description.properties
   }))
 
   const result = await context.model.aggregate(pipeline).toArray()

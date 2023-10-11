@@ -48,7 +48,7 @@ export const abstractResponse = (response: http.ServerResponse): GenericResponse
     writeHead: response.writeHead.bind(response),
     setHeader: response.setHeader.bind(response),
     end: (value) => {
-      if( typeof value === 'object' ) {
+      if( typeof value === 'object' && !(value instanceof Buffer) ) {
         if( !response.headersSent ) {
           response.writeHead(200, {
             'content-type': 'application/json'

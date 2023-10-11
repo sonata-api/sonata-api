@@ -14,6 +14,7 @@ export type BuildLookupOptions = {
   maxDepth?: number
   memoize?: string
   project?: string[]
+  properties?: NonNullable<CollectionProperty['properties']>
 }
 
 export type Reference = {
@@ -29,17 +30,36 @@ const referenceMemo: Record<string, ReferenceMap | {}> = {}
 const lookupMemo: Record<string, ReturnType<typeof buildLookupPipeline>> = {}
 
 const narrowLookupPipelineProjection = (pipeline: Array<Record<string, any>>, projection: string[]) => {
+  const hasAny = (propName: string) => {
+    return propName.includes('.') || projection.includes(propName)
+  }
+
   return pipeline.filter((stage) => {
     if( stage.$lookup ) {
-      return projection.includes(stage.$lookup.as)
+      return hasAny(stage.$lookup.as)
     }
 
     if( stage.$unwind ) {
-      return projection.includes(stage.$unwind.path.slice(1))
+      return hasAny(stage.$unwind.path.slice(1))
     }
 
     return true
   })
+}
+
+const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<CollectionProperty['properties']>) => {
+  const $group = Object.keys(properties).reduce((a, propName) => {
+    return {
+      ...a,
+      [propName]: referenceMap[propName]?.isArray
+        ? { $push: `$${propName}` }
+        : { $first: `$${propName}` }
+    }
+  }, { _id: '$_id' })
+
+  return {
+    $group
+  }
 }
 
 export const getReferences = async (
@@ -76,8 +96,11 @@ export const getReferences = async (
       // }
 
       if( entrypoint.properties ) {
-        reference.deepReferences ??= {}
-        reference.deepReferences[propName] = await getReferences(entrypoint.properties)
+        const deepReferences  = await getReferences(entrypoint.properties)
+        if( Object.keys(deepReferences).length > 0 ) {
+          reference.deepReferences ??= {}
+          reference.deepReferences[propName] = deepReferences
+        }
       }
 
     } else {
@@ -122,7 +145,9 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
     depth = 0,
     maxDepth = 3,
     memoize,
-    project
+    project,
+    properties
+
   } = options || {}
 
   if( memoize && lookupMemo[memoize] ) {
@@ -138,8 +163,19 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
       : propName
   }
 
-  const result = Object.entries(referenceMap).reduce((a, [propName, reference]) => {
-    const pipeline = a
+  const pipeline: any[] = []
+  let hasDeepReferences = false
+
+  if( parent ) {
+    pipeline.push({
+      $unwind: {
+        path: `$${parent}`,
+        preserveNullAndEmptyArrays: true
+      }
+    })
+  }
+
+  Object.entries(referenceMap).forEach(([propName, reference]) => {
     if( reference.referencedCollection ) {
       if( !reference.populatedProperties ) {
         pipeline.push({
@@ -155,7 +191,8 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
         const subPipeline: any[] = []
         if( reference.deepReferences ) {
           subPipeline.push(...buildLookupPipeline(reference.deepReferences, {
-            project: reference.populatedProperties
+            project: reference.populatedProperties,
+            properties
           }))
         }
 
@@ -206,29 +243,30 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
           }
         })
       }
-
-      return pipeline
     }
 
-    if( reference.deepReferences && depth <= maxDepth ) {
+    else if( reference.deepReferences && depth <= maxDepth ) {
+      hasDeepReferences = true
+
       Object.entries(reference.deepReferences).forEach(([refName, refMap]) => {
         pipeline.push(...buildLookupPipeline(refMap, {
-          ...options,
           depth: depth + 1,
           parent: withParent(refName),
+          properties
         }))
       })
     }
+  })
 
-    return pipeline
-
-  }, [] as Array<any>)
+  if( hasDeepReferences ) {
+    pipeline.push(buildGroupPhase(referenceMap, properties!))
+  }
 
   if( memoize ) {
-    lookupMemo[memoize] = result
+    lookupMemo[memoize] = pipeline
   }
 
   return project
-    ? narrowLookupPipelineProjection(result, project)
-    : result
+    ? narrowLookupPipelineProjection(pipeline, project)
+    : pipeline
 }

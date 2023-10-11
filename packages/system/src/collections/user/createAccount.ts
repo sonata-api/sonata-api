@@ -1,6 +1,6 @@
 import { type Context } from '@sonata-api/api'
 import { sendTransactionalEmail  } from '@sonata-api/mailing'
-import { left, isLeft } from '@sonata-api/common'
+import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 import bcrypt from 'bcrypt'
 
@@ -10,7 +10,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   const user = Object.assign({}, props)
 
   if( !context.apiConfig.allowSignup ) {
-    return left('signup disallowed')
+    throw new Error('signup disallowed')
   }
 
   const validationEither = await context.validate({
@@ -42,7 +42,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   })
 
   if( isLeft(validationEither) ) {
-    return validationEither
+    return left(unwrapEither(validationEither))
   }
 
   if( context.apiConfig.group ) {
@@ -61,9 +61,13 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     user.self_registered = true
   }
 
-  const newUser = await context.model.insertOne(user as any)
-  const activationToken = await bcrypt.hash(newUser.insertedId.toString(), 10)
-  const link = `${process.env.API_URL}/user/activate?u=${newUser.insertedId.toString()}&t=${activationToken}`
+  const { insertedId } = await context.model.insertOne(user as any)
+  const newUser = await context.model.findOne({
+    _id: insertedId
+  })
+
+  const activationToken = await bcrypt.hash(insertedId.toString(), 10)
+  const link = `${process.env.API_URL}/user/activate?u=${insertedId.toString()}&t=${activationToken}`
 
   await sendTransactionalEmail({
     receiverName: user.full_name,
@@ -76,7 +80,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   })
 
 
-  return newUser
+  return right(newUser!)
 }
 
 export default createAccount
