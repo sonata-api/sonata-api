@@ -46,7 +46,7 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
   switch( typeof value ) {
     case 'string': {
       if( property.s$isReference ) {
-        return ObjectId.isValid(value) && getReferencedCollection(property)
+        return ObjectId.isValid(value)
           ? new ObjectId(value)
           : value
       }
@@ -128,6 +128,9 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
   for( const key in entrypoint ) {
     const value = target[key as keyof typeof target]
+    if( !value ) {
+      continue
+    }
 
     if( options.autoCast && key === '_id' ) {
       entries.push([

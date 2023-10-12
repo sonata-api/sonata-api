@@ -1,5 +1,25 @@
 # @sonata-api/api
 
+## 0.0.46
+
+### Patch Changes
+
+- Fix getAll bug introduced in last version
+
+## 0.0.45
+
+### Patch Changes
+
+- Fix meta revalidation bug
+- Updated dependencies
+  - @sonata-api/system@0.0.33
+
+## 0.0.44
+
+### Patch Changes
+
+- Add bypassAccessControl option to functions.get
+
 ## 0.0.43
 
 ### Patch Changes

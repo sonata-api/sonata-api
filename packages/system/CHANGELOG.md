@@ -1,5 +1,19 @@
 # @sonata-api/system
 
+## 0.0.34
+
+### Patch Changes
+
+- Fix meta describe serialization bug
+
+## 0.0.33
+
+### Patch Changes
+
+- Fix meta revalidation bug
+- Updated dependencies
+  - @sonata-api/api@0.0.45
+
 ## 0.0.32
 
 ### Patch Changes

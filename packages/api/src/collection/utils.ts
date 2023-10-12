@@ -104,7 +104,7 @@ export const prepareInsert = (
     : prepareCreate()
 
   Object.keys(what).forEach(k => {
-    if( typeof what[k] === 'object' && !Object.keys(what[k]).length  ) {
+    if( what && typeof what[k] === 'object' && JSON.stringify(what) === '{}'  ) {
       delete what[k]
     }
   })

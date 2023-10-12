@@ -12,9 +12,6 @@
       "@sonata-api/mailing": [
         "../mailing/dist"
       ],
-      "@sonata-api/system": [
-        "../system/dist"
-      ],
       "@sonata-api/security": [
         "../security/dist"
       ],

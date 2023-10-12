@@ -11,15 +11,22 @@ import {
   fill
 } from '../collection'
 
-export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
-  filters?: Filters<TDocument>
-  project?: Projection<TDocument>
-  offset?: number
-  limit?: number
-  sort?: QuerySort<TDocument>
-}, context: TContext extends Context<infer Description>
-  ? TContext
-  : never
+export type GetAllOptions = {
+  bypassAccessControl?: boolean
+}
+
+export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
+  payload: {
+    filters?: Filters<TDocument>
+    project?: Projection<TDocument>
+    offset?: number
+    limit?: number
+    sort?: QuerySort<TDocument>
+  },
+  context: TContext extends Context<infer Description>
+    ? TContext
+    : never,
+  options?: GetAllOptions
 ) => {
   const accessControl = useAccessControl(context)
 
@@ -35,13 +42,15 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
   newPayload.filters = Object.fromEntries(entries)
 
   const {
-    filters,
-    limit,
+    filters = {},
+    limit = 0,
     sort,
-    project,
+    project = [],
     offset = 0
 
-  } = unsafe(await accessControl.beforeRead(newPayload))
+  } = !options?.bypassAccessControl
+    ? unsafe(await accessControl.beforeRead(newPayload))
+    : newPayload
 
   const textQuery = !!filters.$text
 

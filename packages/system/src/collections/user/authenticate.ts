@@ -33,6 +33,10 @@ export enum AuthenticationErrors {
 const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
   const leanUser = await context.model.findOne({
     _id: user._id 
+  }, {
+    projection: {
+      password: 0
+    }
   })
 
   if( !leanUser ) {
@@ -66,7 +70,8 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
       }
     }, {})
 
-    Object.assign(tokenContent.user, pick(leanUser, context.apiConfig.tokenUserProperties))
+    Object.assign(leanUser, pick(leanUser, context.apiConfig.tokenUserProperties))
+    Object.assign(tokenContent.user, leanUser)
   }
 
   const token = await signToken(tokenContent)

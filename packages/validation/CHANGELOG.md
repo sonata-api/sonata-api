@@ -1,5 +1,11 @@
 # @sonata-api/validation
 
+## 0.0.8
+
+### Patch Changes
+
+- Fix validation bug
+
 ## 0.0.7
 
 ### Patch Changes

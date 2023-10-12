@@ -11,19 +11,28 @@ import {
   fill
 } from '../collection'
 
-export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
-  filters?: Filters<TDocument>,
-  project?: Projection<TDocument>
-}, context: TContext extends Context<infer Description>
+export type GetOptions = {
+  bypassAccessControl?: boolean
+}
+
+export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
+  payload: {
+    filters?: Filters<TDocument>,
+    project?: Projection<TDocument>
+  },
+  context: TContext extends Context<infer Description>
     ? TContext
-    : never
+    : never,
+  options?: GetOptions
 ) => {
   const accessControl = useAccessControl(context)
 
   const {
     filters = {},
     project = []
-  } = unsafe(await accessControl.beforeRead(payload))
+  } = !options?.bypassAccessControl
+    ? unsafe(await accessControl.beforeRead(payload))
+    : payload
 
   const pipeline: Document[] = []
   const references = await getReferences(context.description.properties, {

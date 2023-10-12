@@ -32,9 +32,7 @@ const describe = async (props: Props | undefined, context: Context): Promise<any
     }
 
     const auth = unwrapEither(authEither)
-    result.auth = {
-      token: auth.token
-    }
+    result.auth = JSON.parse(JSON.stringify(auth))
   }
 
   const resources = await getResources()

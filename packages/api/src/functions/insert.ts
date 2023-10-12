@@ -68,7 +68,7 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
       filters: {
         _id: docId
       }
-    }, context)
+    }, context, { bypassAccessControl: true })
   }
 
   const result = await context.model.findOne({ _id: docId }, { projection })
