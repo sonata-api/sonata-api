@@ -1,20 +1,11 @@
+import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
+import type { DecodedToken, Context, ResourceType, AvailableFunction } from '@sonata-api/api'
 import { createContext, getFunction, decodeToken } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
 import { right, left, isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
-import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
-import type { DecodedToken, Context, ResourceType, } from '@sonata-api/api'
-
 import { ObjectId } from 'mongodb'
 import { sanitizeRequest, prependPagination } from './hooks/pre'
 import { appendPagination } from './hooks/post'
-
-export type RegularVerb =
-  'get'
-  | 'getAll'
-  | 'insert'
-  | 'remove'
-  | 'removeAll'
-  | 'upload'
 
 const prePipe = pipe([
   sanitizeRequest,
@@ -36,9 +27,9 @@ export const getDecodedToken = async (request: MatchedRequest) => {
       }
 
     return right(decodedToken)
-  } catch( e: any ) {
+  } catch( err ) {
     if( process.env.NODE_ENV === 'development' ) {
-      console.trace(e)
+      console.trace(err)
     }
 
     return left('AUTHENTICATION_ERROR')
@@ -149,7 +140,7 @@ export const customVerbs = (resourceType: ResourceType) => async (
   })
 }
 
-export const regularVerb = (functionName: RegularVerb) => async (
+export const regularVerb = (functionName: AvailableFunction) => async (
   request: MatchedRequest,
   response: GenericResponse,
   parentContext: Context
