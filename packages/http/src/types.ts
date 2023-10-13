@@ -1,17 +1,11 @@
 import type { matches } from './routing'
+import type { REQUEST_METHODS } from './constants'
 
 export type RouteOptions = {
   base?: string
 }
 
-export type RequestMethod =
-  'GET'
-  | 'POST'
-  | 'PUT'
-  | 'DELETE'
-  | 'OPTIONS'
-  | 'TRACE'
-  | 'SEARCH'
+export type RequestMethod = (typeof REQUEST_METHODS)[number]
 
 export type GenericRequest = {
   url: string

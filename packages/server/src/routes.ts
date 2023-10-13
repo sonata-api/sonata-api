@@ -18,12 +18,12 @@ export const registerRoutes = (context: Context) => {
     exhaust: true
   })
 
-  router.route('GET', '/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload))
-  router.route('GET', '/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get')))
-  router.route('GET', '/api/(\\w+)$', defaultHandler(regularVerb('getAll')))
-  router.route('POST', '/api/(\\w+)$', defaultHandler(regularVerb('insert')))
-  router.route('DELETE', '/api/(\\w+)/(\\w+)$', defaultHandler(regularVerb('remove')))
-  router.route('POST', '/api/(\\w+)/upload$', defaultHandler(regularVerb('upload')))
+  router.GET('/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload))
+  router.GET('/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get')))
+  router.GET('/api/(\\w+)$', defaultHandler(regularVerb('getAll')))
+  router.POST('/api/(\\w+)$', defaultHandler(regularVerb('insert')))
+  router.DELETE('/api/(\\w+)/(\\w+)$', defaultHandler(regularVerb('remove')))
+  router.POST('/api/(\\w+)/upload$', defaultHandler(regularVerb('upload')))
   router.route(['POST', 'GET'], '/api/(\\w+)/(\\w+)$', defaultHandler(customVerbs('collection')))
   router.route(['POST', 'GET'], '/api/_/(\\w+)/(\\w+)$', defaultHandler(customVerbs('algorithm')))
 

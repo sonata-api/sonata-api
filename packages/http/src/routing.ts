@@ -7,12 +7,19 @@ import type {
 
 } from './types'
 
+import { REQUEST_METHODS } from './constants'
 import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { safeJson } from './payload'
 
 export type RouterOptions = {
   exhaust?: boolean
 }
+
+export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Req, infer _Res, infer _Method, ...infer Rest]
+  ? Rest
+  : never
+
+export type ProxiedRouter<TRouter> = TRouter & Record<RequestMethod, (...args: AbbreviatedRouteParams) => ReturnType<typeof registerRoute>>
 
 export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
@@ -26,7 +33,7 @@ export const matches = <TRequest extends GenericRequest>(
 
   } = options || {}
 
-  if( !url.startsWith(base) ) {
+  if( !url.startsWith(`${base}/`) ) {
     return
   }
 
@@ -159,6 +166,14 @@ export const makeRouter = (options?: RouterOptions) => {
     return result
   }
   
-  return router
+  return new Proxy(router as ProxiedRouter<typeof router>, {
+    get: (target, key) => {
+      if( REQUEST_METHODS.includes(key as any) ) {
+        return (...args: AbbreviatedRouteParams) => target.route(key as RequestMethod, ...args)
+      }
+
+      return target[key as keyof typeof target]
+    }
+  })
 }
 
