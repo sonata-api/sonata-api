@@ -1,5 +1,13 @@
 # @sonata-api/api
 
+## 0.0.47
+
+### Patch Changes
+
+- Fix getters, ergonomic routing
+- Updated dependencies
+  - @sonata-api/http@0.0.8
+
 ## 0.0.46
 
 ### Patch Changes
