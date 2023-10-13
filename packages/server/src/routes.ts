@@ -23,7 +23,6 @@ export const registerRoutes = (context: Context) => {
   router.GET('/api/(\\w+)$', defaultHandler(regularVerb('getAll')))
   router.POST('/api/(\\w+)$', defaultHandler(regularVerb('insert')))
   router.DELETE('/api/(\\w+)/(\\w+)$', defaultHandler(regularVerb('remove')))
-  router.POST('/api/(\\w+)/upload$', defaultHandler(regularVerb('upload')))
   router.route(['POST', 'GET'], '/api/(\\w+)/(\\w+)$', defaultHandler(customVerbs('collection')))
   router.route(['POST', 'GET'], '/api/_/(\\w+)/(\\w+)$', defaultHandler(customVerbs('algorithm')))
 

@@ -1,7 +1,7 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
-import { left, right, isLeft, unwrapEither, getReferencedCollection, pipe, type Either } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, pipe, type Either } from '@sonata-api/common'
 import { getResourceAsset } from '../assets'
 import { preloadDescription } from './preload'
 import {
@@ -128,7 +128,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
   for( const key in entrypoint ) {
     const value = target[key as keyof typeof target]
-    if( !value ) {
+    if( !value && !options?.getters ) {
       continue
     }
 
