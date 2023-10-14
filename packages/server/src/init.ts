@@ -1,5 +1,5 @@
-import type { GenericRequest, GenericResponse } from '@sonata-api/http'
-import type { ApiConfig, DecodedToken } from '@sonata-api/api'
+import type { GenericRequest } from '@sonata-api/http'
+import type { ApiConfig, DecodedToken, Context } from '@sonata-api/api'
 import { right, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
@@ -33,7 +33,7 @@ export const getDecodedToken = async (request: GenericRequest) => {
 
 export const dryInit = async (
   _apiConfig?: ApiConfig,
-  cb?: (req: GenericRequest, res: GenericResponse) => any
+  cb?: (context: Context) => any
 ) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, defaultApiConfig)
@@ -70,7 +70,7 @@ export const dryInit = async (
       })
 
       if( cb ) {
-        const result = await cb(req, res)
+        const result = await cb(context)
         if( result !== undefined ) {
           return result
         }
