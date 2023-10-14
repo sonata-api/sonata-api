@@ -1,10 +1,8 @@
-import { initWithDatabase, defineAccessControl } from 'sonata-api'
+import { init, defineAccessControl } from 'sonata-api'
 
 import person from './collections/person'
 import pet from './collections/pet'
 import user from './collections/user'
-
-import hello from './algorithms/hello'
 
 export const collections = {
   person,
@@ -12,11 +10,7 @@ export const collections = {
   user
 }
 
-export const algorithms = {
-  hello
-}
-
-export const accessControl = defineAccessControl<Collections, Algorithms>()({
+export const accessControl = defineAccessControl<Collections>()({
   roles: {
     guest: {
       capabilities: {
@@ -46,7 +40,4 @@ export const accessControl = defineAccessControl<Collections, Algorithms>()({
   }
 })
 
-initWithDatabase().then(async (server) => {
-  server.start()
-})
-
+init()

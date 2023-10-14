@@ -12,19 +12,12 @@ declare global {
   type SystemCollections = typeof import('@sonata-api/system/collections')
   type UserCollections = typeof import('./src').collections
 
-  type SystemAlgorithms = typeof import('@sonata-api/system/algorithms')
-  type UserAlgorithms = typeof import('./src').algorithms
-
   type Collections = {
     [K in keyof (SystemCollections & UserCollections)]: Awaited<ReturnType<(SystemCollections & UserCollections)[K]>>
   }
 
-  type Algorithms = {
-    [K in keyof (SystemAlgorithms & UserAlgorithms)]: Awaited<ReturnType<(SystemAlgorithms & UserAlgorithms)[K]>>
-  }
-
   type Context<TDescription extends Description=any>
-    = Context_<TDescription, Collections, Algorithms>
+    = Context_<TDescription, Collections>
 
   type UserAccessControl = typeof accessControl
 
