@@ -3,7 +3,6 @@ export type ServerOptions = {
   port?: number
 }
 
-
 export const defineServerOptions = (options?: ServerOptions) => {
   const {
     host = '0.0.0.0',

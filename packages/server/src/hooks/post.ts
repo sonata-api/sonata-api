@@ -1,30 +1,24 @@
-import type { Context, ResourceType } from '@sonata-api/api'
-import type { MatchedRequest } from '@sonata-api/http'
+import type { Context } from '@sonata-api/api'
 import { useFunctions } from '@sonata-api/api'
 
 type PostHookParams = {
   redirected?: boolean
   result: any
-  request: MatchedRequest
   context: Context
-  resourceName: string
-  resourceType: ResourceType
 }
 
 export const appendPagination = async (params: PostHookParams) => {
   const {
     context,
-    request,
     result,
-    resourceType
   } = params
 
-  if( Array.isArray(result) && resourceType === 'collection' ) {
+  if( Array.isArray(result) ) {
     const { count } = useFunctions()()
-    const recordsTotal = await count(request.req.payload, context)
+    const recordsTotal = await count(context.request.payload, context)
 
-    const limit = request.req.payload.limit
-      ? request.req.payload.limit
+    const limit = context.request.payload.limit
+      ? context.request.payload.limit
       : Number(process.env.PAGINATION_LIMIT || 35)
 
     return {
@@ -32,7 +26,7 @@ export const appendPagination = async (params: PostHookParams) => {
       pagination: {
         recordsCount: result.length,
         recordsTotal,
-        offset: request.req.payload.offset || 0,
+        offset: context.request.payload.offset || 0,
         limit
       }
     }

@@ -1,12 +1,5 @@
-import type {
-  GenericRequest,
-  GenericResponse,
-  RequestMethod,
-  MatchedRequest,
-  RouteOptions
-
-} from './types'
-
+import type { Context } from '@sonata-api/api'
+import type { GenericRequest, GenericResponse, RequestMethod, RouteOptions } from './types'
 import { REQUEST_METHODS } from './constants'
 import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { safeJson } from './payload'
@@ -15,7 +8,7 @@ export type RouterOptions = {
   exhaust?: boolean
 }
 
-export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Req, infer _Res, infer _Method, ...infer Rest]
+export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Context, infer _Method, ...infer Rest]
   ? Rest
   : never
 
@@ -55,22 +48,22 @@ export const matches = <TRequest extends GenericRequest>(
   }
 }
 
-export const registerRoute = <TCallback extends (req: MatchedRequest, res: GenericResponse) => any>(
-  req: GenericRequest,
-  res: GenericResponse,
+export const registerRoute = <TCallback extends (context: Context) => any>(
+  context: Context,
   method: RequestMethod | RequestMethod[],
   exp: string,
   cb: TCallback,
   options?: RouteOptions
 ) => {
-  const match = matches(req, method, exp, options)
+  const match = matches(context.request, method, exp, options)
   if( match ) {
-    if( req.headers['content-type'] === 'application/json' ) {
+    if( context.request.headers['content-type'] === 'application/json' ) {
       try {
-        req.payload = safeJson(req.body)
+        context.request.payload = safeJson(context.request.body)
+
       } catch( err ) {
-        res.writeHead(500)
-        res.end(left({
+        context.response.writeHead(500)
+        context.response.end(left({
           httpCode: 500,
           message: 'Invalid JSON'
         }))
@@ -78,7 +71,7 @@ export const registerRoute = <TCallback extends (req: MatchedRequest, res: Gener
       }
     }
 
-    return cb(match, res)
+    return cb(context)
   }
 }
 
@@ -129,16 +122,16 @@ export const makeRouter = (options?: RouterOptions) => {
     exhaust
   } = options || {}
 
-  const routes: ((_: unknown, req: GenericRequest, res: GenericResponse) => ReturnType<typeof registerRoute>)[] = []
+  const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
 
-  const route = <TCallback extends (req: MatchedRequest, res: GenericResponse) => any|Promise<any>>(
+  const route = <TCallback extends (context: Context) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
     exp: string,
     cb: TCallback,
     options?: RouteOptions
   ) => {
-    routes.push((_, req, res) => {
-      return registerRoute(req, res, method, exp, cb, options)
+    routes.push((_, context) => {
+      return registerRoute(context, method, exp, cb, options)
     })
   }
 
@@ -149,13 +142,13 @@ export const makeRouter = (options?: RouterOptions) => {
   const router = {
     route,
     routes,
-    install: (_req: GenericRequest, _res: GenericResponse) => {
+    install: (_context: Context) => {
       return {} as ReturnType<typeof routerPipe>
     }
   }
 
-  router.install = async (req: GenericRequest, res: GenericResponse) => {
-    const result = await routerPipe(null, req, res)
+  router.install = async (context: Context) => {
+    const result = await routerPipe(null, context)
     if( exhaust && result === undefined ) {
       return left({
         httpCode: 404,

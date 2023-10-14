@@ -1,5 +1,6 @@
 import type { AccessControl } from '@sonata-api/access-control'
 import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
+import type { Context } from '../context'
 import type { FunctionPath } from './resource'
 import type { ObjectId } from './database'
 
@@ -34,9 +35,8 @@ export type ApiConfig = {
   tokenUserProperties?: Array<string>
 
   errorHandler?: <TError extends Error>(
-    req: MatchedRequest,
-    res: GenericResponse,
-    error?: TError
+    context: Context,
+    error: TError
   ) => any|Promise<any>
 }
 // #endregion ApiConfig

@@ -1,9 +1,7 @@
-import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
-import type { DecodedToken, Context, ResourceType, AvailableFunction } from '@sonata-api/api'
-import { createContext, getFunction, decodeToken } from '@sonata-api/api'
+import type { Context, AvailableFunction } from '@sonata-api/api'
+import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
-import { right, left, isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
-import { ObjectId } from 'mongodb'
+import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
 import { sanitizeRequest, prependPagination } from './hooks/pre'
 import { appendPagination } from './hooks/post'
 
@@ -16,37 +14,17 @@ const postPipe = pipe([
   appendPagination
 ])
 
-export const getDecodedToken = async (request: MatchedRequest) => {
-  try {
-    const decodedToken: DecodedToken = request.req.headers.authorization
-      ? await decodeToken(request.req.headers.authorization.split('Bearer ').pop() || '')
-      : { user: {} }
-
-      if( decodedToken.user._id ) {
-        decodedToken.user._id = new ObjectId(decodedToken.user._id)
-      }
-
-    return right(decodedToken)
-  } catch( err ) {
-    if( process.env.NODE_ENV === 'development' ) {
-      console.trace(err)
-    }
-
-    return left('AUTHENTICATION_ERROR')
-  }
-}
-
 export const safeHandle = (
-  fn: (request: MatchedRequest, res: GenericResponse, context: Context) => Promise<object>,
+  fn: (context: Context) => Promise<object>,
   context: Context
-) => async (request: MatchedRequest, res: GenericResponse) => {
+) => async () => {
   try {
-    const response = await fn(request, res, context)
+    const response = await fn(context)
     return response
 
   } catch(error: any) {
     if( context.apiConfig.errorHandler ) {
-      return context.apiConfig.errorHandler(request, res, error)
+      return context.apiConfig.errorHandler(context, error)
     }
 
     if( process.env.NODE_ENV !== 'production' ) {
@@ -65,59 +43,37 @@ export const safeHandle = (
       }
     }
 
-    if( request.req.headers['sec-fetch-mode'] === 'cors' ) {
+    if( context.request.headers['sec-fetch-mode'] === 'cors' ) {
       return response
     }
 
     error.httpCode ??= 500
-    res.writeHead(error.httpCode, {
+    context.response.writeHead(error.httpCode, {
       'content-type': 'application/json'
     })
 
-    res.end(response)
+    context.response.end(response)
   }
 }
 
-export const customVerbs = (resourceType: ResourceType) => async (
-  request: MatchedRequest,
-  response: GenericResponse,
-  parentContext: Context
-) => {
+export const customVerbs = () => async (parentContext: Context) => {
   const {
     fragments: [
       resourceName,
       functionName
     ]
-  } = request
-
-  const tokenEither = await getDecodedToken(request)
-  if( isLeft(tokenEither) ) {
-    return tokenEither
-  }
-
-  const token = unwrapEither(tokenEither)
-
-  Object.assign(parentContext, {
-    token,
-    resourceName,
-    response,
-    request
-  })
+  } = parentContext.matched
 
   const context = await createContext({
     parentContext,
-    resourceType,
     resourceName
   })
 
   await prePipe({
-    request,
-    token,
-    response,
     context
   })
 
-  const fnEither = await getFunction(resourceName, functionName, token.user, `${resourceType}s`)
+  const fnEither = await getFunction(resourceName, functionName, context.token.user)
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     switch( error ) {
@@ -129,42 +85,21 @@ export const customVerbs = (resourceType: ResourceType) => async (
   }
 
   const fn = unwrapEither(fnEither)
-  const result = await fn(request.req.payload, context)
+  const result = await fn(context.request.payload, context)
 
   return postPipe({
-    request,
     result,
     context,
-    resourceName,
-    resourceType
   })
 }
 
-export const regularVerb = (functionName: AvailableFunction) => async (
-  request: MatchedRequest,
-  response: GenericResponse,
-  parentContext: Context
-) => {
+export const regularVerb = (functionName: AvailableFunction) => async (parentContext: Context) => {
   const {
     fragments: [
       resourceName,
       id
     ]
-  } = request
-
-  const tokenEither = await getDecodedToken(request)
-  if( isLeft(tokenEither) ) {
-    return tokenEither
-  }
-
-  const token = unwrapEither(tokenEither)
-
-  Object.assign(parentContext, {
-    token,
-    resourceName,
-    response,
-    request
-  })
+  } = parentContext.matched
 
   const context = await createContext({
     parentContext,
@@ -172,26 +107,23 @@ export const regularVerb = (functionName: AvailableFunction) => async (
   })
 
   await prePipe({
-    request,
-    token,
-    response,
     context
   })
 
-  const requestCopy = Object.assign({}, request)
+  const requestCopy = Object.assign({}, context.request)
 
   if( id ) {
-    requestCopy.req.payload.filters = {
-      ...requestCopy.req.payload.filters||{},
+    requestCopy.payload.filters = {
+      ...requestCopy.payload.filters||{},
       _id: id
     }
 
-    if( 'what' in requestCopy.req.payload ) {
-      requestCopy.req.payload.what._id = id
+    if( 'what' in requestCopy.payload ) {
+      requestCopy.payload.what._id = id
     }
   }
 
-  const fnEither = await getFunction(resourceName, functionName, token.user)
+  const fnEither = await getFunction(resourceName, functionName, context.token.user)
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     return {
@@ -200,28 +132,21 @@ export const regularVerb = (functionName: AvailableFunction) => async (
   }
 
   const fn = unwrapEither(fnEither)
-  const result = await fn(request.req.payload, context)
+  const result = await fn(requestCopy.payload, context)
 
   return postPipe({
-    request,
     result,
     context,
-    resourceName,
-    resourceType: 'collection'
   })
 }
 
-export const fileDownload = async (
-  request: MatchedRequest,
-  response: GenericResponse,
-  parentContext: Context
-) => {
+export const fileDownload = async (parentContext: Context) => {
   const context = await createContext({
     resourceName: 'file',
     parentContext
   })
 
-  const [ hash, ...options ] = request.fragments
+  const [ hash, ...options ] = context.matched.fragments
 
   const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
   if( isLeft(fileEither) ) {
@@ -231,7 +156,7 @@ export const fileDownload = async (
 
   const { filename, content, mime } = unwrapEither(fileEither) as any
 
-  response.writeHead(200, {
+  context.response.writeHead(200, {
     'content-type': mime,
     'content-disposition': `${options.includes('download') ? 'attachment; ' : ''}filename=${filename}`
   })

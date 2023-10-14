@@ -1,23 +1,11 @@
-import type {
-  AssetType,
-  Context,
-  Collection,
-  Algorithm,
-  Resource,
-  ResourceType,
-  ResourceBase
-} from './types'
-
+import type { AssetType, Context, Collection, CollectionStructure } from './types'
 import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
 
-const resourcesMemo: Awaited<ReturnType<typeof internalGetResources>> & {
-  _cached: boolean
-} = {
+const resourcesMemo = {
   _cached: false,
-  collections: {},
-  algorithms: {}
+  collections: {} as Awaited<ReturnType<typeof internalGetResources>>
 }
 
 const assetsMemo: {
@@ -30,78 +18,59 @@ export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetResources = async (): Promise<{
-    collections: Record<string, Collection>,
-    algorithms: Record<string, Algorithm>
-}> => {
+const internalGetResources = async (): Promise<Record<string, Collection>> => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {
-      collections: {},
-      algorithms: {}
-    }
+    return {}
   }
   
   // @ts-ignore
-  const { collections, algorithms } = await import('@sonata-api/system')
-  const userConfig = await getEntrypoint()
-  const resources = {
-    collections: Object.assign({}, collections),
-    algorithms: Object.assign({}, algorithms)
+  const { collections: systemCollections } = await import('@sonata-api/system')
+  const { collections: userCollections } = await getEntrypoint()
+
+  return {
+    ...systemCollections,
+    ...userCollections
   }
-
-  Object.assign(resources.collections, userConfig.collections)
-  Object.assign(resources.algorithms, userConfig.algorithms)
-
-  return resources
 }
 
 export const getAccessControl = async () => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as AccessControl<Collections, Algorithms>
+    return {} as AccessControl<Collections>
   }
 
   const userConfig = await getEntrypoint()
-  return userConfig.accessControl as AccessControl<Collections, Algorithms>
+  return userConfig.accessControl as AccessControl<Collections>
 }
 
 export const getResources = async () => {
   if( resourcesMemo._cached ) {
-    return resourcesMemo
+    return resourcesMemo.collections
   }
 
-  const resources = await internalGetResources()
   Object.assign(resourcesMemo, {
-    ...resources,
-    _cached: true
+    _cached: true,
+    collections: await internalGetResources()
   })
 
-  return resources
+  return resourcesMemo.collections
 }
 
 export const internalGetResourceAsset = async <
   ResourceName extends string,
-  AssetName extends ResourceName extends keyof Collections
-    ? keyof Collections[ResourceName] & AssetType
-    : ResourceName extends keyof Algorithms
-      ? keyof Algorithms[ResourceName]
-      : never,
-  TResourceType extends `${ResourceType}s`
+  AssetName extends  keyof Collections[ResourceName] & AssetType
 >(
   resourceName: ResourceName,
   assetName: AssetName,
-  _resourceType?: TResourceType
 ) => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as Right<Resource[AssetName]>
+    return {} as Right<CollectionStructure[AssetName]>
   }
 
   const resources = await getResources()
-  const resourceType = _resourceType || 'collections'
-
-  const asset = (await resources[resourceType][resourceName]?.())?.[assetName as keyof ResourceBase] as Resource[AssetName]
+  const asset = (await resources[resourceName]?.())?.[assetName as AssetType] as CollectionStructure[AssetName]
 
   if( !asset ) {
-    if( !(resourceName in resources[resourceType]) ) return left(ACErrors.ResourceNotFound)
+    if( !(resourceName in resources) ) return left(ACErrors.ResourceNotFound)
     return left(ACErrors.AssetNotFound)
   }
 
@@ -110,28 +79,22 @@ export const internalGetResourceAsset = async <
 
 export const getResourceAsset = async <
   TResourceName extends string,
-  TAssetName extends TResourceName extends keyof Collections
-    ? keyof Collections[TResourceName] & AssetType
-    : TResourceName extends keyof Algorithms
-      ? keyof Algorithms[TResourceName]
-      : never,
-  TResourceType extends `${ResourceType}s`
+  TAssetName extends keyof Collections[TResourceName] & AssetType
 >(
   resourceName: TResourceName,
   assetName: TAssetName,
-  _resourceType?: TResourceType
 ) => {
   const cached = assetsMemo.assets[resourceName]
   if( cached?.[assetName] ) {
-    return right(cached[assetName] as NonNullable<Resource[TAssetName]>)
+    return right(cached[assetName] as NonNullable<CollectionStructure[TAssetName]>)
   }
 
-  const assetEither = await internalGetResourceAsset(resourceName, assetName as any, _resourceType)
+  const assetEither = await internalGetResourceAsset(resourceName, assetName as any)
   if( isLeft(assetEither) ) {
     return assetEither
   }
 
-  const asset = unwrapEither(assetEither) as NonNullable<Resource[TAssetName]>
+  const asset = unwrapEither(assetEither) as NonNullable<CollectionStructure[TAssetName]>
   assetsMemo.assets[resourceName as string] ??= {}
   assetsMemo.assets[resourceName as string][assetName] = asset
 
@@ -142,23 +105,19 @@ export const get = internalGetResourceAsset
 
 export const getFunction = async <
   TResourceName extends string,
-  TFunctionName extends string,
-  TResourceType extends `${ResourceType}s`
+  TFunctionName extends string
 >(
   resourceName: TResourceName,
   functionName: TFunctionName,
   acProfile?: UserACProfile,
-  _resourceType?: TResourceType
 ) => {
-  const resourceType = _resourceType || 'collections'
-
   if( acProfile ) {
     if( !await isGranted(String(resourceName), String(functionName), acProfile) ) {
       return left(ACErrors.AuthorizationError)
     }
   }
 
-  const functionsEither = await getResourceAsset(resourceName as string, 'functions', resourceType)
+  const functionsEither = await getResourceAsset(resourceName as string, 'functions')
   if( isLeft(functionsEither) ) {
     return functionsEither
   }
@@ -168,8 +127,8 @@ export const getFunction = async <
     return left(ACErrors.FunctionNotFound)
   }
 
-  const fn = async (payload: any, context: Context<any, Collections, Algorithms>) => {
-    const resource = await (await getResources())[resourceType][resourceName]()
+  const fn = async (payload: any, context: Context<any, Collections>) => {
+    const resource = await (await getResources())[resourceName]()
     if( resource.security?.rateLimiting?.[functionName] ) {
       const rateLimitingEither = await limitRate(context, resource.security.rateLimiting[functionName])
       if( isLeft(rateLimitingEither) ) {

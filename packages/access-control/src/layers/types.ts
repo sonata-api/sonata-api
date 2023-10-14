@@ -1,4 +1,4 @@
-import type { Context, Collections, Algorithms } from '@sonata-api/api'
+import type { Context, Collections, } from '@sonata-api/api'
 import type { Either } from '@sonata-api/common'
 import type { AccessControl } from '../types'
 import type { ACErrors } from '../errors'
@@ -23,10 +23,9 @@ export type AccessControlLayerProps<TPayload extends Record<string, any>=any> = 
 }
 
 export type AccessControlLayer<
-  TCollections extends Collections,
-  TAlgorithms extends Algorithms,
-  TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>=any
-> = (context: Context<any, TCollections, TAlgorithms, TAccessControl>, props: AccessControlLayerProps) => Promise<Either<
+  TCollections extends Collections = any,
+  TAccessControl extends AccessControl<TCollections, TAccessControl> = any
+> = (context: Context<any, TCollections, TAccessControl>, props: AccessControlLayerProps) => Promise<Either<
   ACErrors,
   ReadPayload | WritePayload
 >>

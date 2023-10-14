@@ -1,18 +1,14 @@
-import type { DecodedToken, Context } from '@sonata-api/api'
-import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
+import type { Context } from '@sonata-api/api'
 import { PAGINATION_PER_PAGE_LIMIT } from '@sonata-api/types'
 
 type PreHookParams = {
-  request: MatchedRequest
-  token: DecodedToken
-  response: GenericResponse
-  context: Context<any, any, any>
+  context: Context
 }
 
 export const sanitizeRequest = async (params: PreHookParams) => {
-  const { request } = params
-  if( ['POST', 'PUT'].includes(request.req.method) ) {
-    if( !request.req.payload ) {
+  const { request } = params.context
+  if( ['POST', 'PUT'].includes(request.method) ) {
+    if( !request.payload ) {
       throw new Error('request payload absent')
     }
   }
@@ -21,12 +17,12 @@ export const sanitizeRequest = async (params: PreHookParams) => {
 }
 
 export const prependPagination = async (params: PreHookParams) => {
-  const { request } = params
+  const { request } = params.context
   if(
-    typeof request.req.payload.limit === 'number'
-    && request.req.payload.limit > PAGINATION_PER_PAGE_LIMIT
+    typeof request.payload.limit === 'number'
+    && request.payload.limit > PAGINATION_PER_PAGE_LIMIT
   ) {
-    request.req.payload.limit = PAGINATION_PER_PAGE_LIMIT
+    request.payload.limit = PAGINATION_PER_PAGE_LIMIT
   }
 
   return params

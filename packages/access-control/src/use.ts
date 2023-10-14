@@ -1,5 +1,5 @@
 import { deepMerge, right, isLeft, unwrapEither } from '@sonata-api/common'
-import type { Context, Collections, Algorithms } from '@sonata-api/api'
+import type { Context, Collections } from '@sonata-api/api'
 import type { Description } from '@sonata-api/types'
 import type { ReadPayload, WritePayload, AccessControlLayer, AccessControlLayerProps } from './layers/types'
 import type { AccessControl } from './types'
@@ -13,7 +13,7 @@ import {
 
 const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() => async <
   TContext,
-  TFunction extends AccessControlLayer<any, any, any>|undefined,
+  TFunction extends AccessControlLayer | undefined,
   TProps extends AccessControlLayerProps<TPayload>
 >(
   context: TContext extends Context<infer _Description>
@@ -44,9 +44,8 @@ const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() 
 export const useAccessControl = <
   TDescription extends Description,
   TCollections extends Collections,
-  TAlgorithms extends Algorithms,
-  TAccessControl extends AccessControl<TCollections, TAlgorithms, TAccessControl>=any
->(context: Context<TDescription, TCollections, TAlgorithms, TAccessControl>) => {
+  TAccessControl extends AccessControl<TCollections, TAccessControl>=any
+>(context: Context<TDescription, TCollections, TAccessControl>) => {
   const options = context.description.options
     ? Object.assign({}, context.description.options)
     : {}

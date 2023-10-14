@@ -1,12 +1,35 @@
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
+import type { ApiConfig, DecodedToken } from '@sonata-api/api'
+import { right, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
-import { createContext, type ApiConfig } from '@sonata-api/api'
+import { createContext, decodeToken, ObjectId } from '@sonata-api/api'
 import { getDatabase } from '@sonata-api/api'
 import { defaultApiConfig } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
+
+export const getDecodedToken = async (request: GenericRequest) => {
+  try {
+    const decodedToken: DecodedToken = request.headers.authorization
+      ? await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
+      : { user: {} }
+
+      if( decodedToken.user._id ) {
+        decodedToken.user._id = new ObjectId(decodedToken.user._id)
+      }
+
+    return right(decodedToken)
+  } catch( err ) {
+    if( process.env.NODE_ENV === 'development' ) {
+      console.trace(err)
+    }
+
+    return left('AUTHENTICATION_ERROR')
+  }
+}
+
 
 export const dryInit = async (
   _apiConfig?: ApiConfig,
@@ -16,7 +39,7 @@ export const dryInit = async (
   Object.assign(apiConfig, defaultApiConfig)
   Object.assign(apiConfig, _apiConfig)
 
-  const context = await createContext({
+  const parentContext = await createContext({
     apiConfig
   })
 
@@ -27,7 +50,7 @@ export const dryInit = async (
   console.timeEnd('warmup')
 
   const serverOptions = defineServerOptions()
-  const apiRouter = registerRoutes(context)
+  const apiRouter = registerRoutes()
 
   const server = registerServer(serverOptions, async (req, res) => {
     if( cors(req, res) === null ) {
@@ -35,6 +58,17 @@ export const dryInit = async (
     }
 
     await wrapRouteExecution(res, async () => {
+      const tokenEither = await getDecodedToken(req)
+      if( isLeft(tokenEither) ) {
+        return tokenEither
+      }
+
+      const token = unwrapEither(tokenEither)
+      const context = await createContext({
+        parentContext,
+        token
+      })
+
       if( cb ) {
         const result = await cb(req, res)
         if( result !== undefined ) {
@@ -42,7 +76,7 @@ export const dryInit = async (
         }
       }
 
-      return apiRouter.install(req, res)
+      return apiRouter.install(context)
     })
   })
 
