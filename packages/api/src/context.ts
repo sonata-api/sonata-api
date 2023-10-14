@@ -12,7 +12,7 @@ import type {
 } from './types'
 
 import { validate } from '@sonata-api/validation'
-import { getCollection } from './database'
+import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
@@ -84,7 +84,7 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
     accessControl,
     description: {},
     model: resourceName
-      ? getCollection(resourceName)
+      ? getDatabaseCollection(resourceName)
       : {},
     collection: resourceName && await collections[resourceName](),
     collections: new Proxy<Collections>({}, {
@@ -94,13 +94,13 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
     }),
     models: new Proxy<Models>({} as Models, {
       get: (_, key: keyof Collections) => {
-        return getCollection(key)
+        return getDatabaseCollection(key)
       }
     }),
 
     validate,
     log: async (message: string, details?: any) => {
-      return getCollection('log').insertOne({
+      return getDatabaseCollection('log').insertOne({
         message,
         details,
         context: resourceName,

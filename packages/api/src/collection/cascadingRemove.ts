@@ -4,7 +4,7 @@ import type { Context } from '../context'
 import { isRight, unwrapEither } from '@sonata-api/common'
 import { preloadDescription } from '../collection'
 import { getFunction } from '../assets'
-import { getCollection } from '../database'
+import { getDatabaseCollection } from '../database'
 
 type CascadingRemoveSubject = {
   propertyName: Lowercase<string>
@@ -35,7 +35,7 @@ const getCascade = (description: Description) => {
 }
 
 const preferredRemove = async (subject: CascadingRemoveSubject, targetId: ObjectId | ObjectId[], context: Context) => {
-  const coll = getCollection(subject.collectionName)
+  const coll = getDatabaseCollection(subject.collectionName)
 
   if( Array.isArray(targetId) ) {
     const removeAllEither = await getFunction(subject.collectionName, 'removeAllAll')
