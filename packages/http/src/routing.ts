@@ -125,6 +125,9 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
 
 export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
+  if( !options.base ) {
+    options.base = '/api'
+  }
 
   const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
 
