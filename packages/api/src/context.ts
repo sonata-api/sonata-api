@@ -48,7 +48,7 @@ export type Context<
   functionPath: FunctionPath
   token: DecodedToken
 
-  collectionName?: keyof TCollections & string
+  collectionName?: (keyof TCollections & string) | string
   request: GenericRequest
   response: GenericResponse
 

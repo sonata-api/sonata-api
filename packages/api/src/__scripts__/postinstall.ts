@@ -24,11 +24,9 @@ declare module '@sonata-api/api' {
   export async function getCollectionAsset<
     const CollectionName extends keyof Collections,
     const AssetName extends keyof Collections[CollectionName] & AssetType,
-    ReturnedAsset=CollectionName extends keyof Collections
-        ? AssetName extends keyof Collections[CollectionName]
-          ? Collections[CollectionName][AssetName]
-          : never
-        : never
+    ReturnedAsset=AssetName extends keyof Collections[CollectionName]
+      ? Collections[CollectionName][AssetName]
+      : never
   >(
     resourceName: CollectionName,
     assetName: AssetName,
@@ -44,11 +42,9 @@ declare module '@sonata-api/api' {
   export async function getFunction<
     CollectionName extends keyof Collections,
     FunctionName extends keyof Collections[CollectionName]['functions'],
-    ReturnedFunction=CollectionName extends keyof Collections
-        ? FunctionName extends keyof Collections[CollectionName]['functions']
-          ? Collections[CollectionName]['functions'][FunctionName]
-          : never
-          : never
+    ReturnedFunction=FunctionName extends keyof Collections[CollectionName]['functions']
+      ? Collections[CollectionName]['functions'][FunctionName]
+      : never
   >(
     resourceName: CollectionName,
     functionName: FunctionName,

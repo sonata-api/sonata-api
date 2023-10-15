@@ -1,4 +1,5 @@
 import { defineCollection, useFunctions } from '@sonata-api/api'
+import { defineAccessControl } from '@sonata-api/access-control'
 import { description, User } from './description'
 
 import authenticate from './authenticate'
@@ -23,5 +24,16 @@ export const user = defineCollection(() => ({
     createAccount,
     getInfo,
     activate,
-  }
+  },
+  // accessControl: defineAccessControl()({
+  //   roles: {
+  //     guest: {
+  //       capabilities: {
+  //         functions: [
+  //           'authenticate'
+  //         ]
+  //       }
+  //     }
+  //   }
+  // })
 }))

@@ -1,6 +1,5 @@
 import type { Collections } from '@sonata-api/api'
 import type { AccessControlLayer } from './layers/types'
-import type { baseRoles } from './baseRoles'
 export { AccessControlLayer }
 
 // #region Role
@@ -8,7 +7,7 @@ export type Role<
   TCollections extends Collections=any,
   TAccessControl extends AccessControl<TCollections>=any
 > = {
-  inherit?: Array<keyof TAccessControl['roles'] | keyof typeof baseRoles>
+  inherit?: Array<keyof TAccessControl['roles']>
   grantEverything?: boolean
   forbidEverything?: boolean
   capabilities?: {

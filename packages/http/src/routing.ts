@@ -124,7 +124,7 @@ export const makeRouter = (options?: RouterOptions) => {
 
   const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
 
-  const route = <TCallback extends (context: Context) => any|Promise<any>>(
+  const route = <TCallback extends (context: Context<any>) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
     exp: string,
     cb: TCallback,
