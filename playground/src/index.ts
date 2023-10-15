@@ -6,13 +6,13 @@ const router = makeRouter()
 router.GET('/hello-world', () => 'hello, world!')
 
 router.GET('/get-people', async (context) => {
-  const queryEither = await validate({
+  const queryEither = await validate(context.request.query, {
     properties: {
       name: {
         type: 'string'
       }
     }
-  }, context.request.query)
+  })
 
   if( isError(queryEither) ) {
     return {

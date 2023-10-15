@@ -147,11 +147,11 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
 }
 
 export const validate = async <
-  TDescription extends Omit<Description, '$id'>,
-  TWhat extends Record<Lowercase<string>, any>
+  TWhat extends Record<Lowercase<string>, any>,
+  TDescription extends Omit<Description, '$id'>
 >(
-  description: TDescription,
   what: TWhat | undefined,
+  description: TDescription,
   options: ValidateOptions = {}
 ) => {
   if( !what ) {

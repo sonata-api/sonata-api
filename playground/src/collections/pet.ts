@@ -38,12 +38,5 @@ export default defineCollection(() => ({
 
       return result
     },
-    validatePerson: async (_arg: null, context: Context<typeof description>) => {
-      const result = await context.validate(description, {
-        name: 1
-      })
-
-      return result
-    }
   }
 }))
