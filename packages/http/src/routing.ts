@@ -1,6 +1,6 @@
 import type { Context } from '@sonata-api/api'
 import type { GenericRequest, GenericResponse, RequestMethod } from './types'
-import { REQUEST_METHODS } from './constants'
+import { REQUEST_METHODS, DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { safeJson } from './payload'
 
@@ -51,7 +51,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
   method: RequestMethod | RequestMethod[],
   exp: string,
   cb: TCallback,
-  options: RouterOptions = { base: '/api' }
+  options: RouterOptions = { base: DEFAULT_BASE_URI }
 ) => {
   const match = matches(context.request, method, exp, options)
   if( match ) {
@@ -126,7 +126,7 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
 export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
   if( !options.base ) {
-    options.base = '/api'
+    options.base = DEFAULT_BASE_URI
   }
 
   const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
