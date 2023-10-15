@@ -1,11 +1,13 @@
 import type { Context } from '@sonata-api/api'
-import type { GenericRequest, GenericResponse, RequestMethod, RouteOptions } from './types'
+import type { GenericRequest, GenericResponse, RequestMethod } from './types'
 import { REQUEST_METHODS } from './constants'
 import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { safeJson } from './payload'
 
 export type RouterOptions = {
   exhaust?: boolean
+  base: string
+  middleware?: (context: Context) => any
 }
 
 export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Context, infer _Method, ...infer Rest]
@@ -18,13 +20,10 @@ export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
   method: RequestMethod | RequestMethod[],
   exp: string,
-  options?: RouteOptions
+  options: RouterOptions
 ) => {
   const { url } = req
-  const {
-    base = '/api'
-
-  } = options || {}
+  const { base } = options
 
   if( !url.startsWith(`${base}/`) ) {
     return
@@ -47,15 +46,22 @@ export const matches = <TRequest extends GenericRequest>(
   }
 }
 
-export const registerRoute = <TCallback extends (context: Context) => any>(
+export const registerRoute = async <TCallback extends (context: Context) => any>(
   context: Context,
   method: RequestMethod | RequestMethod[],
   exp: string,
   cb: TCallback,
-  options?: RouteOptions
+  options: RouterOptions = { base: '/api' }
 ) => {
   const match = matches(context.request, method, exp, options)
   if( match ) {
+    if( options?.middleware ) {
+      const result = await options.middleware(context)
+      if( result ) {
+        return result
+      }
+    }
+
     if( context.request.headers['content-type'] === 'application/json' ) {
       try {
         context.request.payload = safeJson(context.request.body)
@@ -117,10 +123,8 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
   }
 }
 
-export const makeRouter = (options?: RouterOptions) => {
-  const {
-    exhaust
-  } = options || {}
+export const makeRouter = (options: Partial<RouterOptions> = {}) => {
+  const { exhaust } = options
 
   const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
 
@@ -128,10 +132,10 @@ export const makeRouter = (options?: RouterOptions) => {
     method: RequestMethod | RequestMethod[],
     exp: string,
     cb: TCallback,
-    options?: RouteOptions
+    routeOptions?: RouterOptions
   ) => {
     routes.push((_, context) => {
-      return registerRoute(context, method, exp, cb, options)
+      return registerRoute(context, method, exp, cb, routeOptions || options as Required<RouterOptions>)
     })
   }
 
