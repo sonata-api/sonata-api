@@ -22,44 +22,28 @@ If the code surface is minimal, readability is inevitably easy.
 ```javascript
 const { init, useFunctions } = require('sonata-api/untyped')
 
-module.exports = {
-  accessControl: {
-    roles: {
-      guest: {
-        capabilities: {
-          animal: {
-            grantEverything: true
-          }
+exports.collections = {
+  animal: () => ({
+    description: {
+      $id: 'string',
+      properties: {
+        name: {
+          type: 'string'
+        },
+        specie: {
+          enum: [
+            'dog',
+            'cat',
+            'bird'
+          ]
         }
       }
-    }
-  },
-  collections: {
-    animal: () => ({
-      description: {
-        $id: 'string',
-        properties: {
-          name: {
-            type: 'string'
-          },
-          specie: {
-            enum: [
-              'dog',
-              'cat',
-              'bird'
-            ]
-          }
-        }
-      },
-      functions: {
-        ...useFunctions([
-          'insert',
-          'getAll'
-        ]),
-        hello: () => 'hello, world'
-      }
-    })
-  }
+    },
+    functions: useFunctions([
+      'insert',
+      'getAll'
+    ])
+  })
 }
 
 init()
