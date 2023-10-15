@@ -17,10 +17,6 @@ export const getEntrypoint = () => {
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection>> => {
-  if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {}
-  }
-  
   // @ts-ignore
   const { collections: systemCollections } = await import('@sonata-api/system')
   const { collections: userCollections } = await getEntrypoint()
@@ -57,10 +53,6 @@ export const internalGetCollectionAsset = async <
   collectionName: TCollectionName,
   assetName: TAssetName,
 ) => {
-  if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as Right<CollectionStructure[TAssetName]>
-  }
-
   const collection = await getCollection(collectionName)
   const asset = collection?.[assetName as AssetType]
 
