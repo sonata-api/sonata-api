@@ -1,6 +1,6 @@
 import type { Description } from '@sonata-api/types'
 import type { AccessControl } from '@sonata-api/access-control'
-import type { MatchedRequest, GenericRequest, GenericResponse } from '@sonata-api/http'
+import type { GenericRequest, GenericResponse } from '@sonata-api/http'
 import type { Collection } from 'mongodb'
 import type { Schema } from './collection'
 import type {
@@ -27,7 +27,7 @@ type Models = {
 export type ContextOptions<TContext> = {
   apiConfig?: ApiConfig
   parentContext?: TContext
-  resourceName?: string
+  collectionName?: string
   token?: DecodedToken
 }
 // #endregion ContextOptions
@@ -38,9 +38,8 @@ export type Context<
   TCollections extends Collections=any,
   TAccessControl extends AccessControl<TCollections, TAccessControl>=any
 > = Omit<Awaited<ReturnType<typeof internalCreateContext>>,
-  'resourceName'
+  'collectionName'
   | 'collection'
-  | 'collections'
   | 'accessControl'
   | 'model'
 > & {
@@ -49,14 +48,12 @@ export type Context<
   collection: TDescription['$id'] extends keyof Collections
     ? TCollections[TDescription['$id']]
     : CollectionStructure
-  collections: TCollections
   functionPath: FunctionPath
   token: DecodedToken<TAccessControl>
 
-  resourceName?: keyof TCollections & string
+  collectionName?: keyof TCollections & string
   request: GenericRequest
   response: GenericResponse
-  matched: MatchedRequest
 
   apiConfig: ApiConfig
   accessControl: TAccessControl
@@ -64,32 +61,30 @@ export type Context<
 // #endregion Context
 
 export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
-  'resourceName'
+  'collectionName'
   | 'apiConfig'
   | 'token'
 >) => {
   const {
-    resourceName,
+    collectionName,
     apiConfig,
     token = {} as DecodedToken
 
   } = options || {}
 
-  const { getResources, getResourceAsset, getAccessControl } = await import('./assets')
-  const collections = await getResources()
-  const accessControl = await getAccessControl()
+  const { getCollections, getCollectionAsset } = await import('./assets')
+  const collections = await getCollections()
 
   const context = {
-    resourceName,
-    accessControl,
+    collectionName,
     description: {},
-    model: resourceName
-      ? getDatabaseCollection(resourceName)
+    model: collectionName
+      ? getDatabaseCollection(collectionName)
       : {},
-    collection: resourceName && await collections[resourceName](),
+    collection: collectionName && await collections[collectionName](),
     collections: new Proxy<Collections>({}, {
-      get: <TResourceName extends keyof typeof collections>(_: unknown, resourceName: TResourceName) => {
-        return collections[resourceName]?.()
+      get: <TCollectionName extends keyof typeof collections>(_: unknown, collectionName: TCollectionName) => {
+        return collections[collectionName]?.()
       }
     }),
     models: new Proxy<Models>({} as Models, {
@@ -103,7 +98,7 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
       return getDatabaseCollection('log').insertOne({
         message,
         details,
-        context: resourceName,
+        context: collectionName,
         owner: token?.user?._id
           // @ts-ignore
           || options?.parentContext?.token.user._id,
@@ -112,8 +107,8 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
     },
   }
 
-  if( resourceName ) {
-    const description = unsafe(await getResourceAsset(resourceName as any, 'description'))
+  if( collectionName ) {
+    const description = unsafe(await getCollectionAsset(collectionName as any, 'description'))
     context.description = description.alias
       ? await preloadDescription(description)
       : description

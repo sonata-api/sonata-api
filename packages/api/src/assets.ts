@@ -1,15 +1,15 @@
 import type { AssetType, Context, Collection, CollectionStructure } from './types'
 import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
-import { isGranted, ACErrors, type AccessControl } from '@sonata-api/access-control'
+import { isGranted, ACErrors } from '@sonata-api/access-control'
 
-const resourcesMemo = {
+const collectionsMemo = {
   _cached: false,
-  collections: {} as Awaited<ReturnType<typeof internalGetResources>>
+  collections: {} as Awaited<ReturnType<typeof internalGetCollections>>
 }
 
 const assetsMemo: {
-  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetResourceAsset>>>> 
+  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>>> 
 } = {
   assets: {}
 }
@@ -18,7 +18,7 @@ export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetResources = async (): Promise<Record<string, Collection>> => {
+const internalGetCollections = async (): Promise<Record<string, Collection>> => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
     return {}
   }
@@ -33,91 +33,87 @@ const internalGetResources = async (): Promise<Record<string, Collection>> => {
   }
 }
 
-export const getAccessControl = async () => {
-  if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as AccessControl<Collections>
+export const getCollections = async () => {
+  if( collectionsMemo._cached ) {
+    return collectionsMemo.collections
   }
 
-  const userConfig = await getEntrypoint()
-  return userConfig.accessControl as AccessControl<Collections>
-}
-
-export const getResources = async () => {
-  if( resourcesMemo._cached ) {
-    return resourcesMemo.collections
-  }
-
-  Object.assign(resourcesMemo, {
+  Object.assign(collectionsMemo, {
     _cached: true,
-    collections: await internalGetResources()
+    collections: await internalGetCollections()
   })
 
-  return resourcesMemo.collections
+  return collectionsMemo.collections
 }
 
-export const internalGetResourceAsset = async <
-  ResourceName extends string,
-  AssetName extends  keyof Collections[ResourceName] & AssetType
+export const getCollection = async (collectionName: string) => {
+  const collections = await getCollections()
+  return collections[collectionName]?.()
+}
+
+export const internalGetCollectionAsset = async <
+  TCollectionName extends string,
+  TAssetName extends  keyof Collections[TCollectionName] & AssetType
 >(
-  resourceName: ResourceName,
-  assetName: AssetName,
+  collectionName: TCollectionName,
+  assetName: TAssetName,
 ) => {
   if( process.env.SONATA_API_SHALLOW_IMPORT ) {
-    return {} as Right<CollectionStructure[AssetName]>
+    return {} as Right<CollectionStructure[TAssetName]>
   }
 
-  const resources = await getResources()
-  const asset = (await resources[resourceName]?.())?.[assetName as AssetType] as CollectionStructure[AssetName]
+  const collection = await getCollection(collectionName)
+  const asset = collection?.[assetName as AssetType]
 
   if( !asset ) {
-    if( !(resourceName in resources) ) return left(ACErrors.ResourceNotFound)
+    if( !collection ) return left(ACErrors.ResourceNotFound)
     return left(ACErrors.AssetNotFound)
   }
 
   return right(asset)
 }
 
-export const getResourceAsset = async <
-  TResourceName extends string,
-  TAssetName extends keyof Collections[TResourceName] & AssetType
+export const getCollectionAsset = async <
+  TCollectionName extends string,
+  TAssetName extends keyof Collections[TCollectionName] & AssetType
 >(
-  resourceName: TResourceName,
+  collectionName: TCollectionName,
   assetName: TAssetName,
 ) => {
-  const cached = assetsMemo.assets[resourceName]
+  const cached = assetsMemo.assets[collectionName]
   if( cached?.[assetName] ) {
     return right(cached[assetName] as NonNullable<CollectionStructure[TAssetName]>)
   }
 
-  const assetEither = await internalGetResourceAsset(resourceName, assetName as any)
+  const assetEither = await internalGetCollectionAsset(collectionName, assetName as any)
   if( isLeft(assetEither) ) {
     return assetEither
   }
 
   const asset = unwrapEither(assetEither) as NonNullable<CollectionStructure[TAssetName]>
-  assetsMemo.assets[resourceName as string] ??= {}
-  assetsMemo.assets[resourceName as string][assetName] = asset
+  assetsMemo.assets[collectionName as string] ??= {}
+  assetsMemo.assets[collectionName as string][assetName] = asset
 
   return right(asset)
 }
 
-export const get = internalGetResourceAsset
+export const get = internalGetCollectionAsset
 
 export const getFunction = async <
-  TResourceName extends string,
+  TCollectionName extends string,
   TFunctionName extends string
 >(
-  resourceName: TResourceName,
+  collectionName: TCollectionName,
   functionName: TFunctionName,
   acProfile?: UserACProfile,
 ) => {
   if( acProfile ) {
-    if( !await isGranted(String(resourceName), String(functionName), acProfile) ) {
+    if( !await isGranted(String(collectionName), String(functionName), acProfile) ) {
       return left(ACErrors.AuthorizationError)
     }
   }
 
-  const functionsEither = await getResourceAsset(resourceName as string, 'functions')
+  const functionsEither = await getCollectionAsset(collectionName as string, 'functions')
   if( isLeft(functionsEither) ) {
     return functionsEither
   }
@@ -128,20 +124,15 @@ export const getFunction = async <
   }
 
   const fn = async (payload: any, context: Context<any, Collections>) => {
-    const resource = await (await getResources())[resourceName]()
-    if( resource.security?.rateLimiting?.[functionName] ) {
-      const rateLimitingEither = await limitRate(context, resource.security.rateLimiting[functionName])
+    const collection = await (await getCollections())[collectionName]()
+    if( collection.security?.rateLimiting?.[functionName] ) {
+      const rateLimitingEither = await limitRate(context, collection.security.rateLimiting[functionName])
       if( isLeft(rateLimitingEither) ) {
         return left({
           error: unwrapEither(rateLimitingEither),
           httpCode: 429
         })
       }
-    }
-
-    const accessControl = await getAccessControl()
-    if( accessControl.layers?.call ) {
-      await accessControl.layers.call!(context, { payload })
     }
 
     return functions[functionName](payload, context)

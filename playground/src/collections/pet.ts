@@ -1,4 +1,4 @@
-import { defineDescription, createContext } from 'sonata-api'
+import { defineCollection, defineDescription, createContext } from 'sonata-api'
 
 const [Pet, description] = defineDescription({
   $id: 'pet',
@@ -12,7 +12,7 @@ const [Pet, description] = defineDescription({
   }
 })
 
-export default () => ({
+export default defineCollection(() => ({
   item: Pet,
   description,
   functions: {
@@ -41,9 +41,9 @@ export default () => ({
     validatePerson: async (_arg: null, context: Context<typeof description>) => {
       const result = await context.validate(description, {
         name: 1
-      }, ['name'])
+      })
 
       return result
     }
   }
-})
+}))

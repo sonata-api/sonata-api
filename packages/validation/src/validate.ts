@@ -1,3 +1,4 @@
+import type { Schema } from '@sonata-api/api'
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither } from '@sonata-api/common'
 import {
@@ -145,8 +146,11 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
   }
 }
 
-export const validate = async <TWhat extends Record<Lowercase<string>, any>>(
-  description: Omit<Description, '$id'>,
+export const validate = async <
+  TDescription extends Omit<Description, '$id'>,
+  TWhat extends Record<Lowercase<string>, any>
+>(
+  description: TDescription,
   what: TWhat | undefined,
   options: ValidateOptions = {}
 ) => {
@@ -190,5 +194,5 @@ export const validate = async <TWhat extends Record<Lowercase<string>, any>>(
     }))
   }
 
-  return right(what)
+  return right(what as Schema<TDescription>)
 }

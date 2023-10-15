@@ -1,5 +1,4 @@
 import type { AccessControl } from '@sonata-api/access-control'
-import type { MatchedRequest, GenericResponse } from '@sonata-api/http'
 import type { Context } from '../context'
 import type { FunctionPath } from './resource'
 import type { ObjectId } from './database'
@@ -12,7 +11,7 @@ type User = {
 
 export type DecodedToken<TAccessControl extends AccessControl<any, any>=any> = {
   user: Omit<User, 'roles'> & {
-    roles: Array<NonNullable<TAccessControl['availableRoles']>>
+    roles?: Array<NonNullable<TAccessControl['availableRoles']>>
   }
   extra?: Record<string, any>
   allowed_functions?: Array<FunctionPath>

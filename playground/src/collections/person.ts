@@ -1,4 +1,4 @@
-import { defineDescription, useFunctions } from 'sonata-api'
+import { defineCollection, defineDescription, useFunctions } from 'sonata-api'
 
 const [Person, description] = defineDescription({
   $id: 'person',
@@ -18,11 +18,23 @@ const [Person, description] = defineDescription({
   }
 })
 
-export default () => ({
+export const person = defineCollection(() => ({
   item: Person,
   description,
   functions: useFunctions<typeof Person>()([
     'getAll',
     'insert'
-  ])
-})
+  ]),
+  accessControl: {
+    roles: {
+      root: {
+        grantEverything: true
+      },
+      guest: {
+        inherit: [
+          'root'
+        ]
+      }
+    }
+  }
+}))

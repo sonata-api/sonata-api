@@ -75,7 +75,6 @@ export const useAccessControl = <
     return chainFunctions<Required<Payload>>()(
       context,
       props as any, [
-        (accessControl.layers?.read && context.token) && accessControl.layers.read,
         checkOwnershipRead
     ])
   }
@@ -89,7 +88,6 @@ export const useAccessControl = <
     return chainFunctions<Payload>()(
       context,
       props, [
-        (accessControl.layers?.write && context.token) && accessControl.layers.write,
         checkOwnershipWrite,
         checkImmutability
     ])

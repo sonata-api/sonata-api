@@ -19,16 +19,12 @@
   "exports": {
     ".": "./dist/index.js",
     "./collections": "./dist/collections/index.js",
-    "./algorithms": "./dist/algorithms/index.js",
     "./*": "./dist/*"
   },
   "typesVersions": {
     "*": {
       "collections": [
         "dist/collections/index.d.ts"
-      ],
-      "algorithms": [
-        "dist/algorithms/index.d.ts"
       ],
       "collections/*": [
         "dist/collections/*/index.d.ts"
@@ -47,9 +43,6 @@
       ],
       "collections/user/index.js": [
         "dist/collections/user/index.d.ts"
-      ],
-      "algorithms/*": [
-        "dist/algorithms/*/index.d.ts"
       ]
     }
   },

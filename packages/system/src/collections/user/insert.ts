@@ -11,7 +11,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   props.what.group = apiConfig.group
 
   // user is being inserted by a non-root user
-  if( !token?.user?.roles.includes('root') ) {
+  if( !token.user.roles?.includes('root') ) {
     const userId = props.what._id = token?.user?._id
     delete props.what.roles
 

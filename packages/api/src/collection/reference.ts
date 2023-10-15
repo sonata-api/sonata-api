@@ -1,6 +1,6 @@
 import type { CollectionProperty } from '@sonata-api/types'
 import { unsafe } from '@sonata-api/common'
-import { getResourceAsset } from '../assets'
+import { getCollectionAsset } from '../assets'
 import { prepareCollectionName } from '../database'
 
 export type GetReferenceOptions = {
@@ -104,7 +104,7 @@ export const getReferences = async (
       }
 
     } else {
-      const description = unsafe(await getResourceAsset(referencedCollection, 'description'))
+      const description = unsafe(await getCollectionAsset(referencedCollection, 'description'))
       reference.deepReferences = await getReferences(description.properties, {
         depth: depth + 1
       })

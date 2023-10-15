@@ -33,9 +33,10 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
     headers: request.headers || {},
     body: await getBody(request),
     query: url.includes('?')
-      ? parseUrl(url, true)
+      ? parseUrl(url, true).query
       : {},
-    payload: {}
+    payload: {},
+    fragments: []
   }
 
   return req

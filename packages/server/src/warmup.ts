@@ -1,4 +1,4 @@
-import { getResources } from '@sonata-api/api'
+import { getCollections } from '@sonata-api/api'
 import { grantedFor } from '@sonata-api/access-control'
 
 if( process.env.NODE_ENV !== 'production' ) {
@@ -25,7 +25,7 @@ const colorizedRoute = (color: keyof typeof colors, roles?: Array<string>) =>
 }
 
 export const warmup = async () => {
-  const collections = await getResources()
+  const collections = await getCollections()
   const sortedCollections = Object.keys(collections).sort((a, b) => {
     return a > b
       ? 1

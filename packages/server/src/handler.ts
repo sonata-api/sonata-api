@@ -59,27 +59,27 @@ export const safeHandle = (
 export const customVerbs = () => async (parentContext: Context) => {
   const {
     fragments: [
-      resourceName,
+      collectionName,
       functionName
     ]
-  } = parentContext.matched
+  } = parentContext.request
 
   const context = await createContext({
     parentContext,
-    resourceName
+    collectionName
   })
 
   await prePipe({
     context
   })
 
-  const fnEither = await getFunction(resourceName, functionName, context.token.user)
+  const fnEither = await getFunction(collectionName, functionName, context.token.user)
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     switch( error ) {
-      case ACErrors.ResourceNotFound: throw new Error(`no such resource ${resourceName}`)
-      case ACErrors.FunctionNotFound: throw new Error(`no such function ${resourceName}@${functionName}`)
-      case ACErrors.AssetNotFound: throw new Error(`resource ${resourceName} has no registered functions`)
+      case ACErrors.ResourceNotFound: throw new Error(`no such collection ${collectionName}`)
+      case ACErrors.FunctionNotFound: throw new Error(`no such function ${collectionName}@${functionName}`)
+      case ACErrors.AssetNotFound: throw new Error(`collection ${collectionName} has no registered functions`)
       default: throw new Error(`unknown error: ${error}`)
     }
   }
@@ -96,14 +96,14 @@ export const customVerbs = () => async (parentContext: Context) => {
 export const regularVerb = (functionName: AvailableFunction) => async (parentContext: Context) => {
   const {
     fragments: [
-      resourceName,
+      collectionName,
       id
     ]
-  } = parentContext.matched
+  } = parentContext.request
 
   const context = await createContext({
     parentContext,
-    resourceName
+    collectionName
   })
 
   await prePipe({
@@ -123,7 +123,7 @@ export const regularVerb = (functionName: AvailableFunction) => async (parentCon
     }
   }
 
-  const fnEither = await getFunction(resourceName, functionName, context.token.user)
+  const fnEither = await getFunction(collectionName, functionName, context.token.user)
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     return {
@@ -142,11 +142,11 @@ export const regularVerb = (functionName: AvailableFunction) => async (parentCon
 
 export const fileDownload = async (parentContext: Context) => {
   const context = await createContext({
-    resourceName: 'file',
+    collectionName: 'file',
     parentContext
   })
 
-  const [ hash, ...options ] = context.matched.fragments
+  const [ hash, ...options ] = context.request.fragments
 
   const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
   if( isLeft(fileEither) ) {

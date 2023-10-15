@@ -2,7 +2,7 @@ import type { Description, CollectionProperty } from '@sonata-api/types'
 import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
 import { left, right, isLeft, unwrapEither, pipe, type Either } from '@sonata-api/common'
-import { getResourceAsset } from '../assets'
+import { getCollectionAsset } from '../assets'
 import { preloadDescription } from './preload'
 import {
   validateProperty,
@@ -186,7 +186,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       if( options.recurseReferences ) {
         const propCast = property as CollectionProperty
         if( propCast.s$isReference && value && !(value instanceof ObjectId) ) {
-          const targetDescriptionEither = await getResourceAsset(propCast.s$referencedCollection!, 'description')
+          const targetDescriptionEither = await getCollectionAsset(propCast.s$referencedCollection!, 'description')
           if( isLeft(targetDescriptionEither) ) {
             return left(unwrapEither(targetDescriptionEither))
           }

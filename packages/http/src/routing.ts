@@ -42,7 +42,6 @@ export const matches = <TRequest extends GenericRequest>(
   if( matches ) {
     const fragments = matches.splice(1)
     return {
-      req,
       fragments
     }
   }
@@ -71,6 +70,7 @@ export const registerRoute = <TCallback extends (context: Context) => any>(
       }
     }
 
+    Object.assign(context.request, match)
     return cb(context)
   }
 }

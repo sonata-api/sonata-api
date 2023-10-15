@@ -1,5 +1,5 @@
-import { defineDescription, createModel, deepMerge, type Schema } from 'sonata-api'
-import user, { userSchemaCallback } from '@sonata-api/system/collections/user/index.js'
+import { defineDescription, deepMerge, type Schema } from 'sonata-api'
+import { user } from '@sonata-api/system'
 
 const newDescription = <const>{
   required: [
@@ -20,8 +20,8 @@ const [NewUser] = defineDescription(newDescription)
 
 export type User = Awaited<ReturnType<typeof user>>['item'] & typeof NewUser
 
-export default async () => {
-  const userCollection = await user()
+export default () => {
+  const userCollection = user()
   const description = userCollection.description as typeof userCollection['description'] & typeof newDescription
 
   Object.assign(
@@ -32,11 +32,6 @@ export default async () => {
   return {
     item: {} as Schema<typeof description>,
     description,
-    functions: userCollection.functions,
-    model: () => {
-      return createModel(description, {
-        schemaCallback: userSchemaCallback as any
-      })
-    }
+    functions: userCollection.functions
   }
 }

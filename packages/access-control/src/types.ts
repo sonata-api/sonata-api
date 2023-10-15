@@ -3,13 +3,6 @@ import type { AccessControlLayer } from './layers/types'
 import type { baseRoles } from './baseRoles'
 export { AccessControlLayer }
 
-// #region ValidAccessControlLayer
-export type ValidAccessControlLayer =
-  'read'
-  | 'write'
-  | 'call'
-// #endregion ValidAccessControlLayer
-
 // #region Role
 export type Role<
   TCollections extends Collections=any,
@@ -51,8 +44,6 @@ export type InternalAccessControl<
 export type AccessControl<
   TCollections extends Collections=any,
   TAccessControl extends AccessControl<TCollections, TAccessControl>=any
-> = InternalAccessControl<TCollections, TAccessControl> & {
-  layers?: Partial<Record<ValidAccessControlLayer, AccessControlLayer<TCollections, TAccessControl>>>
-}
+> = InternalAccessControl<TCollections, TAccessControl>
 // #endregion AccessControl
 

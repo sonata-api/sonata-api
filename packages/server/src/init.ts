@@ -52,13 +52,13 @@ export const dryInit = async (
   const serverOptions = defineServerOptions()
   const apiRouter = registerRoutes()
 
-  const server = registerServer(serverOptions, async (req, res) => {
-    if( cors(req, res) === null ) {
+  const server = registerServer(serverOptions, async (request, response) => {
+    if( cors(request, response) === null ) {
       return
     }
 
-    await wrapRouteExecution(res, async () => {
-      const tokenEither = await getDecodedToken(req)
+    await wrapRouteExecution(response, async () => {
+      const tokenEither = await getDecodedToken(request)
       if( isLeft(tokenEither) ) {
         return tokenEither
       }
@@ -67,6 +67,11 @@ export const dryInit = async (
       const context = await createContext({
         parentContext,
         token
+      })
+
+      Object.assign(context, {
+        request,
+        response
       })
 
       if( cb ) {

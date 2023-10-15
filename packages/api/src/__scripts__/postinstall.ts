@@ -18,25 +18,19 @@ declare global {
 
   type Context<TDescription extends Description=any>
     = Context_<TDescription, Collections>
-
-  type UserAccessControl = typeof accessControl
-
-  type UserACProfile = {
-    roles: ReadonlyArray<keyof UserAccessControl['roles']>
-  }
 }
 
 declare module '@sonata-api/api' {
-  export async function getResourceAsset<
-    const ResourceName extends keyof Collections,
-    const AssetName extends keyof Collections[ResourceName] & AssetType,
-    ReturnedAsset=ResourceName extends keyof Collections
-        ? AssetName extends keyof Collections[ResourceName]
-          ? Collections[ResourceName][AssetName]
+  export async function getCollectionAsset<
+    const CollectionName extends keyof Collections,
+    const AssetName extends keyof Collections[CollectionName] & AssetType,
+    ReturnedAsset=CollectionName extends keyof Collections
+        ? AssetName extends keyof Collections[CollectionName]
+          ? Collections[CollectionName][AssetName]
           : never
         : never
   >(
-    resourceName: ResourceName,
+    resourceName: CollectionName,
     assetName: AssetName,
   ): Promise<
     Either<
@@ -46,18 +40,18 @@ declare module '@sonata-api/api' {
   >
 
 
-  export const get = getResourceAsset
+  export const get = getCollectionAsset
 
   export async function getFunction<
-    ResourceName extends keyof Collections,
-    FunctionName extends keyof Collections[ResourceName]['functions'],
-    ReturnedFunction=ResourceName extends keyof Collections
-        ? FunctionName extends keyof Collections[ResourceName]['functions']
-          ? Collections[ResourceName]['functions'][FunctionName]
+    CollectionName extends keyof Collections,
+    FunctionName extends keyof Collections[CollectionName]['functions'],
+    ReturnedFunction=CollectionName extends keyof Collections
+        ? FunctionName extends keyof Collections[CollectionName]['functions']
+          ? Collections[CollectionName]['functions'][FunctionName]
           : never
           : never
   >(
-    resourceName: ResourceName,
+    resourceName: CollectionName,
     functionName: FunctionName,
     acProfile?: UserACProfile
   ): Promise<

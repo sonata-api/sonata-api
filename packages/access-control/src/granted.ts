@@ -1,16 +1,7 @@
 import type { AccessControl, Role } from './types'
-import { getEntrypoint } from '@sonata-api/api'
+import { getCollection } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
-
-let acMemo: AccessControl | null = null
-
-const getAccessControl = async () => {
-  if ( !acMemo ) {
-    acMemo = (await getEntrypoint()).accessControl
-  }
-
-  return acMemo!
-}
+import { DEFAULT_ACCESS_CONTROL } from './constants'
 
 const applyInheritance = async (accessControl: AccessControl, targetRole: Role) => {
   const role = Object.assign({}, targetRole) as typeof targetRole & {
@@ -31,35 +22,42 @@ const applyInheritance = async (accessControl: AccessControl, targetRole: Role) 
   return role
 }
 
+export const getAccessControl = async <TCollectionName extends string>(collectionName: TCollectionName) => {
+  const collection = await getCollection(collectionName)
+  const accessControl = collection.accessControl || DEFAULT_ACCESS_CONTROL
+  
+  return accessControl
+}
+
 export const isGranted = async <
-  const ResourceName extends string,
-  const FunctionName extends string,
-  const ACProfile extends {
+  TCollectionName extends string,
+  TFunctionName extends string,
+  const TACProfile extends {
     roles?: Array<string>
     allowedFunctions?: Array<string>
   }
 >(
-  resourceName: ResourceName,
-  functionName: FunctionName,
-  acProfile: ACProfile
+  collectionName: TCollectionName,
+  functionName: TFunctionName,
+  acProfile: TACProfile
 ) => {
-  const accessControl = await getAccessControl()
-  const userRoles = (acProfile.roles || ['guest']) as Array<keyof typeof accessControl['roles']>
+  const accessControl = await getAccessControl(collectionName)
+  const userRoles = (acProfile.roles || ['guest'])
 
   for( const roleName of userRoles ) {
     const _currentRole = accessControl.roles?.[roleName]
     if( !_currentRole ) {
-      throw new Error(`role ${roleName} doesnt exist`)
+      return false
     }
 
     const currentRole = await applyInheritance(accessControl, _currentRole)
-    const subject = currentRole?.capabilities?.[resourceName]
+    const subject = currentRole?.capabilities?.[collectionName]
     if( subject?.blacklist?.includes(functionName) ) {
       return false
     }
 
     const allowedInToken = !acProfile.allowedFunctions || (
-      acProfile.allowedFunctions.includes(`${resourceName}@${functionName}`)
+      acProfile.allowedFunctions.includes(`${collectionName}@${functionName}`)
     )
 
     const result = allowedInToken
@@ -79,21 +77,20 @@ export const isGranted = async <
 }
 
 export const grantedFor = async <
-  const ResourceName extends string,
-  const FunctionName extends string
+  TCollectionName extends string,
+  TFunctionName extends string
 >(
-  resourceName: ResourceName,
-  functionName: FunctionName
+  collectionName: TCollectionName,
+  functionName: TFunctionName
 ) => {
-  const accessControl = await getAccessControl()
-
+  const accessControl = await getAccessControl(collectionName)
   if( !accessControl.roles ) {
     return []
   }
 
   const roles = []
   for( const role in accessControl.roles ) {
-    const granted = await isGranted(resourceName, functionName, {
+    const granted = await isGranted(collectionName, functionName, {
       roles: [
         role
       ]

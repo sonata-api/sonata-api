@@ -7,6 +7,7 @@ export type CollectionStructure = {
   item: any
   description: Description
   security?: SecurityPolicy
+  accessControl?: AccessControl<Collections>
   functions?: Record<string, (...args: any[]) => any>
 }
 
@@ -19,8 +20,6 @@ export type FunctionPath = `${string}@${string}`
 
 export type UnpackFunction<T extends () => any> = Awaited<ReturnType<T>>
 export type Collections = Record<string, UnpackFunction<Collection>>
-
-export type UserAccessControl = AccessControl<Collections>
 
 export type UserACProfile = {
   readonly roles: string[]

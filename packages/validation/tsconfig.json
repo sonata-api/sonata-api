@@ -3,6 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
+      "@sonata-api/api": [
+        "../api/dist"
+      ],
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],

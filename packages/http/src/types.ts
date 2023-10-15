@@ -1,4 +1,3 @@
-import type { matches } from './routing'
 import type { REQUEST_METHODS } from './constants'
 
 export type RouteOptions = {
@@ -14,6 +13,7 @@ export type GenericRequest = {
   body?: string
   query: Record<string, any>
   payload: Record<string, any>
+  fragments: Array<string>
 }
 
 export type GenericResponse = {
@@ -23,5 +23,3 @@ export type GenericResponse = {
   writeHead: (status: number, headers?: Record<string, any>) => void
   end: (content?: any) => void
 }
-
-export type MatchedRequest = NonNullable<ReturnType<typeof matches>>

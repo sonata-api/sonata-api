@@ -1,6 +1,6 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { getReferencedCollection, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
-import { getResourceAsset } from '../assets'
+import { getCollectionAsset } from '../assets'
 
 export type PreloadOptions = {
   serialize?: boolean
@@ -35,7 +35,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
   const description = Object.assign({}, originalDescription)
 
   if( description.alias ) {
-    const aliasedCollectionEither = await getResourceAsset(description.alias as keyof Collections, 'description')
+    const aliasedCollectionEither = await getCollectionAsset(description.alias as keyof Collections, 'description')
     if( isLeft(aliasedCollectionEither) ) {
       throw new Error(`description of ${description.alias} not found`)
     }
@@ -81,7 +81,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
         property.s$referencedCollection = reference.$ref
 
         if( !property.s$indexes && !property.s$inline ) {
-          const referenceDescriptionEither = await getResourceAsset(reference.$ref! as keyof Collections, 'description')
+          const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
           if( isLeft(referenceDescriptionEither) ) {
             throw new Error(`description of ${reference.$ref} not found`)
           }
