@@ -39,7 +39,6 @@ declare module '@sonata-api/api' {
     >
   >
 
-
   export const get = getCollectionAsset
 
   export async function getFunction<
