@@ -4,6 +4,7 @@ import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors } from '@sonata-api/access-control'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
+const collectionMemo: Record<string, CollectionStructure> = {}
 
 const assetsMemo: {
   assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>>> 
@@ -40,8 +41,13 @@ export const getCollections = async () => {
 }
 
 export const getCollection = async (collectionName: string) => {
+  if( collectionMemo[collectionName] ) {
+    return collectionMemo[collectionName]
+  }
+
   const collections = await getCollections()
-  return collections[collectionName]?.()
+  const collection = collectionMemo[collectionName] = await collections[collectionName]?.()
+  return collection
 }
 
 export const internalGetCollectionAsset = async <
@@ -106,7 +112,7 @@ export const getFunction = async <
     }
   }
 
-  const functionsEither = await getCollectionAsset(collectionName as string, 'functions')
+  const functionsEither = await getCollectionAsset(collectionName, 'functions')
   if( isLeft(functionsEither) ) {
     return functionsEither
   }
