@@ -58,6 +58,7 @@
   },
   "peerDependencies": {
     "@sonata-api/api": "*",
+    "@sonata-api/access-control": "*",
     "@sonata-api/common": "*",
     "@sonata-api/types": "*"
   }

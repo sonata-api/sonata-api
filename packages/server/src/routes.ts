@@ -18,7 +18,7 @@ export const registerRoutes = () => {
     exhaust: true
   })
 
-  router.GET('/api/describe', functions.describe)
+  router.route(['POST', 'GET'], '/api/describe', functions.describe)
   router.GET('/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload))
   router.GET('/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get')))
   router.GET('/api/(\\w+)$', defaultHandler(regularVerb('getAll')))

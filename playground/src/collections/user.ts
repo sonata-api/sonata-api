@@ -22,7 +22,7 @@ export type User = Awaited<ReturnType<typeof user>>['item'] & typeof NewUser
 
 export default () => {
   const userCollection = user()
-  const description = userCollection.description as typeof userCollection['description'] & typeof newDescription
+  const description = Object.assign({}, userCollection.description) as typeof userCollection['description'] & typeof newDescription
 
   Object.assign(
     description,

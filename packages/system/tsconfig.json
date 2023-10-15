@@ -6,6 +6,9 @@
       "@sonata-api/api": [
         "../api/dist"
       ],
+      "@sonata-api/access-control": [
+        "../access-control/dist"
+      ],
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],

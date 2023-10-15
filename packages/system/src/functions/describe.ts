@@ -2,6 +2,7 @@ import type { Context, Collection } from '@sonata-api/api'
 import type { Description } from '@sonata-api/types'
 import { createContext, getCollections, preloadDescription } from '@sonata-api/api'
 import { serialize, isLeft, left, unwrapEither, Either } from '@sonata-api/common'
+import { getAvailableRoles } from '@sonata-api/access-control'
 import { default as authenticate } from '../collections/user/authenticate'
 
 type Props = {
@@ -14,7 +15,7 @@ type Props = {
 export const describe = async (context: Context): Promise<any> => {
   const result = {} as {
     descriptions: typeof descriptions
-    roles?: typeof context.accessControl.roles
+    roles?: string[]
     auth?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
       ? Partial<Right>
       : never
@@ -53,7 +54,7 @@ export const describe = async (context: Context): Promise<any> => {
   }
 
   if( props?.roles ) {
-    result.roles = context.accessControl.roles
+    result.roles = await getAvailableRoles()
   }
 
   if( props?.noSerialize ) {

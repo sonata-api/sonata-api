@@ -1,7 +1,9 @@
 import type { AccessControl, Role } from './types'
-import { getCollection } from '@sonata-api/api'
+import { getCollection, getCollections } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
 import { DEFAULT_ACCESS_CONTROL } from './constants'
+
+let availableRolesMemo: Array<string>
 
 const applyInheritance = async (accessControl: AccessControl, targetRole: Role) => {
   const role = Object.assign({}, targetRole) as typeof targetRole & {
@@ -22,11 +24,32 @@ const applyInheritance = async (accessControl: AccessControl, targetRole: Role) 
   return role
 }
 
-export const getAccessControl = async <TCollectionName extends string>(collectionName: TCollectionName) => {
+export const getAccessControl = async <TCollectionName extends string>(collectionName: TCollectionName): Promise<AccessControl> => {
   const collection = await getCollection(collectionName)
   const accessControl = collection.accessControl || DEFAULT_ACCESS_CONTROL
   
   return accessControl
+}
+
+export const getAvailableRoles = async () => {
+  if( availableRolesMemo ) {
+    return availableRolesMemo
+  }
+
+  const collections = await getCollections()
+  const availableRoles = []
+
+  for( const collectionName in collections ) {
+    const ac = await getAccessControl(collectionName)
+    if( !ac.roles ) {
+      continue
+    }
+
+    availableRoles.push(...Object.keys(ac.roles))
+  }
+
+  availableRolesMemo = [ ...new Set(availableRoles) ]
+  return availableRolesMemo
 }
 
 export const isGranted = async <

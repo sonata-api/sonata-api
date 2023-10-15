@@ -45,12 +45,10 @@ export const useAccessControl = <
   TDescription extends Description,
   TCollections extends Collections,
   TAccessControl extends AccessControl<TCollections, TAccessControl>=any
->(context: Context<TDescription, TCollections, TAccessControl>) => {
+>(context: Context<TDescription, TCollections>) => {
   const options = context.description.options
     ? Object.assign({}, context.description.options)
     : {}
-
-  const accessControl = context?.accessControl||{}
 
   const beforeRead = async <const Payload extends Partial<ReadPayload>>(payload?: Payload) => {
     const newPayload = Object.assign({}, payload) as ReadPayload

@@ -1,5 +1,4 @@
 import type { Description } from '@sonata-api/types'
-import type { AccessControl } from '@sonata-api/access-control'
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
 import type { Collection } from 'mongodb'
 import type { Schema } from './collection'
@@ -35,12 +34,10 @@ export type ContextOptions<TContext> = {
 // #region Context
 export type Context<
   TDescription extends Description=any,
-  TCollections extends Collections=any,
-  TAccessControl extends AccessControl<TCollections, TAccessControl>=any
+  TCollections extends Collections=any
 > = Omit<Awaited<ReturnType<typeof internalCreateContext>>,
   'collectionName'
   | 'collection'
-  | 'accessControl'
   | 'model'
 > & {
   description: TDescription
@@ -49,14 +46,13 @@ export type Context<
     ? TCollections[TDescription['$id']]
     : CollectionStructure
   functionPath: FunctionPath
-  token: DecodedToken<TAccessControl>
+  token: DecodedToken
 
   collectionName?: keyof TCollections & string
   request: GenericRequest
   response: GenericResponse
 
   apiConfig: ApiConfig
-  accessControl: TAccessControl
 }
 // #endregion Context
 

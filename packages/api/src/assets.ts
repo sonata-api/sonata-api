@@ -3,10 +3,7 @@ import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/commo
 import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors } from '@sonata-api/access-control'
 
-const collectionsMemo = {
-  _cached: false,
-  collections: {} as Awaited<ReturnType<typeof internalGetCollections>>
-}
+let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
 
 const assetsMemo: {
   assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>>> 
@@ -34,16 +31,12 @@ const internalGetCollections = async (): Promise<Record<string, Collection>> => 
 }
 
 export const getCollections = async () => {
-  if( collectionsMemo._cached ) {
-    return collectionsMemo.collections
+  if( collectionsMemo ) {
+    return collectionsMemo
   }
 
-  Object.assign(collectionsMemo, {
-    _cached: true,
-    collections: await internalGetCollections()
-  })
-
-  return collectionsMemo.collections
+  collectionsMemo = await internalGetCollections()
+  return collectionsMemo
 }
 
 export const getCollection = async (collectionName: string) => {

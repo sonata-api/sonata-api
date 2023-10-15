@@ -13,7 +13,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     throw new Error('signup disallowed')
   }
 
-  const validationEither = await context.validate({
+  const validationEither = await context.validate(user, {
     required: [
       'full_name',
       'email',
@@ -33,7 +33,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
         type: 'string'
       }
     }
-  }, user, {
+  }, {
     extraneous: [
       '_id',
       'roles',
