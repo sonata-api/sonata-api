@@ -3,13 +3,17 @@ import type { Description, CollectionProperty } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
-  ValidateOptions,
   PropertyValidationErrorType,
   PropertyValidationError,
   ValidationError
 
 } from './types'
 
+export type ValidateOptions = {
+  extraneous?: Array<string>|boolean
+  throwOnError?: boolean
+  recurse?: boolean
+}
 
 const getValueType = (value: any) => {
   return Array.isArray(value)
@@ -148,7 +152,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
 
 export const validate = async <
   TWhat extends Record<Lowercase<string>, any>,
-  TDescription extends Omit<Description, '$id'>
+  const TDescription extends Omit<Description, '$id'>
 >(
   what: TWhat | undefined,
   description: TDescription,
@@ -196,3 +200,31 @@ export const validate = async <
 
   return right(what as Schema<TDescription>)
 }
+
+export const validateSilently = async <
+  TWhat extends Record<Lowercase<string>, any>,
+  const TDescription extends Omit<Description, '$id'>
+>(
+  what: TWhat | undefined,
+  description: TDescription,
+  options: ValidateOptions = {}
+) => {
+  const result = await validate(what, description, options)
+  return isLeft(result)
+    ? null
+    : result.value
+}
+
+export const validator = <const TDescription extends Omit<Description, '$id'>>(
+  description: TDescription,
+  options: ValidateOptions = {}
+) => {
+
+  return <const>[
+    {} as Schema<TDescription>,
+    async <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
+      return validateSilently(what, description, options)
+    }
+  ]
+}
+

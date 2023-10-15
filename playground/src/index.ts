@@ -1,12 +1,14 @@
-import { init, makeRouter, validate, isError, unpack } from 'sonata-api'
+import { init, makeRouter, validateSilently } from 'sonata-api'
 export * as collections from './collections'
 
-const router = makeRouter()
+const router = makeRouter({
+  exhaust: true
+})
 
 router.GET('/hello-world', () => 'hello, world!')
 
 router.GET('/get-people', async (context) => {
-  const queryEither = await validate(context.request.query, {
+  const query = await validateSilently(context.request.query, {
     properties: {
       name: {
         type: 'string'
@@ -14,14 +16,12 @@ router.GET('/get-people', async (context) => {
     }
   })
 
-  if( isError(queryEither) ) {
+  if( !query ) {
     return {
-      error: true,
-      details: queryEither.value
+      error: true
     }
   }
 
-  const query = unpack(queryEither)
   await context.models.person.insertOne({
     name: query.name,
     job: 'programmer'

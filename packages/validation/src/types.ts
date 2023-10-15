@@ -4,13 +4,6 @@ export enum ValidationErrorCodes {
   InvalidProperties = 'INVALID_PROPERTIES'
 }
 
-export type ValidateOptions = {
-  extraneous?: Array<string>|boolean
-  throwOnError?: boolean
-  recurse?: boolean
-}
-
-
 export type PropertyValidationErrorType = 'extraneous'
   | 'unmatching'
   | 'extraneous_element'
