@@ -80,14 +80,14 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
     }
 
     Object.assign(context.request, match)
-    return cb(context)
+    return cb(context) || null
   }
 }
 
 export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Promise<any>) => {
   try {
     const result = await cb()
-    if( result === undefined ) {
+    if( result === null ) {
       res.writeHead(204)
       res.end()
       return
