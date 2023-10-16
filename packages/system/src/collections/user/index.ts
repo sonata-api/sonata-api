@@ -26,6 +26,9 @@ export const user = defineCollection(() => ({
   },
   accessControl: {
     roles: {
+      root: {
+        grantEverything: true
+      },
       guest: {
         functions: [
           'authenticate'

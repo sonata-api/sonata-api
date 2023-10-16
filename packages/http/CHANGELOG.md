@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.10
+
+### Patch Changes
+
+- Patch bump
+
 ## 0.0.9
 
 ### Patch Changes

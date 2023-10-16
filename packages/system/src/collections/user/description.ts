@@ -50,8 +50,7 @@ export const [User, description] = defineDescription({
       type: 'array',
       items: {
         enum: [],
-      },
-      s$element: 'select'
+      }
     },
     email: {
       type: 'string',

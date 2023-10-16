@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/access-control",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "## Instalation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

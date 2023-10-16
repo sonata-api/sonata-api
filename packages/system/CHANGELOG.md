@@ -1,5 +1,26 @@
 # @sonata-api/system
 
+## 0.0.37
+
+### Patch Changes
+
+- Fix empty enum validation
+
+## 0.0.36
+
+### Patch Changes
+
+- Fix user AC
+
+## 0.0.35
+
+### Patch Changes
+
+- Patch bump
+- Updated dependencies
+  - @sonata-api/access-control@0.0.16
+  - @sonata-api/api@0.0.49
+
 ## 0.0.34
 
 ### Patch Changes

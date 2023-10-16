@@ -1,5 +1,16 @@
 # @sonata-api/api
 
+## 0.0.49
+
+### Patch Changes
+
+- Patch bump
+- Updated dependencies
+  - @sonata-api/access-control@0.0.16
+  - @sonata-api/http@0.0.10
+  - @sonata-api/system@0.0.35
+  - @sonata-api/validation@0.0.9
+
 ## 0.0.48
 
 ### Patch Changes

@@ -87,6 +87,10 @@ export const validateProperty = async (
     }
   }
 
+  if( property.enum?.length === 0 ) {
+    return
+  }
+
   if( actualType !== expectedType && !(expectedType === 'array' && actualType === 'array') ) {
     return makePropertyError('unmatching', {
       expected: expectedType,

@@ -1,5 +1,17 @@
 # @sonata-api/validation
 
+## 0.0.10
+
+### Patch Changes
+
+- Fix empty enum validation
+
+## 0.0.9
+
+### Patch Changes
+
+- Patch bump
+
 ## 0.0.8
 
 ### Patch Changes
