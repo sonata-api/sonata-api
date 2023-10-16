@@ -1,6 +1,6 @@
 import type { Collection } from '../types'
 
-export const defineCollection = <const TCollection extends Collection>(collection: TCollection) => {
+export const defineCollection = <const TCollection extends Collection<Awaited<ReturnType<TCollection>>>>(collection: TCollection) => {
   return collection
 }
 

@@ -19,12 +19,12 @@ export const registerRoutes = () => {
   })
 
   router.route(['POST', 'GET'], '/api/describe', functions.describe)
-  router.GET('/api/file/(\\w+)(/(\\w+))*$', defaultHandler(fileDownload))
-  router.GET('/api/(\\w+)/id/(\\w+)$', defaultHandler(regularVerb('get')))
-  router.GET('/api/(\\w+)$', defaultHandler(regularVerb('getAll')))
-  router.POST('/api/(\\w+)$', defaultHandler(regularVerb('insert')))
-  router.DELETE('/api/(\\w+)/(\\w+)$', defaultHandler(regularVerb('remove')))
-  router.route(['POST', 'GET'], '/api/(\\w+)/(\\w+)$', defaultHandler(customVerbs()))
+  router.GET('/api/file/(\\w+)(/(\\w+))*', defaultHandler(fileDownload))
+  router.GET('/api/(\\w+)/id/(\\w+)', defaultHandler(regularVerb('get')))
+  router.GET('/api/(\\w+)', defaultHandler(regularVerb('getAll')))
+  router.POST('/api/(\\w+)', defaultHandler(regularVerb('insert')))
+  router.DELETE('/api/(\\w+)/(\\w+)', defaultHandler(regularVerb('remove')))
+  router.route(['POST', 'GET'], '/api/(\\w+)/(\\w+)', defaultHandler(customVerbs()))
 
   return router
 }

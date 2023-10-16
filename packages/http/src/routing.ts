@@ -19,7 +19,7 @@ export type ProxiedRouter<TRouter> = TRouter & Record<RequestMethod, (...args: A
 export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
   method: RequestMethod | RequestMethod[],
-  exp: string,
+  exp: string | RegExp,
   options: RouterOptions
 ) => {
   const { url } = req
@@ -35,7 +35,10 @@ export const matches = <TRequest extends GenericRequest>(
     }
   }
 
-  const regexp = new RegExp(exp)
+  const regexp = exp instanceof RegExp
+    ? exp
+    : new RegExp(`${exp}$`)
+
   const matches = url.match(regexp)
 
   if( matches ) {

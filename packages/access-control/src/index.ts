@@ -1,5 +1,4 @@
 export * from './constants'
-export * from './define'
 export * from './errors'
 export * from './granted'
 export * from './layers'

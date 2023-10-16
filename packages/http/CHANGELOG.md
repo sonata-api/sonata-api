@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.9
+
+### Patch Changes
+
+- Changes in routing and access control
+
 ## 0.0.8
 
 ### Patch Changes

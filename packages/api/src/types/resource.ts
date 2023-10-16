@@ -3,15 +3,18 @@ import type { Description } from '@sonata-api/types'
 import type { SecurityPolicy } from '@sonata-api/security'
 
 // #region Collection
-export type CollectionStructure = {
+export type CollectionStructure<TCollectionStructure extends CollectionStructure = any> = {
   item: any
   description: Description
   security?: SecurityPolicy
-  accessControl?: AccessControl<Collections>
+  accessControl?: AccessControl<TCollectionStructure>
   functions?: Record<string, (...args: any[]) => any>
 }
 
-export type Collection = () => CollectionStructure|Promise<CollectionStructure>
+export type Collection<TCollectionStructure extends CollectionStructure = any> =
+  CollectionStructure<TCollectionStructure> extends infer RecursiveCollection
+    ? (() => RecursiveCollection | Promise<RecursiveCollection>)
+    : never
 // #endregion Collection
 
 export type AssetType = keyof CollectionStructure

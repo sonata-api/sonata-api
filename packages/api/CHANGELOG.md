@@ -1,5 +1,15 @@
 # @sonata-api/api
 
+## 0.0.48
+
+### Patch Changes
+
+- Changes in routing and access control
+- Updated dependencies
+  - @sonata-api/access-control@0.0.15
+  - @sonata-api/system@0.0.35
+  - @sonata-api/http@0.0.9
+
 ## 0.0.47
 
 ### Patch Changes

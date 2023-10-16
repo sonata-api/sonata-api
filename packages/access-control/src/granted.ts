@@ -74,8 +74,7 @@ export const isGranted = async <
     }
 
     const currentRole = await applyInheritance(accessControl, _currentRole)
-    const subject = currentRole?.capabilities?.[collectionName]
-    if( subject?.blacklist?.includes(functionName) ) {
+    if( currentRole.blacklist?.includes(functionName) ) {
       return false
     }
 
@@ -84,11 +83,11 @@ export const isGranted = async <
     )
 
     const result = allowedInToken
-      && (!currentRole.forbidEverything || subject?.functions?.includes(functionName))
+      && (!currentRole.forbidEverything || currentRole.functions?.includes(functionName))
       && (
-        currentRole?.grantEverything
-        || subject?.grantEverything
-        || subject?.functions?.includes(functionName)
+        currentRole.grantEverything
+        || currentRole.grantEverything
+        || currentRole.functions?.includes(functionName)
       )
 
     if( result ) {
