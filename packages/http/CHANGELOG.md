@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.11
+
+### Patch Changes
+
+- Fix routing bug manifested when a query is present
+
 ## 0.0.10
 
 ### Patch Changes

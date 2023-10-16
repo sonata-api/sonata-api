@@ -39,7 +39,7 @@ export const matches = <TRequest extends GenericRequest>(
     ? exp
     : new RegExp(`${exp}$`)
 
-  const matches = url.match(regexp)
+  const matches = url.split('?')[0].match(regexp)
 
   if( matches ) {
     const fragments = matches.splice(1)
