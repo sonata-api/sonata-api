@@ -1,5 +1,5 @@
 import type { AssetType, Context, Collection, CollectionStructure } from './types'
-import { left, right, isLeft, unwrapEither, type Right } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
 import { isGranted, ACErrors } from '@sonata-api/access-control'
 

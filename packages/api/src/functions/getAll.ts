@@ -16,19 +16,20 @@ export type GetAllOptions = {
 }
 
 export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: {
+  _payload: {
     filters?: Filters<TDocument>
     project?: Projection<TDocument>
     offset?: number
     limit?: number
     sort?: QuerySort<TDocument>
-  },
+  } | null,
   context: TContext extends Context<infer Description>
     ? TContext
     : never,
   options?: GetAllOptions
 ) => {
   const accessControl = useAccessControl(context)
+  const payload = _payload || {}
 
   const entries = Object.entries(payload.filters || {})
     .map(([key, value]) => [

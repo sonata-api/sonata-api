@@ -7,7 +7,7 @@ export type UploadAuxProps = {
 
 export type Filters<TDocument> = FilterOperators<TDocument>
 
-export type What<TDocument> = UpdateFilter<TDocument> & {
+export type What<TDocument> = Omit<UpdateFilter<TDocument>, keyof TDocument> & {
   [P in keyof TDocument]?: '_id' extends keyof TDocument[P]
     ? TDocument[P] | string
     : TDocument[P]

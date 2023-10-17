@@ -1,11 +1,12 @@
 import type { Description } from '@sonata-api/types'
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
-import type { Collection } from 'mongodb'
+import type { Collection as MongoCollection } from 'mongodb'
 import type { Schema } from './collection'
 import type {
   FunctionPath,
   DecodedToken,
   ApiConfig,
+  Collection,
   CollectionStructure,
 
 } from './types'
@@ -16,10 +17,26 @@ import { preloadDescription } from './collection/preload'
 import { unsafe } from '@sonata-api/common'
 
 type CollectionModel<TDescription extends Description> =
-  Collection<Omit<Schema<TDescription>, '_id'>>
+  MongoCollection<Omit<Schema<TDescription>, '_id'>>
 
 type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
+}
+
+type IndepthCollection<TCollection> = TCollection extends { functions: infer CollFunctions }
+  ? Omit<TCollection, 'functions'> & {
+    functions: {
+      [FnName in keyof CollFunctions]: CollFunctions[FnName] extends infer Fn
+        ? Fn extends (...args: [infer FnArgs, ...infer _Rest]) => infer FnReturn
+          ? (props: FnArgs) => FnReturn
+          : never
+        : never
+    }
+  }
+  : TCollection
+
+type IndepthCollections = {
+  [P in keyof Collections]: IndepthCollection<Collections[P]>
 }
 
 // #region ContextOptions
@@ -35,16 +52,17 @@ export type ContextOptions<TContext> = {
 export type Context<
   TDescription extends Description=any,
   TCollections extends Collections=any
-> = Omit<Awaited<ReturnType<typeof internalCreateContext>>,
-  'collectionName'
-  | 'collection'
-  | 'model'
-> & {
+> = {
   description: TDescription
   model: CollectionModel<TDescription>
-  collection: TDescription['$id'] extends keyof Collections
-    ? TCollections[TDescription['$id']]
-    : CollectionStructure
+  models: Models
+
+  collection: TDescription['$id'] extends keyof TCollections
+    ? IndepthCollection<TCollections[TDescription['$id']]>
+    : IndepthCollection<CollectionStructure>
+
+  collections: IndepthCollections
+
   functionPath: FunctionPath
   token: DecodedToken
 
@@ -52,9 +70,45 @@ export type Context<
   request: GenericRequest
   response: GenericResponse
 
+  validate: typeof validate
+  log: (message: string, details?: any) => Promise<any>
+
   apiConfig: ApiConfig
+  get: (collectionName?: string) => Promise<Context>
 }
 // #endregion Context
+
+const indepthCollection = (collectionName: string, collections: Record<string, Collection>, parentContext: Context) => {
+  if( !collectionName ) {
+    return
+  }
+
+  const collection = collections[collectionName]?.() as CollectionStructure & {
+    $functions: any
+  }
+
+  if( !collection.functions ) {
+    return collection
+  }
+
+  collection.$functions = Object.assign({}, collection.functions)
+
+  const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<CollectionStructure>['functions']>>({}, {
+    get: (_: unknown, functionName: string) => {
+      return async (props: any) => {
+        const childContext = await createContext({
+          parentContext,
+          collectionName
+        })
+
+        return collection.$functions[functionName](props, childContext)
+      }
+    }
+  })
+
+  collection.functions = proxiedFunctions
+  return collection
+}
 
 export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
   'collectionName'
@@ -71,36 +125,19 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
   const { getCollections, getCollectionAsset } = await import('./assets')
   const collections = await getCollections()
 
-  const context = {
-    collectionName,
-    description: {},
-    model: collectionName
-      ? getDatabaseCollection(collectionName)
-      : {},
-    collection: collectionName && await collections[collectionName](),
-    collections: new Proxy<Collections>({}, {
-      get: <TCollectionName extends keyof typeof collections>(_: unknown, collectionName: TCollectionName) => {
-        return collections[collectionName]?.()
-      }
-    }),
-    models: new Proxy<Models>({} as Models, {
-      get: (_, key: keyof Collections) => {
-        return getDatabaseCollection(key)
-      }
-    }),
+  const context = {} as Context
 
-    validate,
-    log: async (message: string, details?: any) => {
-      return getDatabaseCollection('log').insertOne({
-        message,
-        details,
-        context: collectionName,
-        owner: token?.user?._id
-          // @ts-ignore
-          || options?.parentContext?.token.user._id,
-        created_at: new Date
-      })
-    },
+  context.validate = validate
+  context.log = async (message: string, details?: any) => {
+    return getDatabaseCollection('log').insertOne({
+      message,
+      details,
+      context: collectionName,
+      owner: token?.user?._id
+        // @ts-ignore
+        || options?.parentContext?.token.user._id,
+      created_at: new Date
+    })
   }
 
   if( collectionName ) {
@@ -108,6 +145,30 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
     context.description = description.alias
       ? await preloadDescription(description)
       : description
+
+    context.collectionName = collectionName
+
+    context.collection = indepthCollection(collectionName, collections, context as Context)
+    context.model = getDatabaseCollection(collectionName)
+  }
+
+  context.collections = new Proxy<IndepthCollections>({}, {
+    get: (_: unknown, collectionName: string) => {
+      return indepthCollection(collectionName, collections, context)
+    }
+  })
+
+  context.models = new Proxy<Models>({} as Models, {
+    get: (_, collectionName: string) => {
+      return getDatabaseCollection(collectionName)
+    }
+  })
+
+  context.get = (collectionName) => {
+    return createContext({
+      collectionName,
+      parentContext: context
+    })
   }
 
   if( token.user ) {
@@ -130,6 +191,8 @@ export const createContext = async <TContextOptions>(
 ) => {
   const options = _options as ContextOptions<Context>
   const context = Object.assign({}, options?.parentContext || {}) as Context
+
+  context.collection = 
 
   Object.assign(context, await internalCreateContext(options))
 

@@ -7,6 +7,7 @@ import { traverseDocument, normalizeProjection, prepareInsert } from '../collect
 
 export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
   what: What<WithId<TDocument>>,
+  banana?: TDocument,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
   ? TContext
@@ -68,7 +69,7 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
       filters: {
         _id: docId
       }
-    }, context, { bypassAccessControl: true })
+    }, context, { bypassAccessControl: true }) as TDocument
   }
 
   const result = await context.model.findOne({ _id: docId }, { projection })
@@ -76,5 +77,5 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     getters: true,
     fromProperties: true,
     recurseReferences: true
-  }))
+  })) as TDocument
 }

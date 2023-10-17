@@ -22,12 +22,14 @@ router.GET('/get-people', async (context) => {
     }
   }
 
-  await context.models.person.insertOne({
-    name: query.name,
-    job: 'programmer'
+  await context.collections.person.functions.insert({
+    what: {
+      name: query.name,
+      job: 'programmer'
+    },
   })
 
-  return context.models.person.find().toArray()
+  return context.collections.person.functions.getAll({})
 })
 
 init({}, (context) => {

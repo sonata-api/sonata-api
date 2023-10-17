@@ -13,7 +13,7 @@ export type CollectionStructure<TCollectionStructure extends CollectionStructure
 
 export type Collection<TCollectionStructure extends CollectionStructure = any> =
   CollectionStructure<TCollectionStructure> extends infer RecursiveCollection
-    ? (() => RecursiveCollection | Promise<RecursiveCollection>)
+    ? () => RecursiveCollection
     : never
 // #endregion Collection
 
