@@ -1,13 +1,12 @@
 import type { ObjectId } from 'mongodb'
-import type { Context, OptionalId, WithId } from '../types'
+import type { Context, OptionalId } from '../types'
 import type { CollectionDocument, Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
 export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
-  what: What<WithId<TDocument>>,
-  banana?: TDocument,
+  what: What<TDocument & { _id?: string | ObjectId }>,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
   ? TContext

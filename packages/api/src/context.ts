@@ -79,10 +79,6 @@ export type Context<
 // #endregion Context
 
 const indepthCollection = (collectionName: string, collections: Record<string, Collection>, parentContext: Context) => {
-  if( !collectionName ) {
-    return
-  }
-
   const collection = collections[collectionName]?.() as CollectionStructure & {
     $functions: any
   }
@@ -110,14 +106,16 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
   return collection
 }
 
-export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
-  'collectionName'
-  | 'apiConfig'
-  | 'token'
->) => {
+export const internalCreateContext = async (
+  options: Pick<ContextOptions<any>,
+    | 'collectionName'
+    | 'apiConfig'
+    | 'token'
+  >,
+  parentContext: Context
+) => {
   const {
     collectionName,
-    apiConfig,
     token = {} as DecodedToken
 
   } = options || {}
@@ -125,7 +123,8 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
   const { getCollections, getCollectionAsset } = await import('./assets')
   const collections = await getCollections()
 
-  const context = {} as Context
+  const context = Object.assign({}, parentContext)
+  Object.assign(context, options)
 
   context.validate = validate
   context.log = async (message: string, details?: any) => {
@@ -148,7 +147,7 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
 
     context.collectionName = collectionName
 
-    context.collection = indepthCollection(collectionName, collections, context as Context)
+    context.collection = indepthCollection(collectionName, collections, context)
     context.model = getDatabaseCollection(collectionName)
   }
 
@@ -171,14 +170,6 @@ export const internalCreateContext = async (options?: Pick<ContextOptions<any>,
     })
   }
 
-  if( token.user ) {
-    Object.assign(context, { token })
-  }
-
-  if( apiConfig ) {
-    Object.assign(context, { apiConfig })
-  }
-
   return context
 }
 
@@ -192,15 +183,6 @@ export const createContext = async <TContextOptions>(
   const options = _options as ContextOptions<Context>
   const context = Object.assign({}, options?.parentContext || {}) as Context
 
-  context.collection = 
-
-  Object.assign(context, await internalCreateContext(options))
-
-  if( options?.parentContext ) {
-    Object.assign(context, {
-      apiConfig: options.parentContext.apiConfig || {}
-    })
-  }
-
+  Object.assign(context, await internalCreateContext(options, context))
   return context
 }
