@@ -1,12 +1,12 @@
 import type { ObjectId } from 'mongodb'
-import type { Context, OptionalId } from '../types'
+import type { Context } from '../types'
 import type { CollectionDocument, Projection, What } from './types'
 import { useAccessControl } from '@sonata-api/access-control'
-import { left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
-export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(payload: {
-  what: What<TDocument & { _id?: string | ObjectId }>,
+export const insert = <TDocument extends CollectionDocument<any>>() => async <TContext>(payload: {
+  what: What<TDocument & { _id?: any }>,
   project?: Projection<TDocument>
 }, context: TContext extends Context<infer Description>
   ? TContext
@@ -64,17 +64,17 @@ export const insert = <TDocument extends CollectionDocument<OptionalId<any>>>() 
   }
 
   if( context.collection.functions?.get ) {
-    return context.collection.functions.get({
+    return right(await context.collection.functions.get({
       filters: {
         _id: docId
       }
-    }, context, { bypassAccessControl: true }) as TDocument
+    }, context, { bypassAccessControl: true }) as TDocument)
   }
 
   const result = await context.model.findOne({ _id: docId }, { projection })
-  return unsafe(await traverseDocument(result!, context.description, {
+  return right(unsafe(await traverseDocument(result!, context.description, {
     getters: true,
     fromProperties: true,
     recurseReferences: true
-  })) as TDocument
+  })) as TDocument)
 }

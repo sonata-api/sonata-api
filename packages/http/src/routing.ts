@@ -60,7 +60,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
   if( match ) {
     if( options?.middleware ) {
       const result = await options.middleware(context)
-      if( result ) {
+      if( result !== undefined ) {
         return result
       }
     }
@@ -80,7 +80,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
     }
 
     Object.assign(context.request, match)
-    return cb(context) || null
+    return (await cb(context)) || null
   }
 }
 

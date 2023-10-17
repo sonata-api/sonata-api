@@ -1,5 +1,23 @@
 # @sonata-api/api
 
+## 0.0.54
+
+### Patch Changes
+
+- Fix upload bug
+
+## 0.0.53
+
+### Patch Changes
+
+- Turn insert into Either
+
+## 0.0.52
+
+### Patch Changes
+
+- Make insert loosely typed
+
 ## 0.0.51
 
 ### Patch Changes

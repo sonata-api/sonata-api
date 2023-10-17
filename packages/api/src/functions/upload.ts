@@ -1,8 +1,8 @@
 import type { Context, OptionalId } from '../types'
 import type { CollectionDocument, UploadAuxProps } from './types'
 import { ObjectId } from 'mongodb'
+import { unsafe } from '@sonata-api/common'
 import { checkImmutability } from '@sonata-api/access-control'
-import { createContext } from '../context'
 
 export const upload = <_TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
   payload: UploadAuxProps & { what: { _id?: string } },
@@ -26,10 +26,7 @@ export const upload = <_TDocument extends CollectionDocument<OptionalId<any>>>()
     }
   )
 
-  const file = await context.collections.file.functions!.insert(payload, await createContext({
-    collectionName: 'file',
-    parentContext: context
-  }))
+  const file: any = unsafe(await context.collections.file.functions!.insert(payload))
 
   const insertPayload = context.description.properties[propertyName].type === 'array'
     ? { $addToSet: { [propertyName]: file._id } }

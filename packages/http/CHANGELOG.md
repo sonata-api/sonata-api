@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.12
+
+### Patch Changes
+
+- Fix throw when route returns nothing
+
 ## 0.0.11
 
 ### Patch Changes
