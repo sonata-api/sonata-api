@@ -23,7 +23,7 @@ export type Roles<
 // #region AccessControl
 export type InternalAccessControl<
   TCollectionStructure extends CollectionStructure=any,
-  TAccessControl extends AccessControl<TCollectionStructure> = any
+  TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
 > = {
   roles?: Roles<TCollectionStructure, TAccessControl>
   availableRoles?: keyof TAccessControl['roles']

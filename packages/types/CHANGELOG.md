@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.15
+
+### Patch Changes
+
+- Fix preload bug
+
 ## 0.0.14
 
 ### Patch Changes

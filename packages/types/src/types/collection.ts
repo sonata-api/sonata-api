@@ -1,6 +1,8 @@
 import { COLLECTION_PRESETS } from '../constants'
 import type { Property } from './jsonschema'
 
+type PropertiesWithId<TDescription extends Description> = keyof TDescription['properties'] | '_id'
+
 export type CollectionPresets = typeof COLLECTION_PRESETS[number]
 
 export type CollectionId = string
@@ -20,7 +22,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   params?: Record<string, any>
   query?: Record<string, any>
 
-  requires?: Array<keyof TDescription['properties']>
+  requires?: Array<PropertiesWithId<TDescription>>
 }>
 
 export type CollectionActions<TDescription extends Description> =
@@ -32,13 +34,13 @@ export type Condition<TDescription extends Description> = {
     | 'unequal'
     | 'in'
     | 'notin'
-  term1: keyof TDescription['properties']
+  term1: PropertiesWithId<TDescription>
   term2: any
   else?: any
 }
 
 export type FormLayout<TDescription extends Description> = {
-  fields?: Partial<Record<keyof TDescription['properties'], FormLayoutField<TDescription>>>
+  fields?: Partial<Record<PropertiesWithId<TDescription>, FormLayoutField<TDescription>>>
 }
 
 export type FormLayoutField<TDescription extends Description> = {
@@ -61,16 +63,16 @@ export type TableLayout<TDescription extends Description> = {
 export type FiltersPreset<TDescription extends Description> = {
   name?: string
   icon?: string
-  filters: Partial<Record<keyof TDescription['properties'] | `$${string}`, any>>
-  table?: Array<keyof TDescription['properties']>
+  filters: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
+  table?: Array<PropertiesWithId<TDescription>>
   badgeFunction?: string
   default?: boolean
 }
 
 export type CollectionOptions<TDescription extends Description> = {
   queryPreset?: {
-    filters?: Partial<Record<keyof TDescription['properties'] | `$${string}`, any>>
-    sort?: Partial<Record<keyof TDescription['properties'], any>>
+    filters?: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
+    sort?: Partial<Record<PropertiesWithId<TDescription>, any>>
   }
 }
 
@@ -117,17 +119,17 @@ export type Description<TDescription extends Description=any> = {
   // takes an array of something
   route?: ReadonlyArray<string>
   presets?: ReadonlyArray<CollectionPresets>
-  required?: ReadonlyArray<keyof TDescription['properties']>
-  table?: ReadonlyArray<keyof TDescription['properties']>
-  tableMeta?: ReadonlyArray<keyof TDescription['properties']>
+  required?: ReadonlyArray<PropertiesWithId<TDescription>>
+  table?: ReadonlyArray<PropertiesWithId<TDescription>>
+  tableMeta?: ReadonlyArray<PropertiesWithId<TDescription>>
 
   filtersPresets?: Record<string, FiltersPreset<TDescription>>
-  freshItem?: Partial<Record<keyof TDescription['properties'], any>>
+  freshItem?: Partial<Record<PropertiesWithId<TDescription>, any>>
 
-  form?: ReadonlyArray<keyof TDescription['properties']>|Record<keyof TDescription['properties'], Array<string>>
-  writable?: ReadonlyArray<keyof TDescription['properties']>
-  filters?: ReadonlyArray<keyof TDescription['properties']|{
-    property: keyof TDescription['properties']
+  form?: ReadonlyArray<PropertiesWithId<TDescription>>|Record<PropertiesWithId<TDescription>, Array<string>>
+  writable?: ReadonlyArray<PropertiesWithId<TDescription>>
+  filters?: ReadonlyArray<PropertiesWithId<TDescription>|{
+    property: PropertiesWithId<TDescription>
     default: string
   }>
 
@@ -189,6 +191,7 @@ type CollectionPropertyAux = {
 
   isReference?: boolean
   isFile?: boolean
+  isGetter?: boolean
   referencedCollection?: string
   noForm?: boolean
 

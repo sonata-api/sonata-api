@@ -28,7 +28,7 @@ declare module '@sonata-api/api' {
       ? Collections[CollectionName][AssetName]
       : never
   >(
-    resourceName: CollectionName,
+    collectionName: CollectionName,
     assetName: AssetName,
   ): Promise<
     Either<
@@ -46,7 +46,7 @@ declare module '@sonata-api/api' {
       ? Collections[CollectionName]['functions'][FunctionName]
       : never
   >(
-    resourceName: CollectionName,
+    collectionName: CollectionName,
     functionName: FunctionName,
     acProfile?: UserACProfile
   ): Promise<

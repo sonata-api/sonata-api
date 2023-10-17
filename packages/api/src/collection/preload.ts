@@ -4,6 +4,7 @@ import { getCollectionAsset } from '../assets'
 
 export type PreloadOptions = {
   serialize?: boolean
+  memoize?: boolean
 }
 
 const preloadMemo: Record<string, Partial<Description>> = {}
@@ -25,7 +26,11 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
   ? Buffer
   : Description
 >(originalDescription: Partial<Description>, options?: Options) => {
-  if( preloadMemo[originalDescription.$id!] ) {
+  const {
+    memoize = true
+  } = options || {}
+
+  if( memoize && preloadMemo[originalDescription.$id!] ) {
     const description =  preloadMemo[originalDescription.$id!]
     return (options?.serialize
       ? serialize(description)
@@ -101,10 +106,22 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
         property.items = await preloadDescription(property.items)
       }
 
+      if( property.s$getter ) {
+        return {
+          ...await a,
+          [key]: {
+            ...property,
+            s$isGetter: true
+          }
+        }
+      }
+
       if( property.properties ) {
         return {
           ...await a,
-          [key]: await preloadDescription(property)
+          [key]: await preloadDescription(property, {
+            memoize: false
+          })
         }
       }
 
@@ -115,7 +132,10 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
     }, {} as Promise<Record<Lowercase<string>, CollectionProperty>>)
   }
 
-  preloadMemo[originalDescription.$id!] = description
+  if( memoize ) {
+    preloadMemo[originalDescription.$id!] = description
+  }
+
   return (options?.serialize
     ? serialize(description)
     : description) as Return

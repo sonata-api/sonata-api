@@ -27,7 +27,7 @@ export const upload = <_TDocument extends CollectionDocument<OptionalId<any>>>()
   )
 
   const file = await context.collections.file.functions!.insert(payload, await createContext({
-    resourceName: 'file',
+    collectionName: 'file',
     parentContext: context
   }))
 

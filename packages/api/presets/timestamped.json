@@ -2,11 +2,13 @@
   "properties": {
     "created_at": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "s$noForm": true
     },
     "updated_at": {
       "type": "string",
-      "format": "date-time"
+      "format": "date-time",
+      "s$noForm": true
     }
   }
 }

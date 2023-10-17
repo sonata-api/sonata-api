@@ -30,7 +30,7 @@ export const removeFile = <_TDocument extends CollectionDocument<OptionalId<any>
   )
 
   return context.collections.file.functions!.remove(props, await createContext({
-    resourceName: 'file',
+    collectionName: 'file',
     parentContext: context
   }))
 }

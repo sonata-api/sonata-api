@@ -1,5 +1,22 @@
 # @sonata-api/access-control
 
+## 0.0.18
+
+### Patch Changes
+
+- Fix preload bug
+- Updated dependencies
+  - @sonata-api/types@0.0.15
+  - @sonata-api/api@0.0.51
+
+## 0.0.17
+
+### Patch Changes
+
+- Fix bugs
+- Updated dependencies
+  - @sonata-api/api@0.0.50
+
 ## 0.0.16
 
 ### Patch Changes
