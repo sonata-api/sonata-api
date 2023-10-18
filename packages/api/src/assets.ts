@@ -42,7 +42,7 @@ export const getCollection = async (collectionName: string) => {
   }
 
   const collections = await getCollections()
-  const collection = collectionMemo[collectionName] = await collections[collectionName]?.()
+  const collection = collectionMemo[collectionName] = collections[collectionName]?.()
   return collection
 }
 
@@ -115,7 +115,7 @@ export const getFunction = async <
   }
 
   const fn = async (payload: any, context: Context<any, Collections>) => {
-    const collection = await (await getCollections())[collectionName]()
+    const collection = await getCollection(collectionName)
     if( collection.security?.rateLimiting?.[functionName] ) {
       const rateLimitingEither = await limitRate(context, collection.security.rateLimiting[functionName])
       if( isLeft(rateLimitingEither) ) {

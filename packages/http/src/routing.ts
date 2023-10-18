@@ -80,7 +80,11 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
     }
 
     Object.assign(context.request, match)
-    return (await cb(context)) || null
+
+    const result = await cb(context)
+    return result === undefined
+      ? null
+      : result
   }
 }
 

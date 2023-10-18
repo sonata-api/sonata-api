@@ -8,9 +8,5 @@
         "../types/dist"
       ]
     }
-  },
-  "include": [
-    "@types/*.d.ts",
-    "src"
-  ]
+  }
 }
