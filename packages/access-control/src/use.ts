@@ -43,9 +43,8 @@ const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() 
 
 export const useAccessControl = <
   TDescription extends Description,
-  TCollections extends Collections,
   TAccessControl extends AccessControl<any, TAccessControl>=any
->(context: Context<TDescription, TCollections>) => {
+>(context: Context<TDescription>) => {
   const options = context.description.options
     ? Object.assign({}, context.description.options)
     : {}

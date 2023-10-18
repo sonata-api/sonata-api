@@ -114,7 +114,7 @@ export const getFunction = async <
     return left(ACErrors.FunctionNotFound)
   }
 
-  const fn = async (payload: any, context: Context<any, Collections>) => {
+  const fn = async (payload: any, context: Context) => {
     const collection = await getCollection(collectionName)
     if( collection.security?.rateLimiting?.[functionName] ) {
       const rateLimitingEither = await limitRate(context, collection.security.rateLimiting[functionName])

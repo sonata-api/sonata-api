@@ -49,16 +49,13 @@ export type ContextOptions<TContext> = {
 // #endregion ContextOptions
 
 // #region Context
-export type Context<
-  TDescription extends Description=any,
-  TCollections extends Collections=any
-> = {
+export type Context<TDescription extends Description=any> = {
   description: TDescription
   model: CollectionModel<TDescription>
   models: Models
 
-  collection: TDescription['$id'] extends keyof TCollections
-    ? IndepthCollection<TCollections[TDescription['$id']]>
+  collection: TDescription['$id'] extends keyof Collections
+    ? IndepthCollection<Collections[TDescription['$id']]>
     : IndepthCollection<CollectionStructure>
 
   collections: IndepthCollections
@@ -66,7 +63,7 @@ export type Context<
   functionPath: FunctionPath
   token: DecodedToken
 
-  collectionName?: (keyof TCollections & string) | string
+  collectionName?: (keyof Collections & string) | string
   request: GenericRequest
   response: GenericResponse
 

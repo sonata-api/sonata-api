@@ -1,5 +1,5 @@
 import type { Description } from '@sonata-api/types'
-import type { Context, Collections } from '@sonata-api/api'
+import type { Context } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 
 export type RateLimitingParams = {
@@ -13,15 +13,15 @@ export enum RateLimitingErrors {
   LimitReached = 'LIMIT_REACHED'
 }
 
-const getUser = <const TDescription extends Description>(context: Context<TDescription, Collections>) => {
+const getUser = <TDescription extends Description>(context: Context<TDescription>) => {
   return context.models.user.findOne(
     { _id: context.token.user._id },
     { resources_usage: 1 }
   )
 }
 
-export const limitRate = async <const TDescription extends Description>(
-  context: Context<TDescription, Collections>,
+export const limitRate = async <TDescription extends Description>(
+  context: Context<TDescription>,
   params: RateLimitingParams
 ) => {
   let user: Awaited<ReturnType<typeof getUser>>
