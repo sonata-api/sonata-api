@@ -1,4 +1,6 @@
 // this file will be overwritten
+import type {} from '@sonata-api/types'
+
 declare global {
   type SystemCollections = typeof import('@sonata-api/system/collections')
   type UserCollections = typeof import('./src').collections
