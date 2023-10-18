@@ -3,4 +3,3 @@ __pycache__
 .env
 production.env
 dist
-sonata-api.d.ts
