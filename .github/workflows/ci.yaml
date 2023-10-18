@@ -42,5 +42,13 @@ jobs:
           find packages -mindepth 1 -maxdepth 1 \
             -exec bash -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
           cp -r packages node_modules/@sonata-api
+
+      - name: Build playground
+        run: |
+          cd playground
+          pnpm install .
+          pnpm build
+
       - name: Run tests
         run: pnpm -r test
+

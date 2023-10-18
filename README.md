@@ -14,41 +14,6 @@ Sonata API is a **REST framework** that focuses on developer experience and simp
 - Tiny dependency graph
 
 
-## The 15-seconds example
-
-The code below implements a fully-fledged RESTful API within a single JavaScript file. It will do just what you think it does.
-If the code surface is minimal, readability is inevitably easy.
-
-```typescript
-import { init, useFunctions } from 'sonata-api'
-
-export const collections = {
-  animal: () => ({
-    description: {
-      $id: 'string',
-      properties: {
-        name: {
-          type: 'string'
-        },
-        specie: {
-          enum: [
-            'dog',
-            'cat',
-            'bird'
-          ]
-        }
-      }
-    },
-    functions: useFunctions([
-      'insert',
-      'getAll'
-    ])
-  })
-}
-
-init()
-```
-
 ## Leveling up
 
 - Read the [official documentation](https://sonata-api.github.io/docs/guide/getting-started)
