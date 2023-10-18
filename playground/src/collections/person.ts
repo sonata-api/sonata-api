@@ -14,6 +14,12 @@ const [Person, description] = defineDescription({
         'programmer',
         'policeman'
       ]
+    },
+    pets: {
+      type: 'array',
+      items: {
+        $ref: 'pet'
+      }
     }
   }
 })

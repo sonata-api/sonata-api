@@ -1,4 +1,4 @@
-import { init, makeRouter, validateSilently } from 'sonata-api'
+import { init, makeRouter, validateSilently, isLeft, unwrapEither } from 'sonata-api'
 export * as collections from './collections'
 
 const router = makeRouter({
@@ -22,12 +22,20 @@ router.GET('/get-people', async (context) => {
     }
   }
 
-  await context.collections.person.functions.insert({
+  const personEither = await context.collections.person.functions.insert({
     what: {
       name: query.name,
       job: 'programmer'
     },
   })
+
+  if( isLeft(personEither) ) {
+    return unwrapEither(personEither)
+  }
+
+  const person = unwrapEither(personEither)
+  console.log(person.name)
+  console.log(person.job)
 
   return context.collections.person.functions.getAll({})
 })

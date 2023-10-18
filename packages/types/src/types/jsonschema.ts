@@ -13,7 +13,7 @@ export type JsonSchema<TDescription extends Description=any> = {
 }
 
 export type RefType = {
-  $ref: string
+  $ref: keyof Collections
 }
 
 export type EnumType = {
