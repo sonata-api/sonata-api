@@ -4,10 +4,6 @@ import path from 'path'
 const DTS_FILENAME = 'sonata-api.d.ts'
 
 const dts = `// this file will be overwritten
-import type { AssetType, ResourceErrors, Schema } from '@sonata-api/api'
-import type { Description } from '@sonata-api/types'
-import type { Either } from '@sonata-api/common'
-
 declare global {
   type SystemCollections = typeof import('@sonata-api/system/collections')
   type UserCollections = typeof import('./src').collections

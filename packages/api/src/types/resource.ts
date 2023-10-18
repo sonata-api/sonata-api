@@ -20,9 +20,7 @@ export type Collection<TCollectionStructure extends CollectionStructure = any> =
 export type AssetType = keyof CollectionStructure
 
 export type FunctionPath = `${string}@${string}`
-
-export type UnpackFunction<T extends () => any> = Awaited<ReturnType<T>>
-export type Collections = Record<string, UnpackFunction<Collection>>
+export type Collections = Record<string, ReturnType<Collection>>
 
 export type UserACProfile = {
   readonly roles: string[]
