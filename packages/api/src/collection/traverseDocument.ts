@@ -36,7 +36,7 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Collection
     }
   }
 
-  if( 'items' in parentProperty ) {
+  if( 'items' in parentProperty && 'properties' in parentProperty.items ) {
     const property = parentProperty.items.properties?.[propertyName]
     if( property ) {
       return property
@@ -61,11 +61,13 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
           : value
       }
 
-      if( property.format === 'date' || property.format === 'date-time' ) {
-        const timestamp = Date.parse(value)
-        return !Number.isNaN(timestamp)
-          ? new Date(timestamp)
-          : null
+      if( 'format' in property ) {
+        if( property.format === 'date' || property.format === 'date-time' ) {
+          const timestamp = Date.parse(value)
+          return !Number.isNaN(timestamp)
+            ? new Date(timestamp)
+            : null
+        }
       }
 
       return value
@@ -123,13 +125,13 @@ const validate = async (value: any, _target: any, propName: string, property: Co
 
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   target: TRecursionTarget,
-  parent: CollectionProperty | Description | undefined,
+  parent: CollectionProperty | Description,
   options: TraverseOptions
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
-  const entrypoint = options.fromProperties
-    ? { _id: null, ...parent!.properties! }
+  const entrypoint = options.fromProperties && 'properties' in parent
+    ? { _id: null, ...parent.properties }
     : target
 
   if( !parent ) {

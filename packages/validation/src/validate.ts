@@ -24,8 +24,8 @@ const getValueType = (value: any) => {
 const getPropertyType = (property: CollectionProperty) => {
   if(
     '$ref' in property
-    || property.properties
-    || property.additionalProperties
+    || 'properties' in property
+    || 'additionalProperties' in property
   ) {
     return 'object'
   }
@@ -100,7 +100,7 @@ export const validateProperty = async (
     })
   }
 
-  if( expectedType === 'number' ) {
+  if( 'type' in property && property.type === 'number' ) {
     if(
       (property.maximum && property.maximum < value)
     || (property.minimum && property.minimum > value)

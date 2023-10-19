@@ -1,4 +1,4 @@
-import type { CollectionProperty } from '@sonata-api/types'
+import type { ObjectProperty } from '@sonata-api/types'
 import { unsafe } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import { prepareCollectionName } from '../database'
@@ -14,7 +14,7 @@ export type BuildLookupOptions = {
   maxDepth?: number
   memoize?: string
   project?: string[]
-  properties?: NonNullable<CollectionProperty['properties']>
+  properties?: NonNullable<ObjectProperty['properties']>
 }
 
 export type Reference = {
@@ -47,7 +47,7 @@ const narrowLookupPipelineProjection = (pipeline: Array<Record<string, any>>, pr
   })
 }
 
-const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<CollectionProperty['properties']>) => {
+const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<ObjectProperty['properties']>) => {
   const $group = Object.keys(properties).reduce((a, propName) => {
     return {
       ...a,
@@ -63,7 +63,7 @@ const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<Col
 }
 
 export const getReferences = async (
-  properties: NonNullable<CollectionProperty['properties']>,
+  properties: NonNullable<ObjectProperty['properties']>,
   options?: GetReferenceOptions
 ) => {
   const {
@@ -104,8 +104,8 @@ export const getReferences = async (
       //   })
       // }
 
-      if( entrypoint.properties ) {
-        const deepReferences  = await getReferences(entrypoint.properties)
+      if( 'properties' in entrypoint ) {
+        const deepReferences  = await getReferences(entrypoint.properties!)
         if( Object.keys(deepReferences).length > 0 ) {
           reference.deepReferences ??= {}
           reference.deepReferences[propName] = deepReferences

@@ -12,15 +12,15 @@ export type JsonSchema<TDescription extends Description=any> = {
   properties: Record<Lowercase<string>, CollectionProperty>
 }
 
-export type RefType = {
+export type RefProperty = {
   $ref: keyof Collections & string
 }
 
-export type EnumType = {
+export type EnumProperty = {
   enum: ReadonlyArray<any>
 }
 
-export type ArrayType = {
+export type ArrayProperty = {
   type: 'array'
   items: Property
   uniqueItems?: boolean
@@ -28,20 +28,20 @@ export type ArrayType = {
   maxItems?: number
 }
 
-export type ObjectType = {
+export type ObjectProperty = {
   type: 'object'
   properties?: Record<string, CollectionProperty>
   additionalProperties?: Property
 }
 
-export type StringType = {
+export type StringProperty = {
   type: 'string'
   minLength?: number
   maxLength?: number
   format?: PropertyFormat
 }
 
-export type NumberType = {
+export type NumberProperty = {
   type: 'number' | 'integer'
   minimum?: number
   maximum?: number
@@ -49,18 +49,18 @@ export type NumberType = {
   exclusiveMaximum?: number
 }
 
-export type BooleanType = {
+export type BooleanProperty = {
   type: 'boolean'
 }
 
 export type PropertyAux =
-  | RefType
-  | EnumType
-  | ArrayType
-  | ObjectType
-  | StringType
-  | NumberType
-  | BooleanType
+  | RefProperty
+  | EnumProperty
+  | ArrayProperty
+  | ObjectProperty
+  | StringProperty
+  | NumberProperty
+  | BooleanProperty
 
 export type Property = PropertyAux & {
   default?: any

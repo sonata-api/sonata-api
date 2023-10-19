@@ -1,12 +1,7 @@
 import type { CollectionProperty } from '@sonata-api/types'
 import { formatDateTime } from './string'
 
-export const formatValue = (
-  value: any,
-  key: string,
-  property?: CollectionProperty,
-  index?: string
-): string => {
+export const formatValue = (value: any, key: string, property?: CollectionProperty, index?: string): string => {
   if( Array.isArray(value) ) {
     return value.map(v => formatValue(v, key, property, index)).join(', ')
   }
