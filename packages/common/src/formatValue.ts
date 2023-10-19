@@ -36,8 +36,10 @@ export const formatValue = (
           : false
       }
     }
-    if( ['date', 'date-time'].includes(property.format!) ) {
-      return formatDateTime(String(value), property.format === 'date-time')
+    if( 'format' in property ) {
+      if( ['date', 'date-time'].includes(property.format!) ) {
+        return formatDateTime(String(value), property.format === 'date-time')
+      }
     }
 
     if( [undefined, null].includes(firstValue) ) {

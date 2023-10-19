@@ -5,7 +5,9 @@ export const getReferencedCollection = (property: CollectionProperty) => {
     'items' in property
       ? property.items
       : null,
-    property?.additionalProperties,
+    'additionalProperties' in property
+      ? property.additionalProperties
+      : null,
     property
   ]
 
