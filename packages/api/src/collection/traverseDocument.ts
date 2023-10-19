@@ -3,7 +3,6 @@ import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
 import { left, right, isLeft, unwrapEither, pipe, type Either } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
-import { preloadDescription } from './preload'
 import {
   validateProperty,
   validateWholeness,
@@ -128,7 +127,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
   for( const key in entrypoint ) {
     const value = target[key as keyof typeof target]
-    if( !value && !options?.getters ) {
+    if( value === undefined && !options?.getters ) {
       continue
     }
 
@@ -277,7 +276,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     }
   })
 
-  const resultEither = await recurse(what, await preloadDescription(description), options)
+  const resultEither = await recurse(what, description, options)
   if( isLeft(resultEither) ) {
     return left(unwrapEither(resultEither))
   }

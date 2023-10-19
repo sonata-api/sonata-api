@@ -1,5 +1,17 @@
 # @sonata-api/mailing
 
+## 0.0.9
+
+### Patch Changes
+
+- Several minor fixes
+
+## 0.0.8
+
+### Patch Changes
+
+- Fix mailing package.json
+
 ## 0.0.7
 
 ### Patch Changes

@@ -2,7 +2,6 @@ import type { CollectionProperty, Description } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
 import type { Context } from '../context'
 import { isRight, unwrapEither } from '@sonata-api/common'
-import { preloadDescription } from '../collection'
 import { getFunction } from '../assets'
 import { getDatabaseCollection } from '../database'
 
@@ -72,7 +71,7 @@ export const cascadingRemove = async <TContext>(
     ? TContext
     : never
 ) => {
-  const cascade = getCascade(await preloadDescription(context.description))
+  const cascade = getCascade(context.description)
   for( const subject of cascade ) {
     const targetId = doc[subject.propertyName]
     if( targetId && (!Array.isArray(targetId) || targetId.length > 0) ) {

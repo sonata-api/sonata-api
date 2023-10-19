@@ -1,5 +1,22 @@
 # @sonata-api/api
 
+## 0.0.56
+
+### Patch Changes
+
+- Several minor fixes
+- Updated dependencies
+  - @sonata-api/access-control@0.0.19
+  - @sonata-api/validation@0.0.11
+  - @sonata-api/mailing@0.0.9
+  - @sonata-api/system@0.0.38
+
+## 0.0.55
+
+### Patch Changes
+
+- Fix insert bug
+
 ## 0.0.54
 
 ### Patch Changes

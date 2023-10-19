@@ -145,6 +145,11 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
     : Object.keys(description.properties)
 
   for( const propName of required ) {
+    const property = description.properties[propName as any]
+    if( property.type === 'boolean' || property.readOnly ) {
+      continue
+    }
+
     if( !what[propName as Lowercase<string>] ) {
       return makeValidationError({
         code: ValidationErrorCodes.MissingProperties,

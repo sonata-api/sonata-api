@@ -138,9 +138,7 @@ export const internalCreateContext = async (
 
   if( collectionName ) {
     const description = unsafe(await getCollectionAsset(collectionName as any, 'description'))
-    context.description = description.alias
-      ? await preloadDescription(description)
-      : description
+    context.description = await preloadDescription(description)
 
     context.collectionName = collectionName
 

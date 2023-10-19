@@ -1,5 +1,5 @@
 import { deepMerge, right, isLeft, unwrapEither } from '@sonata-api/common'
-import type { Context, Collections } from '@sonata-api/api'
+import type { Context } from '@sonata-api/api'
 import type { Description } from '@sonata-api/types'
 import type { ReadPayload, WritePayload, AccessControlLayer, AccessControlLayerProps } from './layers/types'
 import type { AccessControl } from './types'

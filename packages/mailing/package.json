@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/mailing",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "description": "## Installation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,8 +10,7 @@
   "scripts": {
     "test": "echo skipping",
     "build": "tsc",
-    "prepublishOnly": "pnpm build",
-    "postinstall": "node dist/__scripts__/postinstall.js || true"
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",

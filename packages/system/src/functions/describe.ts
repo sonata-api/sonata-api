@@ -48,7 +48,7 @@ export const describe = async (context: Context): Promise<any> => {
   result.descriptions = descriptions
 
   for( const collection of retrievedCollections ) {
-    const { description: rawDescription } = await collection()
+    const { description: rawDescription } = collection()
     const description = await preloadDescription(rawDescription)
     descriptions[description.$id] = description
   }
