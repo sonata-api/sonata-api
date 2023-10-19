@@ -29,16 +29,27 @@ export type TraverseOptions = {
   ) => any
 }
 
-const getProperty = (propertyName: string, parentProperty: CollectionProperty) => {
+const getProperty = (propertyName: Lowercase<string>, parentProperty: CollectionProperty | Description) => {
   if( propertyName === '_id' ) {
     return <CollectionProperty>{
       type: 'string'
     }
   }
 
-  return parentProperty.properties?.[propertyName]
-    || parentProperty.items?.properties?.[propertyName]
-    || parentProperty.additionalProperties
+  if( 'items' in parentProperty ) {
+    const property = parentProperty.items.properties?.[propertyName]
+    if( property ) {
+      return property
+    }
+  }
+
+  if( 'additionalProperties' in parentProperty ) {
+    return parentProperty.additionalProperties
+  }
+
+  if( '$id' in parentProperty ) {
+    return parentProperty.properties?.[propertyName]
+  }
 }
 
 const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): Promise<any> => {
@@ -72,7 +83,7 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
       if( Object.keys(value).length > 0 ) {
         const entries: Array<any> = []
         for( const [k, v] of Object.entries(value) ) {
-          const subProperty = getProperty(k, property)
+          const subProperty = getProperty(k as Lowercase<string>, property)
           if( !subProperty ) {
             return value
           }
@@ -112,7 +123,7 @@ const validate = async (value: any, _target: any, propName: string, property: Co
 
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   target: TRecursionTarget,
-  parent: CollectionProperty | undefined,
+  parent: CollectionProperty | Description | undefined,
   options: TraverseOptions
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
@@ -139,7 +150,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       continue
     }
 
-    const property = getProperty(key, parent)
+    const property = getProperty(key as Lowercase<string>, parent)
 
     if( !property && value && typeof value === 'object' ) {
       // if first key is preceded by '$' we assume

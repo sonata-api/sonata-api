@@ -6,7 +6,7 @@ import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, decodeToken, ObjectId } from '@sonata-api/api'
 import { getDatabase } from '@sonata-api/api'
-import { defaultApiConfig } from './constants'
+import { DEFAULT_API_CONFIG } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
 
@@ -36,7 +36,7 @@ export const dryInit = async (
   cb?: (context: Context) => any
 ) => {
   const apiConfig: ApiConfig = {}
-  Object.assign(apiConfig, defaultApiConfig)
+  Object.assign(apiConfig, DEFAULT_API_CONFIG)
   Object.assign(apiConfig, _apiConfig)
 
   const parentContext = await createContext({

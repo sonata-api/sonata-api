@@ -34,7 +34,7 @@ export const [File, description] = defineDescription({
       type: 'number',
     },
     last_modified: {
-      type: 'number',
+      type: 'string',
       format: 'date-time'
     },
     filename: {

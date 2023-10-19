@@ -80,7 +80,14 @@ export const getReferences = async (
   const references: ReferenceMap = {}
 
   for( const [propName, property] of Object.entries(properties) ) {
-    const referencedCollection = property.$ref || property.items?.$ref
+    const referencedCollection = '$ref' in property
+      ? property.$ref
+      : 'items' in property
+        ? '$ref' in property.items
+          ? property.items.$ref
+          : null
+        : null
+
     const reference: Reference = {}
 
     if( depth === 2 || (property.s$populate && property.s$populate.length === 0) ) {
@@ -88,7 +95,9 @@ export const getReferences = async (
     }
 
     if( !referencedCollection ) {
-      const entrypoint = property.items || property
+      const entrypoint = 'items' in property
+        ? property.items
+        : property
       // if( property.additionalProperties ) {
       //   deepReferences[propName] = getReferences(propName, property.additionalProperties, {
       //     memoize: false
@@ -122,7 +131,7 @@ export const getReferences = async (
     }
 
 
-    if( property.type === 'array' ) {
+    if( 'items' in property ) {
       reference.isArray = true
     }
     if( referencedCollection ) {
@@ -145,14 +154,14 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
     depth = 0,
     maxDepth = 3,
     memoize,
-    project,
+    project = [],
     properties
 
   } = options || {}
 
   if( memoize && lookupMemo[memoize] ) {
     const result = lookupMemo[memoize]
-    return project
+    return project.length > 0
       ? narrowLookupPipelineProjection(result, project)
       : result
   }
@@ -266,7 +275,7 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
     lookupMemo[memoize] = pipeline
   }
 
-  return project
+  return project.length > 0
     ? narrowLookupPipelineProjection(pipeline, project)
     : pipeline
 }

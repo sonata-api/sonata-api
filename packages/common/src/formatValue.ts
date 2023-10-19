@@ -25,14 +25,26 @@ export const formatValue = (
   })()
 
   const formatted = (() => {
-    switch(true) {
-      case ['date', 'date-time'].includes(property?.format!):
-        return formatDateTime(String(value), property!.format === 'date-time')
-
-      case property?.type === 'boolean': return firstValue ? 'true' : 'false'
-      case [undefined, null].includes(firstValue): return '-'
-      default: return firstValue
+    if( !property ) {
+      return firstValue
     }
+
+    if( 'type' in property ) {
+      if( property.type  === 'boolean' ) {
+        return firstValue
+          ? 'true'
+          : false
+      }
+    }
+    if( ['date', 'date-time'].includes(property.format!) ) {
+      return formatDateTime(String(value), property.format === 'date-time')
+    }
+
+    if( [undefined, null].includes(firstValue) ) {
+      return '-'
+    }
+
+    return firstValue
   })()
 
   return String(formatted)

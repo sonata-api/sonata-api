@@ -1,5 +1,5 @@
 import type { Context } from '@sonata-api/api'
-import { PAGINATION_PER_PAGE_LIMIT } from '@sonata-api/types'
+import { PAGINATION_PER_PAGE_LIMIT } from '../constants'
 
 type PreHookParams = {
   context: Context

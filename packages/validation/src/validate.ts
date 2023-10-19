@@ -23,18 +23,20 @@ const getValueType = (value: any) => {
 
 const getPropertyType = (property: CollectionProperty) => {
   if(
-    property.$ref
+    '$ref' in property
     || property.properties
     || property.additionalProperties
   ) {
     return 'object'
   }
 
-  if( property.enum ) {
+  if( 'enum' in property ) {
     return typeof property.enum[0]
   }
 
-  return property.type
+  if( 'type' in property ) {
+    return property.type
+  }
 }
 
 const makePropertyError = <
@@ -80,18 +82,18 @@ export const validateProperty = async (
   const actualType = getValueType(value)
 
   if( options.recurse && expectedType === 'object' ) {
-    const resultEither = await validate(property as Required<Description>, what[propName], options)
+    const resultEither = await validate(property, what[propName], options)
 
     if( isLeft(resultEither) ) {
       return unwrapEither(resultEither)
     }
   }
 
-  if( property.enum?.length === 0 ) {
+  if( 'enum' in property && property.enum?.length === 0 ) {
     return
   }
 
-  if( actualType !== expectedType && !(expectedType === 'array' && actualType === 'array') ) {
+  if( actualType !== expectedType && !('items' in property && actualType === 'array') ) {
     return makePropertyError('unmatching', {
       expected: expectedType,
       got: actualType
@@ -112,7 +114,7 @@ export const validateProperty = async (
     }
   }
 
-  else if( property.enum ) {
+  else if( 'enum' in property ) {
     if( !property.enum.includes(value) ) {
       return makePropertyError('extraneous_element', {
         expected: property.enum,
@@ -121,9 +123,9 @@ export const validateProperty = async (
     }
   }
 
-  else if( expectedType === 'array' ) {
+  else if( 'items' in property ) {
     for( const elem of value ) {
-      const result = await validateProperty(propName, elem, property.items!, options) as PropertyValidationError | undefined
+      const result = await validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
 
       if( result ) {
         return result
@@ -146,7 +148,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
 
   for( const propName of required ) {
     const property = description.properties[propName as any]
-    if( property.type === 'boolean' || property.readOnly ) {
+    if( ('type' in property && property.type === 'boolean') || property.readOnly ) {
       continue
     }
 
@@ -161,7 +163,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
 
 export const validate = async <
   TWhat extends Record<Lowercase<string>, any>,
-  const TDescription extends Omit<Description, '$id'>
+  const TDescription extends Omit<Description, '$id' | 'items'>
 >(
   what: TWhat | undefined,
   description: TDescription,

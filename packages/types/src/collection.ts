@@ -1,9 +1,16 @@
-import { COLLECTION_PRESETS } from '../constants'
 import type { Property } from './jsonschema'
 
 type PropertiesWithId<TDescription extends Description> = keyof TDescription['properties'] | '_id'
 
-export type CollectionPresets = typeof COLLECTION_PRESETS[number]
+export type CollectionPresets = 
+  | 'crud'
+  | 'duplicate'
+  | 'delete'
+  | 'deleteAll'
+  | 'owned'
+  | 'timestamped'
+  | 'toggleActive'
+  | 'view'
 
 export type CollectionId = string
 
@@ -30,7 +37,7 @@ export type CollectionActions<TDescription extends Description> =
 
 export type Condition<TDescription extends Description> = {
   operator:
-    'equal'
+    | 'equal'
     | 'unequal'
     | 'in'
     | 'notin'
@@ -77,7 +84,7 @@ export type CollectionOptions<TDescription extends Description> = {
 }
 
 export type LayoutName =
-  'tabular'
+  | 'tabular'
   | 'grid'
 
 export type LayoutOptions = {
@@ -155,13 +162,13 @@ export type CollectionProperty = Property & {
 }
 
 export type PropertyElement =
-  'select'
+  | 'select'
   | 'checkbox'
   | 'radio'
   | 'textarea'
 
 export type PropertyInputType =
-  'text'
+  | 'text'
   | 'email'
   | 'password'
   | 'search'

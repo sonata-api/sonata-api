@@ -50,6 +50,7 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
   if( projection ) {
     pipeline.push({ $project: projection })
   }
+
   pipeline.push(...buildLookupPipeline(references, {
     memoize: context.description.$id,
     project,

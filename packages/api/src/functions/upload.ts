@@ -28,7 +28,7 @@ export const upload = <_TDocument extends CollectionDocument<OptionalId<any>>>()
 
   const file: any = unsafe(await context.collections.file.functions!.insert(payload))
 
-  const insertPayload = context.description.properties[propertyName].type === 'array'
+  const insertPayload = 'items' in context.description.properties[propertyName]
     ? { $addToSet: { [propertyName]: file._id } }
     : { $set: { [propertyName]: file._id } }
 
