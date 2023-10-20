@@ -1,7 +1,7 @@
 import type { Context } from '@sonata-api/api'
 import type { GenericRequest, GenericResponse, RequestMethod } from './types'
 import { REQUEST_METHODS, DEFAULT_BASE_URI } from './constants'
-import { pipe, left, isLeft, unwrapEither } from '@sonata-api/common'
+import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { safeJson } from './payload'
 
 export type RouterOptions = {
@@ -67,7 +67,10 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
 
     if( context.request.headers['content-type'] === 'application/json' ) {
       try {
-        context.request.payload = safeJson(context.request.body)
+        context.request.payload = deepMerge(
+          context.request.payload || {},
+          safeJson(context.request.body)
+        )
 
       } catch( err ) {
         context.response.writeHead(500)

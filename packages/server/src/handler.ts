@@ -2,13 +2,7 @@ import type { Context, AvailableFunction } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
 import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
-import { sanitizeRequest, prependPagination } from './hooks/pre'
 import { appendPagination } from './hooks/post'
-
-const prePipe = pipe([
-  sanitizeRequest,
-  prependPagination
-])
 
 const postPipe = pipe([
   appendPagination
@@ -69,10 +63,6 @@ export const customVerbs = () => async (parentContext: Context) => {
     collectionName
   })
 
-  await prePipe({
-    context
-  })
-
   const fnEither = await getFunction(collectionName, functionName, context.token.user)
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
@@ -104,10 +94,6 @@ export const regularVerb = (functionName: AvailableFunction) => async (parentCon
   const context = await createContext({
     parentContext,
     collectionName
-  })
-
-  await prePipe({
-    context
   })
 
   const requestCopy = Object.assign({}, context.request)

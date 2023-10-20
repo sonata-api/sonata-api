@@ -71,7 +71,6 @@ export type Context<TDescription extends Description=any> = {
   log: (message: string, details?: any) => Promise<any>
 
   apiConfig: ApiConfig
-  get: (collectionName?: string) => Promise<Context>
 }
 // #endregion Context
 
@@ -157,13 +156,6 @@ export const internalCreateContext = async (
       return getDatabaseCollection(collectionName)
     }
   })
-
-  context.get = (collectionName) => {
-    return createContext({
-      collectionName,
-      parentContext: context
-    })
-  }
 
   return context
 }

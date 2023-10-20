@@ -31,13 +31,12 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
   const accessControl = useAccessControl(context)
   const payload = _payload || {}
 
-  const entries = Object.entries(payload.filters || {})
-    .map(([key, value]) => [
-      key,
-      value && typeof value === 'object' && '_id' in value
-        ? value._id
-        : value
-    ])
+  const entries = Object.entries(payload.filters || {}).map(([key, value]) => [
+    key,
+    value && typeof value === 'object' && '_id' in value
+      ? value._id
+      : value
+  ])
 
   const newPayload = Object.assign({}, payload)
   newPayload.filters = Object.fromEntries(entries)

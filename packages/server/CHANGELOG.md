@@ -1,5 +1,15 @@
 # @sonata-api/server
 
+## 0.0.27
+
+### Patch Changes
+
+- Fix routing bug where previously set payload was being ignored
+- Updated dependencies
+  - @sonata-api/server@0.0.27
+  - @sonata-api/http@0.0.13
+  - @sonata-api/api@0.0.59
+
 ## 0.0.26
 
 ### Patch Changes
