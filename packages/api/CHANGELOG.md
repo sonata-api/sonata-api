@@ -1,5 +1,18 @@
 # @sonata-api/api
 
+## 0.0.58
+
+### Patch Changes
+
+- Implement more strict jsonschema typing
+- Updated dependencies
+  - @sonata-api/access-control@0.0.20
+  - @sonata-api/common@0.0.14
+  - @sonata-api/security@0.0.6
+  - @sonata-api/system@0.0.39
+  - @sonata-api/types@0.0.16
+  - @sonata-api/validation@0.0.12
+
 ## 0.0.57
 
 ### Patch Changes

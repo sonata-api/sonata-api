@@ -1,5 +1,32 @@
 # @sonata-api/validation
 
+## 0.0.15
+
+### Patch Changes
+
+- Patch datetime validation
+
+## 0.0.14
+
+### Patch Changes
+
+- Fix date validation
+
+## 0.0.13
+
+### Patch Changes
+
+- Fix validation of dates
+
+## 0.0.12
+
+### Patch Changes
+
+- Implement more strict jsonschema typing
+- Updated dependencies
+  - @sonata-api/common@0.0.14
+  - @sonata-api/types@0.0.16
+
 ## 0.0.11
 
 ### Patch Changes

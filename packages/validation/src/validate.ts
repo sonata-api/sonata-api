@@ -34,6 +34,12 @@ const getPropertyType = (property: CollectionProperty) => {
     return typeof property.enum[0]
   }
 
+  if( 'format' in property ) {
+    if (['date', 'date-time'].includes(property.format!)) {
+      return 'datetime'
+    }
+  }
+
   if( 'type' in property ) {
     return property.type
   }
@@ -94,6 +100,10 @@ export const validateProperty = async (
   }
 
   if( actualType !== expectedType && !('items' in property && actualType === 'array') ) {
+    if( expectedType === 'datetime' && value instanceof Date ) {
+      return
+    }
+
     return makePropertyError('unmatching', {
       expected: expectedType,
       got: actualType

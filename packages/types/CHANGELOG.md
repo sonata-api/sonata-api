@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.16
+
+### Patch Changes
+
+- Implement more strict jsonschema typing
+
 ## 0.0.15
 
 ### Patch Changes
