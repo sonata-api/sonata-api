@@ -11,10 +11,10 @@ import type {
 
 } from './types'
 
+import { unsafe } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
-import { unsafe } from '@sonata-api/common'
 
 type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<Schema<TDescription>, '_id'>>

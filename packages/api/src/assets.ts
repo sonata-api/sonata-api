@@ -48,7 +48,7 @@ export const getCollection = async (collectionName: string) => {
 
 export const internalGetCollectionAsset = async <
   TCollectionName extends string,
-  TAssetName extends  keyof Collections[TCollectionName] & AssetType
+  TAssetName extends keyof Collections[TCollectionName] & AssetType
 >(
   collectionName: TCollectionName,
   assetName: TAssetName,

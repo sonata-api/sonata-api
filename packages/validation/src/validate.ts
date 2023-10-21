@@ -59,7 +59,7 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
   return error as ValidationError
 }
 
-export const validateProperty = async (
+export const validateProperty = (
   propName: Lowercase<string>,
   what: Record<string, any>,
   property: CollectionProperty,
@@ -88,7 +88,7 @@ export const validateProperty = async (
   const actualType = getValueType(value)
 
   if( options.recurse && expectedType === 'object' ) {
-    const resultEither = await validate(property, what[propName], options)
+    const resultEither = validate(property, what[propName], options)
 
     if( isLeft(resultEither) ) {
       return unwrapEither(resultEither)
@@ -135,7 +135,7 @@ export const validateProperty = async (
 
   else if( 'items' in property ) {
     for( const elem of value ) {
-      const result = await validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
+      const result = validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
 
       if( result ) {
         return result
@@ -171,7 +171,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
   }
 }
 
-export const validate = async <
+export const validate = <
   TWhat extends Record<Lowercase<string>, any>,
   const TDescription extends Omit<Description, '$id' | 'items'>
 >(
@@ -194,7 +194,7 @@ export const validate = async <
   const errors: Record<string, PropertyValidationError | ValidationError> = {}
 
   for( const propName in what ) {
-    const result = await validateProperty(
+    const result = validateProperty(
       propName as Lowercase<string>,
       what,
       description.properties?.[propName as Lowercase<string>],
@@ -222,7 +222,7 @@ export const validate = async <
   return right(what as Schema<TDescription>)
 }
 
-export const validateSilently = async <
+export const validateSilently = <
   TWhat extends Record<Lowercase<string>, any>,
   const TDescription extends Omit<Description, '$id'>
 >(
@@ -230,7 +230,7 @@ export const validateSilently = async <
   description: TDescription,
   options: ValidateOptions = {}
 ) => {
-  const result = await validate(what, description, options)
+  const result = validate(what, description, options)
   return isLeft(result)
     ? null
     : result.value
@@ -243,7 +243,7 @@ export const validator = <const TDescription extends Omit<Description, '$id'>>(
 
   return <const>[
     {} as Schema<TDescription>,
-    async <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
+    <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
       return validateSilently(what, description, options)
     }
   ]

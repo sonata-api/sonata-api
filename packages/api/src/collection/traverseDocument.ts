@@ -52,7 +52,7 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Collection
   }
 }
 
-const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options?: TraverseOptions): Promise<any> => {
+const autoCast = (value: any, target: any, propName: string, property: CollectionProperty, options?: TraverseOptions): any => {
   switch( typeof value ) {
     case 'string': {
       if( property.s$isReference ) {
@@ -79,7 +79,7 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
       }
 
       if( Array.isArray(value) ) {
-        return Promise.all(value.map((v) => autoCast(v, target, propName, property, options)))
+        return value.map((v) => autoCast(v, target, propName, property, options))
       }
 
       if( Object.keys(value).length > 0 ) {
@@ -92,7 +92,7 @@ const autoCast = async (value: any, target: any, propName: string, property: Col
 
           entries.push([
             k,
-            await autoCast(v, target, propName, subProperty, options)
+            autoCast(v, target, propName, subProperty, options)
           ])
         }
 
@@ -112,8 +112,8 @@ const getters = (value: any, target: any, _propName: string, property: Collectio
   return value
 }
 
-const validate = async (value: any, _target: any, propName: string, property: CollectionProperty) => {
-  const error = await validateProperty(propName as Lowercase<string>, value, property)
+const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
+  const error = validateProperty(propName as Lowercase<string>, value, property)
   if( error ) {
     return left({
       [propName]: error
@@ -147,7 +147,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     if( options.autoCast && key === '_id' ) {
       entries.push([
         key,
-        await autoCast(value, target, key, { $ref: '', s$isReference: true }, {})
+        autoCast(value, target, key, { $ref: '', s$isReference: true }, {})
       ])
       continue
     }
