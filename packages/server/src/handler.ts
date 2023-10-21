@@ -2,7 +2,7 @@ import type { Context, AvailableFunction } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/access-control'
 import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
-import { appendPagination } from './hooks/post'
+import { appendPagination } from './appendPagination'
 
 const postPipe = pipe([
   appendPagination
@@ -77,10 +77,7 @@ export const customVerbs = () => async (parentContext: Context) => {
   const fn = unwrapEither(fnEither)
   const result = await fn(context.request.payload, context)
 
-  return postPipe({
-    result,
-    context,
-  })
+  return postPipe(result, context)
 }
 
 export const regularVerb = (functionName: AvailableFunction) => async (parentContext: Context) => {
@@ -120,10 +117,7 @@ export const regularVerb = (functionName: AvailableFunction) => async (parentCon
   const fn = unwrapEither(fnEither)
   const result = await fn(requestCopy.payload, context)
 
-  return postPipe({
-    result,
-    context,
-  })
+  return postPipe(result, context)
 }
 
 export const fileDownload = async (parentContext: Context) => {

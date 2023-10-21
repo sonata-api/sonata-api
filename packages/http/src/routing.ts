@@ -114,11 +114,11 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
     return result
 
   } catch( e ) {
-    if( !res.headersSent ) {
-      if( process.env.NODE_ENV !== 'production' ) {
-        console.trace(e)
-      }
+    if( process.env.NODE_ENV !== 'production' ) {
+      console.trace(e)
+    }
 
+    if( !res.headersSent ) {
       res.writeHead(500)
     }
 

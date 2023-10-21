@@ -1,18 +1,7 @@
 import type { Context } from '@sonata-api/api'
 import { useFunctions } from '@sonata-api/api'
 
-type PostHookParams = {
-  redirected?: boolean
-  result: any
-  context: Context
-}
-
-export const appendPagination = async (params: PostHookParams) => {
-  const {
-    context,
-    result,
-  } = params
-
+export const appendPagination = async (result: any, context: Context) => {
   if( Array.isArray(result) ) {
     const { count } = useFunctions()()
     const recordsTotal = await count(context.request.payload, context)
