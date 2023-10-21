@@ -25,7 +25,7 @@ const recurse = (target: any): Array<string> => {
 }
 
 const iconsContent = (icons: Array<string>) => {
-  const content = `export const icons = ${JSON.stringify(icons)};\n`
+  const content = `exports.icons = ${JSON.stringify(icons)};\n`
   return content
 }
 
