@@ -3,25 +3,23 @@ import { writeFile } from 'fs/promises'
 import { collections } from '..'
 import path from 'path'
 
-const recurse = (target: any): Array<string> => {
-  const foundIcons: Array<string> = []
+const recurse = (target: Record<string, any>): Array<string> => {
   if( !target || typeof target !== 'object' ) {
     return []
   }
 
-  if( 's$icon' in target ) {
-    foundIcons.push(target.s$icon)
-  }
+  const foundIcons: Array<string> = []
+  const icon = target.s$icon || target.icon
 
-  if( 'icon' in target ) {
-    foundIcons.push(target.icon)
+  if( icon ) {
+    foundIcons.push(icon)
   }
 
   for( const child of Object.values(target) ) {
     foundIcons.push(...recurse(child))
   }
 
-  return [ ...new Set(foundIcons) ]
+  return foundIcons
 }
 
 const iconsContent = (icons: Array<string>) => {
