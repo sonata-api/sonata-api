@@ -52,7 +52,7 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Collection
   }
 }
 
-const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options: TraverseOptions): Promise<any> => {
+const autoCast = async (value: any, target: any, propName: string, property: CollectionProperty, options?: TraverseOptions): Promise<any> => {
   switch( typeof value ) {
     case 'string': {
       if( property.s$isReference ) {
@@ -147,7 +147,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     if( options.autoCast && key === '_id' ) {
       entries.push([
         key,
-        new ObjectId(value)
+        await autoCast(value, target, key, { $ref: '', s$isReference: true }, {})
       ])
       continue
     }

@@ -1,8 +1,0 @@
-{
-  "properties": {
-    "owner": {
-      "$ref": "user",
-      "s$noForm": true
-    }
-  }
-}

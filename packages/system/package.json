@@ -11,7 +11,8 @@
     "test": "echo skipping",
     "build": "tsc",
     "watch": "tsc --watch",
-    "prepublishOnly": "pnpm build"
+    "writeIcons": "NODE_PATH=../../playground/node_modules node dist/__scripts__/prepublishOnly.js",
+    "prepublishOnly": "pnpm build && pnpm writeIcons"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./collections": "./dist/collections/index.js",
+    "./icons": "./dist/icons.js",
     "./*": "./dist/*"
   },
   "typesVersions": {
@@ -43,6 +45,9 @@
       ],
       "collections/user/index.js": [
         "dist/collections/user/index.d.ts"
+      ],
+      "icons": [
+        "dist/icons.d.ts"
       ]
     }
   },

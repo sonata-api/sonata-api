@@ -1,6 +1,7 @@
 import type { Description, CollectionProperty } from '@sonata-api/types'
 import { getReferencedCollection, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
+import * as presets from '../presets'
 
 export type PreloadOptions = {
   serialize?: boolean
@@ -9,9 +10,9 @@ export type PreloadOptions = {
 
 const preloadMemo: Record<string, Partial<Description>> = {}
 
-export const applyPreset = (entry: Description | Description['properties'], presetName:string, parentName?:string) => {
-  const preset = require(`@sonata-api/api/presets/${presetName}.json`)
-  const presetObject = Object.assign({}, parentName ? (preset[parentName]||{}) : preset)
+export const applyPreset = (entry: Partial<Description> | Description['properties'], presetName: keyof typeof presets, parentName?: string) => {
+  const preset = presets[presetName]
+  const presetObject = Object.assign({}, parentName ? (preset[parentName as keyof typeof preset]||{}) : preset)
 
   return deepMerge(entry, presetObject, {
     callback: (_, left) => {
@@ -57,19 +58,20 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
     Object.assign(description, temp)
   }
 
-  const presets = description.presets?.slice() || []
+  const descriptionPresets = (description.presets?.slice() || []) as (keyof typeof presets)[]
+
   if( description.owned ) {
-    presets.push('owned')
+    descriptionPresets.push('owned')
   }
 
   if( description.timestamps !== false ) {
-    presets.push('timestamped')
+    descriptionPresets.push('timestamped')
   }
 
-  if( presets.length > 0 ) {
-    const merge = presets?.reduce(
-      (a, presetName: string) => applyPreset(a, presetName),
-      description as Description
+  if( descriptionPresets.length > 0 ) {
+    const merge = descriptionPresets?.reduce(
+      (a, presetName) => applyPreset(a, presetName),
+      description
     )
 
     Object.assign(description, merge)

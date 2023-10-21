@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.60
+
+### Patch Changes
+
+- Fix: enable mongodb operator support on \_id fields
+
 ## 0.0.59
 
 ### Patch Changes
