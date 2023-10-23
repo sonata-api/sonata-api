@@ -188,22 +188,20 @@ type CollectionPropertyAux = {
 
   focus?: boolean
   noLabel?: boolean
-  unique?: boolean
+  noForm?: boolean
   hidden?: boolean
   purge?: boolean
+  unique?: boolean
 
   /** @see SvFile */
-  readonly accept?: ReadonlyArray<string>
+  accept?: ReadonlyArray<string>
   componentProps?: Record<string, any>
 
   isReference?: boolean
   isFile?: boolean
   isGetter?: boolean
   referencedCollection?: string
-  noForm?: boolean
 
-  array?: boolean
-  limit?: number
   indexes?: ReadonlyArray<string>
   populate?: ReadonlyArray<string>
   select?: ReadonlyArray<string>

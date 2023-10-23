@@ -27,8 +27,8 @@ type IndepthCollection<TCollection> = TCollection extends { functions: infer Col
   ? Omit<TCollection, 'functions'> & {
     functions: {
       [FnName in keyof CollFunctions]: CollFunctions[FnName] extends infer Fn
-        ? Fn extends (...args: [infer FnArgs, ...infer _Rest]) => infer FnReturn
-          ? (props: FnArgs) => FnReturn
+        ? Fn extends (...args: [infer FnArgs, infer _FnContext, ...infer Rest]) => infer FnReturn
+          ? (props: FnArgs, ...args: Rest) => FnReturn
           : never
         : never
     }
@@ -87,13 +87,13 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
 
   const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<CollectionStructure>['functions']>>({}, {
     get: (_: unknown, functionName: string) => {
-      return async (props: any) => {
+      return async (props: any, ...args: any[]) => {
         const childContext = await createContext({
           parentContext,
           collectionName
         })
 
-        return collection.$functions[functionName](props, childContext)
+        return collection.$functions[functionName](props, childContext, ...args)
       }
     }
   })

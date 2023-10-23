@@ -1,5 +1,15 @@
 # @sonata-api/api
 
+## 0.0.61
+
+### Patch Changes
+
+- Fixes
+- Updated dependencies
+  - @sonata-api/access-control@0.0.21
+  - @sonata-api/system@0.0.40
+  - @sonata-api/types@0.0.17
+
 ## 0.0.60
 
 ### Patch Changes

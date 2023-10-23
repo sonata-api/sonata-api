@@ -129,8 +129,7 @@ export const [User, description] = defineDescription({
     'updated_at'
   ],
   tableMeta: [
-    'first_name',
-    'last_name'
+    'email'
   ],
   formLayout: {
     fields: {

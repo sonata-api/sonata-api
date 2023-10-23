@@ -30,7 +30,7 @@ export const user = defineCollection(() => ({
         grantEverything: true
       },
       guest: {
-        functions: [
+        grant: [
           'authenticate'
         ]
       }

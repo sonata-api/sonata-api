@@ -9,9 +9,8 @@ export type Role<
 > = {
   inherit?: Array<keyof TAccessControl['roles']>
   grantEverything?: boolean
-  forbidEverything?: boolean
-  functions?: Array<keyof TCollectionStructure['functions']>
-  blacklist?: Array<keyof TCollectionStructure['functions']>
+  grant?: Array<keyof TCollectionStructure['functions']>
+  forbid?: Array<keyof TCollectionStructure['functions']>
 }
 // #endregion Role
 
