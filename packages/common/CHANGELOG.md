@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.0.16
+
+### Patch Changes
+
+- Fix upload crashing because of invalid datetime
+
 ## 0.0.15
 
 ### Patch Changes

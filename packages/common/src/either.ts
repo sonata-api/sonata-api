@@ -37,6 +37,10 @@ export const ok = right
 
 export const unsafe = <L, R>(either: Either<L, R>, message?: any) => {
   if( either._tag !== 'Right' ) {
+    if( process.env.NODE_ENV !== 'production' ) {
+      console.trace(JSON.stringify(either.value, null, 2))
+    }
+
     throw new Error(`unsafe threw: ${either.value} (${message || '-'})`)
   }
 

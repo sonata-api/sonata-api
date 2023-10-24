@@ -73,6 +73,14 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       return value
     }
 
+    case 'number': {
+      if( 'format' in property ) {
+        if( property.format === 'date' || property.format === 'date-time' ) {
+          return new Date(value)
+        }
+      }
+    }
+
     case 'object': {
       if( !value || value instanceof ObjectId ) {
         return value
