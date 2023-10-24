@@ -32,12 +32,14 @@ export const getDecodedToken = async (request: GenericRequest) => {
 
 
 export const dryInit = async (
-  _apiConfig?: ApiConfig,
+  _apiConfig?: ApiConfig | null,
   cb?: (context: Context) => any
 ) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, DEFAULT_API_CONFIG)
-  Object.assign(apiConfig, _apiConfig)
+  if( _apiConfig ) {
+    Object.assign(apiConfig, _apiConfig)
+  }
 
   const parentContext = await createContext({
     apiConfig

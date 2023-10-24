@@ -1,5 +1,14 @@
 # @sonata-api/server
 
+## 0.0.29
+
+### Patch Changes
+
+- Fix deepMerge incorrectly merging payload arrays
+- Updated dependencies
+  - @sonata-api/server@0.0.29
+  - @sonata-api/http@0.0.17
+
 ## 0.0.28
 
 ### Patch Changes

@@ -4,9 +4,11 @@ import { REQUEST_METHODS, DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { safeJson } from './payload'
 
+export type RouteUri = `/${string}`
+
 export type RouterOptions = {
   exhaust?: boolean
-  base: `/${string}`
+  base: RouteUri
   middleware?: (context: Context) => any
 }
 
@@ -25,7 +27,7 @@ export const matches = <TRequest extends GenericRequest>(
   const { url } = req
   const { base } = options
 
-  if( !url.startsWith(`${base.slice(1)}/`) ) {
+  if( !url.startsWith(`${base}/`) && base !== '/' ) {
     return
   }
 
@@ -52,7 +54,7 @@ export const matches = <TRequest extends GenericRequest>(
 export const registerRoute = async <TCallback extends (context: Context) => any>(
   context: Context,
   method: RequestMethod | RequestMethod[],
-  exp: string,
+  exp: RouteUri,
   cb: TCallback,
   options: RouterOptions = { base: DEFAULT_BASE_URI }
 ) => {
@@ -69,7 +71,8 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
       try {
         context.request.payload = deepMerge(
           safeJson(context.request.body),
-          context.request.payload || {}
+          context.request.payload || {},
+          { arrays: false }
         )
 
       } catch( err ) {
@@ -143,7 +146,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
 
   const route = <TCallback extends (context: Context<any>) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
-    exp: string,
+    exp: RouteUri,
     cb: TCallback,
     routeOptions?: RouterOptions
   ) => {
