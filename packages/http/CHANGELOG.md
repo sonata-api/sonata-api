@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 0.0.16
+
+### Patch Changes
+
+- Fix insert function and router bug when base === '/'
+
 ## 0.0.15
 
 ### Patch Changes

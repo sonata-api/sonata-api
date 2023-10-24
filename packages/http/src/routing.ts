@@ -6,7 +6,7 @@ import { safeJson } from './payload'
 
 export type RouterOptions = {
   exhaust?: boolean
-  base: string
+  base: `/${string}`
   middleware?: (context: Context) => any
 }
 
@@ -25,7 +25,7 @@ export const matches = <TRequest extends GenericRequest>(
   const { url } = req
   const { base } = options
 
-  if( !url.startsWith(`${base}/`) ) {
+  if( !url.startsWith(`${base.slice(1)}/`) ) {
     return
   }
 

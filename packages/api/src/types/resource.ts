@@ -9,6 +9,7 @@ export type CollectionStructure<TCollectionStructure extends CollectionStructure
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollectionStructure>
   functions?: Record<string, (...args: any[]) => any>
+  $functions?: Record<string, (...args: any[]) => any>
 }
 
 export type Collection<TCollectionStructure extends CollectionStructure = any> =

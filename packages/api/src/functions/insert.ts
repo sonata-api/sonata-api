@@ -65,8 +65,8 @@ export const insert = <TDocument extends CollectionDocument<any>>() => async <TC
 
   }
 
-  if( context.collection.functions?.get ) {
-    return right(await context.collection.functions.get({
+  if( context.collection.$functions?.get ) {
+    return right(await context.collection.$functions.get({
       filters: {
         _id: docId
       }
