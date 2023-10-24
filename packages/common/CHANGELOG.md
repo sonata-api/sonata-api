@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.0.15
+
+### Patch Changes
+
+- Major fixes
+
 ## 0.0.14
 
 ### Patch Changes

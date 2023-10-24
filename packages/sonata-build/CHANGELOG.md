@@ -1,5 +1,11 @@
 # sonata-build
 
+## 0.0.11
+
+### Patch Changes
+
+- Return .js file omitted accidentaly from release
+
 ## 0.0.10
 
 ### Patch Changes

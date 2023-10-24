@@ -39,6 +39,11 @@ export const deepMerge = <
     }
 
     if( leftVal instanceof Object && rightVal instanceof Object ) {
+      if( rightVal.constructor !== Object ) {
+        result[key] = rightVal
+        continue
+      }
+
       result[key] = deepMerge(leftVal, rightVal, options)
       continue
     }

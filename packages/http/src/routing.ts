@@ -68,8 +68,8 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
     if( context.request.headers['content-type'] === 'application/json' ) {
       try {
         context.request.payload = deepMerge(
-          context.request.payload || {},
-          safeJson(context.request.body)
+          safeJson(context.request.body),
+          context.request.payload || {}
         )
 
       } catch( err ) {

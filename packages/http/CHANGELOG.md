@@ -1,5 +1,13 @@
 # @sonata-api/http
 
+## 0.0.15
+
+### Patch Changes
+
+- Major fixes
+- Updated dependencies
+  - @sonata-api/common@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes

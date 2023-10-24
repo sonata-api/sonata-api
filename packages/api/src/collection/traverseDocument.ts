@@ -74,7 +74,7 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
     }
 
     case 'object': {
-      if( !value ) {
+      if( !value || value instanceof ObjectId ) {
         return value
       }
 
@@ -83,6 +83,10 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       }
 
       if( Object.keys(value).length > 0 ) {
+        if( Symbol('id') in value ) {
+          return value
+        }
+
         const entries: Array<any> = []
         for( const [k, v] of Object.entries(value) ) {
           const subProperty = getProperty(k as Lowercase<string>, property)
