@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.66
+
+### Patch Changes
+
+- Fix recursive autocast
+
 ## 0.0.65
 
 ### Patch Changes

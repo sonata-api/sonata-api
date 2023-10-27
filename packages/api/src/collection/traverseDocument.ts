@@ -91,17 +91,16 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       }
 
       if( Object.keys(value).length > 0 ) {
-        if( Symbol('id') in value ) {
-          return value
-        }
-
         const entries: Array<any> = []
         for( const [k, v] of Object.entries(value) ) {
-          const subProperty = getProperty(k as Lowercase<string>, property)
-          if( !subProperty ) {
-            return value
-          }
+          const subProperty = !k.startsWith('$')
+            ? getProperty(k as Lowercase<string>, property)
+            : <CollectionProperty>{ $ref: '', s$isReference: true }
 
+            if( !subProperty ) {
+              continue
+            }
+          
           entries.push([
             k,
             autoCast(v, target, propName, subProperty, options)
