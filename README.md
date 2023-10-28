@@ -1,4 +1,46 @@
 # Aeria
+> An intuitive web framework tuned for security and efficiency
+
+```typescript
+import {
+  init,
+  defineCollection,
+  defineDescription,
+  useFunctions
+} from 'aeria'
+
+const [Person, description] = defineDescription({
+  $id: 'person',
+  properties: {
+    name: {
+      type: 'string'
+    },
+    age: {
+      type: 'number'
+    }
+  }
+})
+
+export const collections = {
+  person: defineCollection(() => ({
+    item: Person,
+    description,
+    functions: useFunctions<typeof Person>()([
+      'getAll',
+      'insert'
+    ]),
+    accessControl: {
+      roles: {
+        guest: {
+          grantEverything: true
+        }
+      }
+    }
+  }))
+}
+
+init()
+```
 
 ### End-to-end strong typing
 
@@ -6,9 +48,9 @@ A type-driven experience is provided with state-of-the-art TypeScript with no co
 
 ### A more cohesive fullstack
 
-Your data will be visually represented at some point. Aeria makes your backend metadata fully available to the frontend and extends [JSON Schema](https://json-schema.org/) with visual representation attributes, enabling frontend engineers to build faster and smarter with whathever libraries they choose.
+Your data will be visually represented at some point. Aeria makes your backend metadata fully available to the frontend and extends [JSON Schema](https://json-schema.org/) with visual representation attributes, enabling frontend engineers to build faster and smarter with whathever libraries comes in mind.
 
 ### Better error handling
 
-Instead of using try-catches everywhere, Aeria makes use of the much safer and runtime faster `Either` approach to error handling, inspired by functional languages. Unlike traditional web frameworks like Express, routes in Aeria have their exceptions handled by default, so you must use try-catches only where you intend to handle exceptions manually.
+Instead of using try-catches everywhere, Aeria makes use of the much safer and runtime efficient `Either` approach to error handling, inspired by functional languages. Unlike traditional web frameworks like Express, routes in Aeria have their exceptions handled by default, so you may use try-catches only where you intend to handle exceptions manually.
 
