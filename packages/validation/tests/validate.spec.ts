@@ -29,9 +29,7 @@ describe('Validate', () => {
   })
 
   it('validates deep object', () => {
-    const validationEither = validate(deepCandidate, deepDescription, {
-      recurse: true
-    })
+    const validationEither = validate(deepCandidate, deepDescription)
 
     assert(isRight(validationEither))
     assert(JSON.stringify(deepCandidate) === JSON.stringify(unwrapEither(validationEither)))
@@ -41,9 +39,7 @@ describe('Validate', () => {
     const candidate = Object.assign({}, deepCandidate)
     deepCandidate.style.color.name.name = 1 as any
 
-    const validationEither = validate(candidate, deepDescription, {
-      recurse: true
-    })
+    const validationEither = validate(candidate, deepDescription)
 
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)
