@@ -25,7 +25,7 @@ A type-driven experience is provided with state-of-the-art TypeScript with no co
 
 ### A more cohesive fullstack
 
-Your data will be visually represented at some point. Aeria makes your backend metadata fully available to the frontend and extends [JSON Schema](https://json-schema.org/) with visual representation attributes, enabling frontend engineers to build faster and smarter with whathever libraries comes in mind.
+Aeria makes your backend metadata fully available to the frontend and extends [JSON Schema](https://json-schema.org/) with visual representation attributes, enabling frontend engineers to build faster and smarter with whathever libraries comes in mind.
 
 ### Better error handling
 
