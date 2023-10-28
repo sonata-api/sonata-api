@@ -1,26 +1,14 @@
-# Sonata API
-> “An idiot admires complexity, a genius admires simplicity, a physicist tries to make it simple, for an idiot anything the more complicated it is the more he will admire it, if you make something so clusterf****d he can't understand it he's gonna think you're a god cause you made it so complicated nobody can understand it. That's how they write journals in Academics, they try to make it so complicated people think you're a genius” — Terry A. Davis
+# Aeria
 
-## Introduction
+### End-to-end strong typing
 
-Sonata API is a **REST framework** that focuses on developer experience and simplicity.
+A type-driven experience is provided with state-of-the-art TypeScript with no code generation required. Just define your collection structure with a runtime Javascript object then it's type will be made universally available, even in the frontend. Aeria public APIs are also minimalistically typed, so most bugs should be caught during the build time.
 
-## Features
+### A more cohesive fullstack
 
-- Out of the box authentication, file management, logging, rate limiting & more
-- Minimal code surface, meaning more productivity and an also minimal attack surface
-- Every use case can be trivially accessed for scripting and unit testing
-- Output your entire API as a single auto-executable JS file
-- Tiny dependency graph
+Your data will be visually represented at some point. Aeria makes your backend metadata fully available to the frontend and extends JSON Schema with visual representation attributes, so frontend engineers can build faster and smarter.
 
+### Better error handling
 
-## Leveling up
+Instead of cascading try-catches and producing unecessary runtime overhead, Aeria makes use of the much safer `Either` approach to error handling, inspired by the functional languages and Rust's `Result<T, E>`. Apart from that, a top level try-catch block already does smart exception handling, so theres no risk a route callback will crash your application -- ever. Break free from exception hell.
 
-- Read the [official documentation](https://sonata-api.github.io/docs/guide/getting-started)
-- Take a look at some neat [examples](https://github.com/sonata-api/sonata-examples)
-- Join our [Discord community]()
-- Ready to participate? Read the [Contributing Guide](https://github.com/ringeringeraja/sonata-api/tree/master/CONTRIBUTING.md)
-
-## License
-
-Sonata API is [MIT licensed](https://github.com/ringeringeraja/sonata-api/tree/master/LICENSE).

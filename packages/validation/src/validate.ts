@@ -10,9 +10,8 @@ import {
 } from './types'
 
 export type ValidateOptions = {
-  extraneous?: Array<string>|boolean
+  extraneous?: Array<string> | boolean
   throwOnError?: boolean
-  recurse?: boolean
 }
 
 const getValueType = (value: any) => {
@@ -65,10 +64,7 @@ export const validateProperty = (
   property: CollectionProperty,
   options: ValidateOptions = {}
 ) => {
-  const {
-    extraneous
-  } = options
-
+  const { extraneous } = options
   if( !what ) {
     return
   }
@@ -80,7 +76,7 @@ export const validateProperty = (
     })
   }
 
-  if( options.recurse && 'properties' in property ) {
+  if( 'properties' in property ) {
     const resultEither = validate(what, property as any, options)
 
     return isLeft(resultEither)

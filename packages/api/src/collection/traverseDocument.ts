@@ -128,9 +128,7 @@ const getters = (value: any, target: any, _propName: string, property: Collectio
 }
 
 const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
-  const error = validateProperty(propName as Lowercase<string>, value, property, {
-    recurse: true
-  })
+  const error = validateProperty(propName as Lowercase<string>, value, property)
 
   if( error ) {
     return left({
