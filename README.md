@@ -1,6 +1,6 @@
 # Aeria
 
-An intuitive web framework tuned for security and efficiency
+An intuitive web framework tuned for security and efficiency.
 
 ```typescript
 router.GET('/get-pets', (context) => {
