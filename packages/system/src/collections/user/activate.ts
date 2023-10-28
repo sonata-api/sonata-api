@@ -17,7 +17,7 @@ const activate = async (props: Props, context: Context<typeof description>) => {
   const {
     u: userId,
     t: token
-  } = context.request.req.query
+  } = context.request.query
 
   if( !userId || !token ) {
     return left(ActivationErrors.InvalidLink)

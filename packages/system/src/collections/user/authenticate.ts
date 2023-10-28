@@ -12,9 +12,8 @@ type Props = {
 
 type Return = {
   user: Pick<User,
-    '_id'
-    | 'first_name'
-    | 'last_name'
+    | '_id'
+    | 'full_name'
     | 'email'
     | 'roles'
     | 'active'
@@ -108,8 +107,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     return right({
       user: {
         _id: null,
-        first_name: 'God',
-        last_name: 'Mode',
+        full_name: 'God Mode',
         email: '',
         roles: ['root'] as string[],
         active: true,

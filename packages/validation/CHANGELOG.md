@@ -1,5 +1,11 @@
 # @sonata-api/validation
 
+## 0.0.18
+
+### Patch Changes
+
+- Fix deep validation
+
 ## 0.0.17
 
 ### Patch Changes

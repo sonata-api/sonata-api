@@ -61,46 +61,42 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 
 export const validateProperty = (
   propName: Lowercase<string>,
-  what: Record<string, any>,
+  what: any,
   property: CollectionProperty,
   options: ValidateOptions = {}
 ) => {
-  const value = what && typeof what === 'object' && propName in what
-    ? what[propName]
-    : what
-
   const {
     extraneous
   } = options
 
-  if( value === null ) {
+  if( !what ) {
     return
   }
 
   if( (Array.isArray(extraneous) && extraneous.includes(propName)) || !property ) {
     return makePropertyError('extraneous', {
       expected: 'undefined',
-      got: getValueType(value)
+      got: getValueType(what)
     })
   }
 
-  const expectedType = getPropertyType(property)!
-  const actualType = getValueType(value)
+  if( options.recurse && 'properties' in property ) {
+    const resultEither = validate(what, property as any, options)
 
-  if( options.recurse && expectedType === 'object' ) {
-    const resultEither = validate(property, what[propName], options)
-
-    if( isLeft(resultEither) ) {
-      return unwrapEither(resultEither)
-    }
+    return isLeft(resultEither)
+      ? unwrapEither(resultEither)
+      : undefined
   }
+
+  const expectedType = getPropertyType(property)!
+  const actualType = getValueType(what)
 
   if( 'enum' in property && property.enum?.length === 0 ) {
     return
   }
 
   if( actualType !== expectedType && !('items' in property && actualType === 'array') ) {
-    if( expectedType === 'datetime' && value instanceof Date ) {
+    if( expectedType === 'datetime' && what instanceof Date ) {
       return
     }
 
@@ -112,10 +108,10 @@ export const validateProperty = (
 
   if( 'type' in property && property.type === 'number' ) {
     if(
-      (property.maximum && property.maximum < value)
-    || (property.minimum && property.minimum > value)
-    || (property.exclusiveMaximum && property.exclusiveMaximum <= value)
-    || (property.exclusiveMinimum && property.exclusiveMinimum >= value)
+      (property.maximum && property.maximum < what)
+    || (property.minimum && property.minimum > what)
+    || (property.exclusiveMaximum && property.exclusiveMaximum <= what)
+    || (property.exclusiveMinimum && property.exclusiveMinimum >= what)
     ) {
       return makePropertyError('numeric_constraint', {
         expected: 'number',
@@ -125,16 +121,16 @@ export const validateProperty = (
   }
 
   else if( 'enum' in property ) {
-    if( !property.enum.includes(value) ) {
+    if( !property.enum.includes(what) ) {
       return makePropertyError('extraneous_element', {
         expected: property.enum,
-        got: value
+        got: what
       })
     }
   }
 
   else if( 'items' in property ) {
-    for( const elem of value ) {
+    for( const elem of what ) {
       const result = validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
 
       if( result ) {
@@ -196,7 +192,7 @@ export const validate = <
   for( const propName in what ) {
     const result = validateProperty(
       propName as Lowercase<string>,
-      what,
+      what[propName],
       description.properties?.[propName as Lowercase<string>],
       options
     )

@@ -50,6 +50,10 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Collection
   if( '$id' in parentProperty ) {
     return parentProperty.properties?.[propertyName]
   }
+
+  if( 'properties' in parentProperty ) {
+    return parentProperty.properties?.[propertyName]
+  }
 }
 
 const autoCast = (value: any, target: any, propName: string, property: CollectionProperty, options?: TraverseOptions): any => {
@@ -91,15 +95,15 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       }
 
       if( Object.keys(value).length > 0 ) {
-        const entries: Array<any> = []
+        const entries: Array<[string, any]> = []
         for( const [k, v] of Object.entries(value) ) {
           const subProperty = !k.startsWith('$')
             ? getProperty(k as Lowercase<string>, property)
             : <CollectionProperty>{ $ref: '', s$isReference: true }
 
-            if( !subProperty ) {
-              continue
-            }
+          if( !subProperty ) {
+            continue
+          }
           
           entries.push([
             k,
@@ -124,7 +128,10 @@ const getters = (value: any, target: any, _propName: string, property: Collectio
 }
 
 const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
-  const error = validateProperty(propName as Lowercase<string>, value, property)
+  const error = validateProperty(propName as Lowercase<string>, value, property, {
+    recurse: true
+  })
+
   if( error ) {
     return left({
       [propName]: error
