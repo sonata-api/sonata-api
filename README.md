@@ -1,45 +1,22 @@
 # Aeria
-> An intuitive web framework tuned for security and efficiency
+
+An intuitive web framework tuned for security and efficiency
 
 ```typescript
-import {
-  init,
-  defineCollection,
-  defineDescription,
-  useFunctions
-} from 'aeria'
-
-const [Person, description] = defineDescription({
-  $id: 'person',
-  properties: {
-    name: {
-      type: 'string'
-    },
-    age: {
-      type: 'number'
-    }
-  }
-})
-
-export const collections = {
-  person: defineCollection(() => ({
-    item: Person,
-    description,
-    functions: useFunctions<typeof Person>()([
-      'getAll',
-      'insert'
-    ]),
-    accessControl: {
-      roles: {
-        guest: {
-          grantEverything: true
-        }
+router.GET('/get-pets', (context) => {
+  const filters = validateSilently(context.request.query, {
+    required: [],
+    properties: {
+      name: {
+        type: 'string'
       }
     }
-  }))
-}
+  })
 
-init()
+  return context.collections.pet.functions.getAll({
+    filters
+  })
+})
 ```
 
 ### End-to-end strong typing

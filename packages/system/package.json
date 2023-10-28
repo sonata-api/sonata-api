@@ -65,6 +65,7 @@
     "@sonata-api/api": "*",
     "@sonata-api/access-control": "*",
     "@sonata-api/common": "*",
-    "@sonata-api/types": "*"
+    "@sonata-api/types": "*",
+    "@sonata-api/validation": "*"
   }
 }

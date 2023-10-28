@@ -1,6 +1,7 @@
 import { type Context } from '@sonata-api/api'
 import { sendTransactionalEmail  } from '@sonata-api/mailing'
 import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
+import { validate } from '@sonata-api/validation'
 import { description, type User } from './description'
 import bcrypt from 'bcrypt'
 
@@ -13,7 +14,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     throw new Error('signup disallowed')
   }
 
-  const validationEither = await context.validate(user, {
+  const validationEither = validate(user, {
     required: [
       'full_name',
       'email',

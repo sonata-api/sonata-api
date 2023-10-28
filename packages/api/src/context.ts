@@ -12,7 +12,6 @@ import type {
 } from './types'
 
 import { unsafe } from '@sonata-api/common'
-import { validate } from '@sonata-api/validation'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
@@ -67,9 +66,7 @@ export type Context<TDescription extends Description=any> = {
   request: GenericRequest
   response: GenericResponse
 
-  validate: typeof validate
   log: (message: string, details?: any) => Promise<any>
-
   apiConfig: ApiConfig
 }
 // #endregion Context
@@ -122,7 +119,6 @@ export const internalCreateContext = async (
   const context = Object.assign({}, parentContext)
   Object.assign(context, options)
 
-  context.validate = validate
   context.log = async (message: string, details?: any) => {
     return getDatabaseCollection('log').insertOne({
       message,
