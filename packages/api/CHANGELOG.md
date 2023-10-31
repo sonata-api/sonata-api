@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.69
+
+### Patch Changes
+
+- Fix traverseDocument bug
+
 ## 0.0.68
 
 ### Patch Changes

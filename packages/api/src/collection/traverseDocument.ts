@@ -173,10 +173,10 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
     const property = getProperty(key as Lowercase<string>, parent)
 
-    if( !property && value && typeof value === 'object' ) {
+    if( !property && value && (value.constructor === Object || value.constructor === Array) ) {
       // if first key is preceded by '$' we assume
       // it contains MongoDB query operators
-      if( Object.keys(value)[0].startsWith('$') ) {
+      if( Object.keys(value)[0]?.startsWith('$') ) {
         if( options.allowOperators ) {
           entries.push([
             key,
