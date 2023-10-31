@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.72
+
+### Patch Changes
+
+- Improve traverseDocument autocasting
+
 ## 0.0.71
 
 ### Patch Changes

@@ -100,14 +100,13 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       if( Object.keys(value).length > 0 ) {
         const entries: Array<[string, any]> = []
         for( const [k, v] of Object.entries(value) ) {
-          const fallbackProperty = <CollectionProperty>{
-            $ref: '',
-            s$isReference: true
-          }
-
           const subProperty = !k.startsWith('$')
-            ? getProperty(k as Lowercase<string>, property) || fallbackProperty
+            ? getProperty(k as Lowercase<string>, property)
             : property
+
+          if( !subProperty ) {
+            continue
+          }
 
           entries.push([
             k,
