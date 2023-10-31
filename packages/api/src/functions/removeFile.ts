@@ -15,10 +15,6 @@ export const removeFile = <_TDocument extends CollectionDocument<OptionalId<any>
 
   } = payload
 
-  if( !parentId ) {
-    throw new TypeError('no parentId')
-  }
-
   await checkImmutability(
     context, {
       propertyName,

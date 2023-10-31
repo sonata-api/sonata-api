@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.70
+
+### Patch Changes
+
+- Fix removeFile
+
 ## 0.0.69
 
 ### Patch Changes
