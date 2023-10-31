@@ -107,7 +107,7 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
 
           const subProperty = !k.startsWith('$')
             ? getProperty(k as Lowercase<string>, property) || fallbackProperty
-            : fallbackProperty
+            : property
 
           entries.push([
             k,
@@ -317,12 +317,10 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     return left(unwrapEither(resultEither))
   }
 
-  const result = unwrapEither(resultEither)
-
   return validationError
     ? left(makeValidationError({
       code: ValidationErrorCodes.InvalidProperties,
       errors: validationError
     }))
-    : right(result)
+    : right(unwrapEither(resultEither) as any)
 }
