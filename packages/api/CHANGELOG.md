@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.71
+
+### Patch Changes
+
+- Fix traverseDocument autocast failing with $elemMatch
+
 ## 0.0.70
 
 ### Patch Changes
