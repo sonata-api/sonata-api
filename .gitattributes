@@ -1,1 +1,5 @@
+# ignore husky hooks
 .husky/* linguist-detectable=false
+
+# ignore bin/index.js
+*.js linguist-generated

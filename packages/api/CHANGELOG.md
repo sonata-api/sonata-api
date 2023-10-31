@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.68
+
+### Patch Changes
+
+- Fix memoization bug in preloadDescription
+
 ## 0.0.67
 
 ### Patch Changes

@@ -20,6 +20,9 @@ export type TraverseOptions = {
   fromProperties?: boolean
   allowOperators?: boolean
   recurseReferences?: boolean
+}
+
+export type TraversePipe = {
   pipe?: (
     value: any,
     target: any,
@@ -142,7 +145,7 @@ const validate = (value: any, _target: any, propName: string, property: Collecti
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   target: TRecursionTarget,
   parent: CollectionProperty | Description,
-  options: TraverseOptions
+  options: TraverseOptions & TraversePipe
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
@@ -173,11 +176,14 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     if( !property && value && typeof value === 'object' ) {
       // if first key is preceded by '$' we assume
       // it contains MongoDB query operators
-      if( options.allowOperators && Object.keys(value)[0].startsWith('$') ) {
-        entries.push([
-          key,
-          value
-        ])
+      if( Object.keys(value)[0].startsWith('$') ) {
+        if( options.allowOperators ) {
+          entries.push([
+            key,
+            value
+          ])
+        }
+
         continue
       }
 
@@ -265,7 +271,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 export const traverseDocument = async <const TWhat extends Record<string, any>>(
   what: TWhat,
   description: Description,
-  options: TraverseOptions
+  options: TraverseOptions & TraversePipe
 ) => {
   const functions = []
   let validationError: ValidationError | null = null

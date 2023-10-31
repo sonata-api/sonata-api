@@ -105,7 +105,9 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
       }
 
       if( 'items' in property && 'properties' in property.items ) {
-        property.items = await preloadDescription(property.items)
+        property.items = await preloadDescription(property.items, {
+          memoize: false
+        })
       }
 
       if( property.s$getter ) {
