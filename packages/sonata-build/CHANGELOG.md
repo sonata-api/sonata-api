@@ -1,5 +1,11 @@
 # sonata-build
 
+## 0.0.12
+
+### Patch Changes
+
+- Make getter properties readOnly by default
+
 ## 0.0.11
 
 ### Patch Changes

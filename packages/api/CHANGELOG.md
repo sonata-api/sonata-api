@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.73
+
+### Patch Changes
+
+- Make getter properties readOnly by default
+
 ## 0.0.72
 
 ### Patch Changes

@@ -115,6 +115,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
           ...await a,
           [key]: {
             ...property,
+            readOnly: true,
             s$isGetter: true
           }
         }
