@@ -18,6 +18,7 @@ export type RefProperty = {
 
 export type EnumProperty = {
   enum: ReadonlyArray<any>
+  default?: any
 }
 
 export type ArrayProperty = {
@@ -32,6 +33,7 @@ export type ObjectProperty = {
   type: 'object'
   properties?: Record<string, CollectionProperty>
   additionalProperties?: Property
+  default?: any
 }
 
 export type StringProperty = {
@@ -39,6 +41,7 @@ export type StringProperty = {
   minLength?: number
   maxLength?: number
   format?: PropertyFormat
+  default?: string | Date
 }
 
 export type NumberProperty = {
@@ -47,10 +50,12 @@ export type NumberProperty = {
   maximum?: number
   exclusiveMinimum?: number
   exclusiveMaximum?: number
+  default?: number
 }
 
 export type BooleanProperty = {
   type: 'boolean'
+  default?: boolean
 }
 
 export type PropertyAux =
@@ -63,7 +68,6 @@ export type PropertyAux =
   | BooleanProperty
 
 export type Property = PropertyAux & {
-  default?: any
   description?: string
   readOnly?: boolean
 }
