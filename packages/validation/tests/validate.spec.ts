@@ -6,7 +6,10 @@ import {
   plainCandidate,
   plainDescription,
   deepCandidate,
-  deepDescription
+  deepDescription,
+  personValidator,
+  personSilentValidator,
+  personCandidate
 
 } from './fixtures'
 
@@ -15,6 +18,35 @@ describe('Validate', () => {
     const validationEither = validate(plainCandidate, plainDescription)
     assert(isRight(validationEither))
     assert(JSON.stringify(plainCandidate) === JSON.stringify(unwrapEither(validationEither)))
+  })
+
+  it('validates object using validator', () => {
+    const validationEither = personValidator(personCandidate)
+    assert(isRight(validationEither))
+    assert(JSON.stringify(plainCandidate) === JSON.stringify(unwrapEither(validationEither)))
+  })
+
+  it('validates object using silent validator', () => {
+    const person = personSilentValidator(personCandidate)
+    assert(JSON.stringify(plainCandidate) === JSON.stringify(person))
+  })
+
+  it('returns left with validator', () => {
+    const validationEither = personValidator({
+      ...personCandidate,
+      age: false
+    })
+
+    assert(isLeft(validationEither))
+  })
+
+  it('returns null with silent validator', () => {
+    const person = personSilentValidator({
+      ...personCandidate,
+      age: false
+    })
+
+    assert(person === null)
   })
 
   it('returns error on plain object', () => {

@@ -236,6 +236,19 @@ export const validator = <const TDescription extends Omit<Description, '$id'>>(
   return <const>[
     {} as Schema<TDescription>,
     <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
+      return validate(what, description, options)
+    }
+  ]
+}
+
+export const silentValidator = <const TDescription extends Omit<Description, '$id'>>(
+  description: TDescription,
+  options: ValidateOptions = {}
+) => {
+
+  return <const>[
+    {} as Schema<TDescription>,
+    <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
       return validateSilently(what, description, options)
     }
   ]
