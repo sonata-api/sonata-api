@@ -65,7 +65,7 @@ export const validateProperty = (
   options: ValidateOptions = {}
 ) => {
   const { extraneous } = options
-  if( !what ) {
+  if( what === undefined ) {
     return
   }
 
@@ -154,7 +154,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
       continue
     }
 
-    if( !what[propName as Lowercase<string>] ) {
+    if( what[propName as Lowercase<string>] === undefined ) {
       return makeValidationError({
         code: ValidationErrorCodes.MissingProperties,
         missing: required.filter((prop) => !Object.keys(what).includes(prop as string)) as string[]
