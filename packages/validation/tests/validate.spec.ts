@@ -38,6 +38,8 @@ describe('Validate', () => {
     })
 
     assert(isLeft(validationEither))
+    const error = unwrapEither(validationEither)
+    assert(error.code === 'INVALID_PROPERTIES')
   })
 
   it('returns null with silent validator', () => {
