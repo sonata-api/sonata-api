@@ -2,7 +2,6 @@ import type { CollectionStructure } from '@sonata-api/api'
 import type { AccessControlLayer } from './layers/types'
 export { AccessControlLayer }
 
-// #region Role
 export type Role<
   TCollectionStructure extends CollectionStructure=any,
   TAccessControl extends AccessControl<TCollectionStructure> = any
@@ -12,14 +11,12 @@ export type Role<
   grant?: Array<keyof TCollectionStructure['functions']>
   forbid?: Array<keyof TCollectionStructure['functions']>
 }
-// #endregion Role
 
 export type Roles<
   TCollectionStructure extends CollectionStructure=any,
   TAccessControl extends AccessControl<TCollectionStructure> = any
 > = Record<string, Role<TCollectionStructure, TAccessControl>>
 
-// #region AccessControl
 export type InternalAccessControl<
   TCollectionStructure extends CollectionStructure=any,
   TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
@@ -33,5 +30,4 @@ export type AccessControl<
   TCollectionStructure extends CollectionStructure=any,
   TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
 > = InternalAccessControl<TCollectionStructure, TAccessControl>
-// #endregion AccessControl
 

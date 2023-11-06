@@ -90,23 +90,17 @@ export const dryInit = async (
   return server
 }
 
-// #region initWithDatabase
 export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
   await getDatabase()
   return dryInit(...args)
 }
-// #endregion initWithDatabase
 
-// #region initThenStart
 export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
   const server = await dryInit(...args)
   server.listen()
 }
-// #endregion initThenStart
 
-// #region initWithDatabaseThenStart
 export const init = async (...args: Parameters<typeof dryInit>) => {
   const server = await initWithDatabase(...args)
   server.listen()
 }
-// #endregion initWithDatabaseThenStart

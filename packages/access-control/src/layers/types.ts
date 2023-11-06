@@ -14,7 +14,6 @@ export type WritePayload = {
   what: Record<string, any>
 }
 
-// #region AccessControlLayer
 export type AccessControlLayerProps<TPayload extends Record<string, any>=any> = {
   propertyName?: string
   parentId?: string
@@ -26,4 +25,3 @@ export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccess
   ACErrors,
   ReadPayload | WritePayload
 >>
-// #endregion AccessControlLayer

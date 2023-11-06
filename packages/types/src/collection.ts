@@ -98,7 +98,6 @@ export type Layout = {
   options?: LayoutOptions
 }
 
-// #region Description
 export type Description<TDescription extends Description=any> = {
   $id: CollectionId
   title?: string
@@ -155,7 +154,6 @@ export type Description<TDescription extends Description=any> = {
 
   properties: Record<Lowercase<string>, CollectionProperty>
 }
-// #endregion Description
 
 export type CollectionProperty = Property & {
   [P in keyof CollectionPropertyAux as `s$${P}`]: CollectionPropertyAux[P]

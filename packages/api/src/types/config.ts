@@ -18,7 +18,6 @@ export type DecodedToken = {
   key_name?: string
 }
 
-// #region ApiConfig
 export type ApiConfig = {
   port?: number
   group?: string
@@ -37,4 +36,3 @@ export type ApiConfig = {
     error: TError
   ) => any|Promise<any>
 }
-// #endregion ApiConfig

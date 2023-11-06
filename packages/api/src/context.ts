@@ -38,16 +38,13 @@ type IndepthCollections = {
   [P in keyof Collections]: IndepthCollection<Collections[P]>
 }
 
-// #region ContextOptions
 export type ContextOptions<TContext> = {
   apiConfig?: ApiConfig
   parentContext?: TContext
   collectionName?: string
   token?: DecodedToken
 }
-// #endregion ContextOptions
 
-// #region Context
 export type Context<TDescription extends Description=any> = {
   description: TDescription
   model: CollectionModel<TDescription>
@@ -69,7 +66,6 @@ export type Context<TDescription extends Description=any> = {
   log: (message: string, details?: any) => Promise<any>
   apiConfig: ApiConfig
 }
-// #endregion Context
 
 const indepthCollection = (collectionName: string, collections: Record<string, Collection>, parentContext: Context) => {
   const collection = collections[collectionName]?.() as CollectionStructure & {
