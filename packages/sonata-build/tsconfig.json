@@ -5,6 +5,9 @@
     "paths": {
       "@sonata-api/common": [
         "../common/dist/cjs"
+      ],
+      "@sonata-api/system": [
+        "../system/dist"
       ]
     }
   }

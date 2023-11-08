@@ -1,6 +1,6 @@
 {
   "name": "sonata-build",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -35,7 +35,8 @@
     "tslib": "^2.5.0"
   },
   "peerDependencies": {
-    "@sonata-api/common": "*"
+    "@sonata-api/common": "*",
+    "@sonata-api/system": "*"
   },
   "devDependencies": {
     "@types/node": "^18.15.3"

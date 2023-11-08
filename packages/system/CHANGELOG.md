@@ -1,5 +1,13 @@
 # @sonata-api/system
 
+## 0.0.42
+
+### Patch Changes
+
+- Compile icons at build time
+- Updated dependencies
+  - @sonata-api/validation@0.0.19
+
 ## 0.0.41
 
 ### Patch Changes

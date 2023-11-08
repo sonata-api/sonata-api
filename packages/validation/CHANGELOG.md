@@ -1,5 +1,11 @@
 # @sonata-api/validation
 
+## 0.0.19
+
+### Patch Changes
+
+- Compile icons at build time
+
 ## 0.0.18
 
 ### Patch Changes

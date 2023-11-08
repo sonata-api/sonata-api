@@ -1,5 +1,13 @@
 # sonata-build
 
+## 0.0.13
+
+### Patch Changes
+
+- Compile icons at build time
+- Updated dependencies
+  - @sonata-api/system@0.0.42
+
 ## 0.0.12
 
 ### Patch Changes
