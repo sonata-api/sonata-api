@@ -70,7 +70,7 @@ export const isGranted = async <
   for( const roleName of userRoles ) {
     const _currentRole = accessControl.roles?.[roleName]
     if( !_currentRole ) {
-      return false
+      continue
     }
 
     const currentRole = await applyInheritance(accessControl, _currentRole)
@@ -90,9 +90,9 @@ export const isGranted = async <
     if( result ) {
       return true
     }
-
-    return false
   }
+
+  return false
 }
 
 export const grantedFor = async <

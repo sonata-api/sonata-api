@@ -70,6 +70,9 @@ export const [User, description] = defineDescription({
       $ref: 'file',
       s$accept: [
         'image/*',
+      ],
+      s$populate: [
+        'owner'
       ]
     },
     group: {
@@ -100,7 +103,11 @@ export const [User, description] = defineDescription({
     name: 'grid',
     options: {
       title: 'full_name',
-      picture: 'picture'
+      badge: 'roles',
+      picture: 'picture',
+      information: 'email',
+      active: 'active',
+      translateBadge: true
     }
   },
   individualActions: {

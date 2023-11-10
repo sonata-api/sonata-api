@@ -86,16 +86,25 @@ export type CollectionOptions<TDescription extends Description> = {
 export type LayoutName =
   | 'tabular'
   | 'grid'
+  | 'list'
 
-export type LayoutOptions = {
-  picture?: string
-  title?: string
-  description?: string
+export type LayoutOptions<TDescription extends Description=any> = {
+  picture?: PropertiesWithId<TDescription>
+  title?: PropertiesWithId<TDescription>
+  badge?: PropertiesWithId<TDescription>
+  information?: PropertiesWithId<TDescription>
+  active?: PropertiesWithId<TDescription>
+  translateBadge?: boolean
 }
 
-export type Layout = {
+export type Layout<TDescription extends Description=any> = {
   name: LayoutName
-  options?: LayoutOptions
+  options?: LayoutOptions<TDescription>
+}
+
+export type SearchOptions = {
+  active: boolean
+  placeholder?: string
 }
 
 export type Description<TDescription extends Description=any> = {
@@ -139,7 +148,7 @@ export type Description<TDescription extends Description=any> = {
     default: string
   }>
 
-  layout?: Layout
+  layout?: Layout<TDescription>
   formLayout?: Partial<FormLayout<TDescription>>
   tableLayout?: Partial<TableLayout<TDescription>>
 
@@ -147,11 +156,7 @@ export type Description<TDescription extends Description=any> = {
   actions?: CollectionActions<TDescription>
   individualActions?: CollectionActions<TDescription>
 
-  search?: {
-    active: boolean
-    placeholder?: string
-  }
-
+  search?: SearchOptions
   properties: Record<Lowercase<string>, CollectionProperty>
 }
 

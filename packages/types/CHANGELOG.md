@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.0.19
+
+### Patch Changes
+
+- Update collection types
+
+## 0.0.18
+
+### Patch Changes
+
+- Fix access control implement new List layout
+
 ## 0.0.17
 
 ### Patch Changes

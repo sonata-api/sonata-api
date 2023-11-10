@@ -24,7 +24,8 @@ export const [File, description] = defineDescription({
   ],
   indexes: [
     'filename',
-    'link'
+    'link',
+    'mime'
   ],
   properties: {
     mime: {

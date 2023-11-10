@@ -1,5 +1,14 @@
 # @sonata-api/access-control
 
+## 0.0.22
+
+### Patch Changes
+
+- Fix access control implement new List layout
+- Updated dependencies
+  - @sonata-api/system@0.0.43
+  - @sonata-api/types@0.0.18
+
 ## 0.0.21
 
 ### Patch Changes
