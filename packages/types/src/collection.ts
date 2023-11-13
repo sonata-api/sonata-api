@@ -36,13 +36,13 @@ export type CollectionActions<TDescription extends Description> =
   Record<string, null|CollectionAction<TDescription>>
 
 export type Condition<TDescription extends Description> = {
-  operator:
+  operator?:
     | 'equal'
     | 'unequal'
     | 'in'
     | 'notin'
-  term1: PropertiesWithId<TDescription>
-  term2: any
+  term1?: PropertiesWithId<TDescription>
+  term2?: any
   else?: any
   or?: Array<Condition<TDescription>>
   and?: Array<Condition<TDescription>>
