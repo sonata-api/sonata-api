@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.20
+
+### Patch Changes
+
+- Implement conditional branching
+
 ## 0.0.19
 
 ### Patch Changes

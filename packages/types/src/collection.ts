@@ -44,6 +44,8 @@ export type Condition<TDescription extends Description> = {
   term1: PropertiesWithId<TDescription>
   term2: any
   else?: any
+  or?: Array<Condition<TDescription>>
+  and?: Array<Condition<TDescription>>
 }
 
 export type FormLayout<TDescription extends Description> = {
