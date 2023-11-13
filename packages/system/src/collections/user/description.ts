@@ -115,7 +115,7 @@ export const [User, description] = defineDescription({
       name: 'Editar',
       icon: 'edit',
     },
-    'route:dashboard-user-changepass': {
+    'route:/dashboard/user/changepass': {
       name: 'Mudar senha',
       icon: 'key-skeleton',
       fetchItem: true

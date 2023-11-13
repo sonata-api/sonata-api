@@ -4,15 +4,19 @@ import { description, type File } from './description'
 
 type Props = {
   filters: {
-    _id: string
+    _id: any
   }
 }
 
 const remove = async (props: Props, context: Context<typeof description>) => {
   const { remove } = useFunctions<File>()()
+
   const file = await context.collection.functions.get({
-    filters: props.filters
-  }, context)
+    filters: props.filters,
+    project: [
+      'absolute_path'
+    ]
+  })
 
   if( !file ) {
     throw new Error('file not found')

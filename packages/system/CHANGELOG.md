@@ -1,5 +1,11 @@
 # @sonata-api/system
 
+## 0.0.44
+
+### Patch Changes
+
+- Update user description
+
 ## 0.0.43
 
 ### Patch Changes
