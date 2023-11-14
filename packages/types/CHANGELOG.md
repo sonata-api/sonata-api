@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.22
+
+### Patch Changes
+
+- Refactor conditions
+
 ## 0.0.21
 
 ### Patch Changes

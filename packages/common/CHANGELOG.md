@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.0.17
+
+### Patch Changes
+
+- Refactor conditions
+
 ## 0.0.16
 
 ### Patch Changes

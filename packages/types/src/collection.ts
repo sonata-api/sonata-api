@@ -1,6 +1,8 @@
 import type { Property } from './jsonschema'
+import type { Condition } from './condition'
 
-type PropertiesWithId<TDescription extends Description> = keyof TDescription['properties'] | '_id'
+export type PropertiesWithId<TDescription extends Description> =
+  keyof TDescription['properties'] | '_id'
 
 export type CollectionPresets = 
   | 'crud'
@@ -34,19 +36,6 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
 
 export type CollectionActions<TDescription extends Description> =
   Record<string, null|CollectionAction<TDescription>>
-
-export type Condition<TDescription extends Description> = {
-  operator?:
-    | 'equal'
-    | 'unequal'
-    | 'in'
-    | 'notin'
-  term1?: PropertiesWithId<TDescription>
-  term2?: any
-  else?: any
-  or?: Array<Condition<TDescription>>
-  and?: Array<Condition<TDescription>>
-}
 
 export type FormLayout<TDescription extends Description> = {
   fields?: Partial<Record<PropertiesWithId<TDescription>, FormLayoutField<TDescription>>>
