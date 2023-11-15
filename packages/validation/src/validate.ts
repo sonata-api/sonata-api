@@ -126,12 +126,16 @@ export const validateProperty = (
   }
 
   else if( 'items' in property ) {
+    let i = 0
     for( const elem of what ) {
       const result = validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
 
       if( result ) {
+        result.index = i
         return result
       }
+
+      i++
     }
   }
 
@@ -146,7 +150,11 @@ export const validateProperty = (
 export const validateWholeness = (description: Omit<Description, '$id'>, what: Record<Lowercase<string>, any>) => {
   const required = description.required
     ? description.required
-    : Object.keys(description.properties)
+    : Object.entries(description.properties).reduce((a, [propertyName, property]) => {
+      return property.readOnly
+        ? a
+        : [...a, propertyName]
+    }, [] as string[])
 
   for( const propName of required ) {
     const property = description.properties[propName as any]
@@ -157,7 +165,7 @@ export const validateWholeness = (description: Omit<Description, '$id'>, what: R
     if( what[propName as Lowercase<string>] === undefined ) {
       return makeValidationError({
         code: ValidationErrorCodes.MissingProperties,
-        missing: required.filter((prop) => !Object.keys(what).includes(prop as string)) as string[]
+        errors: Object.fromEntries(required.filter((prop) => !Object.keys(what).includes(prop as string)).map((error) => [error, { type: 'missing' }]))
       })
     }
   }

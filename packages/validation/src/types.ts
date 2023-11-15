@@ -1,24 +1,26 @@
 export enum ValidationErrorCodes {
-  EmptyTarget = 'EMPTY_TARGET',
+  InvalidProperties = 'INVALID_PROPERTIES',
   MissingProperties = 'MISSING_PROPERTIES',
-  InvalidProperties = 'INVALID_PROPERTIES'
+  EmptyTarget = 'EMPTY_TARGET'
 }
 
-export type PropertyValidationErrorType = 'extraneous'
+export type PropertyValidationErrorType =
+  | 'missing'
+  | 'extraneous'
   | 'unmatching'
   | 'extraneous_element'
   | 'numeric_constraint'
 
 export type PropertyValidationError = {
   type: PropertyValidationErrorType
+  index?: number
   details: {
     expected: string | ReadonlyArray<any>
     got: string
   }
 }
 
-export type ValidationError = {
-  code: ValidationErrorCodes
-  errors?: Record<string, PropertyValidationError | ValidationError> | {} 
-  missing?: string[]
-}
+export type ValidationError =
+  | { code: ValidationErrorCodes.InvalidProperties, errors: Record<string, PropertyValidationError | ValidationError> }
+  | { code: ValidationErrorCodes.MissingProperties, errors: Record<string, { type: 'missing'  }> }
+  | { code: ValidationErrorCodes.EmptyTarget, errors: {} }
