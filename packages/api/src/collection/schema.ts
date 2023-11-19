@@ -34,9 +34,9 @@ type MapType<T> = T extends TestType<{ format: 'date'|'date-time' }>
 type CaseReference<T> = T extends { $id: string }
   ? ObjectId
   : T extends TestType<{ type: 'array', items: { properties: any } }>
-    ? Array<MapType<T['items']>>
+    ? MapType<T['items']>[]
     : T extends TestType<{ type: 'array', items: infer K }>
-      ? Array<MapType<K>>
+      ? MapType<K>[]
       : MapType<T>
 
 type Type<T> = CaseReference<T>

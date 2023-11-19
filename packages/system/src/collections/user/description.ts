@@ -2,7 +2,7 @@ import { defineDescription } from '@sonata-api/api'
 import type { ResourceUsage } from '../resourceUsage/description'
 
 export type User = Omit<typeof User, 'roles' | 'resources_usage'> & {
-  roles: Array<string>
+  roles: string[]
   resources_usage: Map<string, typeof ResourceUsage>
 }
 

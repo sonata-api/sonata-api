@@ -16,12 +16,12 @@ const getFunctions = <TDocument extends CollectionDocument<OptionalId<any>>>() =
 })
 
 type SelectFunctions<
-  TSelectedFunctions extends Array<keyof typeof collFunctions>
-> = TSelectedFunctions extends Array<infer K>
+  TSelectedFunctions extends (keyof typeof collFunctions)[]
+> = TSelectedFunctions extends (infer K)[]
   ? K
   : keyof typeof collFunctions
 
-export const useFunctions = <TDocument extends CollectionDocument<OptionalId<any>>>() => <TSelectedFunctions extends Array<AvailableFunction>>(
+export const useFunctions = <TDocument extends CollectionDocument<OptionalId<any>>>() => <TSelectedFunctions extends AvailableFunction[]>(
   selectedFunctions?: TSelectedFunctions
 ): {
   [P in SelectFunctions<TSelectedFunctions>]: ReturnType<typeof getFunctions<TDocument>>[P]
@@ -38,6 +38,6 @@ export const useFunctions = <TDocument extends CollectionDocument<OptionalId<any
   return functions
 }
 
-export const untypedUseFunctions = (selectedFunctions: Array<AvailableFunction>) => {
+export const untypedUseFunctions = (selectedFunctions: AvailableFunction[]) => {
   return useFunctions<any>()(selectedFunctions)
 }

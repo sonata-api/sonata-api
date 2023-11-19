@@ -31,7 +31,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   params?: Record<string, any>
   query?: Record<string, any>
 
-  requires?: Array<PropertiesWithId<TDescription>>
+  requires?: PropertiesWithId<TDescription>[]
 }>
 
 export type CollectionActions<TDescription extends Description> =
@@ -62,7 +62,7 @@ export type FiltersPreset<TDescription extends Description> = {
   name?: string
   icon?: string
   filters: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
-  table?: Array<PropertiesWithId<TDescription>>
+  table?: PropertiesWithId<TDescription>[]
   badgeFunction?: string
   default?: boolean
 }
@@ -103,7 +103,7 @@ export type Description<TDescription extends Description=any> = {
   title?: string
 
   // unused
-  categories?: Array<string>
+  categories?: string[]
 
   system?: boolean
   inline?: boolean
@@ -120,7 +120,7 @@ export type Description<TDescription extends Description=any> = {
   // modifiers
   owned?: boolean | 'always'
   timestamps?: false
-  immutable?: boolean|ReadonlyArray<string>
+  immutable?: boolean | ReadonlyArray<string>
 
   // takes an array of something
   route?: ReadonlyArray<string>
@@ -132,7 +132,7 @@ export type Description<TDescription extends Description=any> = {
   filtersPresets?: Record<string, FiltersPreset<TDescription>>
   freshItem?: Partial<Record<PropertiesWithId<TDescription>, any>>
 
-  form?: ReadonlyArray<PropertiesWithId<TDescription>>|Record<PropertiesWithId<TDescription>, Array<string>>
+  form?: ReadonlyArray<PropertiesWithId<TDescription>>|Record<PropertiesWithId<TDescription>, string[]>
   writable?: ReadonlyArray<PropertiesWithId<TDescription>>
   filters?: ReadonlyArray<PropertiesWithId<TDescription>|{
     property: PropertiesWithId<TDescription>

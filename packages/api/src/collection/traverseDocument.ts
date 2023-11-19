@@ -98,7 +98,7 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
       }
 
       if( Object.keys(value).length > 0 ) {
-        const entries: Array<[string, any]> = []
+        const entries: [string, any][] = []
         for( const [k, v] of Object.entries(value) ) {
           const subProperty = !k.startsWith('$')
             ? getProperty(k as Lowercase<string>, property)

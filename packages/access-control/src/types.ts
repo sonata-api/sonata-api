@@ -6,10 +6,10 @@ export type Role<
   TCollectionStructure extends CollectionStructure=any,
   TAccessControl extends AccessControl<TCollectionStructure> = any
 > = {
-  inherit?: Array<keyof TAccessControl['roles']>
+  inherit?: (keyof TAccessControl['roles'])[]
   grantEverything?: boolean
-  grant?: Array<keyof TCollectionStructure['functions']>
-  forbid?: Array<keyof TCollectionStructure['functions']>
+  grant?: (keyof TCollectionStructure['functions'])[]
+  forbid?: (keyof TCollectionStructure['functions'])[]
 }
 
 export type Roles<

@@ -4,11 +4,11 @@ import { readFile } from 'fs/promises'
 import { deepMerge } from '@sonata-api/common'
 import { log } from './log'
 
-export const compile = async (fileList: Array<string>) => {
+export const compile = async (fileList: string[]) => {
   const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) as {
     extends?: string
-    include?: Array<string>
-    exclude?: Array<string>
+    include?: string[]
+    exclude?: string[]
   } & typeof import('./config/tsconfig.json')
 
   if( tsConfig.extends ) {

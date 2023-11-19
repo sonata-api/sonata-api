@@ -10,7 +10,7 @@ import {
 } from './types'
 
 export type ValidateOptions = {
-  extraneous?: Array<string> | boolean
+  extraneous?: string[] | boolean
   throwOnError?: boolean
 }
 

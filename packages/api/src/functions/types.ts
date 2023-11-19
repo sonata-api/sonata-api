@@ -16,7 +16,7 @@ export type What<TDocument> = Omit<UpdateFilter<TDocument>, keyof TDocument> & {
 export type Projection<TDocument extends Record<Lowercase<string>, any>> =
   keyof TDocument | '_id' extends infer DocumentProp
     ? TDocument extends Lowercase<string>
-      ? Array<DocumentProp>
+      ? DocumentProp[]
       : Lowercase<string>[]
     : never
 

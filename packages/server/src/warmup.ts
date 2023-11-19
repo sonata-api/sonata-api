@@ -12,8 +12,8 @@ const colors = {
   white: '\x1b[37m',
 }
 
-const colorizedRoute = (color: keyof typeof colors, roles?: Array<string>) =>
-  (verb: string, collectionName: string, path?: string|null, parameters?: Array<string>) => {
+const colorizedRoute = (color: keyof typeof colors, roles?: string[]) =>
+  (verb: string, collectionName: string, path?: string|null, parameters?: string[]) => {
 
   let line = `\x1b[1m${colors[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
   line += `/\x1b[1m${collectionName}\x1b[0m`

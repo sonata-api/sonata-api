@@ -4,16 +4,16 @@ import type { ObjectId } from './database'
 
 type User = {
   _id: ObjectId
-  roles: Array<string>
+  roles: string[]
 }
 
 
 export type DecodedToken = {
   user: Omit<User, 'roles'> & {
-    roles?: Array<string>
+    roles?: string[]
   }
   extra?: Record<string, any>
-  allowed_functions?: Array<FunctionPath>
+  allowed_functions?: FunctionPath[]
   key_id?: string
   key_name?: string
 }
@@ -24,12 +24,12 @@ export type ApiConfig = {
 
   allowSignup?: boolean
   signupDefaults?: Partial<{
-    roles: Array<string>
+    roles: string[]
     active: boolean
   }>
 
   logSuccessfulAuthentications?: boolean
-  tokenUserProperties?: Array<string>
+  tokenUserProperties?: string[]
 
   errorHandler?: <TError extends Error>(
     context: Context,

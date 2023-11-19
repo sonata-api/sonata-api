@@ -10,7 +10,7 @@ type CascadingRemoveSubject = {
   collectionName: string
 }
 
-type CascadingRemove = Array<CascadingRemoveSubject>
+type CascadingRemove = CascadingRemoveSubject[]
 
 const cascadingRemoveMemo: Record<string, CascadingRemove> = {}
 
@@ -20,7 +20,7 @@ const getCascade = (description: Description) => {
   }
 
   const cascade: CascadingRemove = []
-  for( const [propertyName, property] of Object.entries(description.properties) as Array<[Lowercase<string>, CollectionProperty]> ) {
+  for( const [propertyName, property] of Object.entries(description.properties) as [Lowercase<string>, CollectionProperty][] ) {
     if( property.s$isFile || property.s$inline ) {
       cascade.push({
         propertyName,

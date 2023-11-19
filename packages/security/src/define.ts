@@ -1,7 +1,7 @@
 import type { RateLimitingParams } from './rateLimiting'
 
 export type SecurityPolicy = {
-  allowQueryOperators?: Array<string>
+  allowQueryOperators?: string[]
   rateLimiting?: Record<string, RateLimitingParams>
   accessControl?: any
 }

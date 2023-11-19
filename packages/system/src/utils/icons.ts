@@ -1,9 +1,9 @@
-export const extractIcons = (target: Record<string, any>): Array<string> => {
+export const extractIcons = (target: Record<string, any>): string[] => {
   if( !target || typeof target !== 'object' ) {
     return []
   }
 
-  const foundIcons: Array<string> = []
+  const foundIcons: string[] = []
   const icon = target.s$icon || target.icon
 
   if( icon ) {
@@ -17,12 +17,12 @@ export const extractIcons = (target: Record<string, any>): Array<string> => {
   return foundIcons
 }
 
-export const iconsContent = (icons: Array<string>) => {
+export const iconsContent = (icons: string[]) => {
   const content = `exports.icons = ${JSON.stringify(icons)};\n`
   return content
 }
 
-export const iconsDtsContent = (icons: Array<string>) => {
+export const iconsDtsContent = (icons: string[]) => {
   const types = icons.map((icon) => `  | '${icon}'`)
   const lines = [
     `export type UsedIcons = \n${types.join('\n')};`,

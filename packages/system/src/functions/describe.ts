@@ -6,7 +6,7 @@ import { getAvailableRoles } from '@sonata-api/access-control'
 import { default as authenticate } from '../collections/user/authenticate'
 
 type Props = {
-  collections?: Array<string>
+  collections?: string[]
   noSerialize?: boolean
   roles?: boolean
   revalidate?: boolean
@@ -42,7 +42,7 @@ export const describe = async (context: Context): Promise<any> => {
 
   const retrievedCollections = (props?.collections?.length
     ? Object.entries(collections).filter(([key]) => props.collections!.includes(key)).map(([, value]) => value)
-    : Object.values(collections)) as Array<Collection>
+    : Object.values(collections)) as Collection[]
 
   const descriptions: Record<string, Description> = {}
   result.descriptions = descriptions

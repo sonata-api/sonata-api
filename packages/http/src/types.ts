@@ -9,7 +9,7 @@ export type GenericRequest = {
   body?: string
   query: Record<string, any>
   payload: Record<string, any>
-  fragments: Array<string>
+  fragments: string[]
 }
 
 export type GenericResponse = {

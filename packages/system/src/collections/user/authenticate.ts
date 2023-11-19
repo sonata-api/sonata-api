@@ -58,7 +58,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
   }
 
   if( context.apiConfig.tokenUserProperties ) {
-    const pick = (obj: any, properties: Array<string>) => properties.reduce((a, prop) => {
+    const pick = (obj: any, properties: string[]) => properties.reduce((a, prop) => {
       if( 'prop' in obj ) {
         return a
       }

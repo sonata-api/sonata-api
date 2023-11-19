@@ -29,7 +29,7 @@ export type ReferenceMap = Record<string, Reference>
 const referenceMemo: Record<string, ReferenceMap | {}> = {}
 const lookupMemo: Record<string, ReturnType<typeof buildLookupPipeline>> = {}
 
-const narrowLookupPipelineProjection = (pipeline: Array<Record<string, any>>, projection: string[]) => {
+const narrowLookupPipelineProjection = (pipeline: Record<string, any>[], projection: string[]) => {
   const hasAny = (propName: string) => {
     return propName.includes('.') || projection.includes(propName)
   }

@@ -3,11 +3,11 @@ import { getCollection, getCollections } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
 import { DEFAULT_ACCESS_CONTROL } from './constants'
 
-let availableRolesMemo: Array<string>
+let availableRolesMemo: string[]
 
 const applyInheritance = async (accessControl: AccessControl, targetRole: Role) => {
   const role = Object.assign({}, targetRole) as typeof targetRole & {
-    inherit?: Array<keyof typeof accessControl['roles']>
+    inherit?: (keyof typeof accessControl['roles'])[]
   }
 
   if( role.inherit ) {
@@ -56,8 +56,8 @@ export const isGranted = async <
   TCollectionName extends string,
   TFunctionName extends string,
   const TACProfile extends {
-    roles?: Array<string>
-    allowedFunctions?: Array<string>
+    roles?: string[]
+    allowedFunctions?: string[]
   }
 >(
   collectionName: TCollectionName,

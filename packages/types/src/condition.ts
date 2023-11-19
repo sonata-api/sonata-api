@@ -12,11 +12,11 @@ type FinalCondition<TDescription extends Description> = {
 }
 
 type OrCondition<TDescription extends Description> = {
-  or: Array<Condition<TDescription>>
+  or: Condition<TDescription>[]
 }
 
 type AndCondition<TDescription extends Description> = {
-  and: Array<Condition<TDescription>>
+  and: Condition<TDescription>[]
 }
 
 export type Condition<TDescription extends Description> =
