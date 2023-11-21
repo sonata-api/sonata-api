@@ -3,8 +3,11 @@ import type { Condition, Description } from '@sonata-api/types'
 const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
   if( 'term1' in condition ) {
     const term1 = subject[condition.term1]
-    const { operator, term2 } = condition
+    if( condition.operator === 'exists' ) {
+      return !!term1
+    }
 
+    const { operator, term2 } = condition
     switch( operator ) {
       case 'equal': return term1 === term2
       case 'unequal': return term1 !== term2
@@ -14,11 +17,15 @@ const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
   }
 
   if( 'and' in condition ) {
-    return condition.and.every((condition: any) => evaluatesToTrue(subject, condition))
+    return condition.and.every((condition) => evaluatesToTrue(subject, condition))
   }
 
   if( 'or' in condition ) {
-    return condition.or.some((condition: any) => evaluatesToTrue(subject, condition))
+    return condition.or.some((condition) => evaluatesToTrue(subject, condition))
+  }
+
+  if( 'not' in condition ) {
+    return !evaluatesToTrue(subject, condition.not)
   }
 
   return false

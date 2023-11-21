@@ -1,5 +1,17 @@
 # @sonata-api/common
 
+## 0.0.20
+
+### Patch Changes
+
+- Add "not" and "exists" conditions
+
+## 0.0.19
+
+### Patch Changes
+
+- Fix evaluateCondition
+
 ## 0.0.18
 
 ### Patch Changes

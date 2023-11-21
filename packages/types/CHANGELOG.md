@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.0.23
+
+### Patch Changes
+
+- Add "not" and "exists" conditions
+
 ## 0.0.22
 
 ### Patch Changes
