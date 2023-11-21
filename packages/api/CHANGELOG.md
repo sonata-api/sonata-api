@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.74
+
+### Patch Changes
+
+- Fix getAll behavior with $text
+
 ## 0.0.73
 
 ### Patch Changes

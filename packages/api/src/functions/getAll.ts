@@ -31,16 +31,6 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
   const accessControl = useAccessControl(context)
   const payload = _payload || {}
 
-  const entries = Object.entries(payload.filters || {}).map(([key, value]) => [
-    key,
-    value && typeof value === 'object' && '_id' in value
-      ? value._id
-      : value
-  ])
-
-  const newPayload = Object.assign({}, payload)
-  newPayload.filters = Object.fromEntries(entries)
-
   const {
     filters = {},
     limit = 0,
@@ -49,18 +39,22 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     offset = 0
 
   } = !options?.bypassAccessControl
-    ? unsafe(await accessControl.beforeRead(newPayload))
-    : newPayload
+    ? unsafe(await accessControl.beforeRead(payload))
+    : payload
 
-  const textQuery = !!filters.$text
+  const { $text, ...query } = filters
 
   const pipeline: Document[] = []
   const references = await getReferences(context.description.properties, {
     memoize: context.description.$id
   })
 
-  if( textQuery ) {
-    pipeline.push({ $match: filters })
+  if( $text ) {
+    pipeline.push({
+      $match: {
+        $text
+      }
+    })
   }
 
   if( sort ) {
@@ -75,9 +69,9 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
   }
 
-  if( !textQuery && Object.keys(filters).length > 0 ) {
+  if( Object.keys(query).length > 0 ) {
     pipeline.push({
-      $match: unsafe(await traverseDocument(filters, context.description, {
+      $match: unsafe(await traverseDocument(query, context.description, {
         autoCast: true,
         allowOperators: true
       }))
@@ -96,6 +90,7 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     project,
     properties: context.description.properties
   }))
+
 
   const result = await context.model.aggregate(pipeline).toArray()
 
