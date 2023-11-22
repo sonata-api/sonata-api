@@ -12,13 +12,35 @@ export const count = <TDocument extends CollectionDocument<OptionalId<any>>>() =
 ) => {
   const accessControl = useAccessControl(context)
   const { filters } = unsafe(await accessControl.beforeRead(payload))
+  const { $text, ...filtersRest } = filters
 
-  const newFilters = !!filters.$text
-    ? filters
-    : unsafe(await traverseDocument(filters, context.description, {
-      autoCast: true,
-      allowOperators: true
-    }))
+  const traversedFilters = unsafe(await traverseDocument(filtersRest, context.description, {
+    autoCast: true,
+    allowOperators: true
+  }))
 
-  return context.model.countDocuments(newFilters)
+
+  if( $text ) {
+    const pipeline = []
+    if( $text ) {
+      pipeline.push({
+        $match: {
+          $text
+        }
+      })
+    }
+
+    pipeline.push({
+      $match: traversedFilters
+    })
+
+    pipeline.push({
+      $count: 'total'
+    })
+
+    const { total } = await context.model.aggregate(pipeline).next()
+    return total
+  }
+
+  return context.model.countDocuments(traversedFilters)
 }

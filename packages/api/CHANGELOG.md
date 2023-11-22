@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 0.0.75
+
+### Patch Changes
+
+- Fix count function when $text is present
+
 ## 0.0.74
 
 ### Patch Changes

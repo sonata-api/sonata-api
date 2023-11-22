@@ -42,7 +42,7 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     ? unsafe(await accessControl.beforeRead(payload))
     : payload
 
-  const { $text, ...query } = filters
+  const { $text, ...filtersRest } = filters
 
   const pipeline: Document[] = []
   const references = await getReferences(context.description.properties, {
@@ -69,9 +69,9 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
   }
 
-  if( Object.keys(query).length > 0 ) {
+  if( Object.keys(filtersRest).length > 0 ) {
     pipeline.push({
-      $match: unsafe(await traverseDocument(query, context.description, {
+      $match: unsafe(await traverseDocument(filtersRest, context.description, {
         autoCast: true,
         allowOperators: true
       }))
