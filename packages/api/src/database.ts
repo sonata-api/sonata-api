@@ -19,7 +19,14 @@ export const getDatabase = async () => {
       return envUri
     })()
 
-    const client = new MongoClient(mongodbUri)
+    const client = new MongoClient(mongodbUri, {
+      monitorCommands: process.env.NODE_ENV === 'development'
+    })
+
+    if( process.env.NODE_ENV === 'development' ) {
+      client.on('commandStarted', (event) => console.debug(JSON.stringify(event, null, 2)))
+    }
+
     dbMemo = client.db()
   }
 

@@ -91,7 +91,6 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     properties: context.description.properties
   }))
 
-
   const result = await context.model.aggregate(pipeline).toArray()
 
   const documents: typeof result = []
