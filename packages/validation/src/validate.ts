@@ -1,5 +1,5 @@
 import type { Schema } from '@sonata-api/api'
-import type { Description, CollectionProperty } from '@sonata-api/types'
+import type { Description, Property } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
@@ -20,7 +20,7 @@ const getValueType = (value: any) => {
     : typeof value
 }
 
-const getPropertyType = (property: CollectionProperty) => {
+const getPropertyType = (property: Property) => {
   if(
     '$ref' in property
     || 'properties' in property
@@ -61,7 +61,7 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 export const validateProperty = (
   propName: Lowercase<string>,
   what: any,
-  property: CollectionProperty,
+  property: Property,
   options: ValidateOptions = {}
 ) => {
   const { extraneous } = options
@@ -139,7 +139,7 @@ export const validateProperty = (
     }
   }
 
-  else if( property.s$getter ) {
+  else if( property.getter ) {
     return makePropertyError('unmatching', {
       expected: 'getters are read-only',
       got: actualType

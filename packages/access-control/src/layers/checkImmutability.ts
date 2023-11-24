@@ -48,7 +48,7 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
   if(
     immutable
     && fulfilled
-    && ( property.s$inline || currentDocument[propertyName].toString() !== source[propertyName] )
+    && ( property.inline || currentDocument[propertyName].toString() !== source[propertyName] )
   ) {
     return left(ACErrors.ImmutabilityTargetImmutable)
   }

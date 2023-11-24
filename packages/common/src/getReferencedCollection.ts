@@ -1,6 +1,6 @@
-import type { CollectionProperty } from '@sonata-api/types'
+import type { Property } from '@sonata-api/types'
 
-export const getReferencedCollection = (property: CollectionProperty) => {
+export const getReferencedCollection = (property: Property) => {
   const search = [
     'items' in property
       ? property.items

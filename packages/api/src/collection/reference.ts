@@ -80,21 +80,21 @@ export const getReferences = async (
   const references: ReferenceMap = {}
 
   for( const [propName, property] of Object.entries(properties) ) {
-    const referencedCollection = '$ref' in property
-      ? property.$ref
+    const refProperty = '$ref' in property
+      ? property
       : 'items' in property
         ? '$ref' in property.items
-          ? property.items.$ref
+          ? property.items
           : null
         : null
 
     const reference: Reference = {}
 
-    if( depth === 2 || (property.s$populate && property.s$populate.length === 0) ) {
+    if( depth === 2 || (refProperty && refProperty.populate && refProperty.populate.length === 0) ) {
       continue
     }
 
-    if( !referencedCollection ) {
+    if( !refProperty ) {
       const entrypoint = 'items' in property
         ? property.items
         : property
@@ -113,20 +113,20 @@ export const getReferences = async (
       }
 
     } else {
-      const description = unsafe(await getCollectionAsset(referencedCollection, 'description'))
+      const description = unsafe(await getCollectionAsset(refProperty.$ref, 'description'))
       reference.deepReferences = await getReferences(description.properties, {
         depth: depth + 1
       })
 
-      if( !property.s$inline ) {
+      if( !refProperty.inline ) {
         reference.populatedProperties = [
-          ...property.s$indexes || description.indexes!,
-          ...property.s$populate || []
+          ...refProperty.indexes || description.indexes!,
+          ...refProperty.populate || []
         ]
       }
     }
 
-    if( !referencedCollection && !reference.deepReferences ) {
+    if( !refProperty?.$ref && !reference.deepReferences ) {
       continue
     }
 
@@ -134,8 +134,8 @@ export const getReferences = async (
     if( 'items' in property ) {
       reference.isArray = true
     }
-    if( referencedCollection ) {
-      reference.referencedCollection = referencedCollection
+    if( refProperty?.$ref ) {
+      reference.referencedCollection = refProperty.$ref
     }
 
     references[propName] = reference

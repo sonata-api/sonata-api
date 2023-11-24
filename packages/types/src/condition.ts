@@ -1,4 +1,4 @@
-import { Description, PropertiesWithId } from './collection'
+import { Description, PropertiesWithId } from './description'
 
 type FinalCondition<TDescription extends Description> = {
   operator:

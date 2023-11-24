@@ -52,13 +52,13 @@ export const [File, description] = defineDescription({
     },
     link: {
       type: 'string',
-      s$getter: (value: any) => {
+      getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
       }
     },
     download_link: {
       type: 'string',
-      s$getter: (value: any) => {
+      getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
       }
     }

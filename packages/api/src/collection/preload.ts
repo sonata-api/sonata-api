@@ -1,4 +1,4 @@
-import type { Description, CollectionProperty } from '@sonata-api/types'
+import type { Description, Property } from '@sonata-api/types'
 import { getReferencedCollection, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import * as presets from '../presets'
@@ -83,22 +83,22 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
       const reference = getReferencedCollection(property)
 
       if( reference ) {
-        property.s$isReference = true
-        property.s$isFile = reference.$ref === 'file'
-        property.s$referencedCollection = reference.$ref
+        property.isReference = true
+        property.isFile = reference.$ref === 'file'
+        property.referencedCollection = reference.$ref
 
-        if( !property.s$indexes && !property.s$inline ) {
+        if( !reference.indexes && !reference.inline ) {
           const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
           if( isLeft(referenceDescriptionEither) ) {
             throw new Error(`description of ${reference.$ref} not found`)
           }
 
           const referenceDescription = unwrapEither(referenceDescriptionEither)
-          const indexes = property.s$indexes = referenceDescription.indexes?.slice()
+          const indexes = reference.indexes = referenceDescription.indexes?.slice()
 
           if( !indexes ) {
             throw new Error(
-              `neither s$indexes or s$inline are present on reference property or indexes is set on target description on ${description.$id}.${key}`
+              `neither indexes or inline are present on reference property or indexes is set on target description on ${description.$id}.${key}`
             )
           }
         }
@@ -110,13 +110,13 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
         })
       }
 
-      if( property.s$getter ) {
+      if( property.getter ) {
         return {
           ...await a,
           [key]: {
             ...property,
             readOnly: true,
-            s$isGetter: true
+            isGetter: true
           }
         }
       }
@@ -134,7 +134,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
         ...await a,
         [key]: property
       }
-    }, {} as Promise<Record<Lowercase<string>, CollectionProperty>>)
+    }, {} as Promise<Record<Lowercase<string>, Property>>)
   }
 
   if( memoize ) {

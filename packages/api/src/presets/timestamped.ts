@@ -3,13 +3,13 @@ export const timestamped = <const>{
     created_at: {
       type: 'string',
       format: 'date-time',
-      s$noForm: true,
+      noForm: true,
       readOnly: true
     },
     updated_at: {
       type: 'string',
       format: 'date-time',
-      s$noForm: true,
+      noForm: true,
       readOnly: true
     }
   }

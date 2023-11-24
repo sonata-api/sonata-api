@@ -28,7 +28,7 @@ describe('Traverse document', () => {
               },
               image: {
                 $ref: 'file',
-                s$isReference: true
+                isReference: true
               },
               status: {
                 type: 'string'
@@ -66,7 +66,7 @@ describe('Traverse document', () => {
         },
         image: {
           $ref: 'file',
-          s$isReference: true
+          isReference: true
         },
         status: {
           type: 'string'

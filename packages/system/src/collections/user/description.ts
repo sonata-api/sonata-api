@@ -33,13 +33,13 @@ export const [User, description] = defineDescription({
     },
     first_name: {
       type: 'string',
-      s$getter: (document: any) => {
+      getter: (document: any) => {
         return `${document.full_name?.split(' ')[0] || 'N/A'}`
       }
     },
     last_name: {
       type: 'string',
-      s$getter: (document: any) => {
+      getter: (document: any) => {
         return `${document.full_name?.split(' ')[1]}`
       }
     },
@@ -54,24 +54,24 @@ export const [User, description] = defineDescription({
     },
     email: {
       type: 'string',
-      s$inputType: 'email',
-      s$unique: true,
+      inputType: 'email',
+      unique: true,
     },
     password: {
       type: 'string',
-      s$inputType: 'password',
-      s$hidden: true,
+      inputType: 'password',
+      hidden: true,
     },
     phone: {
       type: 'string',
-      s$mask: '(##) #####-####'
+      mask: '(##) #####-####'
     },
     picture: {
       $ref: 'file',
-      s$accept: [
+      accept: [
         'image/*',
       ],
-      s$populate: [
+      populate: [
         'owner'
       ]
     },
@@ -85,9 +85,9 @@ export const [User, description] = defineDescription({
     resources_usage: {
       type: 'object',
       additionalProperties: {
-        $ref: 'resourceUsage'
+        $ref: 'resourceUsage',
+        inline: true
       },
-      s$inline: true
     },
     updated_at: {
       type: 'string',

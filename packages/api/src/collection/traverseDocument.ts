@@ -1,4 +1,4 @@
-import type { Description, CollectionProperty } from '@sonata-api/types'
+import type { Description, Property } from '@sonata-api/types'
 import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
 import { left, right, isLeft, unwrapEither, pipe, type Either } from '@sonata-api/common'
@@ -27,14 +27,14 @@ export type TraversePipe = {
     value: any,
     target: any,
     propName: string,
-    property: CollectionProperty,
+    property: Property,
     options: TraverseOptions
   ) => any
 }
 
-const getProperty = (propertyName: Lowercase<string>, parentProperty: CollectionProperty | Description) => {
+const getProperty = (propertyName: Lowercase<string>, parentProperty: Property | Description) => {
   if( propertyName === '_id' ) {
-    return <CollectionProperty>{
+    return <Property>{
       type: 'string'
     }
   }
@@ -59,10 +59,10 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Collection
   }
 }
 
-const autoCast = (value: any, target: any, propName: string, property: CollectionProperty, options?: TraverseOptions): any => {
+const autoCast = (value: any, target: any, propName: string, property: Property, options?: TraverseOptions): any => {
   switch( typeof value ) {
     case 'string': {
-      if( property.s$isReference ) {
+      if( property.isReference ) {
         return ObjectId.isValid(value)
           ? new ObjectId(value)
           : value
@@ -122,15 +122,15 @@ const autoCast = (value: any, target: any, propName: string, property: Collectio
   return value
 }
 
-const getters = (value: any, target: any, _propName: string, property: CollectionProperty) => {
-  if( property.s$getter ) {
-    return property.s$getter(target)
+const getters = (value: any, target: any, _propName: string, property: Property) => {
+  if( property.getter ) {
+    return property.getter(target)
   }
 
   return value
 }
 
-const validate = (value: any, _target: any, propName: string, property: CollectionProperty) => {
+const validate = (value: any, _target: any, propName: string, property: Property) => {
   const error = validateProperty(propName as Lowercase<string>, value, property)
 
   if( error ) {
@@ -144,7 +144,7 @@ const validate = (value: any, _target: any, propName: string, property: Collecti
 
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   target: TRecursionTarget,
-  parent: CollectionProperty | Description,
+  parent: Property | Description,
   options: TraverseOptions & TraversePipe
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
@@ -166,7 +166,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     if( options.autoCast && key === '_id' ) {
       entries.push([
         key,
-        autoCast(value, target, key, { $ref: '', s$isReference: true }, {})
+        autoCast(value, target, key, { $ref: '', isReference: true }, {})
       ])
       continue
     }
@@ -218,9 +218,9 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
     if( property ) {
       if( options.recurseReferences ) {
-        const propCast = property as CollectionProperty
-        if( propCast.s$isReference && value && !(value instanceof ObjectId) ) {
-          const targetDescriptionEither = await getCollectionAsset(propCast.s$referencedCollection!, 'description')
+        const propCast = property as Property
+        if( propCast.isReference && value && !(value instanceof ObjectId) ) {
+          const targetDescriptionEither = await getCollectionAsset(propCast.referencedCollection!, 'description')
           if( isLeft(targetDescriptionEither) ) {
             return left(unwrapEither(targetDescriptionEither))
           }

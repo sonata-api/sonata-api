@@ -19,7 +19,7 @@ export const normalizeProjection = <
   }
 
   const projection = target.reduce((a, key) => {
-    if( description.properties[key as Lowercase<string>]?.s$hidden ) {
+    if( description.properties[key as Lowercase<string>]?.hidden ) {
       return a
     }
 

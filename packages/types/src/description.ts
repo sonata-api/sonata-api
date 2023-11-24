@@ -148,58 +148,6 @@ export type Description<TDescription extends Description=any> = {
   individualActions?: CollectionActions<TDescription>
 
   search?: SearchOptions
-  properties: Record<Lowercase<string>, CollectionProperty>
+  properties: Record<Lowercase<string>, Property>
 }
 
-export type CollectionProperty = Property & {
-  [P in keyof CollectionPropertyAux as `s$${P}`]: CollectionPropertyAux[P]
-}
-
-export type PropertyElement =
-  | 'select'
-  | 'checkbox'
-  | 'radio'
-  | 'textarea'
-
-export type PropertyInputType =
-  | 'text'
-  | 'email'
-  | 'password'
-  | 'search'
-  | 'time'
-  | 'month'
-
-type CollectionPropertyAux = {
-  icon?: string
-  element?: PropertyElement
-  inputType?: PropertyInputType
-  placeholder?: string
-  hint?: string
-  translate?: boolean
-
-  mask?: string|ReadonlyArray<string>
-  form?: ReadonlyArray<string>
-
-  focus?: boolean
-  noLabel?: boolean
-  noForm?: boolean
-  hidden?: boolean
-  purge?: boolean
-  unique?: boolean
-
-  /** @see SvFile */
-  accept?: ReadonlyArray<string>
-  componentProps?: Record<string, any>
-
-  isReference?: boolean
-  isFile?: boolean
-  isGetter?: boolean
-  referencedCollection?: string
-
-  indexes?: ReadonlyArray<string>
-  populate?: ReadonlyArray<string>
-  select?: ReadonlyArray<string>
-  inline?: boolean
-
-  getter?: (value: any) => any
-}

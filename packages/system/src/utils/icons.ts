@@ -4,7 +4,7 @@ export const extractIcons = (target: Record<string, any>): string[] => {
   }
 
   const foundIcons: string[] = []
-  const icon = target.s$icon || target.icon
+  const icon = target.icon || target.icon
 
   if( icon ) {
     foundIcons.push(icon)
