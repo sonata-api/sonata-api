@@ -1,5 +1,10 @@
-import type { Property, RefProperty } from '@sonata-api/types'
+import type { Property, RefProperty, ArrayProperty } from '@sonata-api/types'
 
-export const isReference = (property: Property): property is RefProperty => {
+type ArrayOfRefs = Omit<ArrayProperty, 'items'> & {
+  items: RefProperty
+}
+
+export const isReference = (property: Property): property is RefProperty | ArrayOfRefs => {
   return !!property.isReference
 }
+

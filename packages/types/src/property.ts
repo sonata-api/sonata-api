@@ -1,4 +1,4 @@
-import type { Description } from '.'
+import type { Description, Condition } from '.'
 
 export type PropertyElement =
   | 'select'
@@ -34,6 +34,8 @@ export type RefProperty = {
   select?: ReadonlyArray<string>
   inline?: boolean
   form?: ReadonlyArray<string>
+
+  constraints?: Condition<any>
 }
 
 export type FileProperty = Omit<RefProperty, '$ref'> & {
@@ -83,7 +85,6 @@ export type NumberProperty = {
   exclusiveMaximum?: number
   default?: number
 
-
   placeholder?: string
 }
 
@@ -92,7 +93,7 @@ export type BooleanProperty = {
   default?: boolean
 }
 
-export type PropertyAux =
+export type MixedProperty =
   | RefProperty
   | FileProperty
   | EnumProperty
@@ -102,7 +103,7 @@ export type PropertyAux =
   | NumberProperty
   | BooleanProperty
 
-export type Property = PropertyAux & {
+export type Property = MixedProperty & {
   description?: string
   readOnly?: boolean
   focus?: boolean

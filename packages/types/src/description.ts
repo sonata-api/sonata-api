@@ -1,4 +1,4 @@
-import type { Property } from './jsonschema'
+import type { Property } from './property'
 import type { Condition } from './condition'
 
 export type PropertiesWithId<TDescription extends Description> =
