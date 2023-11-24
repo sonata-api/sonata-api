@@ -53,7 +53,7 @@ export type FormLayoutField<TDescription extends Description> = {
 
 export type TableLayout<TDescription extends Description> = {
   actions: Partial<Record<keyof TDescription['individualActions'], {
-    button?: boolean
+    button?: boolean | Condition<TDescription>
     if?: Condition<TDescription>
   }>>
 }
