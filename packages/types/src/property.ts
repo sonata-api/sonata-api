@@ -1,4 +1,4 @@
-import type { Description, Condition } from '.'
+import type { Description, Condition, RequiredProperties } from '.'
 
 export type PropertyElement =
   | 'select'
@@ -21,7 +21,7 @@ export type PropertyFormat =
 
 export type JsonSchema<TDescription extends Description=any> = {
   $id: string
-  required?: ReadonlyArray<keyof TDescription['properties']>
+  required?: RequiredProperties<TDescription>
   presets?: ReadonlyArray<keyof TDescription['properties']>
   properties: Record<Lowercase<string>, Property>
 }
@@ -91,6 +91,10 @@ export type NumberProperty = {
 export type BooleanProperty = {
   type: 'boolean'
   default?: boolean
+}
+
+export type ArrayOfRefs = Omit<ArrayProperty, 'items'> & {
+  items: RefProperty
 }
 
 export type MixedProperty =

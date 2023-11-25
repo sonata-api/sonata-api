@@ -98,6 +98,11 @@ export type SearchOptions = {
   placeholder?: string
 }
 
+export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Record<
+  PropertiesWithId<TDescription>,
+  Condition<TDescription> | boolean
+>
+
 export type Description<TDescription extends Description=any> = {
   $id: CollectionId
   title?: string
@@ -125,7 +130,8 @@ export type Description<TDescription extends Description=any> = {
   // takes an array of something
   route?: ReadonlyArray<string>
   presets?: ReadonlyArray<CollectionPresets>
-  required?: ReadonlyArray<PropertiesWithId<TDescription>>
+  required?: RequiredProperties<TDescription>
+
   table?: ReadonlyArray<PropertiesWithId<TDescription>>
   tableMeta?: ReadonlyArray<PropertiesWithId<TDescription>>
 

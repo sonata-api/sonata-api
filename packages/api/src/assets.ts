@@ -1,7 +1,7 @@
 import type { AssetType, Context, Collection, CollectionStructure } from './types'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
-import { isGranted, ACErrors } from '@sonata-api/access-control'
+import { isGranted, ACErrors, ACProfile } from '@sonata-api/access-control'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
 const collectionMemo: Record<string, CollectionStructure> = {}
@@ -96,7 +96,7 @@ export const getFunction = async <
 >(
   collectionName: TCollectionName,
   functionName: TFunctionName,
-  acProfile?: UserACProfile,
+  acProfile?: ACProfile,
 ) => {
   if( acProfile ) {
     if( !await isGranted(String(collectionName), String(functionName), acProfile) ) {

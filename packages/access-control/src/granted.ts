@@ -1,4 +1,4 @@
-import type { AccessControl, Role } from './types'
+import type { AccessControl, Role, ACProfile } from './types'
 import { getCollection, getCollections } from '@sonata-api/api'
 import { deepMerge } from '@sonata-api/common'
 import { DEFAULT_ACCESS_CONTROL } from './constants'
@@ -52,17 +52,10 @@ export const getAvailableRoles = async () => {
   return availableRolesMemo
 }
 
-export const isGranted = async <
-  TCollectionName extends string,
-  TFunctionName extends string,
-  const TACProfile extends {
-    roles?: string[]
-    allowedFunctions?: string[]
-  }
->(
-  collectionName: TCollectionName,
-  functionName: TFunctionName,
-  acProfile: TACProfile
+export const isGranted = async (
+  collectionName: keyof Collections,
+  functionName: string,
+  acProfile: ACProfile
 ) => {
   const accessControl = await getAccessControl(collectionName)
   const userRoles = (acProfile.roles || ['guest'])
@@ -78,8 +71,8 @@ export const isGranted = async <
       return false
     }
 
-    const allowedInToken = !acProfile.allowedFunctions || (
-      acProfile.allowedFunctions.includes(`${collectionName}@${functionName}`)
+    const allowedInToken = !acProfile.allowed_functions || (
+      acProfile.allowed_functions.includes(`${collectionName}@${functionName}`)
     )
 
     const result = allowedInToken && (

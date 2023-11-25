@@ -5,6 +5,7 @@ import { validate } from '../dist'
 import {
   plainCandidate,
   plainDescription,
+  conditionalDescription,
   deepCandidate,
   deepDescription,
   personValidator,
@@ -78,6 +79,13 @@ describe('Validate', () => {
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)
     assert(error.code === 'INVALID_PROPERTIES')
+  })
+
+  it('conditional required', () => {
+    const validEither = validate({ id: 10 }, conditionalDescription)
+    const invalidEither = validate({ id: 9 }, conditionalDescription)
+    assert(isRight(validEither))
+    assert(isLeft(invalidEither))
   })
 
 })

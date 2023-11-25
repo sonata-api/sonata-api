@@ -1,6 +1,6 @@
 import type { Schema } from '@sonata-api/api'
 import type { Description, Property } from '@sonata-api/types'
-import { isLeft, left, right, unwrapEither } from '@sonata-api/common'
+import { isLeft, left, right, unwrapEither, evaluateCondition } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
   PropertyValidationErrorType,
@@ -147,28 +147,75 @@ export const validateProperty = (
   }
 }
 
-export const validateWholeness = (description: Omit<Description, '$id'>, what: Record<Lowercase<string>, any>) => {
+export const checkForUndefined = (property: Property, propertyName: Lowercase<string>, what: Record<Lowercase<string>, any>) => {
+  if( ('type' in property && property.type === 'boolean') || property.readOnly ) {
+    return
+  }
+
+  return what[propertyName] === undefined
+}
+
+export const validateWholeness = (what: Record<Lowercase<string>, any>, description: Omit<Description, '$id'>) => {
+  const missingProps: string[] = []
+
   const required = description.required
     ? description.required
-    : Object.entries(description.properties).reduce((a, [propertyName, property]) => {
-      return property.readOnly
-        ? a
-        : [...a, propertyName]
-    }, [] as string[])
+    : Object.keys(description.properties)
 
-  for( const propName of required ) {
-    const property = description.properties[propName as any]
-    if( ('type' in property && property.type === 'boolean') || property.readOnly ) {
-      continue
-    }
+  if( Array.isArray(required) ) {
+    for( const propName of required ) {
+      const isMissing = checkForUndefined(
+        description.properties[propName as keyof typeof description.properties],
+        propName as Lowercase<string>,
+        what
+      )
 
-    if( what[propName as Lowercase<string>] === undefined ) {
-      return makeValidationError({
-        code: ValidationErrorCodes.MissingProperties,
-        errors: Object.fromEntries(required.filter((prop) => !Object.keys(what).includes(prop as string)).map((error) => [error, { type: 'missing' }]))
-      })
+      if( isMissing ) {
+        missingProps.push(propName)
+      }
     }
   }
+
+  else for( const propName in required ) {
+    const requiredProp = required[propName]
+    if( typeof requiredProp === 'boolean' ) {
+      if( !requiredProp ) {
+        continue
+      }
+    }
+
+    if( typeof requiredProp === 'object' ) {
+      const result = evaluateCondition(what, requiredProp)
+      if( !result.satisfied ) {
+        continue
+      }
+    }
+
+    const isMissing = checkForUndefined(
+      description.properties[propName as keyof typeof description.properties],
+      propName as Lowercase<string>,
+      what
+    )
+
+    if( isMissing ) {
+      missingProps.push(propName)
+    }
+  }
+
+  if( missingProps.length > 0 ) {
+    const requiredNames = Array.isArray(required)
+      ? required
+      : Object.keys(required)
+
+    return makeValidationError({
+      code: ValidationErrorCodes.MissingProperties,
+      errors: Object.fromEntries(
+        requiredNames
+          .filter((prop) => !Object.keys(what).includes(prop))
+          .map((error) => [error, { type: 'missing' }])
+    )})
+  }
+
 }
 
 export const validate = <
@@ -186,7 +233,7 @@ export const validate = <
     }))
   }
 
-  const wholenessError = validateWholeness(description, what)
+  const wholenessError = validateWholeness(what, description)
   if( wholenessError ) {
     return left(wholenessError)
   }

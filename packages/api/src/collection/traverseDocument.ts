@@ -294,7 +294,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
       descriptionCopy.required = options.validateRequired
     }
 
-    const wholenessError = validateWholeness(descriptionCopy, what)
+    const wholenessError = validateWholeness(what, descriptionCopy)
     if( wholenessError ) {
       return left(wholenessError)
     }

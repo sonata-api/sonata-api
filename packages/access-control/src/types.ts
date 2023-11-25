@@ -31,3 +31,8 @@ export type AccessControl<
   TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
 > = InternalAccessControl<TCollectionStructure, TAccessControl>
 
+
+export type ACProfile = {
+  readonly roles?: string[]
+  readonly allowed_functions?: string[]
+}
