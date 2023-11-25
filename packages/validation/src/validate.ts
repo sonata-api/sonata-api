@@ -1,6 +1,6 @@
 import type { Schema } from '@sonata-api/api'
 import type { Description, Property } from '@sonata-api/types'
-import { isLeft, left, right, unwrapEither, evaluateCondition } from '@sonata-api/common'
+import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
   PropertyValidationErrorType,
@@ -147,60 +147,12 @@ export const validateProperty = (
   }
 }
 
-export const checkForUndefined = (property: Property, propertyName: Lowercase<string>, what: Record<Lowercase<string>, any>) => {
-  if( ('type' in property && property.type === 'boolean') || property.readOnly ) {
-    return
-  }
-
-  return what[propertyName] === undefined
-}
-
 export const validateWholeness = (what: Record<Lowercase<string>, any>, description: Omit<Description, '$id'>) => {
-  const missingProps: string[] = []
-
   const required = description.required
     ? description.required
     : Object.keys(description.properties)
 
-  if( Array.isArray(required) ) {
-    for( const propName of required ) {
-      const isMissing = checkForUndefined(
-        description.properties[propName as keyof typeof description.properties],
-        propName as Lowercase<string>,
-        what
-      )
-
-      if( isMissing ) {
-        missingProps.push(propName)
-      }
-    }
-  }
-
-  else for( const propName in required ) {
-    const requiredProp = required[propName]
-    if( typeof requiredProp === 'boolean' ) {
-      if( !requiredProp ) {
-        continue
-      }
-    }
-
-    if( typeof requiredProp === 'object' ) {
-      const result = evaluateCondition(what, requiredProp)
-      if( !result.satisfied ) {
-        continue
-      }
-    }
-
-    const isMissing = checkForUndefined(
-      description.properties[propName as keyof typeof description.properties],
-      propName as Lowercase<string>,
-      what
-    )
-
-    if( isMissing ) {
-      missingProps.push(propName)
-    }
-  }
+  const missingProps = getMissingProperties(what, description, required)
 
   if( missingProps.length > 0 ) {
     const requiredNames = Array.isArray(required)
@@ -211,7 +163,7 @@ export const validateWholeness = (what: Record<Lowercase<string>, any>, descript
       code: ValidationErrorCodes.MissingProperties,
       errors: Object.fromEntries(
         requiredNames
-          .filter((prop) => !Object.keys(what).includes(prop))
+          .filter((prop) => !Object.keys(what).includes(prop as string))
           .map((error) => [error, { type: 'missing' }])
     )})
   }

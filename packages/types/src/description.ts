@@ -98,7 +98,7 @@ export type SearchOptions = {
   placeholder?: string
 }
 
-export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Record<
+export type RequiredProperties<TDescription extends Description> = (ReadonlyArray<PropertiesWithId<TDescription>> & Array<PropertiesWithId<TDescription>>) | Record<
   PropertiesWithId<TDescription>,
   Condition<TDescription> | boolean
 >
