@@ -6,24 +6,24 @@ export const getMissingProperties = (
   description: Omit<Description, '$id'>,
   required: Description['required']
 ) => {
-  const missingProps: string[] = []
+  const missingProps: Lowercase<string>[] = []
 
   if( Array.isArray(required) ) {
-    for( const propName of required ) {
+    for( const propName of (required as Lowercase<string>[]) ) {
       const isMissing = checkForUndefined(
         description.properties[propName as keyof typeof description.properties],
-        propName as Lowercase<string>,
+        propName,
         what
       )
 
       if( isMissing ) {
-        missingProps.push(propName as string)
+        missingProps.push(propName)
       }
     }
   }
 
   else for( const propName in required ) {
-    const requiredProp = required[propName]
+    const requiredProp = required[propName as any]
     if( typeof requiredProp === 'boolean' ) {
       if( !requiredProp ) {
         continue
@@ -44,7 +44,7 @@ export const getMissingProperties = (
     )
 
     if( isMissing ) {
-      missingProps.push(propName)
+      missingProps.push(propName as Lowercase<string>)
     }
   }
 
