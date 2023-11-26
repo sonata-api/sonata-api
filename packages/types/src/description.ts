@@ -98,10 +98,10 @@ export type SearchOptions = {
   placeholder?: string
 }
 
-export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Record<
+export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
   PropertiesWithId<TDescription>,
   Condition<TDescription> | boolean
->
+>>
 
 export type Description<TDescription extends Description=any> = {
   $id: CollectionId

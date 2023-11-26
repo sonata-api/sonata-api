@@ -59,7 +59,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   }
 
   if( !context.token.user._id ) {
-    user.self_registered = true
+    (user.self_registered as boolean) = true
   }
 
   const { insertedId } = await context.model.insertOne(user as any)

@@ -5,7 +5,7 @@ import { description, type File } from './description'
 
 type Props = {
   what: { content: string } & Pick<WithId<File>,
-    '_id'
+    | '_id'
     | 'filename'
     | 'owner'
     | 'absolute_path'
@@ -17,6 +17,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   const what = Object.assign({}, props.what)
   what.owner = context.token?.user._id
   const { STORAGE_PATH } = process.env
+
 
   const extension = what.filename?.split('.').pop()
   if( !extension ) {
@@ -33,7 +34,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   }
 
   const filenameHash = createHash('sha1')
-    .update(what.filename + Date.now())
+    .update(what.filename! + Date.now())
     .digest('hex')
 
   what.absolute_path = `${STORAGE_PATH}/${filenameHash}.${extension}`
