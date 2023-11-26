@@ -1,5 +1,5 @@
 import type { Description, Property } from '@sonata-api/types'
-import { getReferencedCollection, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
+import { getReferenceProperty, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import * as presets from '../presets'
 
@@ -80,7 +80,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
   if( description.properties ) {
     description.properties = await Object.entries(description.properties).reduce(async (a, [key, _property]) => {
       const property = Object.assign({}, _property)
-      const reference = getReferencedCollection(property)
+      const reference = getReferenceProperty(property)
 
       if( reference ) {
         property.isReference = true

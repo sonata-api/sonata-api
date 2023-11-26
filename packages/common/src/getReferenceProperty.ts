@@ -1,6 +1,6 @@
 import type { Property } from '@sonata-api/types'
 
-export const getReferencedCollection = (property: Property) => {
+export const getReferenceProperty = (property: Property) => {
   const search = [
     'items' in property
       ? property.items
@@ -13,6 +13,6 @@ export const getReferencedCollection = (property: Property) => {
 
   const reference = search.find((_) => !!_)
   return reference && '$ref' in reference
-    ? { ...property, ...reference }
+    ? reference
     : null
 }

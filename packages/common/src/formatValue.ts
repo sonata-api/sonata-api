@@ -1,6 +1,6 @@
 import type { Property } from '@sonata-api/types'
 import { formatDateTime } from './string'
-import { getReferencedCollection } from '.'
+import { getReferenceProperty } from '.'
 
 export const formatValue = (value: any, key: string, property?: Property, index?: string): string => {
   if( Array.isArray(value) ) {
@@ -12,7 +12,7 @@ export const formatValue = (value: any, key: string, property?: Property, index?
       return value
     }
 
-    const refProperty = getReferencedCollection(property)
+    const refProperty = getReferenceProperty(property)
     if( refProperty ) {
       const firstIndex = index || refProperty.indexes?.[0]
       return firstIndex && value?.[firstIndex]
