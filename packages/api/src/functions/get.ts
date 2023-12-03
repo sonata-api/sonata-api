@@ -11,15 +11,17 @@ import {
   fill
 } from '../collection'
 
+export type GetPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
+  filters?: Filters<TDocument>
+  project?: Projection<TDocument>
+}
+
 export type GetOptions = {
   bypassAccessControl?: boolean
 }
 
 export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: {
-    filters?: Filters<TDocument>,
-    project?: Projection<TDocument>
-  },
+  payload: GetPayload<TDocument>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never,

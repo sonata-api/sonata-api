@@ -1,5 +1,17 @@
 # @sonata-api/common
 
+## 0.1.1
+
+### Patch Changes
+
+- Fix evaluateCondition bug
+
+## 0.1.0
+
+### Minor Changes
+
+- New description
+
 ## 0.0.20
 
 ### Patch Changes

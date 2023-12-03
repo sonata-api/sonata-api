@@ -1,5 +1,16 @@
 # @sonata-api/mailing
 
+## 1.0.0
+
+### Minor Changes
+
+- New description
+
+### Patch Changes
+
+- Updated dependencies
+  - @sonata-api/common@0.1.0
+
 ## 0.0.9
 
 ### Patch Changes

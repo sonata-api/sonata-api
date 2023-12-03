@@ -4,8 +4,12 @@ import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
+export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
+  filters?: Filters<TDocument>
+}
+
 export const count = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: { filters?: Filters<TDocument> },
+  payload: CountPayload<TDocument>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never

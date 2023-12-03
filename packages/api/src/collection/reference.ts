@@ -1,4 +1,4 @@
-import type { ObjectProperty } from '@sonata-api/types'
+import type { FixedObjectProperty } from '@sonata-api/types'
 import { unsafe } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import { prepareCollectionName } from '../database'
@@ -14,7 +14,7 @@ export type BuildLookupOptions = {
   maxDepth?: number
   memoize?: string
   project?: string[]
-  properties?: NonNullable<ObjectProperty['properties']>
+  properties?: NonNullable<FixedObjectProperty['properties']>
 }
 
 export type Reference = {
@@ -47,7 +47,7 @@ const narrowLookupPipelineProjection = (pipeline: Record<string, any>[], project
   })
 }
 
-const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<ObjectProperty['properties']>) => {
+const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<FixedObjectProperty['properties']>) => {
   const $group = Object.keys(properties).reduce((a, propName) => {
     return {
       ...a,
@@ -63,7 +63,7 @@ const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<Obj
 }
 
 export const getReferences = async (
-  properties: NonNullable<ObjectProperty['properties']>,
+  properties: NonNullable<FixedObjectProperty['properties']>,
   options?: GetReferenceOptions
 ) => {
   const {

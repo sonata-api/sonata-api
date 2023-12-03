@@ -1,10 +1,9 @@
 import type { Description, Condition, RequiredProperties } from '.'
 
-export type PropertyElement =
-  | 'select'
+export type PropertyArrayElement =
   | 'checkbox'
   | 'radio'
-  | 'textarea'
+  | 'select'
 
 export type PropertyInputType =
   | 'text'
@@ -34,6 +33,7 @@ export type RefProperty = {
   select?: ReadonlyArray<string>
   inline?: boolean
   form?: ReadonlyArray<string>
+  purge?: boolean
 
   constraints?: Condition<any>
 }
@@ -46,6 +46,7 @@ export type FileProperty = Omit<RefProperty, '$ref'> & {
 export type EnumProperty = {
   enum: ReadonlyArray<any>
   default?: any
+  element?: PropertyArrayElement
 }
 
 export type ArrayProperty = {
@@ -54,14 +55,21 @@ export type ArrayProperty = {
   uniqueItems?: boolean
   minItems?: number
   maxItems?: number
+  element?: PropertyArrayElement
 }
 
-export type ObjectProperty = {
-  type: 'object'
-  properties?: Record<string, Property>
-  additionalProperties?: Property
-  default?: any
+export type FixedObjectProperty = {
+  properties: Record<string, Property>
   form?: ReadonlyArray<string>
+}
+
+export type VariableObjectProperty = {
+  additionalProperties?: Property
+}
+
+export type ObjectProperty = (FixedObjectProperty | VariableObjectProperty) & {
+  type: 'object'
+  default?: any
 }
 
 export type StringProperty = {
@@ -73,12 +81,14 @@ export type StringProperty = {
   mask?: string | ReadonlyArray<string>
 
   placeholder?: string
-  element?: PropertyElement
+  element?: 'textarea'
   inputType?: PropertyInputType
 }
 
 export type NumberProperty = {
-  type: 'number' | 'integer'
+  type:
+    | 'number'
+    | 'integer'
   minimum?: number
   maximum?: number
   exclusiveMinimum?: number
@@ -91,6 +101,7 @@ export type NumberProperty = {
 export type BooleanProperty = {
   type: 'boolean'
   default?: boolean
+  element?: 'checkbox'
 }
 
 export type ArrayOfRefs = Omit<ArrayProperty, 'items'> & {
@@ -107,7 +118,7 @@ export type MixedProperty =
   | NumberProperty
   | BooleanProperty
 
-export type Property = MixedProperty & {
+export type PropertyBase = {
   description?: string
   readOnly?: boolean
   focus?: boolean
@@ -120,7 +131,6 @@ export type Property = MixedProperty & {
   noForm?: boolean
   noLabel?: boolean
   hidden?: boolean
-  purge?: boolean
   unique?: boolean
 
   isReference?: boolean
@@ -130,3 +140,5 @@ export type Property = MixedProperty & {
 
   getter?: (value: any) => any
 }
+
+export type Property = MixedProperty & PropertyBase

@@ -11,7 +11,7 @@ const equalOrContains = (term1: any, term2: any) => {
   }
 
   if( Array.isArray(term2) ) {
-    return term1.includes(term1)
+    return term2.includes(term1)
   }
 }
 
@@ -25,7 +25,7 @@ const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
     const { operator, term2 } = condition
     switch( operator ) {
       case 'equal': return term1 === term2
-      case 'in': return equalOrContains(term1, term2)
+      case 'in': return !!equalOrContains(term1, term2)
       case 'gt': return term1 > term2
       case 'lt': return term1 < term2
       case 'gte': return term1 >= term2

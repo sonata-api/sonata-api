@@ -1,5 +1,17 @@
 # @sonata-api/http
 
+## 1.0.0
+
+### Minor Changes
+
+- New description
+
+### Patch Changes
+
+- Updated dependencies
+  - @sonata-api/access-control@1.0.0
+  - @sonata-api/common@0.1.0
+
 ## 0.0.17
 
 ### Patch Changes

@@ -3,10 +3,12 @@ import type { CollectionDocument, Filters } from './types'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument, cascadingRemove } from '../collection'
 
+export type RemoveAllPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
+  filters: Filters<TDocument>
+}
+
 export const removeAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: {
-    filters: Filters<TDocument>
-  },
+  payload: RemoveAllPayload<TDocument>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never

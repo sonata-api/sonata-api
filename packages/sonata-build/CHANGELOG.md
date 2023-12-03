@@ -1,5 +1,17 @@
 # sonata-build
 
+## 1.0.0
+
+### Minor Changes
+
+- New description
+
+### Patch Changes
+
+- Updated dependencies
+  - @sonata-api/common@0.1.0
+  - @sonata-api/system@1.0.0
+
 ## 0.0.13
 
 ### Patch Changes

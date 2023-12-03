@@ -5,11 +5,13 @@ import { useAccessControl } from '@sonata-api/access-control'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
+export type InsertPayload<TDocument extends CollectionDocument<any>> = {
+  what: What<TDocument & { _id?: any }>
+  project?: Projection<TDocument>
+}
+
 export const insert = <TDocument extends CollectionDocument<any>>() => async <TContext>(
-  payload: {
-    what: What<TDocument & { _id?: any }>,
-    project?: Projection<TDocument>
-  },
+  payload: InsertPayload<TDocument>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never
