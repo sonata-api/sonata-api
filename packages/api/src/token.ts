@@ -1,7 +1,7 @@
 import { promisify } from 'util'
 import jwt, { Secret, SignOptions } from 'jsonwebtoken'
 
-const asyncSign = promisify<string|object|Buffer, Secret, SignOptions>(jwt.sign)
+const asyncSign = promisify<string | object | Buffer, Secret, SignOptions>(jwt.sign)
 const asyncVerify = promisify<string, Secret, any>(jwt.verify)
 
 export const EXPIRES_IN = 36000

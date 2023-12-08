@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.1.2
+
+### Patch Changes
+
+- Redo date formating
+
 ## 0.1.1
 
 ### Patch Changes

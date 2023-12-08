@@ -29,8 +29,5 @@
     "@sonata-api/system": "*",
     "@sonata-api/types": "*",
     "mongodb": "^6.1.0"
-  },
-  "devDependencies": {
-    "@types/node": "^20.6.4"
   }
 }

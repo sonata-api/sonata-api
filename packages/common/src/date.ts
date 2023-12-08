@@ -1,19 +1,37 @@
+export type DateFormatOptions = {
+  hours?: boolean
+  hoursOnly?: boolean
+  locale?: string
+}
+
 const rtf = new Intl.RelativeTimeFormat(undefined, {
   numeric: 'auto'
 })
 
 const units = {
-  year: 24 * 60 * 60 * 1000 * 365,
-  month: 24 * 60 * 60 * 1000 * 365/12,
-  day: 24 * 60 * 60 * 1000,
-  hour: 60 * 60 * 1000,
-  minute: 60 * 1000,
+  year: 31536000000,
+  month: 2628000000,
+  day: 86400000,
+  hour: 3600000,
+  minute: 6000,
   second: 1000
 }
 
-export const formatToString = function(target: Date, hours: boolean = false, locale = 'pt-BR') {
+export const formatToString = function(target: Date, options?: DateFormatOptions) {
+  const {
+    hours,
+    hoursOnly,
+    locale = 'navigator' in globalThis
+      ? navigator.language
+      : 'en-US'
+  } = options || {}
+
+  if( hoursOnly ) {
+    return target.toLocaleTimeString()
+  }
+
   return hours
-    ? target.toLocaleString(locale).split(':').slice(0, -1).join(':')
+    ? target.toLocaleString(locale)
     : target.toLocaleDateString(locale)
 }
 

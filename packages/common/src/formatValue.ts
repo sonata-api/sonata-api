@@ -39,7 +39,9 @@ export const formatValue = (value: any, key: string, property?: Property, index?
     }
     if( 'format' in property ) {
       if( ['date', 'date-time'].includes(property.format!) ) {
-        return formatDateTime(String(value), property.format === 'date-time')
+        return formatDateTime(String(value), {
+          hours: property.format === 'date-time'
+        })
       }
     }
 

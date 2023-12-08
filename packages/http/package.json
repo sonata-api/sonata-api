@@ -19,9 +19,6 @@
   "files": [
     "dist"
   ],
-  "devDependencies": {
-    "@types/node": "^20.6.5"
-  },
   "peerDependencies": {
     "@sonata-api/common": "*",
     "@sonata-api/access-control": "*"

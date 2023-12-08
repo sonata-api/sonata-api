@@ -1,14 +1,14 @@
-import { formatToString } from './date'
+import { formatToString, type DateFormatOptions } from './date'
 
 export const capitalize = function(target: string) {
   return target.charAt(0).toUpperCase() + target.slice(1)
 }
 
-export const formatDateTime = function(target: string, hours: boolean = false) {
-  const d = new Date(target)
-  if( isNaN(d.getDate()) ) {
+export const formatDateTime = function(target: string, options?: DateFormatOptions) {
+  const date = new Date(target)
+  if( isNaN(date.getDate()) ) {
     return '-'
   }
 
-  return formatToString(d, hours)
+  return formatToString(date, options)
 }

@@ -37,8 +37,5 @@
   "peerDependencies": {
     "@sonata-api/common": "*",
     "@sonata-api/system": "*"
-  },
-  "devDependencies": {
-    "@types/node": "^18.15.3"
   }
 }
