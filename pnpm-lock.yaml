@@ -277,7 +277,11 @@ importers:
         specifier: ^6.1.0
         version: 6.3.0
 
-  packages/types: {}
+  packages/types:
+    devDependencies:
+      mongodb:
+        specifier: ^6.1.0
+        version: 6.3.0
 
   packages/validation:
     dependencies:

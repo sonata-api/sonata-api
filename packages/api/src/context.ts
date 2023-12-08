@@ -1,7 +1,6 @@
-import type { Description } from '@sonata-api/types'
+import type { Description, Schema } from '@sonata-api/types'
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
 import type { Collection as MongoCollection } from 'mongodb'
-import type { Schema } from './collection'
 import type {
   FunctionPath,
   DecodedToken,

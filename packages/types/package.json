@@ -22,5 +22,8 @@
   "license": "ISC",
   "files": [
     "dist"
-  ]
+  ],
+  "devDependencies": {
+    "mongodb": "^6.1.0"
+  }
 }

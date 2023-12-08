@@ -1,5 +1,5 @@
-import type { JsonSchema } from '@sonata-api/types'
-import type { ObjectId } from '../types'
+import type { JsonSchema } from './property'
+import type { ObjectId } from 'mongodb'
 
 export type Schema<TSchema extends Subschema> = { _id: ObjectId } & CaseTimestamped<
   TSchema,

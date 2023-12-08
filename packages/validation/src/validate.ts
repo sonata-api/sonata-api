@@ -1,5 +1,4 @@
-import type { Schema } from '@sonata-api/api'
-import type { Description, Property } from '@sonata-api/types'
+import type { Description, Property, Schema } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
 import {
   ValidationErrorCodes,

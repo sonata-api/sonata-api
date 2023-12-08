@@ -1,5 +1,4 @@
-import type { Description } from '@sonata-api/types'
-import type { Schema } from './schema'
+import type { Description, Schema } from '@sonata-api/types'
 
 export const defineDescription = <const TDescription extends Description<TDescription>>(description: Partial<TDescription>) => [{}, description] as unknown as [
   Schema<TDescription>,
