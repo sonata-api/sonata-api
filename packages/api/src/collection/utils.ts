@@ -1,5 +1,4 @@
-import type { Description } from '@sonata-api/types'
-import type { OptionalId } from '../types'
+import type { Description, OptionalId } from '@sonata-api/types'
 import { freshItem } from '@sonata-api/common'
 
 export const normalizeProjection = <

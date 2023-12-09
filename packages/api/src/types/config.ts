@@ -1,6 +1,6 @@
+import type { ObjectId } from '@sonata-api/types'
 import type { Context } from '../context'
 import type { FunctionPath } from './resource'
-import type { ObjectId } from './database'
 
 type User = {
   _id: ObjectId

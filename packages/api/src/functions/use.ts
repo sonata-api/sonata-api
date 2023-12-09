@@ -1,5 +1,4 @@
-import type { OptionalId } from '../types'
-import type { CollectionDocument } from './types'
+import type { CollectionDocument, OptionalId } from '@sonata-api/types'
 import * as collFunctions from '.'
 
 export type AvailableFunction = keyof typeof collFunctions

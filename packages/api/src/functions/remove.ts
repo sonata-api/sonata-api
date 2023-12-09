@@ -1,11 +1,7 @@
-import type { Context, OptionalId } from '../types'
-import type { CollectionDocument, Filters } from './types'
+import type { CollectionDocument, RemovePayload, OptionalId } from '@sonata-api/types'
+import type { Context } from '../types'
 import { left, unsafe } from '@sonata-api/common'
 import { traverseDocument, cascadingRemove } from '../collection'
-
-export type RemovePayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  filters: Filters<TDocument>
-}
 
 export const remove = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
   payload: RemovePayload<TDocument>,

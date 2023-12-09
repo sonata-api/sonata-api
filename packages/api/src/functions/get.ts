@@ -1,5 +1,5 @@
-import type { Context, OptionalId } from '../types'
-import type { CollectionDocument, Filters, Projection } from './types'
+import type { CollectionDocument, GetPayload, OptionalId  } from '@sonata-api/types'
+import type { Context } from '../types'
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
@@ -10,11 +10,6 @@ import {
   buildLookupPipeline,
   fill
 } from '../collection'
-
-export type GetPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  filters?: Filters<TDocument>
-  project?: Projection<TDocument>
-}
 
 export type GetOptions = {
   bypassAccessControl?: boolean

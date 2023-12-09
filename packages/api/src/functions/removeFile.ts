@@ -1,12 +1,6 @@
-import type { Context, OptionalId } from '../types'
-import type { CollectionDocument, UploadAuxProps } from './types'
+import type { CollectionDocument, RemoveFilePayload, OptionalId } from '@sonata-api/types'
+import type { Context } from '../types'
 import { checkImmutability } from '@sonata-api/access-control'
-
-export type RemoveFilePayload = UploadAuxProps & {
-  filters: {
-    _id: any
-  }
-}
 
 export const removeFile = <_TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
   payload: RemoveFilePayload,

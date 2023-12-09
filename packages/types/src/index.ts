@@ -1,4 +1,6 @@
 export * from './description'
 export * from './condition'
+export * from './functions'
 export * from './property'
 export * from './schema'
+export { ObjectId, WithId, OptionalId } from 'mongodb'

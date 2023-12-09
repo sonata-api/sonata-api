@@ -1,5 +1,5 @@
-import type { Context, OptionalId } from '../types'
-import type { CollectionDocument, Filters } from './types'
+import type { CollectionDocument, Filters, OptionalId } from '@sonata-api/types'
+import type { Context } from '../types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'

@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb'
+export { ObjectId } from 'mongodb'
 
 let dbMemo: ReturnType<MongoClient['db']> | undefined
 

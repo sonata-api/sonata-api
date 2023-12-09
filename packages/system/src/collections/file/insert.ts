@@ -1,6 +1,7 @@
+import type { WithId } from '@sonata-api/types'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
-import { type Context, type WithId, useFunctions } from '@sonata-api/api'
+import { type Context, useFunctions } from '@sonata-api/api'
 import { description, type File } from './description'
 
 type Props = {
