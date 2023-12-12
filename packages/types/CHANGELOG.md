@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.3
+
+### Patch Changes
+
+- Update Schema<T> to cover nested selective props
+
 ## 0.1.2
 
 ### Patch Changes
