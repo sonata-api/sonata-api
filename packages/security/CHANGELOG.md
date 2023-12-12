@@ -1,5 +1,25 @@
 # @sonata-api/security
 
+## 1.0.2
+
+### Patch Changes
+
+- Update packages
+- Updated dependencies
+  - @sonata-api/access-control@1.0.2
+  - @sonata-api/common@0.1.4
+  - @sonata-api/api@1.0.4
+
+## 1.0.1
+
+### Patch Changes
+
+- General refactor
+- Updated dependencies
+  - @sonata-api/api@1.0.3
+  - @sonata-api/access-control@1.0.1
+  - @sonata-api/common@0.1.3
+
 ## 1.0.0
 
 ### Minor Changes

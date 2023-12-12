@@ -205,9 +205,11 @@ export const buildLookupPipeline = (referenceMap: ReferenceMap | {}, options?: B
           }))
         }
 
-        subPipeline.push({
-          $project: Object.fromEntries(reference.populatedProperties.map((index) => [index, 1]))
-        })
+        if( reference.populatedProperties.length > 0 ) {
+          subPipeline.push({
+            $project: Object.fromEntries(reference.populatedProperties.map((index) => [index, 1]))
+          })
+        }
 
         pipeline.push({
           $lookup: {

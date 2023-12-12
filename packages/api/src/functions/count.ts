@@ -42,8 +42,10 @@ export const count = <TDocument extends CollectionDocument<OptionalId<any>>>() =
       $count: 'total'
     })
 
-    const { total } = await context.model.aggregate(pipeline).next()
-    return total
+    const result = await context.model.aggregate(pipeline).next()
+    return result
+      ? result.total
+      : 0
   }
 
   return context.model.countDocuments(traversedFilters)

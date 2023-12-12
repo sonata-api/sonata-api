@@ -1,5 +1,21 @@
 # @sonata-api/node-http
 
+## 1.0.2
+
+### Patch Changes
+
+- Update packages
+- Updated dependencies
+  - @sonata-api/http@1.0.2
+
+## 1.0.1
+
+### Patch Changes
+
+- General refactor
+- Updated dependencies
+  - @sonata-api/http@1.0.1
+
 ## 1.0.0
 
 ### Minor Changes

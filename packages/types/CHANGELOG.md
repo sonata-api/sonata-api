@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.2
+
+### Patch Changes
+
+- Update packages
+
+## 0.1.1
+
+### Patch Changes
+
+- General refactor
+
 ## 0.1.0
 
 ### Minor Changes

@@ -1,5 +1,47 @@
 # @sonata-api/api
 
+## 1.0.4
+
+### Patch Changes
+
+- Update packages
+- Updated dependencies
+  - @sonata-api/access-control@1.0.2
+  - @sonata-api/validation@1.0.2
+  - @sonata-api/security@1.0.2
+  - @sonata-api/mailing@1.0.2
+  - @sonata-api/common@0.1.4
+  - @sonata-api/system@1.0.2
+  - @sonata-api/types@0.1.2
+  - @sonata-api/http@1.0.2
+
+## 1.0.3
+
+### Patch Changes
+
+- General refactor
+- Updated dependencies
+  - @sonata-api/access-control@1.0.1
+  - @sonata-api/common@0.1.3
+  - @sonata-api/http@1.0.1
+  - @sonata-api/mailing@1.0.1
+  - @sonata-api/security@1.0.1
+  - @sonata-api/system@1.0.1
+  - @sonata-api/types@0.1.1
+  - @sonata-api/validation@1.0.1
+
+## 1.0.2
+
+### Patch Changes
+
+- Fix count() bug
+
+## 1.0.1
+
+### Patch Changes
+
+- Fix deep projection bug
+
 ## 1.0.0
 
 ### Minor Changes

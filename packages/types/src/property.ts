@@ -61,6 +61,7 @@ export type ArrayProperty = {
 export type FixedObjectProperty = {
   properties: Record<string, Property>
   form?: ReadonlyArray<string>
+  required?: ReadonlyArray<string>
 }
 
 export type VariableObjectProperty = {

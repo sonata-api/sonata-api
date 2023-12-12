@@ -1,5 +1,17 @@
 # @sonata-api/common
 
+## 0.1.4
+
+### Patch Changes
+
+- Update packages
+
+## 0.1.3
+
+### Patch Changes
+
+- General refactor
+
 ## 0.1.2
 
 ### Patch Changes
