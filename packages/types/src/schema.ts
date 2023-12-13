@@ -61,9 +61,9 @@ type MapTypes<
   CombineProperties<Properties> extends infer MappedTypes
     ? TSchema extends { required: readonly [] }
       ? Partial<MappedTypes>
-      : TSchema extends { required: infer RequiredProp }
-        ? RequiredProp extends readonly (keyof MappedTypes)[]
-          ? Pick<MappedTypes, RequiredProp[number]> extends infer RequiredProps
+      : TSchema extends { required: infer RequiredPropNames }
+        ? RequiredPropNames extends readonly (keyof MappedTypes)[]
+          ? Pick<MappedTypes, RequiredPropNames[number]> extends infer RequiredProps
             ? RequiredProps & Partial<Exclude<MappedTypes, keyof RequiredProps>>
             : never
           : never
