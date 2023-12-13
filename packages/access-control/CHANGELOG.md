@@ -1,5 +1,13 @@
 # @sonata-api/access-control
 
+## 1.0.3
+
+### Patch Changes
+
+- Fix inference bug
+- Updated dependencies
+  - @sonata-api/types@0.1.5
+
 ## 1.0.2
 
 ### Patch Changes

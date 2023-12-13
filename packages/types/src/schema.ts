@@ -59,17 +59,16 @@ type MapTypes<
   Properties = TSchema['properties']
 > = 
   CombineProperties<Properties> extends infer MappedTypes
-    ? TSchema extends { required: ReadonlyArray<never> }
+    ? TSchema extends { required: readonly [] }
       ? Partial<MappedTypes>
-      : TSchema extends { required: ReadonlyArray<infer RequiredProp> }
-        ? RequiredProp extends keyof MappedTypes
-          ? Pick<MappedTypes, RequiredProp> extends infer RequiredProps
+      : TSchema extends { required: infer RequiredProp }
+        ? RequiredProp extends readonly (keyof MappedTypes)[]
+          ? Pick<MappedTypes, RequiredProp[number]> extends infer RequiredProps
             ? RequiredProps & Partial<Exclude<MappedTypes, keyof RequiredProps>>
             : never
           : never
         : MappedTypes
       : never
-
 
 type CaseOwned<
   TSchema extends Subschema,
