@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.4
+
+### Patch Changes
+
+- Fix inference bug
+
 ## 0.1.3
 
 ### Patch Changes
