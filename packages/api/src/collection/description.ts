@@ -5,7 +5,7 @@ export const defineDescription = <const TDescription extends Description<TDescri
   TDescription
 ]
 
-export const defineAliasDescription = <TDescription extends Partial<Description>>(description: TDescription) => {
+export const defineAliasDescription = <const TDescription extends Partial<Description>>(description: TDescription) => {
   return defineDescription(description as any)[1] as TDescription & {
     properties: TDescription['properties'] extends object
       ? TDescription['properties']

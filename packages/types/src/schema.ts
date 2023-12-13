@@ -21,7 +21,7 @@ type Timestamped = {
 
 type TestType<T> = T & Record<string, any>
 
-type MapType<T> = T extends TestType<{ format: 'date'|'date-time' }>
+type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? Date        : T extends TestType<{ type: 'string' }>
   ? string      : T extends TestType<{ type: 'number' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
@@ -56,12 +56,12 @@ type CombineProperties<TProperties> = FilterReadonlyProperties<TProperties> exte
 
 type MapTypes<
   TSchema extends Subschema,
-  Properties=TSchema['properties']
+  Properties = TSchema['properties']
 > = 
   CombineProperties<Properties> extends infer MappedTypes
-    ? TSchema extends { required: [] }
+    ? TSchema extends { required: ReadonlyArray<never> }
       ? Partial<MappedTypes>
-      : TSchema extends { required: (infer RequiredProp)[] }
+      : TSchema extends { required: ReadonlyArray<infer RequiredProp> }
         ? RequiredProp extends keyof MappedTypes
           ? Pick<MappedTypes, RequiredProp> extends infer RequiredProps
             ? RequiredProps & Partial<Exclude<MappedTypes, keyof RequiredProps>>
@@ -69,6 +69,7 @@ type MapTypes<
           : never
         : MappedTypes
       : never
+
 
 type CaseOwned<
   TSchema extends Subschema,

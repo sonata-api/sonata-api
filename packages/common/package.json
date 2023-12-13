@@ -42,6 +42,7 @@
     }
   },
   "peerDependencies": {
+    "@sonata-api/types": "*",
     "bson": "^5.4.0"
   }
 }
