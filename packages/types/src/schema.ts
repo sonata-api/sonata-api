@@ -70,7 +70,6 @@ type MapTypes<
         : MappedTypes
       : never
 
-
 type CaseOwned<
   TSchema extends Subschema,
   TType
