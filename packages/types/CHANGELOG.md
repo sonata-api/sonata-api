@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.6
+
+### Patch Changes
+
+- Remove timestamps from subschemas
+
 ## 0.1.5
 
 ### Patch Changes

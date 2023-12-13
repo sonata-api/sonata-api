@@ -26,7 +26,7 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? string      : T extends TestType<{ type: 'number' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
   ? boolean     : T extends TestType<{ properties: any }>
-  ? Omit<Schema<T>, '_id'>   : T extends TestType<{ type: 'object' }>
+  ? Omit<Schema<T & { timestamps: false }>, '_id'>   : T extends TestType<{ type: 'object' }>
   ? object      : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ $ref: string }>
   ? ObjectId    : never
@@ -69,6 +69,7 @@ type MapTypes<
           : never
         : MappedTypes
       : never
+
 
 type CaseOwned<
   TSchema extends Subschema,
