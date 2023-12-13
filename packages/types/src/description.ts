@@ -31,7 +31,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   params?: Record<string, any>
   query?: Record<string, any>
 
-  requires?: PropertiesWithId<TDescription>[]
+  requires?: readonly PropertiesWithId<TDescription>[]
 }>
 
 export type CollectionActions<TDescription extends Description> =

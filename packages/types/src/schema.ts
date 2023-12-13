@@ -1,5 +1,5 @@
-import type { JsonSchema } from './property'
 import type { ObjectId } from 'mongodb'
+import type { JsonSchema } from './property'
 
 export type Schema<TSchema extends Subschema> = { _id: ObjectId } & CaseTimestamped<
   TSchema,

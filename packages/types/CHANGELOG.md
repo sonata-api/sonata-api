@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.7
+
+### Patch Changes
+
+- Fix type inference
+
 ## 0.1.6
 
 ### Patch Changes
