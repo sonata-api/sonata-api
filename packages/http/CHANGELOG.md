@@ -1,5 +1,13 @@
 # @sonata-api/http
 
+## 1.0.3
+
+### Patch Changes
+
+- Routing and condition bugs
+- Updated dependencies
+  - @sonata-api/common@0.1.5
+
 ## 1.0.2
 
 ### Patch Changes

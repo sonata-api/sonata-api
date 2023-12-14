@@ -1,5 +1,11 @@
 # @sonata-api/common
 
+## 0.1.5
+
+### Patch Changes
+
+- Routing and condition bugs
+
 ## 0.1.4
 
 ### Patch Changes
