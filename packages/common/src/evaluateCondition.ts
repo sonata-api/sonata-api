@@ -17,6 +17,10 @@ const equalOrContains = (term1: any, term2: any) => {
 
 const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
   if( 'term1' in condition ) {
+    if( !subject ) {
+      return false
+    }
+
     const term1 = subject[condition.term1]
     if( condition.operator === 'exists' ) {
       return !!term1

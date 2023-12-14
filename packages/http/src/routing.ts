@@ -168,7 +168,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   }
 
   router.install = async (context: Context) => {
-    const result = await routerPipe(null, context)
+    const result = await routerPipe(undefined, context)
     if( exhaust && result === undefined ) {
       return left({
         httpCode: 404,
