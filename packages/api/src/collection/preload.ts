@@ -6,11 +6,65 @@ import * as presets from '../presets'
 export type PreloadOptions = {
   serialize?: boolean
   memoize?: boolean
+  timestamps?: boolean
 }
 
 const preloadMemo: Record<string, Partial<Description>> = {}
 
-export const applyPreset = (entry: Partial<Description> | Description['properties'], presetName: keyof typeof presets, parentName?: string) => {
+const recurseProperty = async (_property: Property, propertyName: string, description: Partial<Description>): Promise<Property> => {
+  const property = Object.assign({}, _property)
+
+  if( 'items' in property ) {
+    property.items = await recurseProperty(property.items, propertyName, description)
+    return property
+  }
+
+  if( 'properties' in property ) {
+    return preloadDescription(property, {
+      memoize: false,
+      timestamps: false
+    })
+  }
+
+  if( property.getter ) {
+    return {
+      ...property,
+      readOnly: true,
+      isGetter: true
+    }
+  }
+
+  const reference = getReferenceProperty(property)
+  if( reference ) {
+    property.isReference = true
+    property.isFile = reference.$ref === 'file'
+    property.referencedCollection = reference.$ref
+
+    if( !reference.indexes && !reference.inline ) {
+      const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
+      if( isLeft(referenceDescriptionEither) ) {
+        throw new Error(`description of ${reference.$ref} not found`)
+      }
+
+      const referenceDescription = unwrapEither(referenceDescriptionEither)
+      const indexes = reference.indexes = referenceDescription.indexes?.slice()
+
+      if( !indexes ) {
+        throw new Error(
+          `neither indexes or inline are present on reference property or indexes is set on target description on ${description.$id}.${propertyName}`
+        )
+      }
+    }
+  }
+
+  return property
+}
+
+export const applyPreset = (
+  entry: Partial<Description> | Description['properties'],
+  presetName: keyof typeof presets,
+  parentName?: string
+) => {
   const preset = presets[presetName]
   const presetObject = Object.assign({}, parentName ? (preset[parentName as keyof typeof preset]||{}) : preset)
 
@@ -23,12 +77,16 @@ export const applyPreset = (entry: Partial<Description> | Description['propertie
   })
 }
 
-export const preloadDescription = async <Options extends PreloadOptions, Return=Options extends { serialize: true }
-  ? Buffer
-  : Description
+export const preloadDescription = async <
+  Options extends PreloadOptions,
+  Return = Options extends { serialize: true }
+    ? Buffer
+    : Description
 >(originalDescription: Partial<Description>, options?: Options) => {
   const {
-    memoize = true
+    memoize = true,
+    timestamps = true
+
   } = options || {}
 
   if( memoize && preloadMemo[originalDescription.$id!] ) {
@@ -64,7 +122,7 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
     descriptionPresets.push('owned')
   }
 
-  if( description.timestamps !== false ) {
+  if( description.timestamps !== false && timestamps !== false ) {
     descriptionPresets.push('timestamped')
   }
 
@@ -78,62 +136,12 @@ export const preloadDescription = async <Options extends PreloadOptions, Return=
   }
 
   if( description.properties ) {
-    description.properties = await Object.entries(description.properties).reduce(async (a, [key, _property]) => {
-      const property = Object.assign({}, _property)
-      const reference = getReferenceProperty(property)
-
-      if( reference ) {
-        property.isReference = true
-        property.isFile = reference.$ref === 'file'
-        property.referencedCollection = reference.$ref
-
-        if( !reference.indexes && !reference.inline ) {
-          const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
-          if( isLeft(referenceDescriptionEither) ) {
-            throw new Error(`description of ${reference.$ref} not found`)
-          }
-
-          const referenceDescription = unwrapEither(referenceDescriptionEither)
-          const indexes = reference.indexes = referenceDescription.indexes?.slice()
-
-          if( !indexes ) {
-            throw new Error(
-              `neither indexes or inline are present on reference property or indexes is set on target description on ${description.$id}.${key}`
-            )
-          }
-        }
-      }
-
-      if( 'items' in property && 'properties' in property.items ) {
-        property.items = await preloadDescription(property.items, {
-          memoize: false
-        })
-      }
-
-      if( property.getter ) {
-        return {
-          ...await a,
-          [key]: {
-            ...property,
-            readOnly: true,
-            isGetter: true
-          }
-        }
-      }
-
-      if( 'properties' in property ) {
-        return {
-          ...await a,
-          [key]: await preloadDescription(property, {
-            memoize: false
-          })
-        }
-      }
-
+    description.properties = await Object.entries(description.properties).reduce(async (a, [propertyName, property]) => {
       return {
         ...await a,
-        [key]: property
+        [propertyName]: await recurseProperty(property, propertyName, description)
       }
+
     }, {} as Promise<Record<Lowercase<string>, Property>>)
   }
 

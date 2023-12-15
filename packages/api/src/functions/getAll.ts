@@ -51,16 +51,14 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
   }
 
-  if( sort ) {
-    pipeline.push({ $sort: sort })
-  }
+  const preferredSort = sort
+    ? sort
+    : context.description.timestamps !== false
+      ? { _id: -1 }
+      : null
 
-  else if( context.description.timestamps !== false ) {
-    pipeline.push({
-      $sort: {
-        _id: -1
-      }
-    })
+  if( preferredSort ) {
+    pipeline.push({ $sort: preferredSort })
   }
 
   if( Object.keys(filtersRest).length > 0 ) {
@@ -79,11 +77,15 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     pipeline.push({ $project: projection })
   }
 
-  pipeline.push(...buildLookupPipeline(references, {
+  pipeline.push(...await buildLookupPipeline(references, {
     memoize: context.description.$id,
     project,
     properties: context.description.properties
   }))
+
+  if( Object.keys(references).length > 0 && preferredSort ) {
+    pipeline.push({ $sort: preferredSort })
+  }
 
   const result = await context.model.aggregate(pipeline).toArray()
 

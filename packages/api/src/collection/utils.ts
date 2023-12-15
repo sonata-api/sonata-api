@@ -43,7 +43,7 @@ export const fill = <TDocument extends OptionalId<any>>(
 export const prepareInsert = (
   payload: any,
   description: Pick<Description,
-    'properties'
+    | 'properties'
     | 'form'
     | 'writable'
     | 'owned'

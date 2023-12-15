@@ -1,7 +1,7 @@
 import type { Description, Property } from '@sonata-api/types'
 import type { ACErrors } from '@sonata-api/access-control'
 import { ObjectId } from 'mongodb'
-import { left, right, isLeft, unwrapEither, pipe, type Either } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, pipe, isReference, type Either } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import {
   validateProperty,
@@ -62,7 +62,7 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Property |
 const autoCast = (value: any, target: any, propName: string, property: Property, options?: TraverseOptions): any => {
   switch( typeof value ) {
     case 'string': {
-      if( property.isReference ) {
+      if( isReference(property) ) {
         return ObjectId.isValid(value)
           ? new ObjectId(value)
           : value
@@ -132,6 +132,7 @@ const getters = (value: any, target: any, _propName: string, property: Property)
 
 const validate = (value: any, _target: any, propName: string, property: Property) => {
   const error = validateProperty(propName as Lowercase<string>, value, property)
+  console.log(_target)
 
   if( error ) {
     return left({
@@ -205,7 +206,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
         continue
       }
 
-      const operatorEither = await recurse(value as any, parent, options)
+      const operatorEither = await recurse(value, parent, options)
       if( isLeft(operatorEither) ) {
         return left(unwrapEither(operatorEither))
       }
@@ -245,7 +246,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
             continue
           }
 
-          const documentEither = await traverseDocument(value as any, targetDescription, options)
+          const documentEither = await traverseDocument(value, targetDescription, options)
           if( isLeft(documentEither) ) {
             return left(unwrapEither(documentEither))
           }

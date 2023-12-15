@@ -48,7 +48,7 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
     pipeline.push({ $project: projection })
   }
 
-  pipeline.push(...buildLookupPipeline(references, {
+  pipeline.push(...await buildLookupPipeline(references, {
     memoize: context.description.$id,
     project,
     properties: context.description.properties
@@ -58,6 +58,8 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
   if( !result ) {
     return null
   }
+
+  console.log(JSON.stringify(pipeline, null, 2))
 
   return fill(
     unsafe(await traverseDocument(result, context.description, {
