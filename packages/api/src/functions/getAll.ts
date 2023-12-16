@@ -70,7 +70,10 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
     })
   }
 
-  pipeline.push({ $skip: offset })
+  if( offset > 0 ) {
+    pipeline.push({ $skip: offset })
+  }
+
   pipeline.push({ $limit: limit })
   const projection = normalizeProjection(project, context.description)
   if( projection ) {
@@ -88,8 +91,8 @@ export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() 
   }
 
   const result = await context.model.aggregate(pipeline).toArray()
-
   const documents: typeof result = []
+
   for( const document of result ) {
     documents.push(
       unsafe(await traverseDocument(fill(document, context.description), context.description, {

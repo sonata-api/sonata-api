@@ -84,7 +84,7 @@ export const preloadDescription = async <
     : Description
 >(originalDescription: Partial<Description>, options?: Options) => {
   const {
-    memoize = true,
+    memoize = !!originalDescription.$id,
     timestamps = true
 
   } = options || {}
