@@ -54,7 +54,6 @@ export const get = <TDocument extends CollectionDocument<OptionalId<any>>>() => 
     properties: context.description.properties
   }))
 
-  console.log(JSON.stringify(pipeline, null, 2))
   const result = await context.model.aggregate(pipeline).next()
   if( !result ) {
     return null

@@ -61,6 +61,10 @@ const getProperty = (propertyName: Lowercase<string>, parentProperty: Property |
 
 const autoCast = (value: any, target: any, propName: string, property: Property, options?: TraverseOptions): any => {
   switch( typeof value ) {
+    case 'boolean': {
+      return !!value
+    }
+
     case 'string': {
       if( isReference(property) ) {
         return ObjectId.isValid(value)
@@ -132,7 +136,6 @@ const getters = (value: any, target: any, _propName: string, property: Property)
 
 const validate = (value: any, _target: any, propName: string, property: Property) => {
   const error = validateProperty(propName as Lowercase<string>, value, property)
-  console.log(_target)
 
   if( error ) {
     return left({

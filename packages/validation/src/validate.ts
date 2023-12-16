@@ -95,6 +95,10 @@ export const validateProperty = (
       return
     }
 
+    if( expectedType === 'boolean' && !what )  {
+      return
+    }
+
     return makePropertyError('unmatching', {
       expected: expectedType,
       got: actualType
