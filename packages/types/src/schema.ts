@@ -44,7 +44,7 @@ type MapReferences<TProperties> = {
       ? K extends keyof Collections
         ? Collections[K]['item']
         : never
-      : Prop extends TestType<{ items: { $ref: infer K } }>
+      : Prop extends TestType<{ items: TestType<{ $ref: infer K }> }>
         ? K extends keyof Collections
           ? Collections[K]['item'][]
           : never
@@ -52,30 +52,28 @@ type MapReferences<TProperties> = {
     : never
 }
 
-
-declare const t1: Schema<{
-  $id: 't1',
-  properties: {
-    customer: {
-      $ref:'customer'
-    }
+export type PackReferences<T> = T extends Record<any, any>
+  ? {
+    [P in keyof T]: T[P] extends infer Prop
+      ? Prop extends any[] | readonly any[]
+        ? PackReferences<Prop[number]>[]
+        : Prop extends { _id: infer Id }
+          ? Id
+          : Prop
+      : never
   }
-}>
-
-t1.customer.axa
-
-type Type<T> = MapType<T>
+  : T
 
 type FilterReadonlyProperties<TProperties> = {
   [P in keyof TProperties as TProperties[P] extends { readOnly: true }
     ? P
     : never
-  ]: Type<TProperties[P]>
+  ]: MapType<TProperties[P]>
 }
 
 type CombineProperties<TProperties> = FilterReadonlyProperties<TProperties> extends infer ReadonlyProperties
   ? Readonly<ReadonlyProperties> & {
-    [P in Exclude<keyof TProperties, keyof ReadonlyProperties>]: Type<TProperties[P]>
+    [P in Exclude<keyof TProperties, keyof ReadonlyProperties>]: MapType<TProperties[P]>
   }
   : never
 

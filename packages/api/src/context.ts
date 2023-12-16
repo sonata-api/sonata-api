@@ -1,4 +1,4 @@
-import type { Description, Schema } from '@sonata-api/types'
+import type { Description, Schema, PackReferences } from '@sonata-api/types'
 import type { GenericRequest, GenericResponse } from '@sonata-api/http'
 import type { Collection as MongoCollection } from 'mongodb'
 import type {
@@ -15,7 +15,7 @@ import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
 type CollectionModel<TDescription extends Description> =
-  MongoCollection<Omit<Schema<TDescription>, '_id'>>
+  MongoCollection<Omit<PackReferences<Schema<TDescription>>, '_id'>>
 
 type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
