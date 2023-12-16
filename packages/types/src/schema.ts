@@ -28,18 +28,43 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? boolean     : T extends TestType<{ properties: any }>
   ? Omit<Schema<T & { timestamps: false }>, '_id'>   : T extends TestType<{ type: 'object' }>
   ? object      : T extends TestType<{ enum: ReadonlyArray<infer K> }>
-  ? K           : T extends TestType<{ $ref: string }>
-  ? ObjectId    : never
+  ? K           : T extends TestType<{ items: infer K }>
+    ? MapType<K>[]
+    : never
 
-type CaseReference<T> = T extends { $id: string }
-  ? ObjectId
-  : T extends TestType<{ type: 'array', items: { properties: any } }>
-    ? MapType<T['items']>[]
-    : T extends TestType<{ type: 'array', items: infer K }>
-      ? MapType<K>[]
-      : MapType<T>
+type MapReferences<TProperties> = {
+  [
+    P in keyof TProperties as TProperties[P] extends 
+      | TestType<{ $ref: string }>
+      | TestType<{ items: { $ref: string } }>
+      ? P
+      : never
+  ]: TProperties[P] extends infer Prop
+    ? Prop extends TestType<{ $ref: infer K }>
+      ? K extends keyof Collections
+        ? Collections[K]['item']
+        : never
+      : Prop extends TestType<{ items: { $ref: infer K } }>
+        ? K extends keyof Collections
+          ? Collections[K]['item'][]
+          : never
+        : never
+    : never
+}
 
-type Type<T> = CaseReference<T>
+
+declare const t1: Schema<{
+  $id: 't1',
+  properties: {
+    customer: {
+      $ref:'customer'
+    }
+  }
+}>
+
+t1.customer.axa
+
+type Type<T> = MapType<T>
 
 type FilterReadonlyProperties<TProperties> = {
   [P in keyof TProperties as TProperties[P] extends { readOnly: true }
@@ -54,11 +79,17 @@ type CombineProperties<TProperties> = FilterReadonlyProperties<TProperties> exte
   }
   : never
 
+type MergeReferences<TProperties> = CombineProperties<TProperties> extends infer CombinedProperties
+  ? MapReferences<TProperties> extends infer MappedReferences
+    ? MappedReferences & Omit<CombinedProperties, keyof MappedReferences>
+    : never
+  : never
+
 type MapTypes<
   TSchema extends Subschema,
   Properties = TSchema['properties']
 > = 
-  CombineProperties<Properties> extends infer MappedTypes
+  MergeReferences<Properties> extends infer MappedTypes
     ? TSchema extends { required: readonly [] }
       ? Partial<MappedTypes>
       : TSchema extends { required: infer RequiredPropNames }
