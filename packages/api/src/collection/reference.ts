@@ -67,13 +67,9 @@ const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<Fix
   }
 }
 
-const buildArrayCleanupPhase = (referenceMap: ReferenceMap, project: string[]) => {
+const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
   const $set = Object.entries(referenceMap).reduce((a, [refName, refMap]) => {
-    if(
-      !refMap.isArray
-      || refMap.referencedCollection
-      || (project.length > 0 && !project.includes(refName))
-    ) {
+    if( !refMap.isArray || refMap.referencedCollection ) {
       return a
     }
 
@@ -329,7 +325,7 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   if( hasDeepReferences ) {
     pipeline.push(buildGroupPhase(referenceMap, properties))
 
-    const arrayCleanupPhase = buildArrayCleanupPhase(referenceMap, project)
+    const arrayCleanupPhase = buildArrayCleanupPhase(referenceMap)
     if( arrayCleanupPhase ) {
       pipeline.push(arrayCleanupPhase)
     }
