@@ -1,14 +1,11 @@
 import type { ObjectId } from 'mongodb'
-import type { JsonSchema } from './property'
 
-export type Schema<TSchema extends Subschema> = { _id: ObjectId } & CaseTimestamped<
+export type Schema<TSchema> = { _id: ObjectId } & CaseTimestamped<
   TSchema,
   CaseOwned<
     TSchema,
     MapTypes<TSchema>
   >>
-
-type Subschema = Omit<JsonSchema, '$id'>
 
 type Owned = {
   owner?: ObjectId
@@ -32,25 +29,27 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
     ? MapType<K>[]
     : never
 
-type MapReferences<TProperties> = {
-  [
-    P in keyof TProperties as TProperties[P] extends 
-      | TestType<{ $ref: string }>
-      | TestType<{ items: { $ref: string } }>
-      ? P
-      : never
-  ]: TProperties[P] extends infer Prop
-    ? Prop extends TestType<{ $ref: infer K }>
-      ? K extends keyof Collections
-        ? Collections[K]['item']
+type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
+  ? {
+    [
+      P in keyof Properties as Properties[P] extends 
+        | TestType<{ $ref: string }>
+        | TestType<{ items: { $ref: string } }>
+        ? P
         : never
-      : Prop extends TestType<{ items: TestType<{ $ref: infer K }> }>
+    ]: Properties[P] extends infer Prop
+      ? Prop extends TestType<{ $ref: infer K }>
         ? K extends keyof Collections
-          ? Collections[K]['item'][]
+          ? Collections[K]['item']
           : never
-        : never
-    : never
-}
+        : Prop extends TestType<{ items: TestType<{ $ref: infer K }> }>
+          ? K extends keyof Collections
+            ? Collections[K]['item'][]
+            : never
+          : never
+      : never
+  }
+  : never
 
 export type PackReferences<T> = T extends Record<any, any>
   ? {
@@ -71,23 +70,22 @@ type FilterReadonlyProperties<TProperties> = {
   ]: MapType<TProperties[P]>
 }
 
-type CombineProperties<TProperties> = FilterReadonlyProperties<TProperties> extends infer ReadonlyProperties
-  ? Readonly<ReadonlyProperties> & {
-    [P in Exclude<keyof TProperties, keyof ReadonlyProperties>]: MapType<TProperties[P]>
-  }
+type CombineProperties<TSchema> = TSchema extends { properties: infer Properties }
+  ? FilterReadonlyProperties<Properties> extends infer ReadonlyProperties
+    ? Readonly<ReadonlyProperties> & {
+      [P in Exclude<keyof Properties, keyof ReadonlyProperties>]: MapType<Properties[P]>
+    }
+    : never
   : never
 
-type MergeReferences<TProperties> = CombineProperties<TProperties> extends infer CombinedProperties
-  ? MapReferences<TProperties> extends infer MappedReferences
+type MergeReferences<TSchema> = CombineProperties<TSchema> extends infer CombinedProperties
+  ? MapReferences<TSchema> extends infer MappedReferences
     ? MappedReferences & Omit<CombinedProperties, keyof MappedReferences>
     : never
   : never
 
-type MapTypes<
-  TSchema extends Subschema,
-  Properties = TSchema['properties']
-> = 
-  MergeReferences<Properties> extends infer MappedTypes
+type MapTypes<TSchema> = 
+  MergeReferences<TSchema> extends infer MappedTypes
     ? TSchema extends { required: readonly [] }
       ? Partial<MappedTypes>
       : TSchema extends { required: infer RequiredPropNames }
@@ -100,14 +98,14 @@ type MapTypes<
       : never
 
 type CaseOwned<
-  TSchema extends Subschema,
+  TSchema,
   TType
 > = TSchema extends { owned: true | string }
   ? TType & Owned
   : TType
 
 type CaseTimestamped<
-  TSchema extends Subschema,
+  TSchema,
   TType
 > = TSchema extends { timestamps: false }
   ? TType

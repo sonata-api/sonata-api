@@ -62,7 +62,7 @@ export type FiltersPreset<TDescription extends Description> = {
   name?: string
   icon?: string
   filters: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
-  table?: PropertiesWithId<TDescription>[]
+  table?: readonly PropertiesWithId<TDescription>[]
   badgeFunction?: string
   default?: boolean
 }

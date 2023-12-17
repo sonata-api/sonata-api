@@ -1,3 +1,4 @@
+import type { PackReferences } from '@sonata-api/types'
 import { MongoClient } from 'mongodb'
 export { ObjectId } from 'mongodb'
 
@@ -52,5 +53,5 @@ export const prepareCollectionName = (collectionName: string) => {
 
 export const getDatabaseCollection = <TDocument extends Record<string, any>>(collectionName: string) => {
   const db = getDatabaseSync()
-  return db.collection<TDocument>(prepareCollectionName(collectionName))
+  return db.collection<PackReferences<TDocument>>(prepareCollectionName(collectionName))
 }
