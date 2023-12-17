@@ -1,4 +1,5 @@
 import type { FilterOperators, UpdateFilter, WithId, OptionalId } from 'mongodb'
+import type { PackReferences } from './schema'
 
 export type UploadAuxProps = {
   parentId: string
@@ -41,7 +42,7 @@ export type GetAllPayload<TDocument extends CollectionDocument<OptionalId<any>>>
 }
 
 export type InsertPayload<TDocument extends CollectionDocument<any>> = {
-  what: What<TDocument & { _id?: any }>
+  what: What<PackReferences<TDocument> & { _id?: any }>
   project?: Projection<TDocument>
 }
 

@@ -1,11 +1,11 @@
-import type { CollectionDocument, InsertPayload, ObjectId, PackReferences } from '@sonata-api/types'
+import type { CollectionDocument, InsertPayload, ObjectId } from '@sonata-api/types'
 import type { Context } from '../types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
 export const insert = <TDocument extends CollectionDocument<any>>() => async <TContext>(
-  payload: InsertPayload<PackReferences<TDocument>>,
+  payload: InsertPayload<TDocument>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never

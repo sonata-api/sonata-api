@@ -24,7 +24,7 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
   ? boolean     : T extends TestType<{ properties: any }>
   ? Omit<Schema<T & { timestamps: false }>, '_id'>   : T extends TestType<{ type: 'object' }>
-  ? object      : T extends TestType<{ enum: ReadonlyArray<infer K> }>
+  ? any         : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ items: infer K }>
     ? MapType<K>[]
     : never
@@ -51,17 +51,19 @@ type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   }
   : never
 
-export type PackReferences<T> = T extends Record<any, any>
-  ? {
-    [P in keyof T]: T[P] extends infer Prop
-      ? Prop extends any[] | readonly any[]
-        ? PackReferences<Prop[number]>[]
-        : Prop extends { _id: infer Id }
-          ? Id
-          : Prop
-      : never
-  }
-  : T
+export type PackReferencesAux<T> = T extends (...args: any[]) => any
+  ? T
+  : T extends { _id: infer Id }
+    ? Id
+    : T extends Record<string, any>
+      ? PackReferences<T>
+      : T extends any[] | readonly any[]
+        ? PackReferencesAux<T[number]>[]
+        : T
+
+export type PackReferences<T> = {
+  [P in keyof T]: PackReferencesAux<T[P]>
+}
 
 type FilterReadonlyProperties<TProperties> = {
   [P in keyof TProperties as TProperties[P] extends { readOnly: true }

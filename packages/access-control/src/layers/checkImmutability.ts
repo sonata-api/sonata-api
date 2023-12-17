@@ -28,7 +28,8 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
     || (Array.isArray(description.immutable) && description.immutable.includes(propertyName) )
   )
 
-  const currentDocument = await context.model.findOne({ _id: new ObjectId(parentId) })
+
+  const currentDocument: Record<string, any> | null = await context.model.findOne({ _id: new ObjectId(parentId) })
   if( !currentDocument ) {
     return left(ACErrors.ImmutabilityParentNotFound)
   }
@@ -48,7 +49,7 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
   if(
     immutable
     && fulfilled
-    && ( property.inline || (currentDocument[propertyName] as any).toString() !== source[propertyName] )
+    && ( property.inline || (currentDocument[propertyName]).toString() !== source[propertyName] )
   ) {
     return left(ACErrors.ImmutabilityTargetImmutable)
   }

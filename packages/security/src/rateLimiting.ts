@@ -13,7 +13,7 @@ export enum RateLimitingErrors {
   LimitReached = 'LIMIT_REACHED'
 }
 
-const getUser = <TDescription extends Description>(context: Context<TDescription>) => {
+const getUser = <TDescription extends Description>(context: Context<TDescription>): Promise<Record<string, any> | null> => {
   return context.models.user.findOne(
     { _id: context.token.user._id },
     { resources_usage: 1 }
@@ -45,7 +45,7 @@ export const limitRate = async <TDescription extends Description>(
 
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
-    const entry = await context.models.resourceUsage.insertOne({ hits: increment })
+    const entry = await context.models.resourceUsage.insertOne(<any>{ hits: increment })
     await context.models.user.updateOne(
       { _id: user._id },
       { $set: { [`resources_usage.${context.functionPath}`]: entry.insertedId }
