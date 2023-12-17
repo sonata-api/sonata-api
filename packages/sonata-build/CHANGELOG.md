@@ -1,5 +1,14 @@
 # sonata-build
 
+## 1.0.3
+
+### Patch Changes
+
+- New inference system
+- Updated dependencies
+  - @sonata-api/common@0.1.6
+  - @sonata-api/system@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes

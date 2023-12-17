@@ -1,5 +1,13 @@
 # @sonata-api/common
 
+## 0.1.6
+
+### Patch Changes
+
+- New inference system
+- Updated dependencies
+  - @sonata-api/types@0.1.8
+
 ## 0.1.5
 
 ### Patch Changes

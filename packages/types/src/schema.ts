@@ -51,7 +51,7 @@ type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   }
   : never
 
-export type PackReferencesAux<T> = T extends (...args: any[]) => any
+type PackReferencesAux<T> = T extends (...args: any[]) => any
   ? T
   : T extends { _id: infer Id }
     ? Id

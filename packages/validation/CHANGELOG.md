@@ -1,5 +1,14 @@
 # @sonata-api/validation
 
+## 1.0.3
+
+### Patch Changes
+
+- New inference system
+- Updated dependencies
+  - @sonata-api/common@0.1.6
+  - @sonata-api/types@0.1.8
+
 ## 1.0.2
 
 ### Patch Changes

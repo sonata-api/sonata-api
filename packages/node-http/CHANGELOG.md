@@ -1,5 +1,13 @@
 # @sonata-api/node-http
 
+## 1.0.3
+
+### Patch Changes
+
+- New inference system
+- Updated dependencies
+  - @sonata-api/http@1.0.4
+
 ## 1.0.2
 
 ### Patch Changes

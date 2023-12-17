@@ -1,5 +1,17 @@
 # @sonata-api/access-control
 
+## 1.0.4
+
+### Patch Changes
+
+- New inference system
+- Updated dependencies
+  - @sonata-api/api@1.0.5
+  - @sonata-api/common@0.1.6
+  - @sonata-api/server@1.0.3
+  - @sonata-api/system@1.0.3
+  - @sonata-api/types@0.1.8
+
 ## 1.0.3
 
 ### Patch Changes
