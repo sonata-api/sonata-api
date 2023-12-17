@@ -5,10 +5,8 @@ const router = makeRouter({
   exhaust: true
 })
 
-router.GET('/hello-world', () => 'hello, world!')
-
 router.GET('/get-people', async (context) => {
-  const query = await validateSilently(context.request.query, {
+  const query = validateSilently(context.request.query, {
     properties: {
       name: {
         type: 'string'
@@ -36,6 +34,13 @@ router.GET('/get-people', async (context) => {
   const person = unwrapEither(personEither)
   console.log(person.name)
   console.log(person.job)
+
+  if( person.pets ) {
+    for( const pet of person.pets ) {
+      console.log(pet.name)
+      console.log(pet.favorite_toy)
+    }
+  }
 
   return context.collections.person.functions.getAll({})
 })

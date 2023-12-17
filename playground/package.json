@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "api": "link:",
     "sonata-api": "file:../packages/sonata-api"
   },
   "devDependencies": {
