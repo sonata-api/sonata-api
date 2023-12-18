@@ -1,8 +1,9 @@
 import type { Description, Property, Either } from '@sonata-api/types'
 import type { ACErrors } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
-import { left, right, isLeft, unwrapEither, pipe, isReference } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
+import { preloadDescription } from './preload'
 import {
   validateProperty,
   validateWholeness,
@@ -161,29 +162,30 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     return right({} as TRecursionTarget)
   }
 
-  for( const key in entrypoint ) {
-    const value = target[key as keyof typeof target]
+  for( const propName in entrypoint ) {
+    const value = target[propName as keyof typeof target]
     if( value === undefined && !options?.getters ) {
       continue
     }
 
-    if( options.autoCast && key === '_id' ) {
+    if( options.autoCast && propName === '_id' ) {
       entries.push([
-        key,
-        autoCast(value, target, key, { $ref: '', isReference: true }, {})
+        propName,
+        autoCast(value, target, propName, { $ref: '', isReference: true }, {})
       ])
       continue
     }
 
-    const property = getProperty(key as Lowercase<string>, parent)
+    const property = getProperty(propName as Lowercase<string>, parent)
+    console.log(propName, property)
 
     if( !property && value && (value.constructor === Object || value.constructor === Array) ) {
-      // if first key is preceded by '$' we assume
+      // if first propName is preceded by '$' we assume
       // it contains MongoDB query operators
       if( Object.keys(value)[0]?.startsWith('$') ) {
         if( options.allowOperators ) {
           entries.push([
-            key,
+            propName,
             value
           ])
         }
@@ -203,7 +205,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
         }
 
         entries.push([
-          key,
+          propName,
           operations
         ])
         continue
@@ -215,7 +217,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       }
 
       entries.push([
-        key,
+        propName,
         unwrapEither(operatorEither)
       ])
     }
@@ -224,12 +226,8 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       if( options.recurseReferences ) {
         const propCast = property as Property
         if( propCast.isReference && value && !(value instanceof ObjectId) ) {
-          const targetDescriptionEither = await getCollectionAsset(propCast.referencedCollection!, 'description')
-          if( isLeft(targetDescriptionEither) ) {
-            return left(unwrapEither(targetDescriptionEither))
-          }
+          const targetDescription = await preloadDescription(unsafe(await getCollectionAsset(propCast.referencedCollection!, 'description')))
 
-          const targetDescription = unwrapEither(targetDescriptionEither)
           if( Array.isArray(value) ) {
             const documents = []
 
@@ -243,7 +241,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
             }
 
             entries.push([
-              key,
+              propName,
               documents
             ])
             continue
@@ -255,7 +253,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
           }
 
           entries.push([
-            key,
+            propName,
             unwrapEither(documentEither)
           ])
           continue
@@ -263,8 +261,8 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       }
 
       entries.push([
-        key,
-        await options.pipe!(value, target, key, property, options)
+        propName,
+        await options.pipe!(value, target, propName, property, options)
       ])
     }
   }

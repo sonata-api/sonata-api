@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.8
+
+### Patch Changes
+
+- Fix deep reference traverseDocument bug
+
 ## 1.0.7
 
 ### Patch Changes

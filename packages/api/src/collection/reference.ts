@@ -208,7 +208,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   }
 
   const pipeline: any[] = []
-  const deepArrayReferences: string[] = []
   let hasDeepReferences = false
 
   if( parent ) {
@@ -308,10 +307,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
         const refProperties = 'items' in sourceProperty
             ? sourceProperty.items.properties
             : sourceProperty.properties
-
-        if( 'items' in sourceProperty ) {
-          deepArrayReferences.push(refName)
-        }
 
         pipeline.push(...await buildLookupPipeline(refMap, {
           depth: depth + 1,
