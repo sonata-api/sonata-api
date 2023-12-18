@@ -31,7 +31,7 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
 
 type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   ? {
-    [
+    -readonly [
       P in keyof Properties as Properties[P] extends 
         | TestType<{ $ref: string }>
         | TestType<{ items: { $ref: string } }>
