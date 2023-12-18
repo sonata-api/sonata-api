@@ -1,5 +1,5 @@
-import type { WithId } from '@sonata-api/types'
-import { type Context, useFunctions } from '@sonata-api/api'
+import type { Context, WithId } from '@sonata-api/types'
+import { useFunctions } from '@sonata-api/api'
 import * as bcrypt from 'bcrypt'
 import { description, type User } from './description'
 

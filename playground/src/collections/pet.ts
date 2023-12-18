@@ -6,9 +6,14 @@ const [Pet, description] = defineDescription({
     name: {
       type: 'string'
     },
-    favorite_toy: {
-      type: 'string'
-    },
+    toys: {
+      type: 'object',
+      properties: {
+        favorite: {
+          $ref: 'petToy'
+        },
+      }
+    }
   }
 })
 

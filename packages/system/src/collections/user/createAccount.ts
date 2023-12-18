@@ -1,4 +1,4 @@
-import { type Context } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
 import { sendTransactionalEmail  } from '@sonata-api/mailing'
 import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'

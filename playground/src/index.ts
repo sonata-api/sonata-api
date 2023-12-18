@@ -38,7 +38,8 @@ router.GET('/get-people', async (context) => {
   if( person.pets ) {
     for( const pet of person.pets ) {
       console.log(pet.name)
-      console.log(pet.favorite_toy)
+      console.log(pet.toys.favorite.name)
+      console.log(pet.toys.favorite.brand)
     }
   }
 

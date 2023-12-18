@@ -1,5 +1,4 @@
-import type { CollectionDocument, InsertPayload, ObjectId } from '@sonata-api/types'
-import type { Context } from '../types'
+import type { Context, CollectionDocument, InsertPayload, ObjectId } from '@sonata-api/types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'

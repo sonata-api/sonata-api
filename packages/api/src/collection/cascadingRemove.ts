@@ -1,6 +1,5 @@
-import type { Property, Description } from '@sonata-api/types'
+import type { Context, Property, Description } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
-import type { Context } from '../context'
 import { isRight, unwrapEither } from '@sonata-api/common'
 import { getFunction } from '../assets'
 import { getDatabaseCollection } from '../database'

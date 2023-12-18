@@ -1,4 +1,4 @@
-import type { Context } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
 import { makeRouter } from '@sonata-api/http'
 import { functions } from '@sonata-api/system'
 import {

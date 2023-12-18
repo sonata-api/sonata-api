@@ -1,5 +1,4 @@
-import type { CollectionDocument, GetAllPayload, OptionalId } from '@sonata-api/types'
-import type { Context } from '../types'
+import type { Context, CollectionDocument, GetAllPayload, OptionalId } from '@sonata-api/types'
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'

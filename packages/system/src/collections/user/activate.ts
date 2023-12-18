@@ -1,4 +1,4 @@
-import type { Context } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
 import type { description } from './description'
 import { left, right } from '@sonata-api/common'
 import bcrypt from 'bcrypt'

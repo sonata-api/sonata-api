@@ -1,4 +1,13 @@
-import type { REQUEST_METHODS } from './constants'
+export const REQUEST_METHODS = <const>[
+  'GET',
+  'POST',
+  'PUT',
+  'DELETE',
+  'OPTIONS',
+  'PATCH',
+  'TRACE',
+  'SEARCH',
+]
 
 export type RequestMethod = (typeof REQUEST_METHODS)[number]
 

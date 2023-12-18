@@ -5,6 +5,9 @@
     "paths": {
       "@sonata-api/http": [
         "../http/dist"
+      ],
+      "@sonata-api/types": [
+        "../types/dist"
       ]
     }
   }

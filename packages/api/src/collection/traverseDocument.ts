@@ -1,7 +1,7 @@
-import type { Description, Property } from '@sonata-api/types'
-import type { ACErrors } from '@sonata-api/access-control'
+import type { Description, Property, Either } from '@sonata-api/types'
+import type { ACErrors } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
-import { left, right, isLeft, unwrapEither, pipe, isReference, type Either } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, pipe, isReference } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import {
   validateProperty,

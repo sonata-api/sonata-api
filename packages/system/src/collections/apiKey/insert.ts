@@ -1,5 +1,5 @@
-import type { WithId } from '@sonata-api/types'
-import { signToken, type Context } from '@sonata-api/api'
+import type { Context, WithId } from '@sonata-api/types'
+import { signToken } from '@sonata-api/api'
 import { description, type ApiKey } from './description'
 
 type Props = {

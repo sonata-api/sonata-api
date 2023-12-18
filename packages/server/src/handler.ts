@@ -1,6 +1,7 @@
-import type { Context, AvailableFunction } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
+import type { AvailableFunction } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
-import { ACErrors } from '@sonata-api/access-control'
+import { ACErrors } from '@sonata-api/types'
 import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
 import { appendPagination } from './appendPagination'
 

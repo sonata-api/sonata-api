@@ -1,7 +1,8 @@
-import type { AssetType, Context, Collection, CollectionStructure } from './types'
+import type { AssetType, Context, Collection, CollectionStructure, ACProfile  } from '@sonata-api/types'
+import { ACErrors } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
-import { isGranted, ACErrors, ACProfile } from '@sonata-api/access-control'
+import { isGranted } from '@sonata-api/access-control'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
 const collectionMemo: Record<string, CollectionStructure> = {}

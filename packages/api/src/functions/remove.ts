@@ -1,5 +1,4 @@
-import type { CollectionDocument, RemovePayload, OptionalId } from '@sonata-api/types'
-import type { Context } from '../types'
+import type { Context, CollectionDocument, RemovePayload, OptionalId } from '@sonata-api/types'
 import { left, unsafe } from '@sonata-api/common'
 import { traverseDocument, cascadingRemove } from '../collection'
 

@@ -21,6 +21,7 @@
   ],
   "peerDependencies": {
     "@sonata-api/common": "*",
+    "@sonata-api/types": "*",
     "@sonata-api/access-control": "*"
   }
 }

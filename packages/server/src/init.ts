@@ -1,5 +1,4 @@
-import type { GenericRequest } from '@sonata-api/http'
-import type { ApiConfig, DecodedToken, Context } from '@sonata-api/api'
+import type { Context, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
 import { right, left, isLeft, unwrapEither } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'

@@ -1,6 +1,9 @@
-import type { AccessControl } from '@sonata-api/access-control'
-import type { Description } from '@sonata-api/types'
-import type { SecurityPolicy } from '@sonata-api/security'
+import type { ObjectId, Context, Description, SecurityPolicy, AccessControl } from '.'
+
+type User = {
+  _id: ObjectId
+  roles: string[]
+}
 
 export type CollectionStructure<TCollectionStructure extends CollectionStructure = any> = {
   item: any
@@ -24,4 +27,34 @@ export type Collections = Record<string, ReturnType<Collection>>
 export type UserACProfile = {
   readonly roles: string[]
   readonly allowed_functions?: string[]
+}
+
+
+export type DecodedToken = {
+  user: Omit<User, 'roles'> & {
+    roles?: string[]
+  }
+  extra?: Record<string, any>
+  allowed_functions?: FunctionPath[]
+  key_id?: string
+  key_name?: string
+}
+
+export type ApiConfig = {
+  port?: number
+  group?: string
+
+  allowSignup?: boolean
+  signupDefaults?: Partial<{
+    roles: string[]
+    active: boolean
+  }>
+
+  logSuccessfulAuthentications?: boolean
+  tokenUserProperties?: string[]
+
+  errorHandler?: <TError extends Error>(
+    context: Context,
+    error: TError
+  ) => any|Promise<any>
 }

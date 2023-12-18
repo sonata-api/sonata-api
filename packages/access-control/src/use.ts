@@ -1,8 +1,14 @@
 import { deepMerge, right, isLeft, unwrapEither } from '@sonata-api/common'
-import type { Context } from '@sonata-api/api'
-import type { Description } from '@sonata-api/types'
-import type { ReadPayload, WritePayload, AccessControlLayer, AccessControlLayerProps } from './layers/types'
-import type { AccessControl } from './types'
+import type {
+  Context,
+  AccessControl,
+  AccessControlLayer,
+  AccessControlLayerProps,
+  Description,
+  GetAllPayload,
+  InsertPayload
+
+} from '@sonata-api/types'
 
 import {
   checkImmutability,
@@ -11,7 +17,7 @@ import {
 
 } from './layers'
 
-const chainFunctions = <TPayload extends Partial<ReadPayload | WritePayload>>() => async <
+const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayload<any>>>() => async <
   TContext,
   TFunction extends AccessControlLayer | undefined,
   TProps extends AccessControlLayerProps<TPayload>
@@ -49,8 +55,8 @@ export const useAccessControl = <
     ? Object.assign({}, context.description.options)
     : {}
 
-  const beforeRead = async <const Payload extends Partial<ReadPayload>>(payload?: Payload) => {
-    const newPayload = Object.assign({}, payload) as ReadPayload
+  const beforeRead = async <const Payload extends Partial<GetAllPayload<any>>>(payload?: Payload) => {
+    const newPayload = Object.assign({}, payload) as GetAllPayload<any>
     newPayload.filters ??= {}
     newPayload.limit = newPayload.limit
       ? newPayload.limit > 150
@@ -76,7 +82,7 @@ export const useAccessControl = <
     ])
   }
 
-  const beforeWrite = async <const Payload extends Partial<WritePayload>>(payload?: Payload) => {
+  const beforeWrite = async <const Payload extends Partial<InsertPayload<any>>>(payload?: Payload) => {
     const newPayload = Object.assign({ what: {} }, payload)
     const props = {
       payload: newPayload

@@ -1,12 +1,7 @@
 import http from 'http'
 import { parse as parseUrl } from 'url'
-import type {
-  ServerOptions,
-  GenericRequest,
-  GenericResponse,
-  RequestMethod
-
-} from '@sonata-api/http'
+import type { GenericRequest, GenericResponse, RequestMethod } from '@sonata-api/types'
+import type { ServerOptions } from '@sonata-api/http'
 
 const getBody = ($req: http.IncomingMessage) => {
   return new Promise<string>((resolve) => {

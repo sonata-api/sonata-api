@@ -1,4 +1,4 @@
-import type { Context } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
 import { readFile } from 'fs/promises'
 import { ObjectId } from 'mongodb'
 import { left, right } from '@sonata-api/common'

@@ -1,5 +1,6 @@
+import type { Context } from '@sonata-api/types'
 import { unlink } from 'fs/promises'
-import { type Context, useFunctions } from '@sonata-api/api'
+import { useFunctions } from '@sonata-api/api'
 import { description, type File } from './description'
 
 type Props = {

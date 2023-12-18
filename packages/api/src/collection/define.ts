@@ -1,4 +1,4 @@
-import type { Collection } from '../types'
+import type { Collection } from '@sonata-api/types'
 
 export const defineCollection = <const TCollection extends Collection<Awaited<ReturnType<TCollection>>>>(collection: TCollection) => {
   return collection

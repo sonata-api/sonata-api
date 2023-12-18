@@ -1,70 +1,18 @@
-import type { Description, Schema, PackReferences } from '@sonata-api/types'
-import type { GenericRequest, GenericResponse } from '@sonata-api/http'
-import type { Collection as MongoCollection } from 'mongodb'
 import type {
-  FunctionPath,
+  Context,
+  ContextOptions,
+  IndepthCollection,
+  IndepthCollections,
   DecodedToken,
-  ApiConfig,
   Collection,
   CollectionStructure,
+  Models
 
-} from './types'
+} from '@sonata-api/types'
 
 import { unsafe } from '@sonata-api/common'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
-
-type CollectionModel<TDescription extends Description> =
-  MongoCollection<Omit<PackReferences<Schema<TDescription>>, '_id'>>
-
-type Models = {
-  [K in keyof Collections]: CollectionModel<Collections[K]['description']>
-}
-
-type IndepthCollection<TCollection> = TCollection extends { functions: infer CollFunctions }
-  ? Omit<TCollection, 'functions'> & {
-    functions: {
-      [FnName in keyof CollFunctions]: CollFunctions[FnName] extends infer Fn
-        ? Fn extends (...args: [infer FnArgs, infer _FnContext, ...infer Rest]) => infer FnReturn
-          ? (props: FnArgs, ...args: Rest) => FnReturn
-          : never
-        : never
-    }
-  }
-  : TCollection
-
-type IndepthCollections = {
-  [P in keyof Collections]: IndepthCollection<Collections[P]>
-}
-
-export type ContextOptions<TContext> = {
-  apiConfig?: ApiConfig
-  parentContext?: TContext
-  collectionName?: string
-  token?: DecodedToken
-}
-
-export type Context<TDescription extends Description=any> = {
-  description: TDescription
-  model: CollectionModel<TDescription>
-  models: Models
-
-  collection: TDescription['$id'] extends keyof Collections
-    ? IndepthCollection<Collections[TDescription['$id']]>
-    : IndepthCollection<CollectionStructure>
-
-  collections: IndepthCollections
-
-  functionPath: FunctionPath
-  token: DecodedToken
-
-  collectionName?: (keyof Collections & string) | string
-  request: GenericRequest
-  response: GenericResponse
-
-  log: (message: string, details?: any) => Promise<any>
-  apiConfig: ApiConfig
-}
 
 const indepthCollection = (collectionName: string, collections: Record<string, Collection>, parentContext: Context) => {
   const collection = collections[collectionName]?.() as CollectionStructure & {

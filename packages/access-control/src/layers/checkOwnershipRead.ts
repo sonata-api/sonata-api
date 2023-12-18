@@ -1,8 +1,7 @@
-import type { AccessControlLayerProps, ReadPayload } from './types'
-import type { Context } from '@sonata-api/api'
+import type { Context, AccessControlLayerProps, AccessControlLayerReadPayload } from '@sonata-api/types'
 import { right } from '@sonata-api/common'
 
-export const checkOwnershipRead = async (context: Context, props: AccessControlLayerProps<ReadPayload>) => {
+export const checkOwnershipRead = async (context: Context, props: AccessControlLayerProps<AccessControlLayerReadPayload>) => {
   const { token, description } = context
   const payload = Object.assign({}, props.payload)
 

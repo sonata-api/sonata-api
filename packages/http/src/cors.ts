@@ -1,4 +1,4 @@
-import type { GenericRequest, GenericResponse } from './types'
+import type { GenericRequest, GenericResponse } from '@sonata-api/types'
 
 export const cors = (req: GenericRequest, res: GenericResponse) => {
   const headers = <const>{

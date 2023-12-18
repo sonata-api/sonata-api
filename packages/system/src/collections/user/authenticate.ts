@@ -1,5 +1,6 @@
+import type { Context  } from '@sonata-api/types'
 import { compare as bcryptCompare } from 'bcrypt'
-import { signToken, type Context } from '@sonata-api/api'
+import { signToken } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import { description, type User } from './description'
 

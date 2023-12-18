@@ -1,5 +1,4 @@
-import type { CollectionDocument, UploadPayload, OptionalId } from '@sonata-api/types'
-import type { Context } from '../types'
+import type { Context, CollectionDocument, UploadPayload, OptionalId } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
 import { unsafe } from '@sonata-api/common'
 import { checkImmutability } from '@sonata-api/access-control'

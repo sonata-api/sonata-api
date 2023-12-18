@@ -1,4 +1,4 @@
-import type { Context } from '@sonata-api/api'
+import type { Context } from '@sonata-api/types'
 import { useFunctions } from '@sonata-api/api'
 
 export const appendPagination = async (result: any, context: Context) => {

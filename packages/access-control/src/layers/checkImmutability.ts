@@ -1,10 +1,18 @@
-import type { AccessControlLayerProps, ReadPayload, WritePayload } from './types'
-import type { Context } from '@sonata-api/api'
-import { ObjectId } from 'mongodb'
-import { left, right, isLeft } from '@sonata-api/common'
-import { ACErrors } from '../errors'
+import type {
+  Context,
+  AccessControlLayerProps,
+  AccessControlLayerReadPayload,
+  AccessControlLayerWritePayload
+} from '@sonata-api/types'
 
-const internalCheckImmutability = async (context: Context, props: AccessControlLayerProps<ReadPayload|WritePayload>) => {
+import { ObjectId } from 'mongodb'
+import { ACErrors } from '@sonata-api/types'
+import { left, right, isLeft } from '@sonata-api/common'
+
+const internalCheckImmutability = async (
+  context: Context,
+  props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>
+) => {
   const {
     propertyName = '',
     parentId,
@@ -57,7 +65,7 @@ const internalCheckImmutability = async (context: Context, props: AccessControlL
   return right(props.payload)
 }
 
-export const checkImmutability = async (context: Context, props: AccessControlLayerProps<ReadPayload|WritePayload>) => {
+export const checkImmutability = async (context: Context, props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>) => {
   if( !props.parentId ) {
     return right(props.payload)
   }

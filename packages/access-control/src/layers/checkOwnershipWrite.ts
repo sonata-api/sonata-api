@@ -1,9 +1,8 @@
-import type { AccessControlLayerProps, WritePayload } from './types'
-import type { Context } from '@sonata-api/api'
+import type { Context, AccessControlLayerProps, InsertPayload } from '@sonata-api/types'
+import { ACErrors } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
-import { ACErrors } from '../errors'
 
-export const checkOwnershipWrite = async (context: Context, props: AccessControlLayerProps<WritePayload>) => {
+export const checkOwnershipWrite = async (context: Context, props: AccessControlLayerProps<InsertPayload<any>>) => {
   const { token, description } = context
   const { parentId } = props
 

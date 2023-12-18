@@ -1,12 +1,5 @@
-import type { Description } from '@sonata-api/types'
-import type { Context } from '@sonata-api/api'
+import type { Context, Description, RateLimitingParams } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
-
-export type RateLimitingParams = {
-  limit?: number
-  scale?: number
-  increment?: number
-}
 
 export enum RateLimitingErrors {
   Unauthenticated = 'UNAUTHENTICATED',

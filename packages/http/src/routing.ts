@@ -1,6 +1,6 @@
-import type { Context } from '@sonata-api/api'
-import type { GenericRequest, GenericResponse, RequestMethod } from './types'
-import { REQUEST_METHODS, DEFAULT_BASE_URI } from './constants'
+import type { Context, GenericRequest, GenericResponse, RequestMethod } from '@sonata-api/types'
+import { REQUEST_METHODS } from '@sonata-api/types'
+import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { safeJson } from './payload'
 
