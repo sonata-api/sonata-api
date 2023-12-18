@@ -215,6 +215,9 @@ importers:
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
+      '@sonata-api/entrypoint':
+        specifier: '*'
+        version: link:../entrypoint
       '@sonata-api/http':
         specifier: '*'
         version: link:../http
@@ -324,19 +327,6 @@ importers:
       mongodb:
         specifier: '*'
         version: 6.3.0
-
-  playground:
-    dependencies:
-      api:
-        specifier: 'link:'
-        version: 'link:'
-      sonata-api:
-        specifier: file:../packages/sonata-api
-        version: file:packages/sonata-api(@sonata-api/access-control@packages+access-control)(@sonata-api/api@packages+api)(@sonata-api/common@packages+common)(@sonata-api/entrypoint@packages+entrypoint)(@sonata-api/http@packages+http)(@sonata-api/mailing@packages+mailing)(@sonata-api/node-http@packages+node-http)(@sonata-api/security@packages+security)(@sonata-api/server@packages+server)(@sonata-api/system@packages+system)(@sonata-api/types@packages+types)(@sonata-api/validation@packages+validation)
-    devDependencies:
-      typescript:
-        specifier: ^5.1.3
-        version: 5.3.3
 
 packages:
 
@@ -5257,35 +5247,3 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
-
-  file:packages/sonata-api(@sonata-api/access-control@packages+access-control)(@sonata-api/api@packages+api)(@sonata-api/common@packages+common)(@sonata-api/entrypoint@packages+entrypoint)(@sonata-api/http@packages+http)(@sonata-api/mailing@packages+mailing)(@sonata-api/node-http@packages+node-http)(@sonata-api/security@packages+security)(@sonata-api/server@packages+server)(@sonata-api/system@packages+system)(@sonata-api/types@packages+types)(@sonata-api/validation@packages+validation):
-    resolution: {directory: packages/sonata-api, type: directory}
-    id: file:packages/sonata-api
-    name: sonata-api
-    peerDependencies:
-      '@sonata-api/access-control': '*'
-      '@sonata-api/api': '*'
-      '@sonata-api/common': '*'
-      '@sonata-api/entrypoint': '*'
-      '@sonata-api/http': '*'
-      '@sonata-api/mailing': '*'
-      '@sonata-api/node-http': '*'
-      '@sonata-api/security': '*'
-      '@sonata-api/server': '*'
-      '@sonata-api/system': '*'
-      '@sonata-api/types': '*'
-      '@sonata-api/validation': '*'
-    dependencies:
-      '@sonata-api/access-control': link:packages/access-control
-      '@sonata-api/api': link:packages/api
-      '@sonata-api/common': link:packages/common
-      '@sonata-api/entrypoint': link:packages/entrypoint
-      '@sonata-api/http': link:packages/http
-      '@sonata-api/mailing': link:packages/mailing
-      '@sonata-api/node-http': link:packages/node-http
-      '@sonata-api/security': link:packages/security
-      '@sonata-api/server': link:packages/server
-      '@sonata-api/system': link:packages/system
-      '@sonata-api/types': link:packages/types
-      '@sonata-api/validation': link:packages/validation
-    dev: false
