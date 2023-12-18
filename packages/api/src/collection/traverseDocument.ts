@@ -177,7 +177,6 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
     }
 
     const property = getProperty(propName as Lowercase<string>, parent)
-    console.log(propName, property)
 
     if( !property && value && (value.constructor === Object || value.constructor === Array) ) {
       // if first propName is preceded by '$' we assume

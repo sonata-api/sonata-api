@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.9
+
+### Patch Changes
+
+- Remove left over console.log
+
 ## 1.0.8
 
 ### Patch Changes
