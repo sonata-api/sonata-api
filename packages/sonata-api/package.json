@@ -1,6 +1,6 @@
 {
   "name": "sonata-api",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -26,6 +26,7 @@
     "@sonata-api/access-control": "*",
     "@sonata-api/api": "*",
     "@sonata-api/common": "*",
+    "@sonata-api/entrypoint": "*",
     "@sonata-api/http": "*",
     "@sonata-api/mailing": "*",
     "@sonata-api/node-http": "*",

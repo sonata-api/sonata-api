@@ -15,6 +15,9 @@
       "@sonata-api/api": [
         "../api/dist"
       ],
+      "@sonata-api/entrypoint": [
+        "../entrypoint/dist"
+      ],
       "@sonata-api/system": [
         "../system/dist"
       ],

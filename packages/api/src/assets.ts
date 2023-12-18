@@ -1,11 +1,9 @@
-import type { AssetType, Context, Collection, CollectionStructure, ACProfile  } from '@sonata-api/types'
+import type { AssetType, Context, CollectionStructure, ACProfile  } from '@sonata-api/types'
 import { ACErrors } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
 import { isGranted } from '@sonata-api/access-control'
-
-let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
-const collectionMemo: Record<string, CollectionStructure> = {}
+import { getCollection } from '@sonata-api/entrypoint'
 
 const assetsMemo: {
   assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>>> 
@@ -13,39 +11,6 @@ const assetsMemo: {
   assets: {}
 }
 
-export const getEntrypoint = () => {
-  return import(process.argv[1])
-}
-
-const internalGetCollections = async (): Promise<Record<string, Collection>> => {
-  // @ts-ignore
-  const { collections: systemCollections } = await import('@sonata-api/system')
-  const { collections: userCollections } = await getEntrypoint()
-
-  return {
-    ...systemCollections,
-    ...userCollections
-  }
-}
-
-export const getCollections = async () => {
-  if( collectionsMemo ) {
-    return collectionsMemo
-  }
-
-  collectionsMemo = await internalGetCollections()
-  return collectionsMemo
-}
-
-export const getCollection = async (collectionName: string) => {
-  if( collectionMemo[collectionName] ) {
-    return collectionMemo[collectionName]
-  }
-
-  const collections = await getCollections()
-  const collection = collectionMemo[collectionName] = collections[collectionName]?.()
-  return collection
-}
 
 export const internalGetCollectionAsset = async <
   TCollectionName extends string,

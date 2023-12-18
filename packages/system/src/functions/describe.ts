@@ -1,6 +1,7 @@
 import type { Context, Collection, Either } from '@sonata-api/types'
 import type { Description } from '@sonata-api/types'
-import { createContext, getCollections, preloadDescription } from '@sonata-api/api'
+import { createContext, preloadDescription } from '@sonata-api/api'
+import { getCollections } from '@sonata-api/entrypoint'
 import { serialize, isLeft, left, unwrapEither } from '@sonata-api/common'
 import { getAvailableRoles } from '@sonata-api/access-control'
 import { default as authenticate } from '../collections/user/authenticate'

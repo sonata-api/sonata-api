@@ -1,5 +1,5 @@
 import type { AccessControl, Role, ACProfile } from '@sonata-api/types'
-import { getCollection, getCollections } from '@sonata-api/api'
+import { getCollection, getCollections } from '@sonata-api/entrypoint'
 import { deepMerge } from '@sonata-api/common'
 import { DEFAULT_ACCESS_CONTROL } from './constants'
 

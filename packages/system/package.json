@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/system",
-  "version": "1.0.3",
+  "version": "1.0.6",
   "description": "## Installation",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -64,6 +64,7 @@
   "peerDependencies": {
     "@sonata-api/api": "*",
     "@sonata-api/access-control": "*",
+    "@sonata-api/entrypoint": "*",
     "@sonata-api/common": "*",
     "@sonata-api/types": "*",
     "@sonata-api/validation": "*"

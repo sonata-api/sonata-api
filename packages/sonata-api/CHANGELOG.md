@@ -1,5 +1,42 @@
 # sonata-api
 
+## 1.0.5
+
+### Patch Changes
+
+- Include new packages
+- Updated dependencies
+  - @sonata-api/access-control@1.0.6
+  - @sonata-api/entrypoint@0.0.2
+  - @sonata-api/validation@1.0.5
+  - @sonata-api/node-http@1.0.5
+  - @sonata-api/security@1.0.5
+  - @sonata-api/mailing@1.0.5
+  - @sonata-api/common@0.1.8
+  - @sonata-api/server@1.0.5
+  - @sonata-api/system@1.0.6
+  - @sonata-api/types@0.1.10
+  - @sonata-api/http@1.0.6
+  - @sonata-api/api@1.0.7
+
+## 1.0.4
+
+### Patch Changes
+
+- Add new packages
+- Updated dependencies
+  - @sonata-api/access-control@1.0.5
+  - @sonata-api/mailing@1.0.4
+  - @sonata-api/common@0.1.7
+  - @sonata-api/server@1.0.4
+  - @sonata-api/system@1.0.4
+  - @sonata-api/api@1.0.6
+  - @sonata-api/http@1.0.5
+  - @sonata-api/node-http@1.0.4
+  - @sonata-api/security@1.0.4
+  - @sonata-api/types@0.1.9
+  - @sonata-api/validation@1.0.4
+
 ## 1.0.3
 
 ### Patch Changes

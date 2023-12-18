@@ -1,4 +1,4 @@
-import { getCollections } from '@sonata-api/api'
+import { getCollections } from '@sonata-api/entrypoint'
 import { grantedFor } from '@sonata-api/access-control'
 
 if( process.env.NODE_ENV !== 'production' ) {

@@ -11,6 +11,7 @@ import type {
 } from '@sonata-api/types'
 
 import { unsafe } from '@sonata-api/common'
+import { getCollections } from '@sonata-api/entrypoint'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
@@ -56,7 +57,7 @@ export const internalCreateContext = async (
 
   } = options || {}
 
-  const { getCollections, getCollectionAsset } = await import('./assets')
+  const { getCollectionAsset } = await import('./assets')
   const collections = await getCollections()
 
   const context = Object.assign({}, parentContext)

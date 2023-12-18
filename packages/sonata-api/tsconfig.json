@@ -15,6 +15,9 @@
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],
+      "@sonata-api/entrypoint": [
+        "../entrypoint/dist"
+      ],
       "@sonata-api/http": [
         "../http/dist"
       ],

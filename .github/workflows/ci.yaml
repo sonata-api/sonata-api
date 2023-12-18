@@ -25,6 +25,7 @@ jobs:
         run: |
           pnpm --no-bail --filter='./packages/types' build
           pnpm --no-bail --filter='./packages/common' build
+          pnpm --no-bail --filter='./packages/entrypoint' build
           pnpm --no-bail --filter='./packages/http' build
           pnpm --no-bail --filter='./packages/node-http' build
           pnpm --no-bail --filter='./packages/validation' build
