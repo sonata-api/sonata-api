@@ -20,7 +20,8 @@ jobs:
           cache: pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Prepare package building
+
+      - name: Build packages
         run: |
           {
             pnpm --no-bail --filter='./packages/types' build
