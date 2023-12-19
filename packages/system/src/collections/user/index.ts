@@ -7,8 +7,7 @@ import insert from './insert'
 import createAccount from './createAccount'
 import getInfo from './getInfo'
 
-export const user = defineCollection(() => ({
-  item: {} as User,
+export const user = defineCollection({
   description,
   functions: {
     ...useFunctions<User>()([
@@ -36,4 +35,4 @@ export const user = defineCollection(() => ({
       }
     }
   }
-}))
+})

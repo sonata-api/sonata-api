@@ -4,8 +4,7 @@ import insert from './insert'
 import download from './download'
 import remove from './remove'
 
-export const file = defineCollection(() => ({
-  item: {} as File,
+export const file = defineCollection({
   description,
   functions: {
     ...useFunctions<typeof File>()([
@@ -15,4 +14,4 @@ export const file = defineCollection(() => ({
     download,
     remove
   }
-}))
+})

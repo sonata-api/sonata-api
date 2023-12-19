@@ -1,6 +1,6 @@
 import type { Collection as MongoCollection } from 'mongodb'
 import type { GenericRequest, GenericResponse } from './http'
-import type { Description, PackReferences, SchemaWithId, FunctionPath, DecodedToken, ApiConfig, CollectionStructure } from '.'
+import type { Description, PackReferences, SchemaWithId, FunctionPath, DecodedToken, ApiConfig, Collection } from '.'
 
 export type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
@@ -39,7 +39,7 @@ export type Context<TDescription extends Description=any> = {
 
   collection: TDescription['$id'] extends keyof Collections
     ? IndepthCollection<Collections[TDescription['$id']]>
-    : IndepthCollection<CollectionStructure>
+    : IndepthCollection<Collection>
 
   collections: IndepthCollections
 

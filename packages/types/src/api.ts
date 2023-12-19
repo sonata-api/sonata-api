@@ -5,24 +5,19 @@ type User = {
   roles: string[]
 }
 
-export type CollectionStructure<TCollectionStructure extends CollectionStructure = any> = {
-  item: any
+export type Collection<TCollection extends Collection = any> = {
+  item?: any
   description: Description
   security?: SecurityPolicy
-  accessControl?: AccessControl<TCollectionStructure>
+  accessControl?: AccessControl<TCollection>
   functions?: Record<string, (...args: any[]) => any>
   $functions?: Record<string, (...args: any[]) => any>
 }
 
-export type Collection<TCollectionStructure extends CollectionStructure = any> =
-  CollectionStructure<TCollectionStructure> extends infer RecursiveCollection
-    ? () => RecursiveCollection
-    : never
-
-export type AssetType = keyof CollectionStructure
+export type AssetType = keyof Collection
 
 export type FunctionPath = `${string}@${string}`
-export type Collections = Record<string, ReturnType<Collection>>
+export type Collections = Record<string, Collection>
 
 export type UserACProfile = {
   readonly roles: string[]

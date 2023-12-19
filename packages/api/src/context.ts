@@ -5,7 +5,6 @@ import type {
   IndepthCollections,
   DecodedToken,
   Collection,
-  CollectionStructure,
   Models
 
 } from '@sonata-api/types'
@@ -15,8 +14,11 @@ import { getCollections } from '@sonata-api/entrypoint'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
-const indepthCollection = (collectionName: string, collections: Record<string, Collection>, parentContext: Context) => {
-  const collection = collections[collectionName]?.() as CollectionStructure & {
+const indepthCollection = (collectionName: string, collections: Record<string, Collection | (() => Collection | Promise<Collection>)>, parentContext: Context) => {
+  const candidate = collections[collectionName]
+  const collection = (typeof candidate === 'function'
+    ? candidate()
+    : candidate) as Collection & {
     $functions: any
   }
 
@@ -26,7 +28,7 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
 
   collection.$functions = Object.assign({}, collection.functions)
 
-  const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<CollectionStructure>['functions']>>({}, {
+  const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<Collection>['functions']>>({}, {
     get: (_: unknown, functionName: string) => {
       return async (props: any, ...args: any[]) => {
         const childContext = await createContext({

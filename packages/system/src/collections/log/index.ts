@@ -1,7 +1,7 @@
 import { defineCollection, useFunctions } from '@sonata-api/api'
 import { description, Log } from './description'
 
-export const log = defineCollection(() => ({
+export const log = defineCollection({
   item: Log,
   description,
   functions: {
@@ -11,4 +11,4 @@ export const log = defineCollection(() => ({
       'insert'
     ])
   }
-}))
+})

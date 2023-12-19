@@ -1,4 +1,4 @@
-import type { Context, Collection, Either } from '@sonata-api/types'
+import type { Context, Either } from '@sonata-api/types'
 import type { Description } from '@sonata-api/types'
 import { createContext, preloadDescription } from '@sonata-api/api'
 import { getCollections, getRouter } from '@sonata-api/entrypoint'
@@ -45,13 +45,17 @@ export const describe = async (context: Context): Promise<any> => {
 
   const retrievedCollections = (props.collections?.length
     ? Object.entries(collections).filter(([key]) => props.collections!.includes(key)).map(([, value]) => value)
-    : Object.values(collections)) as Collection[]
+    : Object.values(collections))
 
   const descriptions: Record<string, Description> = {}
   result.descriptions = descriptions
 
-  for( const collection of retrievedCollections ) {
-    const { description: rawDescription } = collection()
+  for( const candidate of retrievedCollections ) {
+    const collection = typeof candidate === 'function'
+      ? await candidate()
+      : candidate
+
+    const { description: rawDescription } = collection
     const description = await preloadDescription(rawDescription)
     descriptions[description.$id] = description
   }

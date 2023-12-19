@@ -9,7 +9,7 @@ const iconsJson = async () => {
   const icons = []
 
   for( const collectionName in collections ) {
-    const collection = collections[collectionName as keyof typeof collections]()
+    const collection = collections[collectionName as keyof typeof collections]
     icons.push(...extractIcons(collection.description))
   }
 

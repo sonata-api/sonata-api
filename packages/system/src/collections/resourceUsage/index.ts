@@ -1,7 +1,6 @@
 import { defineCollection } from '@sonata-api/api'
-import { description, ResourceUsage } from './description'
+import { description } from './description'
 
-export const resourceUsage = defineCollection(() => ({
-  item: ResourceUsage,
+export const resourceUsage = defineCollection({
   description
-}))
+})

@@ -1,4 +1,4 @@
-import type { Context, CollectionStructure, Either, GetAllPayload, InsertPayload } from '.'
+import type { Context, Collection, Either, GetAllPayload, InsertPayload } from '.'
 
 export enum ACErrors {
   AuthorizationError = 'AUTHORIZATION_ERROR',
@@ -36,33 +36,33 @@ export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccess
 >>
 
 export type Role<
-  TCollectionStructure extends CollectionStructure=any,
-  TAccessControl extends AccessControl<TCollectionStructure> = any
+  TCollection extends Collection=any,
+  TAccessControl extends AccessControl<TCollection> = any
 > = {
   inherit?: (keyof TAccessControl['roles'])[]
   grantEverything?: boolean
-  grant?: (keyof TCollectionStructure['functions'])[]
-  forbid?: (keyof TCollectionStructure['functions'])[]
+  grant?: (keyof TCollection['functions'])[]
+  forbid?: (keyof TCollection['functions'])[]
 }
 
 export type Roles<
-  TCollectionStructure extends CollectionStructure=any,
-  TAccessControl extends AccessControl<TCollectionStructure> = any
-> = Record<string, Role<TCollectionStructure, TAccessControl>>
+  TCollection extends Collection=any,
+  TAccessControl extends AccessControl<TCollection> = any
+> = Record<string, Role<TCollection, TAccessControl>>
 
 export type InternalAccessControl<
-  TCollectionStructure extends CollectionStructure=any,
-  TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
+  TCollection extends Collection=any,
+  TAccessControl extends AccessControl<TCollection, TAccessControl> = any
 > = {
-  roles?: Roles<TCollectionStructure, TAccessControl>
+  roles?: Roles<TCollection, TAccessControl>
   availableRoles?: keyof TAccessControl['roles']
   parent?: TAccessControl['roles']
 }
 
 export type AccessControl<
-  TCollectionStructure extends CollectionStructure=any,
-  TAccessControl extends AccessControl<TCollectionStructure, TAccessControl> = any
-> = InternalAccessControl<TCollectionStructure, TAccessControl>
+  TCollection extends Collection=any,
+  TAccessControl extends AccessControl<TCollection, TAccessControl> = any
+> = InternalAccessControl<TCollection, TAccessControl>
 
 
 export type ACProfile = {

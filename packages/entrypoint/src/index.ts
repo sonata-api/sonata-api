@@ -1,13 +1,13 @@
-import type { Collection, CollectionStructure } from '@sonata-api/types'
+import type { Collection } from '@sonata-api/types'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>>
-const collectionMemo: Record<string, CollectionStructure> = {}
+const collectionMemo: Record<string, Collection> = {}
 
 export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetCollections = async (): Promise<Record<string, Collection>> => {
+const internalGetCollections = async (): Promise<Record<string, Collection | (() => Collection | Promise<Collection>)>> => {
   // @ts-ignore
   const { collections: systemCollections } = await import('@sonata-api/system')
   const { collections: userCollections } = await getEntrypoint()
@@ -33,7 +33,14 @@ export const getCollection = async (collectionName: string) => {
   }
 
   const collections = await getCollections()
-  const collection = collectionMemo[collectionName] = collections[collectionName]?.()
+
+  const candidate = collections[collectionName]
+  const collection = typeof candidate === 'function'
+    ? await candidate()
+    : candidate
+
+  collectionsMemo[collectionName] = candidate
+
   return collection
 }
 

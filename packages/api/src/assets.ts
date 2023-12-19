@@ -1,4 +1,4 @@
-import type { AssetType, Context, CollectionStructure, ACProfile  } from '@sonata-api/types'
+import type { AssetType, Context, Collection, ACProfile  } from '@sonata-api/types'
 import { ACErrors } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
@@ -10,7 +10,6 @@ const assetsMemo: {
 } = {
   assets: {}
 }
-
 
 export const internalGetCollectionAsset = async <
   TCollectionName extends string,
@@ -39,7 +38,7 @@ export const getCollectionAsset = async <
 ) => {
   const cached = assetsMemo.assets[collectionName]
   if( cached?.[assetName] ) {
-    return right(cached[assetName] as NonNullable<CollectionStructure[TAssetName]>)
+    return right(cached[assetName] as NonNullable<Collection[TAssetName]>)
   }
 
   const assetEither = await internalGetCollectionAsset(collectionName, assetName as any)
@@ -47,7 +46,7 @@ export const getCollectionAsset = async <
     return assetEither
   }
 
-  const asset = unwrapEither(assetEither) as NonNullable<CollectionStructure[TAssetName]>
+  const asset = unwrapEither(assetEither) as NonNullable<Collection[TAssetName]>
   assetsMemo.assets[collectionName as string] ??= {}
   assetsMemo.assets[collectionName as string][assetName] = asset
 
@@ -77,6 +76,7 @@ export const getFunction = async <
 
   const functions = unwrapEither(functionsEither) 
   if( !(functionName in functions) ) {
+    console.log(await getCollection('order'))
     return left(ACErrors.FunctionNotFound)
   }
 
