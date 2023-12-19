@@ -1,11 +1,15 @@
 import type { ObjectId } from 'mongodb'
 
-export type Schema<TSchema> = { _id: ObjectId } & CaseTimestamped<
+export type Schema<TSchema> = CaseTimestamped<
   TSchema,
   CaseOwned<
     TSchema,
     MapTypes<TSchema>
   >>
+
+export type SchemaWithId<TSchema> = Schema<TSchema> & {
+  _id: ObjectId
+}
 
 type Owned = {
   owner?: ObjectId
@@ -23,7 +27,7 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? string      : T extends TestType<{ type: 'number' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
   ? boolean     : T extends TestType<{ properties: any }>
-  ? Omit<Schema<T & { timestamps: false }>, '_id'>   : T extends TestType<{ type: 'object' }>
+  ? Schema<T & { timestamps: false }> : T extends TestType<{ type: 'object' }>
   ? any         : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ items: infer K }>
     ? MapType<K>[]
@@ -65,7 +69,7 @@ export type PackReferences<T> = {
   [P in keyof T]: PackReferencesAux<T[P]>
 }
 
-type FilterReadonlyProperties<TProperties> = {
+export type FilterReadonlyProperties<TProperties> = {
   [P in keyof TProperties as TProperties[P] extends { readOnly: true }
     ? P
     : never

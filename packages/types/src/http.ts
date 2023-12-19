@@ -28,3 +28,23 @@ export type GenericResponse = {
   writeHead: (status: number, headers?: Record<string, any>) => void
   end: (content?: any) => void
 }
+
+export type EndpointFunction<
+  TRouteResponse,
+  TRoutePayload
+> = TRoutePayload extends undefined
+  ? () => Promise<TRouteResponse>
+  : (payload: TRoutePayload) => Promise<TRouteResponse>
+
+export type MakeEndpoint<
+  TRoute extends string,
+  TRouteResponse = any,
+  TRoutePayload = undefined,
+> = TRoute extends `/${infer RouteTail}`
+  ? MakeEndpoint<RouteTail, TRouteResponse, TRoutePayload>
+    : TRoute extends `${infer Route}/${infer RouteTail}`
+      ? Record<Route, MakeEndpoint<RouteTail, TRouteResponse, TRoutePayload>>
+      : TRoute extends `(${string}`
+        ? Record<string, EndpointFunction<TRouteResponse, TRoutePayload>>
+        : Record<TRoute, EndpointFunction<TRouteResponse, TRoutePayload>>
+

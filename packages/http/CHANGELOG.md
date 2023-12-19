@@ -1,5 +1,13 @@
 # @sonata-api/http
 
+## 1.0.7
+
+### Patch Changes
+
+- Make router metadata available to the runtime
+- Updated dependencies
+  - @sonata-api/types@0.1.12
+
 ## 1.0.6
 
 ### Patch Changes

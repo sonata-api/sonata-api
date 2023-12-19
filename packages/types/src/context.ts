@@ -1,9 +1,9 @@
 import type { Collection as MongoCollection } from 'mongodb'
 import type { GenericRequest, GenericResponse } from './http'
-import type { Description, PackReferences, Schema, FunctionPath, DecodedToken, ApiConfig, CollectionStructure } from '.'
+import type { Description, PackReferences, SchemaWithId, FunctionPath, DecodedToken, ApiConfig, CollectionStructure } from '.'
 
 export type CollectionModel<TDescription extends Description> =
-  MongoCollection<Omit<PackReferences<Schema<TDescription>>, '_id'>>
+  MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
 
 export type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>

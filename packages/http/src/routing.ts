@@ -6,10 +6,13 @@ import { safeJson } from './payload'
 
 export type RouteUri = `/${string}`
 
+export type RouteContract = [any, any]
+
 export type RouterOptions = {
   exhaust?: boolean
-  base: RouteUri
+  base?: RouteUri
   middleware?: (context: Context) => any
+  contract?: RouteContract
 }
 
 export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Context, infer _Method, ...infer Rest]
@@ -143,6 +146,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   }
 
   const routes: ((_: unknown, context: Context) => ReturnType<typeof registerRoute>)[] = []
+  const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <TCallback extends (context: Context<any>) => any|Promise<any>>(
     method: RequestMethod | RequestMethod[],
@@ -150,6 +154,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     cb: TCallback,
     routeOptions?: RouterOptions
   ) => {
+    routesMeta[exp] = routeOptions?.contract || null
     routes.push((_, context) => {
       return registerRoute(context, method, exp, cb, routeOptions || options as Required<RouterOptions>)
     })
@@ -162,6 +167,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const router = {
     route,
     routes,
+    routesMeta,
     install: (_context: Context) => {
       return {} as ReturnType<typeof routerPipe>
     }

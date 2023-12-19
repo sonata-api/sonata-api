@@ -37,3 +37,7 @@ export const getCollection = async (collectionName: string) => {
   return collection
 }
 
+export const getRouter = async () => {
+  const entrypoint = await getEntrypoint()
+  return entrypoint.router
+}

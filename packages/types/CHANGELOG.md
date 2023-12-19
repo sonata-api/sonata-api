@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.13
+
+### Patch Changes
+
+- SchemaWithId<T>
+
+## 0.1.12
+
+### Patch Changes
+
+- Make router metadata available to the runtime
+
 ## 0.1.11
 
 ### Patch Changes

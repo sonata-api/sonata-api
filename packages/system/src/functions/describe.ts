@@ -1,7 +1,7 @@
 import type { Context, Collection, Either } from '@sonata-api/types'
 import type { Description } from '@sonata-api/types'
 import { createContext, preloadDescription } from '@sonata-api/api'
-import { getCollections } from '@sonata-api/entrypoint'
+import { getCollections, getRouter } from '@sonata-api/entrypoint'
 import { serialize, isLeft, left, unwrapEither } from '@sonata-api/common'
 import { getAvailableRoles } from '@sonata-api/access-control'
 import { default as authenticate } from '../collections/user/authenticate'
@@ -11,6 +11,7 @@ type Props = {
   noSerialize?: boolean
   roles?: boolean
   revalidate?: boolean
+  router?: boolean
 }
 
 export const describe = async (context: Context): Promise<any> => {
@@ -20,11 +21,12 @@ export const describe = async (context: Context): Promise<any> => {
     auth?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
       ? Partial<Right>
       : never
+    router?: any
   }
 
-  const props = context.request.payload as Props
+  const props = context.request.payload as Props || {}
 
-  if( props?.revalidate ) {
+  if( props.revalidate ) {
     const authEither  = await authenticate({ revalidate: true }, await createContext({
       collectionName: 'user',
       parentContext: context,
@@ -41,7 +43,7 @@ export const describe = async (context: Context): Promise<any> => {
 
   const collections = await getCollections()
 
-  const retrievedCollections = (props?.collections?.length
+  const retrievedCollections = (props.collections?.length
     ? Object.entries(collections).filter(([key]) => props.collections!.includes(key)).map(([, value]) => value)
     : Object.values(collections)) as Collection[]
 
@@ -54,11 +56,16 @@ export const describe = async (context: Context): Promise<any> => {
     descriptions[description.$id] = description
   }
 
-  if( props?.roles ) {
+  if( props.roles ) {
     result.roles = await getAvailableRoles()
   }
 
-  if( props?.noSerialize ) {
+  if( props.router ) {
+    const router = await getRouter()
+    result.router = router.routesMeta
+  }
+
+  if( props.noSerialize ) {
     return result
   }
 
