@@ -1,5 +1,5 @@
 import type { FilterOperators, UpdateFilter, WithId, OptionalId } from 'mongodb'
-import type { PackReferences } from './schema'
+import type { PackReferences, Either, ValidationError } from '.'
 
 export type UploadAuxProps = {
   parentId: string
@@ -75,7 +75,7 @@ export type CollectionFunctions<TDocument extends CollectionDocument<OptionalId<
   count: (payload: CountPayload<TDocument>) => Promise<number>
   get: (payload: GetPayload<TDocument>) => Promise<TDocument>
   getAll: (payload?: GetAllPayload<TDocument>) => Promise<TDocument[]>
-  insert: (payload: InsertPayload<TDocument>) => Promise<TDocument>
+  insert: (payload: InsertPayload<TDocument>) => Promise<Either<ValidationError, TDocument>>
   upload: (payload: UploadPayload) => Promise<any>
   remove: (payload: RemovePayload<TDocument>) => Promise<TDocument>
   removeAll: (payload: RemoveAllPayload<TDocument>) => Promise<any>

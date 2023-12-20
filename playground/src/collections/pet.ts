@@ -1,6 +1,6 @@
 import { defineCollection, defineDescription } from 'sonata-api'
 
-const [Pet, description] = defineDescription({
+const description = defineDescription({
   $id: 'pet',
   properties: {
     name: {
@@ -17,7 +17,6 @@ const [Pet, description] = defineDescription({
   }
 })
 
-export const pet = defineCollection(() => ({
-  item: Pet,
+export const pet = defineCollection({
   description
-}))
+})

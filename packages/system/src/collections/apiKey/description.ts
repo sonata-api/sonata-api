@@ -1,8 +1,8 @@
-import { defineDescription } from '@sonata-api/api'
+import { defineDescriptionTuple } from '@sonata-api/api'
 
 export type ApiKey = typeof ApiKey
 
-export const [ApiKey, description] = defineDescription({
+export const [ApiKey, description] = defineDescriptionTuple({
   $id: 'apiKey',
   owned: true,
   immutable: [

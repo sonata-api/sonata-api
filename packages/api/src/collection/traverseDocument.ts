@@ -1,18 +1,10 @@
-import type { Description, Property, Either } from '@sonata-api/types'
-import type { ACErrors } from '@sonata-api/types'
-import { ObjectId } from 'mongodb'
+import type { Description, Property, Either, ACErrors, ValidationError } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference } from '@sonata-api/common'
+import { validateProperty, validateWholeness, makeValidationError } from '@sonata-api/validation'
+import { ValidationErrorCodes } from '@sonata-api/types'
+import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets'
 import { preloadDescription } from './preload'
-import {
-  validateProperty,
-  validateWholeness,
-  makeValidationError,
-  ValidationErrorCodes,
-  type ValidationError
-
-} from '@sonata-api/validation'
-
 export type TraverseOptions = {
   autoCast?: boolean
   getters?: boolean

@@ -6,7 +6,11 @@ declare global {
   type UserCollections = typeof import('./src').collections
 
   type Collections = {
-    [K in keyof (SystemCollections & UserCollections)]: ReturnType<(SystemCollections & UserCollections)[K]>
+    [K in keyof (SystemCollections & UserCollections)]: (SystemCollections & UserCollections)[K] extends infer CollCandidate
+      ? CollCandidate extends () => infer Coll
+        ? Coll
+        : CollCandidate
+      : never
   }
 }
 //

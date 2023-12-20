@@ -6,7 +6,7 @@ import {
   PropertyValidationError,
   ValidationError
 
-} from './types'
+} from '@sonata-api/types'
 
 export type ValidateOptions = {
   extraneous?: string[] | boolean

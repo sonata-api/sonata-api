@@ -1,6 +1,6 @@
-import { defineDescription } from '@sonata-api/api'
+import { defineDescriptionTuple } from '@sonata-api/api'
 
-export const [ResourceUsage, description] = defineDescription({
+export const [ResourceUsage, description] = defineDescriptionTuple({
   $id: 'resourceUsage',
   required: [],
   properties: {
