@@ -53,8 +53,6 @@ export const getCollectionAsset = async <
   return right(asset)
 }
 
-export const get = internalGetCollectionAsset
-
 export const getFunction = async <
   TCollectionName extends string,
   TFunctionName extends string
@@ -76,7 +74,6 @@ export const getFunction = async <
 
   const functions = unwrapEither(functionsEither) 
   if( !(functionName in functions) ) {
-    console.log(await getCollection('order'))
     return left(ACErrors.FunctionNotFound)
   }
 

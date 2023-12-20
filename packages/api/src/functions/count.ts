@@ -1,14 +1,10 @@
-import type { Context, CollectionDocument, Filters, OptionalId } from '@sonata-api/types'
+import type { Context, SchemaWithId, CountPayload } from '@sonata-api/types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
-export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  filters?: Filters<TDocument>
-}
-
-export const count = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: CountPayload<TDocument>,
+export const count = async <TContext extends Context>(
+  payload: CountPayload<SchemaWithId<Context['description']>>,
   context: TContext extends Context<infer Description>
     ? TContext
     : never

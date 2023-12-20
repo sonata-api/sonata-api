@@ -1,14 +1,11 @@
-import { defineCollection, useFunctions } from '@sonata-api/api'
-import { description, Log } from './description'
+import { defineCollection, get, getAll, insert } from '@sonata-api/api'
+import { description } from './description'
 
 export const log = defineCollection({
-  item: Log,
   description,
   functions: {
-    ...useFunctions<typeof Log>()([
-      'get',
-      'getAll',
-      'insert'
-    ])
+    get,
+    getAll,
+    insert
   }
 })

@@ -1,5 +1,5 @@
 import type { Context } from '@sonata-api/types'
-import type { AvailableFunction } from '@sonata-api/api'
+import type { functions } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/types'
 import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
@@ -81,7 +81,7 @@ export const customVerbs = () => async (parentContext: Context) => {
   return postPipe(result, context)
 }
 
-export const regularVerb = (functionName: AvailableFunction) => async (parentContext: Context) => {
+export const regularVerb = (functionName: keyof typeof functions) => async (parentContext: Context) => {
   const {
     fragments: [
       collectionName,

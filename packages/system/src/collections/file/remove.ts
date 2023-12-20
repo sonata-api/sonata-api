@@ -1,6 +1,6 @@
 import type { Context } from '@sonata-api/types'
 import { unlink } from 'fs/promises'
-import { useFunctions } from '@sonata-api/api'
+import { functions } from '@sonata-api/api'
 import { description, type File } from './description'
 
 type Props = {
@@ -10,8 +10,6 @@ type Props = {
 }
 
 const remove = async (props: Props, context: Context<typeof description>) => {
-  const { remove } = useFunctions<File>()()
-
   const file = await context.collection.functions.get({
     filters: props.filters,
     project: [
@@ -26,7 +24,7 @@ const remove = async (props: Props, context: Context<typeof description>) => {
   if( file.absolute_path ) {
     await unlink(file.absolute_path).catch(() => null)
   }
-  return remove(props, context)
+  return functions.remove(props, context)
 }
 
 export default remove

@@ -64,11 +64,9 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
   })
 }
 
-export const cascadingRemove = async <TContext>(
+export const cascadingRemove = async <TContext extends Context>(
   doc: Record<string, any>,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never
+  context: TContext
 ) => {
   const cascade = getCascade(context.description)
   for( const subject of cascade ) {

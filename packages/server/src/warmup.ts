@@ -35,7 +35,7 @@ export const warmup = async () => {
   return Promise.all(sortedCollections.map(async (collectionName) => {
     const candidate = collections[collectionName]
     const collection = typeof candidate === 'function'
-      ? await candidate()
+      ? candidate()
       : candidate
 
     if( !collection.functions ) {

@@ -1,5 +1,5 @@
-import { defineCollection, useFunctions } from '@sonata-api/api'
-import { description, File } from './description'
+import { defineCollection, get } from '@sonata-api/api'
+import { description } from './description'
 import insert from './insert'
 import download from './download'
 import remove from './remove'
@@ -7,9 +7,7 @@ import remove from './remove'
 export const file = defineCollection({
   description,
   functions: {
-    ...useFunctions<typeof File>()([
-      'get'
-    ]),
+    get,
     insert,
     download,
     remove

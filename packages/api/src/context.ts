@@ -14,19 +14,15 @@ import { getCollections } from '@sonata-api/entrypoint'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
-const indepthCollection = (collectionName: string, collections: Record<string, Collection | (() => Collection | Promise<Collection>)>, parentContext: Context) => {
+const indepthCollection = (collectionName: string, collections: Record<string, Collection | (() => Collection)>, parentContext: Context) => {
   const candidate = collections[collectionName]
-  const collection = (typeof candidate === 'function'
+  const collection = typeof candidate === 'function'
     ? candidate()
-    : candidate) as Collection & {
-    $functions: any
-  }
+    : candidate
 
   if( !collection.functions ) {
     return collection
   }
-
-  collection.$functions = Object.assign({}, collection.functions)
 
   const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<Collection>['functions']>>({}, {
     get: (_: unknown, functionName: string) => {
@@ -36,13 +32,15 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
           collectionName
         })
 
-        return collection.$functions[functionName](props, childContext, ...args)
+        return collection.functions![functionName](props, childContext, ...args)
       }
     }
   })
 
-  collection.functions = proxiedFunctions
-  return collection
+  return {
+    ...collection,
+    functions: proxiedFunctions
+  }
 }
 
 export const internalCreateContext = async (

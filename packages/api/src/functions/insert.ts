@@ -1,13 +1,14 @@
-import type { Context, CollectionDocument, InsertPayload, ObjectId } from '@sonata-api/types'
+import type { Context, SchemaWithId, InsertPayload, ObjectId } from '@sonata-api/types'
 import { useAccessControl } from '@sonata-api/access-control'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
-export const insert = <TDocument extends CollectionDocument<any>>() => async <TContext>(
-  payload: InsertPayload<TDocument>,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never
+export const insert = async <
+  TContext extends Context,
+  TDocument = SchemaWithId<TContext['description']>
+>(
+  payload: InsertPayload<SchemaWithId<TContext['description']>>,
+  context: TContext
 ) => {
   const accessControl = useAccessControl(context)
 
@@ -73,5 +74,5 @@ export const insert = <TDocument extends CollectionDocument<any>>() => async <TC
     getters: true,
     fromProperties: true,
     recurseReferences: true
-  })) as TDocument)
+  })) as TContext['description'])
 }

@@ -1,12 +1,10 @@
-import type { Context, CollectionDocument, RemovePayload, OptionalId } from '@sonata-api/types'
+import type { Context, SchemaWithId, RemovePayload } from '@sonata-api/types'
 import { left, unsafe } from '@sonata-api/common'
 import { traverseDocument, cascadingRemove } from '../collection'
 
-export const remove = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  payload: RemovePayload<TDocument>,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never
+export const remove = async <TContext extends Context>(
+  payload: RemovePayload<SchemaWithId<TContext['description']>>,
+  context: TContext
 ) => {
   if( !payload.filters._id ) {
     return left({

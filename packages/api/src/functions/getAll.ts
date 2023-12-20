@@ -1,4 +1,4 @@
-import type { Context, CollectionDocument, GetAllPayload, OptionalId } from '@sonata-api/types'
+import type { Context, SchemaWithId, GetAllPayload } from '@sonata-api/types'
 import type { Document } from 'mongodb'
 import { useAccessControl } from '@sonata-api/access-control'
 import { unsafe } from '@sonata-api/common'
@@ -14,11 +14,12 @@ export type GetAllOptions = {
   bypassAccessControl?: boolean
 }
 
-export const getAll = <TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
-  _payload: GetAllPayload<TDocument> | null,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never,
+export const getAll = async <
+  TContext extends Context,
+  TDocument = SchemaWithId<TContext['description']>
+>(
+  _payload: GetAllPayload<SchemaWithId<Context['description']>> | null,
+  context: TContext,
   options?: GetAllOptions
 ) => {
   const accessControl = useAccessControl(context)

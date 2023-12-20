@@ -1,7 +1,7 @@
 import type { Context, WithId } from '@sonata-api/types'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
-import { useFunctions } from '@sonata-api/api'
+import { insert as originalInsert } from '@sonata-api/api'
 import { description, type File } from './description'
 
 type Props = {
@@ -14,7 +14,6 @@ type Props = {
 }
 
 const insert = async (props: Props, context: Context<typeof description>) => {
-  const { insert } = useFunctions<File>()()
   const what = Object.assign({}, props.what)
   what.owner = context.token?.user._id
   const { STORAGE_PATH } = process.env
@@ -41,7 +40,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   what.absolute_path = `${STORAGE_PATH}/${filenameHash}.${extension}`
   await writeFile(what.absolute_path, Buffer.from(what.content.split(',').pop()!, 'base64'))
 
-  return insert({
+  return originalInsert({
     ...props,
     what
   }, context)

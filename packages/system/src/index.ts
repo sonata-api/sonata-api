@@ -4,4 +4,4 @@ export * from './collections'
 export * from './utils'
 
 export * as collections from './collections'
-export * as functions from './functions'
+export * as systemFunctions from './functions'

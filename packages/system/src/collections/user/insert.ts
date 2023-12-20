@@ -1,10 +1,10 @@
-import type { Context, WithId } from '@sonata-api/types'
-import { useFunctions } from '@sonata-api/api'
+import type { Context, PackReferences } from '@sonata-api/types'
 import * as bcrypt from 'bcrypt'
+import { functions } from '@sonata-api/api'
 import { description, type User } from './description'
 
 type Props = {
-  what: WithId<Partial<User>>
+  what: Omit<PackReferences<User>, 'roles'>
 }
 
 const insert = async (props: Props, context: Context<typeof description>) => {
@@ -19,8 +19,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     delete props.what.password
   }
 
-  const { insert } = useFunctions<User>()()
-  return insert(props, context)
+  return functions.insert(props, context)
 }
 
 export default insert

@@ -1,5 +1,5 @@
-import { defineCollection, useFunctions } from '@sonata-api/api'
-import { description, User } from './description'
+import { defineCollection, get, getAll, remove, upload, removeFile } from '@sonata-api/api'
+import { description } from './description'
 
 import authenticate from './authenticate'
 import activate from './activate'
@@ -10,13 +10,11 @@ import getInfo from './getInfo'
 export const user = defineCollection({
   description,
   functions: {
-    ...useFunctions<User>()([
-      'get',
-      'getAll',
-      'remove',
-      'upload',
-      'removeFile'
-    ]),
+    get,
+    getAll,
+    remove,
+    upload,
+    removeFile,
     insert,
     authenticate,
     createAccount,

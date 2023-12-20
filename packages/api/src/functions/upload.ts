@@ -1,13 +1,11 @@
-import type { Context, CollectionDocument, UploadPayload, OptionalId } from '@sonata-api/types'
+import type { Context, UploadPayload } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
 import { unsafe } from '@sonata-api/common'
 import { checkImmutability } from '@sonata-api/access-control'
 
-export const upload = <_TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
+export const upload = async <TContext extends Context>(
   payload: UploadPayload,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never
+  context: TContext
 ) => {
   const {
     propertyName,

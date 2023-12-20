@@ -11,7 +11,6 @@ export type Collection<TCollection extends Collection = any> = {
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
   functions?: Record<string, (...args: any[]) => any>
-  $functions?: Record<string, (...args: any[]) => any>
 }
 
 export type AssetType = keyof Collection

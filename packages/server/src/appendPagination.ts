@@ -1,10 +1,9 @@
 import type { Context } from '@sonata-api/types'
-import { useFunctions } from '@sonata-api/api'
+import { functions } from '@sonata-api/api'
 
 export const appendPagination = async (result: any, context: Context) => {
   if( Array.isArray(result) ) {
-    const { count } = useFunctions()()
-    const recordsTotal = await count(context.request.payload, context)
+    const recordsTotal = await functions.count(context.request.payload, context)
 
     const limit = context.request.payload.limit
       ? context.request.payload.limit

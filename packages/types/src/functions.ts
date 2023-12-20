@@ -28,6 +28,11 @@ export type CollectionDocument<TDocument> = Pick<
   Extract<keyof TDocument, Lowercase<string>>
 >
 
+export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
+  filters?: Filters<TDocument>
+}
+
+
 export type GetPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
   filters?: Filters<TDocument>
   project?: Projection<TDocument>
@@ -65,3 +70,15 @@ export type UploadPayload = UploadAuxProps & {
     _id: string
   }
 }
+
+export type CollectionFunctions<TDocument extends CollectionDocument<OptionalId<any>>> = {
+  count: (payload: CountPayload<TDocument>) => Promise<number>
+  get: (payload: GetPayload<TDocument>) => Promise<TDocument>
+  getAll: (payload?: GetAllPayload<TDocument>) => Promise<TDocument[]>
+  insert: (payload: InsertPayload<TDocument>) => Promise<TDocument>
+  upload: (payload: UploadPayload) => Promise<any>
+  remove: (payload: RemovePayload<TDocument>) => Promise<TDocument>
+  removeAll: (payload: RemoveAllPayload<TDocument>) => Promise<any>
+  removeFile: (payload: RemoveFilePayload) => Promise<any>
+}
+

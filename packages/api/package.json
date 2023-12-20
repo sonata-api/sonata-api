@@ -18,8 +18,7 @@
     ".": "./dist/index.js",
     "./presets": "./dist/presets/index.js",
     "./presets/*": "./dist/presets/*",
-    "./database": "./dist/database.js",
-    "./untyped": "./dist/untyped.js"
+    "./database": "./dist/database.js"
   },
   "files": [
     "dist"

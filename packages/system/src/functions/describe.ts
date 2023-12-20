@@ -52,7 +52,7 @@ export const describe = async (context: Context): Promise<any> => {
 
   for( const candidate of retrievedCollections ) {
     const collection = typeof candidate === 'function'
-      ? await candidate()
+      ? candidate()
       : candidate
 
     const { description: rawDescription } = collection

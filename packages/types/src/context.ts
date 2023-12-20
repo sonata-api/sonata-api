@@ -1,6 +1,16 @@
 import type { Collection as MongoCollection } from 'mongodb'
 import type { GenericRequest, GenericResponse } from './http'
-import type { Description, PackReferences, SchemaWithId, FunctionPath, DecodedToken, ApiConfig, Collection } from '.'
+import type {
+  Description,
+  PackReferences,
+  SchemaWithId,
+  FunctionPath,
+  DecodedToken,
+  ApiConfig,
+  Collection,
+  CollectionFunctions
+
+} from '.'
 
 export type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
@@ -9,16 +19,15 @@ export type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
 }
 
-export type IndepthCollection<TCollection> = TCollection extends { functions: infer CollFunctions }
-  ? Omit<TCollection, 'functions'> & {
-    functions: {
-      [FnName in keyof CollFunctions]: CollFunctions[FnName] extends infer Fn
-        ? Fn extends (...args: [infer FnArgs, infer _FnContext, ...infer Rest]) => infer FnReturn
-          ? (props: FnArgs, ...args: Rest) => FnReturn
-          : never
-        : never
+export type IndepthCollection<TCollection> = TCollection extends {
+  functions: infer CollFunctions
+  description: infer InferredDescription
+}
+  ? CollectionFunctions<SchemaWithId<InferredDescription>> extends infer Functions
+    ? Omit<TCollection, 'functions'> & {
+      functions: Omit<CollFunctions, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
     }
-  }
+    : never
   : TCollection
 
 export type IndepthCollections = {
@@ -32,7 +41,7 @@ export type ContextOptions<TContext> = {
   token?: DecodedToken
 }
 
-export type Context<TDescription extends Description=any> = {
+export type Context<TDescription extends Description = any> = {
   description: TDescription
   model: CollectionModel<TDescription>
   models: Models

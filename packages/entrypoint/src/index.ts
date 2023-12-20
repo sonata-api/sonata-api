@@ -7,7 +7,7 @@ export const getEntrypoint = () => {
   return import(process.argv[1])
 }
 
-const internalGetCollections = async (): Promise<Record<string, Collection | (() => Collection | Promise<Collection>)>> => {
+const internalGetCollections = async (): Promise<Record<string, Collection | (() => Collection)>> => {
   // @ts-ignore
   const { collections: systemCollections } = await import('@sonata-api/system')
   const { collections: userCollections } = await getEntrypoint()
@@ -36,7 +36,7 @@ export const getCollection = async (collectionName: string) => {
 
   const candidate = collections[collectionName]
   const collection = typeof candidate === 'function'
-    ? await candidate()
+    ? candidate()
     : candidate
 
   collectionsMemo[collectionName] = candidate

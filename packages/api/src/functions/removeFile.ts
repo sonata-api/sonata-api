@@ -1,11 +1,9 @@
-import type { Context, CollectionDocument, RemoveFilePayload, OptionalId } from '@sonata-api/types'
+import type { Context, RemoveFilePayload } from '@sonata-api/types'
 import { checkImmutability } from '@sonata-api/access-control'
 
-export const removeFile = <_TDocument extends CollectionDocument<OptionalId<any>>>() => async <TContext>(
+export const removeFile = async <TContext extends Context>(
   payload: RemoveFilePayload,
-  context: TContext extends Context<infer Description>
-    ? TContext
-    : never
+  context: TContext
 ) => {
   const {
     propertyName,
