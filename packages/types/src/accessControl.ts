@@ -23,7 +23,7 @@ export type AccessControlLayerWritePayload = {
   what: Record<string, any>
 }
 
-export type AccessControlLayerProps<TPayload extends Record<string, any>=any> = {
+export type AccessControlLayerProps<TPayload extends Record<string, any> = any> = {
   propertyName?: string
   parentId?: string
   childId?: string
@@ -36,7 +36,7 @@ export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccess
 >>
 
 export type Role<
-  TCollection extends Collection=any,
+  TCollection extends Collection = any,
   TAccessControl extends AccessControl<TCollection> = any
 > = {
   inherit?: (keyof TAccessControl['roles'])[]
@@ -46,12 +46,12 @@ export type Role<
 }
 
 export type Roles<
-  TCollection extends Collection=any,
+  TCollection extends Collection = any,
   TAccessControl extends AccessControl<TCollection> = any
 > = Record<string, Role<TCollection, TAccessControl>>
 
 export type InternalAccessControl<
-  TCollection extends Collection=any,
+  TCollection extends Collection = any,
   TAccessControl extends AccessControl<TCollection, TAccessControl> = any
 > = {
   roles?: Roles<TCollection, TAccessControl>
@@ -60,7 +60,7 @@ export type InternalAccessControl<
 }
 
 export type AccessControl<
-  TCollection extends Collection=any,
+  TCollection extends Collection = any,
   TAccessControl extends AccessControl<TCollection, TAccessControl> = any
 > = InternalAccessControl<TCollection, TAccessControl>
 

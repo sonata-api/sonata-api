@@ -9,8 +9,8 @@ export type Collection<
   TCollection extends Collection = any,
   TDescription extends Description = Description
 > = {
-  item?: any
   description: TDescription
+  item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
   functions?: Record<string, (...args: any[]) => any>

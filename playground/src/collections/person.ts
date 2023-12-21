@@ -36,6 +36,9 @@ export const person = defineCollection({
       guest: {
         inherit: [
           'root'
+        ],
+        grant: [
+          'getAll'
         ]
       }
     }
