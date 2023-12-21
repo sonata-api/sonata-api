@@ -19,3 +19,20 @@ export const pet = defineCollection({
   }
 })
 
+export const petToy = defineCollection({
+  description: {
+    $id: 'petToy',
+    properties: {
+      name: {
+        type: 'string'
+      },
+      brand: {
+        enum: [
+          'dogs choice',
+          'the pet company',
+        ]
+      }
+    }
+  }
+})
+
