@@ -5,9 +5,12 @@ type User = {
   roles: string[]
 }
 
-export type Collection<TCollection extends Collection = any> = {
+export type Collection<
+  TCollection extends Collection = any,
+  TDescription extends Description = Description
+> = {
   item?: any
-  description: Description
+  description: TDescription
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
   functions?: Record<string, (...args: any[]) => any>
@@ -22,7 +25,6 @@ export type UserACProfile = {
   readonly roles: string[]
   readonly allowed_functions?: string[]
 }
-
 
 export type DecodedToken = {
   user: Omit<User, 'roles'> & {

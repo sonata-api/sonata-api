@@ -1,20 +1,18 @@
-import { defineCollection, defineDescription } from 'sonata-api'
-
-const description = defineDescription({
-  $id: 'petToy',
-  properties: {
-    name: {
-      type: 'string'
-    },
-    brand: {
-      enum: [
-        'dogs choice',
-        'the pet company',
-      ]
-    }
-  }
-})
+import { defineCollection } from 'sonata-api'
 
 export const petToy = defineCollection({
-  description
+  description: {
+    $id: 'petToy',
+    properties: {
+      name: {
+        type: 'string'
+      },
+      brand: {
+        enum: [
+          'dogs choice',
+          'the pet company',
+        ]
+      }
+    }
+  }
 })

@@ -1,8 +1,11 @@
-import type { SchemaWithId, Collection } from '@sonata-api/types'
+import type { SchemaWithId, Collection, Description } from '@sonata-api/types'
 
-export const defineCollection = <TCollection extends Collection<TCollection>>(collection: TCollection) => {
+export const defineCollection = <
+  TCollection extends Collection<TCollection, TDescription>,
+  const TDescription extends Description
+>(collection: TCollection & { description: TDescription }) => {
   return collection as TCollection & {
-    item: SchemaWithId<TCollection['description']>
+    item: SchemaWithId<TDescription>
   }
 }
 

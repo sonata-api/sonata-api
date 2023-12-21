@@ -1,31 +1,29 @@
-import { defineCollection, defineDescription, getAll, insert } from 'sonata-api'
-
-const description = defineDescription({
-  $id: 'person',
-  required: [],
-  properties: {
-    name: {
-      type: 'string'
-    },
-    job: {
-      enum: [
-        'driver',
-        'baker',
-        'programmer',
-        'policeman'
-      ]
-    },
-    pets: {
-      type: 'array',
-      items: {
-        $ref: 'pet'
-      }
-    }
-  }
-})
+import { defineCollection, getAll, insert } from 'sonata-api'
 
 export const person = defineCollection({
-  description,
+  description: {
+    $id: 'person',
+    required: [],
+    properties: {
+      name: {
+        type: 'string',
+      },
+      job: {
+        enum: [
+          'driver',
+          'baker',
+          'programmer',
+          'policeman'
+        ]
+      },
+      pets: {
+        type: 'array',
+        items: {
+          $ref: 'pet'
+        }
+      }
+    }
+  },
   functions: {
     getAll,
     insert,
