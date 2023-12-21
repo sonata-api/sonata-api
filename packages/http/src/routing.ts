@@ -101,8 +101,10 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any|Pro
   try {
     const result = await cb()
     if( result === null ) {
-      res.writeHead(204)
-      res.end()
+      if( !res.headersSent ) {
+        res.writeHead(204)
+        res.end()
+      }
       return
     }
 

@@ -5,11 +5,8 @@ type User = {
   roles: string[]
 }
 
-export type Collection<
-  TCollection extends Collection = any,
-  TDescription extends Description = Description
-> = {
-  description: TDescription
+export type Collection<TCollection extends Collection = any> = {
+  description: Description
   item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
