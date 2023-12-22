@@ -8,14 +8,8 @@ export const getEntrypoint = () => {
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (() => Collection)>> => {
-  // @ts-ignore
-  const { collections: systemCollections } = await import('@sonata-api/system')
-  const { collections: userCollections } = await getEntrypoint()
-
-  return {
-    ...systemCollections,
-    ...userCollections
-  }
+  const { collections } = await getEntrypoint()
+  return { ...collections }
 }
 
 export const getCollections = async () => {

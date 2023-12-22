@@ -30,7 +30,7 @@ export const describe = async (context: Context): Promise<any> => {
     const authEither  = await authenticate({ revalidate: true }, await createContext({
       collectionName: 'user',
       parentContext: context,
-    }) as any)
+    }))
 
     if( isLeft(authEither) ) {
       const error = unwrapEither(authEither)

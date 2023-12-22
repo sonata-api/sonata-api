@@ -23,7 +23,7 @@ export type ProxiedRouter<TRouter> = TRouter & Record<RequestMethod, (...args: A
 
 export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
-  method: RequestMethod | RequestMethod[],
+  method: RequestMethod | RequestMethod[] | null,
   exp: string | RegExp,
   options: RouterOptions
 ) => {
@@ -34,7 +34,7 @@ export const matches = <TRequest extends GenericRequest>(
     return
   }
 
-  if( method !== req.method ) {
+  if( method && method !== req.method ) {
     if( !Array.isArray(method) || !method.includes(req.method) ) {
       return
     }
@@ -162,6 +162,24 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     })
   }
 
+  const group = <
+    TRouter extends {
+      install: (context: Context) => any
+      routesMeta: typeof routesMeta
+    }
+  >(exp: RouteUri, router: TRouter) => {
+    for( const route in router.routesMeta ) {
+      routesMeta[`${exp}${route}`] = router.routesMeta[route as keyof typeof router.routesMeta]
+    }
+
+    routes.push((_, context) => {
+      const match = matches(context.request, null, new RegExp(`${exp}/`), options)
+      if( match ) {
+        return router.install(context)
+      }
+    })
+  }
+
   const routerPipe = pipe(routes, {
     returnFirst: true
   })
@@ -170,6 +188,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     route,
     routes,
     routesMeta,
+    group,
     install: (_context: Context) => {
       return {} as ReturnType<typeof routerPipe>
     }
