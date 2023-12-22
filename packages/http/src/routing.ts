@@ -15,11 +15,6 @@ export type RouterOptions = {
   contract?: RouteContract
 }
 
-export type AbbreviatedRouteParams = Parameters<typeof registerRoute> extends [infer _Context, infer _Method, ...infer Rest]
-  ? Rest
-  : never
-
-
 type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & {
   request: Omit<Context['request'], 'payload'> & {
     payload: TContract extends [infer Payload, any]
@@ -252,7 +247,11 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   return new Proxy(router as ProxiedRouter<typeof router>, {
     get: (target, key) => {
       if( REQUEST_METHODS.includes(key as any) ) {
-        return (...args: AbbreviatedRouteParams) => target.route(key as RequestMethod, ...args)
+        return (
+          ...args: Parameters<typeof target.route> extends [any, ...infer Params]
+            ? Params
+            : never
+        ) => target.route(key as RequestMethod, ...args)
       }
 
       return target[key as keyof typeof target]
