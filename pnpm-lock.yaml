@@ -130,6 +130,9 @@ importers:
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
+      '@sonata-api/validation':
+        specifier: '*'
+        version: link:../validation
 
   packages/mailing:
     dependencies:
