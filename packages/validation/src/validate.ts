@@ -1,4 +1,4 @@
-import type { Description, Property, Schema } from '@sonata-api/types'
+import type { JsonSchema, Property, Schema } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
@@ -150,12 +150,12 @@ export const validateProperty = (
   }
 }
 
-export const validateWholeness = (what: Record<Lowercase<string>, any>, description: Omit<Description, '$id'>) => {
-  const required = description.required
-    ? description.required
-    : Object.keys(description.properties)
+export const validateWholeness = (what: Record<Lowercase<string>, any>, schema: Omit<JsonSchema, '$id'>) => {
+  const required = schema.required
+    ? schema.required
+    : Object.keys(schema.properties)
 
-  const missingProps = getMissingProperties(what, description, required)
+  const missingProps = getMissingProperties(what, schema, required)
 
   if( missingProps.length > 0 ) {
     const requiredNames = Array.isArray(required)
@@ -175,10 +175,10 @@ export const validateWholeness = (what: Record<Lowercase<string>, any>, descript
 
 export const validate = <
   TWhat extends Record<Lowercase<string>, any>,
-  const TDescription extends Omit<Description, '$id' | 'items'>
+  const TJsonSchema extends Omit<JsonSchema, '$id' | 'items'>
 >(
   what: TWhat | undefined,
-  description: TDescription,
+  schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {
   if( !what ) {
@@ -188,7 +188,7 @@ export const validate = <
     }))
   }
 
-  const wholenessError = validateWholeness(what, description)
+  const wholenessError = validateWholeness(what, schema)
   if( wholenessError ) {
     return left(wholenessError)
   }
@@ -199,7 +199,7 @@ export const validate = <
     const result = validateProperty(
       propName as Lowercase<string>,
       what[propName],
-      description.properties?.[propName as Lowercase<string>],
+      schema.properties?.[propName as Lowercase<string>],
       options
     )
 
@@ -221,45 +221,45 @@ export const validate = <
     }))
   }
 
-  return right(what as Schema<TDescription>)
+  return right(what as Schema<TJsonSchema>)
 }
 
 export const validateSilently = <
   TWhat extends Record<Lowercase<string>, any>,
-  const TDescription extends Omit<Description, '$id'>
+  const TJsonSchema extends Omit<JsonSchema, '$id'>
 >(
   what: TWhat | undefined,
-  description: TDescription,
+  schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {
-  const result = validate(what, description, options)
+  const result = validate(what, schema, options)
   return isLeft(result)
     ? null
     : result.value
 }
 
-export const validator = <const TDescription extends Omit<Description, '$id'>>(
-  description: TDescription,
+export const validator = <const TJsonSchema extends Omit<JsonSchema, '$id'>>(
+  schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {
 
   return <const>[
-    {} as Schema<TDescription>,
+    {} as Schema<TJsonSchema>,
     <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
-      return validate(what, description, options)
+      return validate(what, schema, options)
     }
   ]
 }
 
-export const silentValidator = <const TDescription extends Omit<Description, '$id'>>(
-  description: TDescription,
+export const silentValidator = <const TJsonSchema extends Omit<JsonSchema, '$id'>>(
+  schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {
 
   return <const>[
-    {} as Schema<TDescription>,
+    {} as Schema<TJsonSchema>,
     <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
-      return validateSilently(what, description, options)
+      return validateSilently(what, schema, options)
     }
   ]
 }

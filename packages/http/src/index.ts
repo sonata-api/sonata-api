@@ -1,4 +1,5 @@
 export * from './constants'
+export * from './contract'
 export * from './cors'
 export * from './options'
 export * from './routing'

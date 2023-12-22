@@ -1,16 +1,5 @@
 import type { ObjectId } from 'mongodb'
 
-export type Schema<TSchema> = CaseTimestamped<
-  TSchema,
-  CaseOwned<
-    TSchema,
-    MapTypes<TSchema>
-  >>
-
-export type SchemaWithId<TSchema> = Schema<TSchema> & {
-  _id: ObjectId
-}
-
 type Owned = {
   owner?: ObjectId
 }
@@ -90,7 +79,7 @@ type MergeReferences<TSchema> = CombineProperties<TSchema> extends infer Combine
     : never
   : never
 
-type MapTypes<TSchema> = 
+export type InferSchema<TSchema> = 
   MergeReferences<TSchema> extends infer MappedTypes
     ? TSchema extends { required: readonly [] }
       ? Partial<MappedTypes>
@@ -102,6 +91,17 @@ type MapTypes<TSchema> =
           : never
         : MappedTypes
       : never
+
+export type Schema<TSchema> = CaseTimestamped<
+  TSchema,
+  CaseOwned<
+    TSchema,
+    InferSchema<TSchema>
+  >>
+
+export type SchemaWithId<TSchema> = Schema<TSchema> & {
+  _id: ObjectId
+}
 
 type CaseOwned<
   TSchema,
