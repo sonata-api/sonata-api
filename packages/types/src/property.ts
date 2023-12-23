@@ -109,6 +109,10 @@ export type ArrayOfRefs = Omit<ArrayProperty, 'items'> & {
   items: RefProperty
 }
 
+export type LiteralProperty = {
+  literal: any
+}
+
 export type MixedProperty =
   | RefProperty
   | FileProperty
@@ -118,6 +122,7 @@ export type MixedProperty =
   | StringProperty
   | NumberProperty
   | BooleanProperty
+  | LiteralProperty
 
 export type PropertyBase = {
   description?: string

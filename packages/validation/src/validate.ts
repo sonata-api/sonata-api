@@ -76,11 +76,22 @@ export const validateProperty = (
   }
 
   if( 'properties' in property ) {
-    const resultEither = validate(what, property as any, options)
+    const resultEither = validate(what, property, options)
 
     return isLeft(resultEither)
       ? unwrapEither(resultEither)
       : undefined
+  }
+
+  if( 'literal' in property ) {
+    if( what !== property.literal ) {
+      return makePropertyError('unmatching', {
+        expected: property.literal,
+        got: what
+      })
+    }
+
+    return
   }
 
   const expectedType = getPropertyType(property)!
