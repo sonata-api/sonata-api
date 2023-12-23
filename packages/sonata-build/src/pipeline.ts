@@ -34,7 +34,11 @@ async function compilationPhase() {
   await mkdir(base, { recursive: true })
 
   for( const collectionName in collections ) {
-    const collection = collections[collectionName as keyof typeof collections]()
+    const candidate = collections[collectionName as keyof typeof collections]
+    const collection = typeof candidate === 'function'
+      ? candidate()
+      : candidate
+
     icons.push(...extractIcons(collection.description))
   }
 

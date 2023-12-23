@@ -43,14 +43,15 @@ export const describe = async (context: Context): Promise<any> => {
 
   const collections = await getCollections()
 
-  const retrievedCollections = (props.collections?.length
-    ? Object.entries(collections).filter(([key]) => props.collections!.includes(key)).map(([, value]) => value)
-    : Object.values(collections))
+  const retrievedCollections = props.collections?.length
+    ? Object.fromEntries(Object.entries(collections).filter(([key]) => props.collections!.includes(key)))
+    : collections
 
   const descriptions: Record<string, Description> = {}
   result.descriptions = descriptions
 
-  for( const candidate of retrievedCollections ) {
+  for( const collectionName in retrievedCollections ) {
+    const candidate = retrievedCollections[collectionName]
     const collection = typeof candidate === 'function'
       ? candidate()
       : candidate
@@ -76,3 +77,4 @@ export const describe = async (context: Context): Promise<any> => {
   context.response.setHeader('content-type', 'application/bson')
   return context.response.end(serialize(result))
 }
+

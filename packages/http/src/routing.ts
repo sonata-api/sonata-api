@@ -199,20 +199,27 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
       install: (context: Context, options?: RouterOptions) => any
       routesMeta: typeof routesMeta
     }
-  >(exp: RouteUri, router: TRouter) => {
+  >(exp: RouteUri, router: TRouter, routeOptions?: RouterOptions) => {
     const newOptions = Object.assign({}, options)
 
     for( const route in router.routesMeta ) {
       routesMeta[`${exp}${route}`] = router.routesMeta[route as keyof typeof router.routesMeta]
     }
 
-    routes.push((_, context, groupOptions) => {
+    routes.push(async (_, context, groupOptions) => {
       newOptions.base = groupOptions
         ? `${groupOptions.base!}${exp}`
         : `${options.base!}${exp}`
 
       const match = matches(context.request, null, new RegExp(`^${newOptions.base}/`), newOptions)
       if( match ) {
+        if( routeOptions?.middleware ) {
+          const result = await routeOptions.middleware(context)
+          if( result ) {
+            return result
+          }
+        }
+
         return router.install(context, newOptions)
       }
     })
