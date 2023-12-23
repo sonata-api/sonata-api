@@ -15,6 +15,20 @@ export type RouterOptions = {
   contract?: RouteContract
 }
 
+type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
+  ? SchemaOption extends any
+    ? InferSchema<SchemaOption>
+    : never
+  : InferSchema<TSchema>
+
+type InferResponse<TContract> = TContract extends [any, infer Response]
+  ? Response extends null
+    ? any
+    : MapSchemaUnion<Response> extends infer InferredResponse
+      ? InferredResponse | Promise<InferredResponse>
+      : never
+    : never
+
 type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & {
   request: Omit<Context['request'], 'payload'> & {
     payload: TContract extends [infer Payload, any]
@@ -28,8 +42,8 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
 export type ProxiedRouter<TRouter> = TRouter & Record<
   RequestMethod,
   <
-    TCallback extends (context: TypedContext<TContract>) => any | Promise<any>,
-    TContract extends RouteContract
+    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract>,
+    const TContract extends RouteContract
   >(
     exp: RouteUri,
     cb: TCallback,
@@ -170,8 +184,8 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <
-    TCallback extends (context: TypedContext<TContract>) => any | Promise<any>,
-    TContract extends RouteContract
+    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract>,
+    const TContract extends RouteContract
   >(
     method: RequestMethod | RequestMethod[],
     exp: RouteUri,

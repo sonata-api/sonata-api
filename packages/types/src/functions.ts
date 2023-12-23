@@ -73,7 +73,7 @@ export type UploadPayload = UploadAuxProps & {
 
 export type CollectionFunctions<TDocument extends CollectionDocument<OptionalId<any>>> = {
   count: (payload: CountPayload<TDocument>) => Promise<number>
-  get: (payload: GetPayload<TDocument>) => Promise<TDocument>
+  get: (payload: GetPayload<TDocument>) => Promise<TDocument | null>
   getAll: (payload?: GetAllPayload<TDocument>) => Promise<TDocument[]>
   insert: (payload: InsertPayload<TDocument>) => Promise<Either<ValidationError, TDocument>>
   upload: (payload: UploadPayload) => Promise<any>
