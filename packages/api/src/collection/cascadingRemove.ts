@@ -36,7 +36,7 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
   const coll = getDatabaseCollection(subject.collectionName)
 
   if( Array.isArray(targetId) ) {
-    const removeAllEither = await getFunction(subject.collectionName, 'removeAllAll')
+    const removeAllEither = await getFunction(subject.collectionName, 'removeAll')
     if( isRight(removeAllEither) ) {
       const removeAll = unwrapEither(removeAllEither)
       return removeAll({
