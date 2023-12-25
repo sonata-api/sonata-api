@@ -1,5 +1,5 @@
 import type { Property } from '@sonata-api/types'
-import { formatDateTime } from './string'
+import { formatDateTime } from './date'
 import { getReferenceProperty } from '.'
 
 export const formatValue = (value: any, key: string, property?: Property, index?: string): string => {

@@ -17,7 +17,15 @@ const units = {
   second: 1000
 }
 
-export const formatToString = function(target: Date, options?: DateFormatOptions) {
+export const formatDateTime = function(date: Date | string, options?: DateFormatOptions) {
+  const target = date instanceof Date
+    ? date
+    : new Date(date)
+
+  if( isNaN(target.getDate()) ) {
+    return '-'
+  }
+
   const {
     hours,
     hoursOnly,
@@ -33,12 +41,6 @@ export const formatToString = function(target: Date, options?: DateFormatOptions
   return hours
     ? target.toLocaleString(locale)
     : target.toLocaleDateString(locale)
-}
-
-export const daysAgo = function(target: Date, days: number) {
-  const d = new Date()
-  d.setDate(target.getDate() - days)
-  return d
 }
 
 export const getRelativeTimeFromNow = function(target: any) {
