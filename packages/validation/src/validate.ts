@@ -86,7 +86,7 @@ export const validateProperty = (
   if( 'literal' in property ) {
     if( what !== property.literal ) {
       return makePropertyError('unmatching', {
-        expected: property.literal,
+        expected: property.literal as any,
         got: what
       })
     }

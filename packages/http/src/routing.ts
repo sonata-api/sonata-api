@@ -11,6 +11,10 @@ export type RouteUri = `/${string}`
 export type RouterOptions = {
   exhaust?: boolean
   base?: RouteUri
+}
+
+export type RouteOptions = {
+  base?: RouteUri
   middleware?: (context: Context) => any
   contract?: RouteContract
 }
@@ -33,7 +37,7 @@ export type ProxiedRouter<TRouter> = TRouter & Record<
   >(
     exp: RouteUri,
     cb: TCallback,
-    routeOptions?: RouterOptions & {
+    routeOptions?: RouteOptions & {
       contract?: TContract
     }
   ) => ReturnType<typeof registerRoute>
@@ -43,7 +47,7 @@ export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
   method: RequestMethod | RequestMethod[] | null,
   exp: string | RegExp,
-  options: RouterOptions
+  options: RouteOptions
 ) => {
   const { url } = req
   const { base = DEFAULT_BASE_URI } = options
@@ -73,7 +77,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
   method: RequestMethod | RequestMethod[],
   exp: RouteUri,
   cb: TCallback,
-  options: RouterOptions = {}
+  options: RouteOptions = {}
 ) => {
   const match = matches(context.request, method, exp, options)
   if( match ) {
@@ -166,7 +170,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
   options.base ??= DEFAULT_BASE_URI
 
-  const routes: ((_: unknown, context: Context, groupOptions?: RouterOptions) => ReturnType<typeof registerRoute>)[] = []
+  const routes: ((_: unknown, context: Context, groupOptions?: RouteOptions) => ReturnType<typeof registerRoute>)[] = []
   const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <
@@ -176,7 +180,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     method: RequestMethod | RequestMethod[],
     exp: RouteUri,
     cb: TCallback,
-    routeOptions?: RouterOptions & {
+    routeOptions?: RouteOptions & {
       contract?: TContract
     }
   ) => {
@@ -196,10 +200,10 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
 
   const group = <
     TRouter extends {
-      install: (context: Context, options?: RouterOptions) => any
+      install: (context: Context, options?: RouteOptions) => any
       routesMeta: typeof routesMeta
     }
-  >(exp: RouteUri, router: TRouter, routeOptions?: RouterOptions) => {
+  >(exp: RouteUri, router: TRouter, routeOptions?: RouteOptions) => {
     const newOptions = Object.assign({}, options)
 
     for( const route in router.routesMeta ) {
@@ -234,12 +238,12 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     routes,
     routesMeta,
     group,
-    install: (_context: Context, _options?: RouterOptions) => {
+    install: (_context: Context, _options?: RouteOptions) => {
       return {} as ReturnType<typeof routerPipe>
     }
   }
 
-  router.install = async (context: Context, options?: RouterOptions) => {
+  router.install = async (context: Context, options?: RouteOptions) => {
     const result = await routerPipe(undefined, context, options)
     if( exhaust && result === undefined ) {
       return left({

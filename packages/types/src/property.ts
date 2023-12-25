@@ -110,7 +110,7 @@ export type ArrayOfRefs = Omit<ArrayProperty, 'items'> & {
 }
 
 export type LiteralProperty = {
-  literal: any
+  literal: string | number | boolean
 }
 
 export type MixedProperty =
