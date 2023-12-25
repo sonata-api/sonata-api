@@ -42,14 +42,3 @@ export const topLevel = (config: InstanceConfig) => {
   return proxify({})
 }
 
-(async () => {
-  const aeria = topLevel({
-    apiUrl: 'https://pedidos.capsulbrasil.com.br/api'
-  })
-
-  await aeria.user.authenticate({
-    email: 'root',
-    password: '12569874'
-  })
-})()
-
