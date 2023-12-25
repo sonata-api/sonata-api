@@ -56,11 +56,9 @@ type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
     : never
   : InferSchema<TSchema>
 
-export type InferResponse<TContract> = TContract extends [any, infer Response]
-  ? Response extends null
+export type InferResponse<TResponse> = Response extends null
     ? any
-    : MapSchemaUnion<Response> extends infer InferredResponse
-      ? InferredResponse | Promise<InferredResponse>
+    : MapSchemaUnion<TResponse> extends infer InferredTResponse
+      ? InferredTResponse | Promise<InferredTResponse>
       : never
-    : never
 

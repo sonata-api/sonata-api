@@ -32,7 +32,7 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
 export type ProxiedRouter<TRouter> = TRouter & Record<
   RequestMethod,
   <
-    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract>,
+    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract[1]>,
     const TContract extends RouteContract
   >(
     exp: RouteUri,
@@ -174,7 +174,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <
-    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract>,
+    TCallback extends (context: TypedContext<TContract>) => InferResponse<TContract[1]>,
     const TContract extends RouteContract
   >(
     method: RequestMethod | RequestMethod[],
