@@ -188,11 +188,13 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
     parent,
     depth = 0,
     maxDepth = 3,
-    memoize,
+    memoize: memoizeId,
     project = [],
     properties
 
   } = options
+
+  const memoize = `${memoizeId}-${project.sort().join('-')}`
 
   if( memoize && lookupMemo[memoize] ) {
     const result = lookupMemo[memoize]

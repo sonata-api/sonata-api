@@ -52,8 +52,8 @@ export const get = async <
 
   pipeline.push(...await buildLookupPipeline(references, {
     memoize: context.description.$id,
-    project,
-    properties: context.description.properties
+    project: payload.populate || project,
+    properties: context.description.properties,
   }))
 
   const result = await context.model.aggregate(pipeline).next()

@@ -82,7 +82,7 @@ export const getAll = async <
 
   pipeline.push(...await buildLookupPipeline(references, {
     memoize: context.description.$id,
-    project,
+    project: payload.populate || project,
     properties: context.description.properties
   }))
 
