@@ -71,9 +71,6 @@ export const [User, description] = defineDescriptionTuple({
       accept: [
         'image/*',
       ],
-      populate: [
-        'owner'
-      ]
     },
     group: {
       type: 'string',
