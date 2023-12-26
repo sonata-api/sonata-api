@@ -104,6 +104,29 @@ export type SchemaWithId<TSchema> = Schema<TSchema> & {
   _id: ObjectId
 }
 
+type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
+  ? { $ref: Ref }       : TValue extends string
+  ? { type: 'string' }  : TValue extends number
+  ? { type: 'number' }  : TValue extends boolean
+  ? { type: 'boolean' } : TValue extends new () => Date
+  ? { type: 'string', format: 'date' }            : TValue extends readonly [infer K]
+  ? { type: 'array', items: ValueToProperty<K> }  : TValue extends (infer K)[]
+  ? { enum: K }         : TValue extends Record<string, any>
+  ? keyof TValue extends never
+    ? { type: 'object' }
+    : { type: 'object' } & ObjectToSchema<TValue> : never
+
+export type ObjectToSchema<TObject extends Record<string, any>, TRequired extends string[] | null = null> = {
+  [P in keyof TObject]: TObject[P] extends infer Value
+    ? ValueToProperty<Value>
+    : never
+} extends infer Properties
+  ? TRequired extends null
+    ? { properties: Properties }
+    : { required: TRequired, properties: Properties }
+  : never
+
+
 type CaseOwned<
   TSchema,
   TType

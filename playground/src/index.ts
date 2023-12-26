@@ -1,4 +1,4 @@
-import { init, makeRouter, isLeft, unwrapEither } from 'sonata-api'
+import { init, makeRouter, isLeft, unwrapEither, schema, leftSchema } from 'sonata-api'
 export * as collections from './collections'
 
 const router = makeRouter({
@@ -34,10 +34,10 @@ router.GET('/get-people', async (context) => {
   }
 }, {
   contract: [
-    { properties: { name: { type: 'string' } } },
+    schema({ name: '' }),
     [
-      { properties: { _tag: { literal: 'Left' }, value: { type: 'object' } } },
-      { properties: { result: { type: 'array', items: { $ref: 'person' } } } }
+      leftSchema({}),
+      schema({ result: ['$person'] })
     ]
   ]
 })
