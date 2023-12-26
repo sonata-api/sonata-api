@@ -60,7 +60,7 @@ export type ArrayProperty = {
 }
 
 export type FixedObjectProperty = {
-  properties: Record<string, Property>
+  properties: Record<Lowercase<string>, Property>
   form?: ReadonlyArray<string>
   required?: ReadonlyArray<string>
 }
