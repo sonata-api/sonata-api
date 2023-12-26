@@ -1,4 +1,4 @@
-import type { InferSchema } from './schema'
+import type { InferProperty } from './schema'
 
 export const REQUEST_METHODS = <const>[
   'GET',
@@ -52,12 +52,13 @@ export type MakeEndpoint<
 
 type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
   ? SchemaOption extends any
-    ? InferSchema<SchemaOption>
+    ? InferProperty<SchemaOption>
     : never
-  : InferSchema<TSchema>
+  : InferProperty<TSchema>
 
 export type InferResponse<TResponse> = TResponse extends null
   ? any
   : MapSchemaUnion<TResponse> extends infer InferredTResponse
     ? InferredTResponse | Promise<InferredTResponse>
     : never
+

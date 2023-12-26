@@ -11,7 +11,7 @@ type Timestamped = {
 
 type TestType<T> = T & Record<string, any>
 
-type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
+export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? Date        : T extends TestType<{ type: 'string' }>
   ? string      : T extends TestType<{ type: 'number' }>
   ? number      : T extends TestType<{ type: 'boolean' }>
@@ -20,7 +20,10 @@ type MapType<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? any         : T extends TestType<{ literal: infer K }>
   ? K           : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ items: infer K }>
-    ? MapType<K>[]
+  ? InferProperty<K>[]  : T extends TestType<{ $ref: infer K }>
+    ? K extends keyof Collections
+      ? Collections[K]['item']
+      : never
     : never
 
 type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
@@ -63,13 +66,13 @@ export type FilterReadonlyProperties<TProperties> = {
   [P in keyof TProperties as TProperties[P] extends { readOnly: true }
     ? P
     : never
-  ]: MapType<TProperties[P]>
+  ]: InferProperty<TProperties[P]>
 }
 
 type CombineProperties<TSchema> = TSchema extends { properties: infer Properties }
   ? FilterReadonlyProperties<Properties> extends infer ReadonlyProperties
     ? Readonly<ReadonlyProperties> & {
-      [P in Exclude<keyof Properties, keyof ReadonlyProperties>]: MapType<Properties[P]>
+      [P in Exclude<keyof Properties, keyof ReadonlyProperties>]: InferProperty<Properties[P]>
     }
     : never
   : never
@@ -116,15 +119,19 @@ type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
     ? { type: 'object' }
     : { type: 'object' } & ObjectToSchema<TValue> : never
 
-export type ObjectToSchema<TObject extends Record<string, any>, TRequired extends string[] | null = null> = {
-  [P in keyof TObject]: TObject[P] extends infer Value
-    ? ValueToProperty<Value>
-    : never
-} extends infer Properties
-  ? TRequired extends null
-    ? { properties: Properties }
-    : { required: TRequired, properties: Properties }
-  : never
+export type ObjectToSchema<TObject, TRequired extends string[] | null = null> = TObject extends readonly [infer K]
+  ? ValueToProperty<[K]>
+  : keyof TObject extends never
+    ? { type: 'object' }
+      : {
+        [P in keyof TObject]: TObject[P] extends infer Value
+          ? ValueToProperty<Value>
+          : never
+      } extends infer Properties
+        ? TRequired extends null
+          ? { type: 'object', properties: Properties }
+          : { type: 'object', required: TRequired, properties: Properties }
+        : never
 
 
 type CaseOwned<

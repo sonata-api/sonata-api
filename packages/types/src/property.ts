@@ -20,6 +20,7 @@ export type PropertyFormat =
 
 export type JsonSchema<TDescription extends Description=any> = {
   $id: string
+  type?: 'object'
   required?: RequiredProperties<TDescription>
   presets?: ReadonlyArray<keyof TDescription['properties']>
   properties: Record<Lowercase<string>, Property>

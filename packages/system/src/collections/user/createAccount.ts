@@ -15,6 +15,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   }
 
   const validationEither = validate(user, {
+    type: 'object',
     required: [
       'full_name',
       'email',

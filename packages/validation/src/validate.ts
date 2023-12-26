@@ -185,8 +185,8 @@ export const validateWholeness = (what: Record<Lowercase<string>, any>, schema: 
 }
 
 export const validate = <
-  TWhat extends Record<Lowercase<string>, any>,
-  const TJsonSchema extends Omit<JsonSchema, '$id' | 'items'>
+  TWhat extends any,
+  const TJsonSchema extends Property
 >(
   what: TWhat | undefined,
   schema: TJsonSchema,
@@ -197,6 +197,13 @@ export const validate = <
       code: ValidationErrorCodes.EmptyTarget,
       errors: {}
     }))
+  }
+
+  if( !('properties' in schema) ) {
+    const result: any = validateProperty('', what, schema)
+    return result
+      ? left(result)
+      : right(what)
   }
 
   const wholenessError = validateWholeness(what, schema)
@@ -210,7 +217,7 @@ export const validate = <
     const result = validateProperty(
       propName as Lowercase<string>,
       what[propName],
-      schema.properties?.[propName as Lowercase<string>],
+      schema.properties?.[propName],
       options
     )
 
@@ -236,8 +243,8 @@ export const validate = <
 }
 
 export const validateSilently = <
-  TWhat extends Record<Lowercase<string>, any>,
-  const TJsonSchema extends Omit<JsonSchema, '$id'>
+  TWhat extends any,
+  const TJsonSchema extends Property
 >(
   what: TWhat | undefined,
   schema: TJsonSchema,
@@ -249,7 +256,7 @@ export const validateSilently = <
     : result.value
 }
 
-export const validator = <const TJsonSchema extends Omit<JsonSchema, '$id'>>(
+export const validator = <const TJsonSchema extends Property>(
   schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {
@@ -262,7 +269,7 @@ export const validator = <const TJsonSchema extends Omit<JsonSchema, '$id'>>(
   ]
 }
 
-export const silentValidator = <const TJsonSchema extends Omit<JsonSchema, '$id'>>(
+export const silentValidator = <const TJsonSchema extends Property>(
   schema: TJsonSchema,
   options: ValidateOptions = {}
 ) => {

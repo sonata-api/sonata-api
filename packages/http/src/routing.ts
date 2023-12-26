@@ -1,4 +1,4 @@
-import type { Context, GenericRequest, GenericResponse, RequestMethod, InferSchema, InferResponse } from '@sonata-api/types'
+import type { Context, GenericRequest, GenericResponse, RequestMethod, InferProperty, InferResponse } from '@sonata-api/types'
 import { REQUEST_METHODS } from '@sonata-api/types'
 import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
@@ -24,7 +24,7 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
     payload: TContract extends [infer Payload, any]
       ? Payload extends null
       ? never
-      : InferSchema<Payload>
+      : InferProperty<Payload>
         : never
   }
 }

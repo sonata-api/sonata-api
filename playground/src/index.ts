@@ -29,18 +29,17 @@ router.GET('/get-people', async (context) => {
     }
   }
 
-  return {
-    result: await context.collections.person.functions.getAll()
-  }
+  return context.collections.user.functions.getAll()
 }, {
   contract: [
     schema({ name: '' }),
     [
       leftSchema({}),
-      schema({ result: ['$person'] })
+      schema(['$person'])
     ]
   ]
 })
+
 
 init({}, (context) => {
   return router.install(context)

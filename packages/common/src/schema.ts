@@ -31,7 +31,7 @@ const mapValueToProperty = (value: any): any => {
 }
 
 export const schema = <
-  const TObject extends Record<string, any>,
+  const TObject,
   TRequired extends (keyof TObject & string)[]
 >(object: TObject, required?: TRequired) => {
   const entries: [string, Property][] = []
@@ -46,19 +46,20 @@ export const schema = <
 
   const properties = Object.fromEntries(entries)
   return {
+    type: 'object',
     required,
     properties
   } as ObjectToSchema<TObject, TRequired> 
 }
 
-export const leftSchema = <const TObject extends Record<string, any>>(object: TObject) => {
+export const leftSchema = <const TObject>(object: TObject) => {
   return schema({
     _tag: 'Left',
     value: object
   })
 }
 
-export const rightSchema = <const TObject extends Record<string, any>>(object: TObject) => {
+export const rightSchema = <const TObject>(object: TObject) => {
   return schema({
     _tag: 'Right',
     value: object

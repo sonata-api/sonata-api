@@ -1,8 +1,9 @@
-import type { JsonSchema } from '@sonata-api/types'
+import type { Property } from '@sonata-api/types'
 
-export type RouteContract = Omit<JsonSchema, '$id'> extends infer PartialSchema
-  ? [PartialSchema | null, PartialSchema | PartialSchema[] | null]
-  : never
+export type RouteContract = [
+  Property | null,
+  Property | Property[] | null
+]
 
 export const defineContract = <const TRouteContract extends RouteContract>(contract: TRouteContract) => {
   return contract
