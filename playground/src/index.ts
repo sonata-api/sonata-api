@@ -29,7 +29,7 @@ router.GET('/get-people', async (context) => {
     }
   }
 
-  return context.collections.user.functions.getAll()
+  return context.collections.person.functions.getAll()
 }, {
   contract: [
     schema({ name: '' }),

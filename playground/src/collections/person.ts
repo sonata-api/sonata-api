@@ -1,9 +1,8 @@
-import { defineCollection, getAll, insert } from 'sonata-api'
+import { defineCollection, get, getAll, insert } from 'sonata-api'
 
 export const person = defineCollection({
   description: {
     $id: 'person',
-    required: [],
     properties: {
       name: {
         type: 'string',
@@ -25,6 +24,7 @@ export const person = defineCollection({
     }
   },
   functions: {
+    get,
     getAll,
     insert,
   },

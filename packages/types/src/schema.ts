@@ -9,6 +9,21 @@ type Timestamped = {
   created_at?: Date
 }
 
+type CaseOwned<
+  TSchema,
+  TType
+> = TSchema extends { owned: true | string }
+  ? TType & Owned
+  : TType
+
+type CaseTimestamped<
+  TSchema,
+  TType
+> = TSchema extends { timestamps: false }
+  ? TType
+  : TType & Timestamped
+
+
 type TestType<T> = T & Record<string, any>
 
 export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time' }>
@@ -20,11 +35,69 @@ export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time'
   ? any         : T extends TestType<{ literal: infer K }>
   ? K           : T extends TestType<{ enum: ReadonlyArray<infer K> }>
   ? K           : T extends TestType<{ items: infer K }>
-  ? InferProperty<K>[]  : T extends TestType<{ $ref: infer K }>
-    ? K extends keyof Collections
-      ? Collections[K]['item']
-      : never
+  ? InferProperty<K>[]  : never
+
+export type InferSchema<TSchema> = MergeReferences<TSchema> extends infer MappedTypes
+  ? TSchema extends { required: readonly [] }
+    ? Partial<MappedTypes>
+    : TSchema extends { required: infer RequiredPropNames }
+      ? RequiredPropNames extends readonly (keyof MappedTypes)[]
+        ? Pick<MappedTypes, RequiredPropNames[number]> extends infer RequiredProps
+          ? RequiredProps & Partial<Exclude<MappedTypes, keyof RequiredProps>>
+          : never
+        : never
+      : MappedTypes
     : never
+
+export type Schema<TSchema> = CaseTimestamped<
+  TSchema,
+  CaseOwned<
+    TSchema,
+    InferSchema<TSchema>
+  >>
+
+export type SchemaWithId<TSchema> = Schema<TSchema> & {
+  _id: ObjectId
+}
+
+export type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
+  ? SchemaOption extends any
+    ? SchemaOption extends
+      | { $ref: infer K }
+      | { items: { $ref: infer K } }
+      ? K extends keyof Collections
+        ? 'items' extends keyof SchemaOption
+          ? Collections[K]['item'][]
+          : Collections[K]['item']
+        : never
+      : InferProperty<SchemaOption>
+    : never
+  : InferProperty<TSchema>
+
+export type ObjectToSchema<TObject, TRequired extends string[] | null = null> = TObject extends readonly [infer K]
+  ? ValueToProperty<[K]>
+  : keyof TObject extends never
+    ? { type: 'object' }
+      : {
+        [P in keyof TObject]: TObject[P] extends infer Value
+          ? ValueToProperty<Value>
+          : never
+      } extends infer Properties
+        ? TRequired extends null
+          ? { type: 'object', properties: Properties }
+          : { type: 'object', required: TRequired, properties: Properties }
+        : never
+
+export type PackReferences<T> = {
+  [P in keyof T]: PackReferencesAux<T[P]>
+}
+
+export type FilterReadonlyProperties<TProperties> = {
+  [P in keyof TProperties as TProperties[P] extends { readOnly: true }
+    ? P
+    : never
+  ]: InferProperty<TProperties[P]>
+}
 
 type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   ? {
@@ -58,17 +131,6 @@ type PackReferencesAux<T> = T extends (...args: any[]) => any
         ? PackReferencesAux<T[number]>[]
         : T
 
-export type PackReferences<T> = {
-  [P in keyof T]: PackReferencesAux<T[P]>
-}
-
-export type FilterReadonlyProperties<TProperties> = {
-  [P in keyof TProperties as TProperties[P] extends { readOnly: true }
-    ? P
-    : never
-  ]: InferProperty<TProperties[P]>
-}
-
 type CombineProperties<TSchema> = TSchema extends { properties: infer Properties }
   ? FilterReadonlyProperties<Properties> extends infer ReadonlyProperties
     ? Readonly<ReadonlyProperties> & {
@@ -83,30 +145,6 @@ type MergeReferences<TSchema> = CombineProperties<TSchema> extends infer Combine
     : never
   : never
 
-export type InferSchema<TSchema> = 
-  MergeReferences<TSchema> extends infer MappedTypes
-    ? TSchema extends { required: readonly [] }
-      ? Partial<MappedTypes>
-      : TSchema extends { required: infer RequiredPropNames }
-        ? RequiredPropNames extends readonly (keyof MappedTypes)[]
-          ? Pick<MappedTypes, RequiredPropNames[number]> extends infer RequiredProps
-            ? RequiredProps & Partial<Exclude<MappedTypes, keyof RequiredProps>>
-            : never
-          : never
-        : MappedTypes
-      : never
-
-export type Schema<TSchema> = CaseTimestamped<
-  TSchema,
-  CaseOwned<
-    TSchema,
-    InferSchema<TSchema>
-  >>
-
-export type SchemaWithId<TSchema> = Schema<TSchema> & {
-  _id: ObjectId
-}
-
 type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
   ? { $ref: Ref }       : TValue extends string
   ? { type: 'string' }  : TValue extends number
@@ -118,33 +156,3 @@ type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
   ? keyof TValue extends never
     ? { type: 'object' }
     : { type: 'object' } & ObjectToSchema<TValue> : never
-
-export type ObjectToSchema<TObject, TRequired extends string[] | null = null> = TObject extends readonly [infer K]
-  ? ValueToProperty<[K]>
-  : keyof TObject extends never
-    ? { type: 'object' }
-      : {
-        [P in keyof TObject]: TObject[P] extends infer Value
-          ? ValueToProperty<Value>
-          : never
-      } extends infer Properties
-        ? TRequired extends null
-          ? { type: 'object', properties: Properties }
-          : { type: 'object', required: TRequired, properties: Properties }
-        : never
-
-
-type CaseOwned<
-  TSchema,
-  TType
-> = TSchema extends { owned: true | string }
-  ? TType & Owned
-  : TType
-
-type CaseTimestamped<
-  TSchema,
-  TType
-> = TSchema extends { timestamps: false }
-  ? TType
-  : TType & Timestamped
-

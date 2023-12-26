@@ -1,4 +1,4 @@
-import type { InferProperty } from './schema'
+import type { MapSchemaUnion } from './schema'
 
 export const REQUEST_METHODS = <const>[
   'GET',
@@ -49,12 +49,6 @@ export type MakeEndpoint<
       : TRoute extends `(${string}`
         ? Record<string, EndpointFunction<TRouteResponse, TRoutePayload>>
         : Record<TRoute, EndpointFunction<TRouteResponse, TRoutePayload>>
-
-type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
-  ? SchemaOption extends any
-    ? InferProperty<SchemaOption>
-    : never
-  : InferProperty<TSchema>
 
 export type InferResponse<TResponse> = TResponse extends null
   ? any
