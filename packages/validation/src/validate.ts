@@ -1,4 +1,4 @@
-import type { JsonSchema, Property, Schema, Description } from '@sonata-api/types'
+import type { JsonSchema, Property, InferSchema, Description } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
 import {
   ValidationErrorCodes,
@@ -203,7 +203,7 @@ export const validate = <
     const result: any = validateProperty('', what, schema)
     return result
       ? left(result)
-      : right(what)
+      : right(what as InferSchema<TJsonSchema>)
   }
 
   const wholenessError = validateWholeness(what, schema)
@@ -239,7 +239,7 @@ export const validate = <
     }))
   }
 
-  return right(what as Schema<TJsonSchema>)
+  return right(what as InferSchema<TJsonSchema>)
 }
 
 export const validateSilently = <
@@ -262,7 +262,7 @@ export const validator = <const TJsonSchema extends Omit<Description, '$id'> | P
 ) => {
 
   return <const>[
-    {} as Schema<TJsonSchema>,
+    {} as InferSchema<TJsonSchema>,
     <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
       return validate(what, schema, options)
     }
@@ -275,7 +275,7 @@ export const silentValidator = <const TJsonSchema extends Omit<Description, '$id
 ) => {
 
   return <const>[
-    {} as Schema<TJsonSchema>,
+    {} as InferSchema<TJsonSchema>,
     <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
       return validateSilently(what, schema, options)
     }
