@@ -35,7 +35,7 @@ router.GET('/get-people', async (context) => {
     schema({ name: '' }),
     [
       leftSchema({}),
-      schema(['$person'])
+      schema(['$person']),
     ]
   ]
 })
