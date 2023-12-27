@@ -23,8 +23,10 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
   request: Omit<Context['request'], 'payload'> & {
     payload: TContract extends [infer Payload, any]
       ? Payload extends null
-      ? never
-      : InferProperty<Payload>
+        ? never
+        : InferProperty<Payload>
+      : TContract extends Record<string, any>
+        ? InferProperty<TContract>
         : never
   }
 }
@@ -110,10 +112,16 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
 
     Object.assign(context.request, match)
 
-    if( options.contract?.[0] ) {
-      const validationEither = validate(context.request.payload, options.contract[0])
-      if( isLeft(validationEither) ) {
-        return validationEither
+    if( options.contract ) {
+      const payloadSchema = Array.isArray(options.contract)
+        ? options.contract[0]
+        : options.contract
+
+      if( payloadSchema ) {
+        const validationEither = validate(context.request.payload, payloadSchema)
+        if( isLeft(validationEither) ) {
+          return validationEither
+        }
       }
     }
 

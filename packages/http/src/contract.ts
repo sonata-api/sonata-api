@@ -1,6 +1,6 @@
 import type { Property } from '@sonata-api/types'
 
-export type RouteContract = [
+export type RouteContract = Property | [
   Property | null,
   Property | Property[] | null
 ]

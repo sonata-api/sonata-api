@@ -49,7 +49,9 @@ declare module 'aeria-sdk' {
         ? RoutePayload extends null
           ? MakeEndpoint<Route, InferResponse<RouteResponse>, undefined>
           : MakeEndpoint<Route, InferResponse<RouteResponse>, InferSchema<RoutePayload>>
-        : MakeEndpoint<Route>
+        : RouteContract extends Record<string, any>
+          ? MakeEndpoint<Route, any, InferSchema<RouteContract>>
+          : MakeEndpoint<Route>
       : never
   } extends infer Endpoints
     ? UnionToIntersection<Endpoints[keyof Endpoints]>
