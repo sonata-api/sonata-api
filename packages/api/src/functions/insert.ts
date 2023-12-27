@@ -61,8 +61,8 @@ export const insert = async <
 
   }
 
-  if( context.collection.$functions?.get ) {
-    return right(await context.collection.$functions.get({
+  if( context.collection.functions?.get ) {
+    return right(await context.collection.functions.get({
       filters: {
         _id: docId
       }
@@ -74,5 +74,5 @@ export const insert = async <
     getters: true,
     fromProperties: true,
     recurseReferences: true
-  })) as TContext['description'])
+  })))
 }
