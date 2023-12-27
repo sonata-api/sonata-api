@@ -142,7 +142,7 @@ const validate = (value: any, _target: any, propName: string, property: Property
 const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   target: TRecursionTarget,
   parent: Property | Description,
-  options: TraverseOptions & TraversePipe
+  options: TraverseOptions & TraversePipe = {}
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
@@ -156,7 +156,9 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
   for( const propName in entrypoint ) {
     const value = target[propName as keyof typeof target]
-    if( value === undefined && !options?.getters ) {
+    const property = getProperty(propName as Lowercase<string>, parent)
+
+    if( value === undefined && !(options.getters && property?.isGetter) ) {
       continue
     }
 
@@ -167,8 +169,6 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
       ])
       continue
     }
-
-    const property = getProperty(propName as Lowercase<string>, parent)
 
     if( !property && value && (value.constructor === Object || value.constructor === Array) ) {
       // if first propName is preceded by '$' we assume
