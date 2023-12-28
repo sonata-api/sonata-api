@@ -11,13 +11,14 @@ export const freshItem = (description: Pick<Description, 'properties' | 'freshIt
         switch( property.type ) {
           case 'array': return []
           case 'object': return {}
+          case 'boolean': return false
         }
       }
 
       return null
     })()
 
-    if( !value ) {
+    if( value === undefined || value === null ) {
       return a
     }
 

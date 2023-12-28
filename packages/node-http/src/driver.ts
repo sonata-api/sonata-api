@@ -3,20 +3,13 @@ import { parse as parseUrl } from 'url'
 import type { GenericRequest, GenericResponse, RequestMethod } from '@sonata-api/types'
 import type { ServerOptions } from '@sonata-api/http'
 
-const getBody = ($req: http.IncomingMessage) => {
-  return new Promise<string>((resolve) => {
-    const bodyParts: Buffer[] = []
-    let body
+const getBody = async ($req: http.IncomingMessage) => {
+  const bodyParts: Buffer[] = []
+  for await (const chunk of $req) {
+    bodyParts.push(chunk)
+  }
 
-    $req.on('data', (chunk) => {
-      bodyParts.push(chunk)
-    })
-
-    $req.on('end', () => {
-      body = Buffer.concat(bodyParts).toString()
-      resolve(body)
-    })
-  })
+  return Buffer.concat(bodyParts).toString()
 }
 
 export const abstractRequest = async (request: http.IncomingMessage) => {
