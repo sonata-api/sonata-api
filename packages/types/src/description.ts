@@ -23,6 +23,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
   selection?: boolean
   effect?: string
   button?: boolean
+  translate?: boolean
 
   // route namespace
   setItem?: boolean

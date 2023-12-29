@@ -39,7 +39,8 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
 
   return {
     ...collection,
-    functions: proxiedFunctions
+    functions: proxiedFunctions,
+    originalFunctions: collection.functions,
   }
 }
 

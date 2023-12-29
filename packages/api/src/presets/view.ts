@@ -1,3 +1,5 @@
+import type { Description } from '@sonata-api/types'
+
 export const view = <const>{
   individualActions: {
     'ui:spawnView': {
@@ -6,4 +8,4 @@ export const view = <const>{
       translate: true
     }
   }
-}
+} satisfies Pick<Description, 'individualActions'>

@@ -24,7 +24,7 @@ export const insert = async <
     validate: true,
     validateRequired: payload.what._id
       ? []
-      : context.description.required as string[]
+      : context.description.required
   })
 
   if( isLeft(whatEither) ) {
@@ -61,8 +61,8 @@ export const insert = async <
 
   }
 
-  if( context.collection.functions?.get ) {
-    return right(await context.collection.functions.get({
+  if( context.collection.originalFunctions.get ) {
+    return right(await context.collection.originalFunctions.get({
       filters: {
         _id: docId
       }

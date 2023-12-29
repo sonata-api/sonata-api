@@ -1,3 +1,5 @@
+import type { JsonSchema } from '@sonata-api/types'
+
 export const owned = <const>{
   properties: {
     owner: {
@@ -5,4 +7,4 @@ export const owned = <const>{
       noForm: true
     }
   }
-}
+} satisfies Pick<JsonSchema, 'properties'>

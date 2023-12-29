@@ -1,3 +1,5 @@
+import type { Description } from '@sonata-api/types'
+
 export const duplicate = <const>{
   individualActions: {
     'ui:duplicate': {
@@ -6,4 +8,4 @@ export const duplicate = <const>{
       translate: true
     }
   }
-}
+} satisfies Pick<Description, 'individualActions'>

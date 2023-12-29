@@ -26,6 +26,7 @@ export type IndepthCollection<TCollection> = TCollection extends {
   ? CollectionFunctions<SchemaWithId<InferredDescription>> extends infer Functions
     ? Omit<TCollection, 'functions'> & {
       functions: Omit<CollFunctions, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
+      originalFunctions: CollFunctions
     }
     : never
   : TCollection

@@ -1,3 +1,5 @@
+import type { Description } from '@sonata-api/types'
+
 export const crud = <const>{
   actions: {
     'ui:spawnAdd': {
@@ -20,4 +22,4 @@ export const crud = <const>{
       translate: true
     }
   }
-}
+} satisfies Pick<Description, 'actions' | 'individualActions'>

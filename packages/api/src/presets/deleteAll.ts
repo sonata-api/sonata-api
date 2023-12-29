@@ -1,3 +1,5 @@
+import type { Description } from '@sonata-api/types'
+
 export const deleteAll = <const>{
   actions: {
     removeAll: {
@@ -7,4 +9,4 @@ export const deleteAll = <const>{
       translate: true
     }
   }
-}
+} satisfies Pick<Description, 'actions'>

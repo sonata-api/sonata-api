@@ -169,15 +169,10 @@ export const validateWholeness = (what: Record<Lowercase<string>, any>, schema: 
   const missingProps = getMissingProperties(what, schema, required)
 
   if( missingProps.length > 0 ) {
-    const requiredNames = Array.isArray(required)
-      ? required
-      : Object.keys(required)
-
     return makeValidationError({
       code: ValidationErrorCodes.MissingProperties,
       errors: Object.fromEntries(
-        requiredNames
-          .filter((prop) => !Object.keys(what).includes(prop as string))
+        missingProps
           .map((error) => [error, { type: 'missing' }])
     )})
   }

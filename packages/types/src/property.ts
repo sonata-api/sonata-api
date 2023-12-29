@@ -143,6 +143,7 @@ export type PropertyBase = {
   isReference?: boolean
   isFile?: boolean
   isGetter?: boolean
+  isTimestamp?: boolean
   referencedCollection?: string
 
   getter?: (value: any) => any

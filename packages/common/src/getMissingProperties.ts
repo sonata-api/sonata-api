@@ -7,7 +7,7 @@ export const getMissingProperties = (
   required: JsonSchema['required']
 ) => {
   const missingProps: Lowercase<string>[] = []
-
+  
   if( Array.isArray(required) ) {
     for( const propName of (required as Lowercase<string>[]) ) {
       const isMissing = checkForUndefined(

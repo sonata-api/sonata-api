@@ -269,7 +269,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
   const functions = []
   let validationError: ValidationError | null = null
 
-  if( Object.keys(what).length === 0 ) {
+  if( !options.validate && Object.keys(what).length === 0 ) {
     return right({})
   }
 
