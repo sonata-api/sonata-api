@@ -1,6 +1,6 @@
 import type { Property } from '@sonata-api/types'
 
-export const checkForUndefined = (property: Property, propertyName: Lowercase<string>, what: Record<Lowercase<string>, any>) => {
+export const checkForUndefined = (property: Property, propertyName: string, what: Record<string, any>) => {
   if( property.readOnly || property.isTimestamp ) {
     return false
   }

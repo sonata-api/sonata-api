@@ -25,7 +25,7 @@ export type TraversePipe = {
   ) => any
 }
 
-const getProperty = (propertyName: Lowercase<string>, parentProperty: Property | Description) => {
+const getProperty = (propertyName: string, parentProperty: Property | Description) => {
   if( propertyName === '_id' ) {
     return <Property>{
       type: 'string'
@@ -98,7 +98,7 @@ const autoCast = (value: any, target: any, propName: string, property: Property,
         const entries: [string, any][] = []
         for( const [k, v] of Object.entries(value) ) {
           const subProperty = !k.startsWith('$')
-            ? getProperty(k as Lowercase<string>, property)
+            ? getProperty(k, property)
             : property
 
           if( !subProperty ) {
@@ -128,7 +128,7 @@ const getters = (value: any, target: any, _propName: string, property: Property)
 }
 
 const validate = (value: any, _target: any, propName: string, property: Property) => {
-  const error = validateProperty(propName as Lowercase<string>, value, property)
+  const error = validateProperty(propName, value, property)
 
   if( error ) {
     return left({
@@ -139,7 +139,7 @@ const validate = (value: any, _target: any, propName: string, property: Property
   return value
 }
 
-const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
+const recurse = async <TRecursionTarget extends Record<string, any>>(
   target: TRecursionTarget,
   parent: Property | Description,
   options: TraverseOptions & TraversePipe = {}
@@ -155,8 +155,8 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
   }
 
   for( const propName in entrypoint ) {
-    const value = target[propName as keyof typeof target]
-    const property = getProperty(propName as Lowercase<string>, parent)
+    const value = target[propName]
+    const property = getProperty(propName, parent)
 
     if( value === undefined && !(options.getters && property?.isGetter) ) {
       continue
@@ -215,7 +215,7 @@ const recurse = async <TRecursionTarget extends Record<Lowercase<string>, any>>(
 
     if( property ) {
       if( options.recurseReferences ) {
-        const propCast = property as Property
+        const propCast = property
         if( propCast.isReference && value && !(value instanceof ObjectId) ) {
           const targetDescription = await preloadDescription(unsafe(await getCollectionAsset(propCast.referencedCollection!, 'description')))
 
@@ -314,5 +314,5 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
       code: ValidationErrorCodes.InvalidProperties,
       errors: validationError
     }))
-    : right(unwrapEither(resultEither) as any)
+    : right(unwrapEither(resultEither))
 }

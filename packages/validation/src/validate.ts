@@ -58,7 +58,7 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 }
 
 export const validateProperty = (
-  propName: Lowercase<string>,
+  propName: string,
   what: any,
   property: Property,
   options: ValidateOptions = {}
@@ -161,7 +161,7 @@ export const validateProperty = (
   }
 }
 
-export const validateWholeness = (what: Record<Lowercase<string>, any>, schema: Omit<JsonSchema, '$id'>) => {
+export const validateWholeness = (what: Record<string, any>, schema: Omit<JsonSchema, '$id'>) => {
   const required = schema.required
     ? schema.required
     : Object.keys(schema.properties)
@@ -210,7 +210,7 @@ export const validate = <
 
   for( const propName in what ) {
     const result = validateProperty(
-      propName as Lowercase<string>,
+      propName,
       what[propName],
       schema.properties?.[propName],
       options
@@ -258,7 +258,7 @@ export const validator = <const TJsonSchema extends Omit<Description, '$id'> | P
 
   return <const>[
     {} as InferSchema<TJsonSchema>,
-    <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
+    <TWhat extends Record<string, any>>(what: TWhat) => {
       return validate(what, schema, options)
     }
   ]
@@ -271,7 +271,7 @@ export const silentValidator = <const TJsonSchema extends Omit<Description, '$id
 
   return <const>[
     {} as InferSchema<TJsonSchema>,
-    <TWhat extends Record<Lowercase<string>, any>>(what: TWhat) => {
+    <TWhat extends Record<string, any>>(what: TWhat) => {
       return validateSilently(what, schema, options)
     }
   ]

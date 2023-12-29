@@ -136,13 +136,12 @@ export const preloadDescription = async <
   }
 
   if( description.properties ) {
-    description.properties = await Object.entries(description.properties).reduce(async (a, [propertyName, property]) => {
-      return {
-        ...await a,
-        [propertyName]: await recurseProperty(property, propertyName, description)
-      }
+    const properties: [string, Property][] = []
+    for( const [propertyName, property] of Object.entries(description.properties) ) {
+      properties.push([propertyName, await recurseProperty(property, propertyName, description)])
+    }
 
-    }, {} as Promise<Record<Lowercase<string>, Property>>)
+    description.properties = Object.fromEntries(properties)
   }
 
   if( memoize ) {

@@ -18,7 +18,7 @@ export const normalizeProjection = <
   }
 
   const projection = target.reduce((a, key) => {
-    if( description.properties[key as Lowercase<string>]?.hidden ) {
+    if( description.properties[key]?.hidden ) {
       return a
     }
 
@@ -58,13 +58,13 @@ export const prepareInsert = (
 
   } = payload
 
-  const forbidden = (key: Lowercase<string>) => {
+  const forbidden = (key: string) => {
     return description.properties[key]?.readOnly
       || (description.writable && !description.writable.includes(key)
     )
   }
-  const prepareUpdate = () => Object.entries(rest as Record<string, any>).reduce((a: any, [key, value]) => {
-    if( forbidden(key as Lowercase<string>) ) {
+  const prepareUpdate = () => Object.entries(rest).reduce((a: Record<string, any>, [key, value]) => {
+    if( forbidden(key) ) {
       return a
     }
 
@@ -74,7 +74,7 @@ export const prepareInsert = (
       return a
     }
 
-    if( [undefined, null].includes(value) ) {
+    if( [undefined, null].includes(value as any) ) {
       a.$unset[key] = 1
       return a
     }
@@ -87,8 +87,8 @@ export const prepareInsert = (
     $unset: {}
   })
 
-  const prepareCreate = () => Object.entries(rest as Record<string, any>).reduce((a: any, [key, value]) => {
-    if( forbidden(key as Lowercase<string>) || [undefined, null].includes(value) ) {
+  const prepareCreate = () => Object.entries(rest).reduce((a, [key, value]) => {
+    if( forbidden(key) || [undefined, null].includes(value as any) ) {
       return a
     }
 

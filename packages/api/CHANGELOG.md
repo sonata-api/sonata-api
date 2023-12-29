@@ -1,5 +1,21 @@
 # @sonata-api/api
 
+## 1.0.14
+
+### Patch Changes
+
+- Verison bump
+- Updated dependencies
+  - @sonata-api/access-control@1.0.8
+  - @sonata-api/common@0.1.10
+  - @sonata-api/entrypoint@0.0.5
+  - @sonata-api/http@1.0.9
+  - @sonata-api/mailing@1.0.7
+  - @sonata-api/security@1.0.7
+  - @sonata-api/system@1.0.10
+  - @sonata-api/types@0.1.15
+  - @sonata-api/validation@1.0.7
+
 ## 1.0.13
 
 ### Patch Changes

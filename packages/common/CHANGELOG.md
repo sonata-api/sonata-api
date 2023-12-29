@@ -1,5 +1,13 @@
 # @sonata-api/common
 
+## 0.1.10
+
+### Patch Changes
+
+- Verison bump
+- Updated dependencies
+  - @sonata-api/types@0.1.15
+
 ## 0.1.9
 
 ### Patch Changes

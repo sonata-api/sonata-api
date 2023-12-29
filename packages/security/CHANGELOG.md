@@ -1,5 +1,15 @@
 # @sonata-api/security
 
+## 1.0.7
+
+### Patch Changes
+
+- Verison bump
+- Updated dependencies
+  - @sonata-api/access-control@1.0.8
+  - @sonata-api/api@1.0.14
+  - @sonata-api/common@0.1.10
+
 ## 1.0.6
 
 ### Patch Changes

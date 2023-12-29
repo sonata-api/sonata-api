@@ -1,4 +1,4 @@
-import type { Description, Condition, RequiredProperties } from '.'
+import type { Description, Condition, PropertiesWithId } from '.'
 
 export type PropertyArrayElement =
   | 'checkbox'
@@ -13,17 +13,22 @@ export type PropertyInputType =
   | 'time'
   | 'month'
 
-
 export type PropertyFormat = 
   | 'date'
   | 'date-time'
 
-export type JsonSchema<TDescription extends Description=any> = {
+type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
+  PropertiesWithId<TDescription>,
+  Condition<TDescription> | boolean
+>>
+
+
+export type JsonSchema<TJsonSchema extends Description = any> = {
   $id: string
   type?: 'object'
-  required?: RequiredProperties<TDescription>
-  presets?: ReadonlyArray<keyof TDescription['properties']>
-  properties: Record<Lowercase<string>, Property>
+  required?: RequiredProperties<TJsonSchema>
+  definitions?: Record<string, Property>
+  properties: Record<string, Property>
 }
 
 export type RefProperty = {
@@ -60,7 +65,7 @@ export type ArrayProperty = {
 }
 
 export type FixedObjectProperty = {
-  properties: Record<Lowercase<string>, Property>
+  properties: Record<string, Property>
   form?: ReadonlyArray<string>
   required?: ReadonlyArray<string>
 }

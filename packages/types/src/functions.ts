@@ -3,7 +3,7 @@ import type { PackReferences, Either, ValidationError } from '.'
 
 export type UploadAuxProps = {
   parentId: string
-  propertyName: Lowercase<string>
+  propertyName: string
 }
 
 export type Filters<TDocument> = FilterOperators<TDocument>
@@ -14,18 +14,18 @@ export type What<TDocument> = Omit<UpdateFilter<TDocument>, keyof TDocument> & {
     : TDocument[P]
 }
 
-export type Projection<TDocument extends Record<Lowercase<string>, any>> =
+export type Projection<TDocument extends Record<string, any>> =
   keyof TDocument | '_id' extends infer DocumentProp
-    ? TDocument extends Lowercase<string>
+    ? TDocument extends string
       ? DocumentProp[]
-      : Lowercase<string>[]
+      : string[]
     : never
 
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>
 
 export type CollectionDocument<TDocument> = Pick<
   TDocument,
-  Extract<keyof TDocument, Lowercase<string>>
+  Extract<keyof TDocument, string>
 >
 
 export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {

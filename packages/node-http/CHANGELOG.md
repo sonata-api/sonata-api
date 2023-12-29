@@ -1,5 +1,13 @@
 # @sonata-api/node-http
 
+## 1.0.7
+
+### Patch Changes
+
+- Verison bump
+- Updated dependencies
+  - @sonata-api/http@1.0.9
+
 ## 1.0.6
 
 ### Patch Changes

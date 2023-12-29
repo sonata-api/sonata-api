@@ -1,11 +1,11 @@
-import type { Context, Property, Description } from '@sonata-api/types'
+import type { Context, Description } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
 import { isRight, unwrapEither } from '@sonata-api/common'
 import { getFunction } from '../assets'
 import { getDatabaseCollection } from '../database'
 
 type CascadingRemoveSubject = {
-  propertyName: Lowercase<string>
+  propertyName: string
   collectionName: string
 }
 
@@ -19,7 +19,7 @@ const getCascade = (description: Description) => {
   }
 
   const cascade: CascadingRemove = []
-  for( const [propertyName, property] of Object.entries(description.properties) as [Lowercase<string>, Property][] ) {
+  for( const [propertyName, property] of Object.entries(description.properties) ) {
     if( property.isFile || ('$ref' in property && property.inline) ) {
       cascade.push({
         propertyName,

@@ -1,5 +1,14 @@
 # @sonata-api/mailing
 
+## 1.0.7
+
+### Patch Changes
+
+- Verison bump
+- Updated dependencies
+  - @sonata-api/common@0.1.10
+  - @sonata-api/types@0.1.15
+
 ## 1.0.6
 
 ### Patch Changes

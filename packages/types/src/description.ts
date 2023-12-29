@@ -1,4 +1,4 @@
-import type { Property } from './property'
+import type { JsonSchema } from './property'
 import type { Condition } from './condition'
 
 export type PropertiesWithId<TDescription extends Description> =
@@ -13,8 +13,6 @@ export type CollectionPresets =
   | 'timestamped'
   | 'toggleActive'
   | 'view'
-
-export type CollectionId = string
 
 export type CollectionAction<TDescription extends Description> = Readonly<{
   name: string
@@ -99,16 +97,9 @@ export type SearchOptions = {
   placeholder?: string
 }
 
-export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
-  PropertiesWithId<TDescription>,
-  Condition<TDescription> | boolean
->>
-
-export type Description<TDescription extends Description=any> = {
-  $id: CollectionId
-  title?: string
-
+export type Description<TDescription extends Description = any> = JsonSchema<TDescription> & {
   // unused
+  title?: string
   categories?: string[]
 
   system?: boolean
@@ -131,7 +122,6 @@ export type Description<TDescription extends Description=any> = {
   // takes an array of something
   route?: ReadonlyArray<string>
   presets?: ReadonlyArray<CollectionPresets>
-  required?: RequiredProperties<TDescription>
 
   table?: ReadonlyArray<PropertiesWithId<TDescription>>
   tableMeta?: ReadonlyArray<PropertiesWithId<TDescription>>
@@ -155,6 +145,5 @@ export type Description<TDescription extends Description=any> = {
   individualActions?: CollectionActions<TDescription>
 
   search?: SearchOptions
-  properties: Record<Lowercase<string>, Property>
 }
 
