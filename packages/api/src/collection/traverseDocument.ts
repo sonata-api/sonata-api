@@ -314,5 +314,5 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
       code: ValidationErrorCodes.InvalidProperties,
       errors: validationError
     }))
-    : right(unwrapEither(resultEither))
+    : right(unwrapEither(resultEither) as Record<string, any>)
 }
