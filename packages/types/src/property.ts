@@ -23,11 +23,10 @@ export type RequiredProperties<TDescription extends Description> = ReadonlyArray
 >>
 
 
-export type JsonSchema<TJsonSchema extends Description = any> = {
+export type JsonSchema<TJsonSchema extends JsonSchema = any> = {
   $id: string
   type?: 'object'
   required?: RequiredProperties<TJsonSchema>
-  definitions?: Record<string, Property>
   properties: Record<string, Property>
 }
 

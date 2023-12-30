@@ -10,7 +10,7 @@ export type Collection<TCollection extends Collection = any> = {
   item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
-  functions?: Record<string, (...args: any[]) => any>
+  functions?: Record<string, (payload: any, context: Context, ...args: any[]) => any>
 }
 
 export type AssetType = keyof Collection

@@ -19,13 +19,24 @@ export type Models = {
   [K in keyof Collections]: CollectionModel<Collections[K]['description']>
 }
 
+
+type OmitContextParameter<TFunctions> = {
+  [P in keyof TFunctions]: TFunctions[P] extends infer Fn
+    ? Fn extends (...args: any[]) => any
+      ? Parameters<Fn> extends [infer Payload, Context, ...infer ExtraParameters]
+        ? (payload: Payload, ...args: ExtraParameters) => ReturnType<Fn>
+        : Fn
+      : never
+    : never
+}
+
 export type IndepthCollection<TCollection> = TCollection extends {
   functions: infer CollFunctions
   description: infer InferredDescription
 }
   ? CollectionFunctions<SchemaWithId<InferredDescription>> extends infer Functions
     ? Omit<TCollection, 'functions'> & {
-      functions: Omit<CollFunctions, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
+      functions: Omit<OmitContextParameter<CollFunctions>, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
       originalFunctions: CollFunctions
     }
     : never

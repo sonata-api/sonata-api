@@ -1,5 +1,13 @@
 # @sonata-api/entrypoint
 
+## 0.0.6
+
+### Patch Changes
+
+- New version
+- Updated dependencies
+  - @sonata-api/types@0.1.16
+
 ## 0.0.5
 
 ### Patch Changes

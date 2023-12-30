@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.17
+
+### Patch Changes
+
+- Type refactor
+
+## 0.1.16
+
+### Patch Changes
+
+- New version
+
 ## 0.1.15
 
 ### Patch Changes
