@@ -1,5 +1,13 @@
 # @sonata-api/common
 
+## 0.1.13
+
+### Patch Changes
+
+- Aeria SDK and types improvements
+- Updated dependencies
+  - @sonata-api/types@0.1.18
+
 ## 0.1.12
 
 ### Patch Changes

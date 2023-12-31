@@ -23,7 +23,6 @@ type CaseTimestamped<
   ? TType
   : TType & Timestamped
 
-
 type TestType<T> = T & Record<string, any>
 
 export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time' }>
@@ -156,3 +155,4 @@ type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
   ? keyof TValue extends never
     ? { type: 'object' }
     : { type: 'object' } & ObjectToSchema<TValue> : never
+

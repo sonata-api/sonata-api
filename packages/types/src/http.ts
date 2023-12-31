@@ -50,9 +50,13 @@ export type MakeEndpoint<
         ? Record<string, EndpointFunction<TRouteResponse, TRoutePayload>>
         : Record<TRoute, EndpointFunction<TRouteResponse, TRoutePayload>>
 
+type UnwrapResponse<TResponse> = TResponse extends any[]
+  ? TResponse
+  : TResponse[]
+
 export type InferResponse<TResponse> = TResponse extends null
   ? any
-  : MapSchemaUnion<TResponse> extends infer InferredTResponse
+  : MapSchemaUnion<UnwrapResponse<TResponse>> extends infer InferredTResponse
     ? InferredTResponse | Promise<InferredTResponse>
     : never
 

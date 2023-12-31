@@ -1,16 +1,21 @@
+import type { InstanceConfig } from './types'
 import { request as originalRequest, defaultRequestTransformer, type RequestConfig } from '@sonata-api/common'
-import { authMemo } from './auth'
+import { getStorage } from './storage'
 
-export const request = <Return = any>(url: string, payload?: any, _config?: RequestConfig) => {
-  const config = Object.assign({}, _config)
-  config.requestTransformer ??= async (url, payload, _params) => {
+export const request = <Return = any>(config: InstanceConfig, url: string, payload?: any, _requestConfig?: RequestConfig) => {
+  const requestConfig = Object.assign({}, _requestConfig)
+  requestConfig.requestTransformer ??= async (url, payload, _params) => {
     const params = Object.assign({}, _params)
+    const authVal = getStorage(config).get('auth')
+    const auth = authVal
+      ? JSON.parse(authVal)
+      : {}
 
-    if( authMemo.token ) {
+    if( auth.token ) {
       params.headers ??= {}
-      switch( authMemo.token.type ) {
+      switch( auth.token.type ) {
         case 'bearer': {
-          params.headers.authorization = `Bearer ${authMemo.token.content}`
+          params.headers.authorization = `Bearer ${auth.token.content}`
           break
         }
       }
@@ -19,5 +24,5 @@ export const request = <Return = any>(url: string, payload?: any, _config?: Requ
     return defaultRequestTransformer(url, payload, params)
   }
 
-  return originalRequest(url, payload, config) as Promise<Return>
+  return originalRequest(url, payload, requestConfig) as Promise<Return>
 }

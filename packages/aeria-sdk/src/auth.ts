@@ -1,6 +1,8 @@
 import type { InstanceConfig } from  './types'
-import { isLeft, unwrapEither } from '@sonata-api/common'
+import { isRight, unwrapEither } from '@sonata-api/common'
 import { request } from './http'
+import { apiUrl } from './utils'
+import { getStorage } from './storage'
 
 export type AuthenticationResult = {
   user: any
@@ -18,15 +20,16 @@ export type AuthenticationPayload = {
 export const authMemo = {} as AuthenticationResult
 
 export const authenticate = (config: InstanceConfig) => async (payload: AuthenticationPayload) => {
-  const response = await request(`${config.apiUrl}/user/authenticate`, payload)
+  const response = await request(config, `${apiUrl(config)}/user/authenticate`, payload)
   const resultEither = response.data
-  if( isLeft(resultEither) ) {
-    //
-    return
+  if( isRight(resultEither) ) {
+    const result = unwrapEither(resultEither)
+    getStorage(config).set('auth', JSON.stringify(result))
   }
 
-  const result = unwrapEither(resultEither)
-  Object.assign(authMemo, result)
+  return resultEither
+}
 
-  return result
+export const signout = (config: InstanceConfig) => async () => {
+  getStorage(config).remove('auth')
 }

@@ -2,10 +2,13 @@ import type { PackReferences } from '@sonata-api/types'
 import { MongoClient } from 'mongodb'
 export { ObjectId } from 'mongodb'
 
-let dbMemo: ReturnType<MongoClient['db']> | undefined
+const dbMemo = {} as {
+  client: MongoClient
+  db: ReturnType<MongoClient['db']> | undefined
+}
 
 export const getDatabase = async () => {
-  if( !dbMemo ) {
+  if( !dbMemo.db ) {
     const mongodbUri = await (async () => {
       const envUri = process.env.MONGODB_URI
       if( !envUri ) {
@@ -29,18 +32,19 @@ export const getDatabase = async () => {
       client.on('commandStarted', (event) => console.debug(JSON.stringify(event, null, 2)))
     }
 
-    dbMemo = client.db()
+    dbMemo.client = client
+    dbMemo.db = client.db()
   }
 
   return dbMemo
 }
 
 export const getDatabaseSync = () => {
-  if( !dbMemo ) {
+  if( !dbMemo.db ) {
     throw new Error('getDatabaseSync() called with no active database')
   }
 
-  return dbMemo
+  return dbMemo.db
 }
 
 export const prepareCollectionName = (collectionName: string) => {

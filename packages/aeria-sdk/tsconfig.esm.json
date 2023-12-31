@@ -1,8 +1,8 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/cjs",
-    "module": "commonjs",
+    "outDir": "dist/esm",
+    "module": "esnext",
     "paths": {
       "@sonata-api/common": [
         "../common/dist/cjs"
