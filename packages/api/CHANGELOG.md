@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.18
+
+### Patch Changes
+
+- Updates
+
 ## 1.0.17
 
 ### Patch Changes

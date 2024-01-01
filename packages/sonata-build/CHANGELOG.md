@@ -1,5 +1,11 @@
 # sonata-build
 
+## 1.0.9
+
+### Patch Changes
+
+- Updates
+
 ## 1.0.8
 
 ### Patch Changes

@@ -30,12 +30,10 @@ export const compile = async (fileList: string[]) => {
   const program = ts.createProgram(selectedFiles, compilerOptions as ts.CompilerOptions)
   const emitResult = program.emit()
 
-  const allDiagnostics = ts
-    .getPreEmitDiagnostics(program)
-    .concat(emitResult.diagnostics)
+  const diagnostics = ts.getPreEmitDiagnostics(program)
 
-  if( allDiagnostics.length ) {
-    allDiagnostics.forEach((diagnostic) => {
+  if( diagnostics.length ) {
+    diagnostics.forEach((diagnostic) => {
       if( diagnostic.file ) {
         const { line, character } = ts.getLineAndCharacterOfPosition(
           diagnostic.file,
@@ -50,14 +48,14 @@ export const compile = async (fileList: string[]) => {
       log('error', ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n'))
     })
 
-    log('error', `${allDiagnostics.length} errors found`)
+    log('error', `${diagnostics.length} errors found`)
   }
 
 
   if( emitResult.emitSkipped ) {
     return {
       success: false,
-      diagnostics: allDiagnostics
+      diagnostics: diagnostics
     }
   }
 
