@@ -3,8 +3,7 @@
   "private": true,
   "packageManager": "pnpm@8.7.6",
   "scripts": {
-    "build": "pnpm --no-bail -r build",
-    "postinstall": "rm -rf packages/*/node_modules/@sonata-api"
+    "postinstall": "husky install; rm -rf packages/*/node_modules/@sonata-api"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
