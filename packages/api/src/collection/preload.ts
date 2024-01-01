@@ -36,10 +36,7 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
 
   const reference = getReferenceProperty(property)
   if( reference ) {
-    property.isReference = true
     property.isFile = reference.$ref === 'file'
-    property.referencedCollection = reference.$ref
-
     if( !reference.indexes && !reference.inline ) {
       const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
       if( isLeft(referenceDescriptionEither) ) {
@@ -98,25 +95,10 @@ export const preloadDescription = async <
 
   const description = Object.assign({}, originalDescription)
 
-  if( description.alias ) {
-    const aliasedCollectionEither = await getCollectionAsset(description.alias as keyof Collections, 'description')
-    if( isLeft(aliasedCollectionEither) ) {
-      throw new Error(`description of ${description.alias} not found`)
-    }
-
-    const aliasedCollDescription = unwrapEither(aliasedCollectionEither)
-
-    const {
-      $id: collectionName,
-      ...aliasedCollection
-
-    } = aliasedCollDescription
-
-    const temp = Object.assign(aliasedCollection, description)
-    Object.assign(description, temp)
+  const descriptionPresets: (keyof typeof presets)[] = []
+  if( description.presets ) {
+    descriptionPresets.push(...description.presets)
   }
-
-  const descriptionPresets = (description.presets?.slice() || []) as (keyof typeof presets)[]
 
   if( description.owned ) {
     descriptionPresets.push('owned')

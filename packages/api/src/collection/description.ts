@@ -9,10 +9,3 @@ export const defineDescriptionTuple = <const TDescription extends Description<TD
   TDescription
 ]
 
-export const defineAliasDescription = <const TDescription extends Partial<Description>>(description: TDescription) => {
-  return defineDescription(description as any) as TDescription & {
-    properties: TDescription['properties'] extends object
-      ? TDescription['properties']
-      : {}
-  }
-}

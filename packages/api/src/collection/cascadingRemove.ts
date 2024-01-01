@@ -20,10 +20,10 @@ const getCascade = (description: Description) => {
 
   const cascade: CascadingRemove = []
   for( const [propertyName, property] of Object.entries(description.properties) ) {
-    if( property.isFile || ('$ref' in property && property.inline) ) {
+    if( '$ref' in property && property.inline ) {
       cascade.push({
         propertyName,
-        collectionName: property.referencedCollection!
+        collectionName: property.$ref
       })
     }
   }

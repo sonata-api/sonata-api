@@ -165,7 +165,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     if( options.autoCast && propName === '_id' ) {
       entries.push([
         propName,
-        autoCast(value, target, propName, { $ref: '', isReference: true }, {})
+        autoCast(value, target, propName, { $ref: '' }, {})
       ])
       continue
     }
@@ -216,8 +216,8 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     if( property ) {
       if( options.recurseReferences ) {
         const propCast = property
-        if( propCast.isReference && value && !(value instanceof ObjectId) ) {
-          const targetDescription = await preloadDescription(unsafe(await getCollectionAsset(propCast.referencedCollection!, 'description')))
+        if( '$ref' in propCast && value && !(value instanceof ObjectId) ) {
+          const targetDescription = await preloadDescription(unsafe(await getCollectionAsset(propCast.$ref, 'description')))
 
           if( Array.isArray(value) ) {
             const documents = []

@@ -7,11 +7,10 @@ export type PropertiesWithId<TDescription extends Description> =
 export type CollectionPresets = 
   | 'crud'
   | 'duplicate'
-  | 'delete'
-  | 'deleteAll'
+  | 'remove'
+  | 'removeAll'
   | 'owned'
   | 'timestamped'
-  | 'toggleActive'
   | 'view'
 
 export type CollectionAction<TDescription extends Description> = Readonly<{
@@ -107,7 +106,6 @@ export type Description<TDescription extends Description = any> = JsonSchema<TDe
 
   preferred?: Record<string, Partial<TDescription | Description>>
 
-  alias?: string
   icon?: string
   options?: CollectionOptions<TDescription>
 

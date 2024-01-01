@@ -1,6 +1,6 @@
 import type { Description } from '@sonata-api/types'
 
-export const deleteAll = <const>{
+export const removeAll = <const>{
   actions: {
     removeAll: {
       name: 'action.removeAll',

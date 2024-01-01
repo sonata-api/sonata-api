@@ -1,5 +1,5 @@
 export * from './crud'
-export * from './deleteAll'
+export * from './removeAll'
 export * from './duplicate'
 export * from './owned'
 export * from './remove'
