@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.20
+
+### Patch Changes
+
+- Remove unecessary flag in preloadDescription
+
 ## 1.0.19
 
 ### Patch Changes
