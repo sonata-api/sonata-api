@@ -30,8 +30,7 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
     return {
       ...property,
       readOnly: true,
-      isGetter: true
-    }
+    } satisfies Property
   }
 
   const reference = getReferenceProperty(property)

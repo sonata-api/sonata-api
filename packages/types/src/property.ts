@@ -145,7 +145,6 @@ export type PropertyBase = {
   unique?: boolean
 
   isFile?: boolean
-  isGetter?: boolean
   isTimestamp?: boolean
   getter?: (value: any) => any
 }

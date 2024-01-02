@@ -158,7 +158,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     const value = target[propName]
     const property = getProperty(propName, parent)
 
-    if( value === undefined && !(options.getters && property?.isGetter) ) {
+    if( value === undefined && !(options.getters && property && 'getter' in property) ) {
       continue
     }
 
