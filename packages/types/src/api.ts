@@ -32,6 +32,9 @@ export type DecodedToken =
   }
   | {
     authenticated: false
+    user: {
+      _id: null
+    }
   }
 
 export type ApiConfig = {

@@ -1,5 +1,14 @@
 # @sonata-api/server
 
+## 1.0.10
+
+### Patch Changes
+
+- Feat: more retrocompatible DecodedToken narrowing
+- Updated dependencies
+  - @sonata-api/server@1.0.10
+  - @sonata-api/types@0.1.20
+
 ## 1.0.9
 
 ### Patch Changes

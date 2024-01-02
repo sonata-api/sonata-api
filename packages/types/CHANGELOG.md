@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.20
+
+### Patch Changes
+
+- Feat: more retrocompatible DecodedToken narrowing
+
 ## 0.1.19
 
 ### Patch Changes

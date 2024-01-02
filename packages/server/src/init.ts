@@ -16,7 +16,12 @@ export const getDecodedToken = async (request: GenericRequest) => {
         authenticated: true,
         ...await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
       }
-      : { authenticated: false, }
+      : {
+        authenticated: false,
+        user: {
+          _id: null
+        }
+      }
 
       if( decodedToken.authenticated ) {
         decodedToken.user._id = new ObjectId(decodedToken.user._id)
