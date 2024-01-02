@@ -1,5 +1,39 @@
 # @sonata-api/api
 
+## 1.0.25
+
+### Patch Changes
+
+- getDatabaseCollection
+
+## 1.0.24
+
+### Patch Changes
+
+- Publish isReference
+- Updated dependencies
+  - @sonata-api/common@0.1.14
+
+## 1.0.23
+
+### Patch Changes
+
+- -
+
+## 1.0.22
+
+### Patch Changes
+
+- -
+
+## 1.0.21
+
+### Patch Changes
+
+- Deprecate property.isGetter
+- Updated dependencies
+  - @sonata-api/types@0.1.21
+
 ## 1.0.20
 
 ### Patch Changes

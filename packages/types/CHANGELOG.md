@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.21
+
+### Patch Changes
+
+- Deprecate property.isGetter
+
 ## 0.1.20
 
 ### Patch Changes

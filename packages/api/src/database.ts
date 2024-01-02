@@ -59,3 +59,4 @@ export const getDatabaseCollection = <TDocument extends Record<string, any>>(col
   const db = getDatabaseSync()
   return db.collection<PackReferences<TDocument>>(prepareCollectionName(collectionName))
 }
+
