@@ -64,7 +64,14 @@ export const customVerbs = () => async (parentContext: Context) => {
     collectionName
   })
 
-  const fnEither = await getFunction(collectionName, functionName, context.token.user)
+  const fnEither = await getFunction(
+    collectionName,
+    functionName,
+    context.token.authenticated
+      ? context.token.user
+      : {}
+  )
+
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     switch( error ) {
@@ -107,7 +114,14 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
     }
   }
 
-  const fnEither = await getFunction(collectionName, functionName, context.token.user)
+  const fnEither = await getFunction(
+    collectionName,
+    functionName,
+    context.token.authenticated
+      ? context.token.user
+      : {}
+  )
+
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     return {

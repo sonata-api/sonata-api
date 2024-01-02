@@ -1,4 +1,4 @@
-import type { Context  } from '@sonata-api/types'
+import type { Context } from '@sonata-api/types'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
@@ -26,6 +26,7 @@ type Return = {
 }
 
 export enum AuthenticationErrors {
+  Unauthenticated = 'UNAUTHENTICATED',
   InvalidCredentials = 'INVALID_CREDENTIALS',
   InactiveUser = 'INACTIVE_USER',
 }
@@ -88,7 +89,9 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
 
 const authenticate = async (props: Props, context: Context<typeof description>) => {
   if( 'revalidate' in props ) {
-    return right(await getUser(context.token.user, context))
+    return context.token.authenticated
+      ? right(await getUser(context.token.user, context))
+      : left(AuthenticationErrors.Unauthenticated)
   }
 
   if( typeof props?.email !== 'string' ) {

@@ -14,8 +14,12 @@ type Props = {
 }
 
 const insert = async (props: Props, context: Context<typeof description>) => {
+  if( !context.token.authenticated ) {
+    throw new Error('')
+  }
+
   const what = Object.assign({}, props.what)
-  what.owner = context.token?.user._id
+  what.owner = context.token.user._id
   const { STORAGE_PATH } = process.env
 
 

@@ -59,8 +59,8 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     user.password = await bcrypt.hash(user.password, 10)
   }
 
-  if( !context.token.user._id ) {
-    (user.self_registered as boolean) = true
+  if( !context.token.authenticated ) {
+    user.self_registered = true
   }
 
   const { insertedId } = await context.model.insertOne(user as any)

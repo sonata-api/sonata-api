@@ -12,10 +12,13 @@ import { registerRoutes } from './routes'
 export const getDecodedToken = async (request: GenericRequest) => {
   try {
     const decodedToken: DecodedToken = request.headers.authorization
-      ? await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
-      : { user: {} }
+      ? {
+        authenticated: true,
+        ...await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
+      }
+      : { authenticated: false, }
 
-      if( decodedToken.user._id ) {
+      if( decodedToken.authenticated ) {
         decodedToken.user._id = new ObjectId(decodedToken.user._id)
       }
 

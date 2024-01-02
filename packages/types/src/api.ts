@@ -1,10 +1,5 @@
 import type { ObjectId, Context, Description, SecurityPolicy, AccessControl } from '.'
 
-type User = {
-  _id: ObjectId
-  roles: string[]
-}
-
 export type Collection<TCollection extends Collection = any> = {
   description: Description
   item?: any
@@ -23,15 +18,21 @@ export type UserACProfile = {
   readonly allowed_functions?: string[]
 }
 
-export type DecodedToken = {
-  user: Omit<User, 'roles'> & {
-    roles?: string[]
+export type DecodedToken =
+  | {
+    authenticated: true
+    user:  {
+      _id: ObjectId
+      roles?: string[]
+    }
+    extra?: Record<string, any>
+    allowed_functions?: FunctionPath[]
+    key_id?: string
+    key_name?: string
   }
-  extra?: Record<string, any>
-  allowed_functions?: FunctionPath[]
-  key_id?: string
-  key_name?: string
-}
+  | {
+    authenticated: false
+  }
 
 export type ApiConfig = {
   port?: number

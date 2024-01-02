@@ -8,7 +8,7 @@ export const checkOwnershipWrite = async (context: Context, props: AccessControl
 
   const payload = Object.assign({}, props.payload)
 
-  if( token.user && description.owned ) {
+  if( token.authenticated && description.owned ) {
     if( !payload.what._id || description.owned === 'always' ) {
       payload.what.owner = token.user._id
     } else {

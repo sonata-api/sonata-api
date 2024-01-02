@@ -7,6 +7,10 @@ export enum RateLimitingErrors {
 }
 
 const getUser = <TDescription extends Description>(context: Context<TDescription>): Promise<Record<string, any> | null> => {
+  if( !context.token.authenticated ) {
+    throw new Error()
+  }
+
   return context.models.user.findOne(
     { _id: context.token.user._id },
     { resources_usage: 1 }
@@ -19,7 +23,7 @@ export const limitRate = async <TDescription extends Description>(
 ) => {
   let user: Awaited<ReturnType<typeof getUser>>
 
-  if( !context.token.user?._id || !(user = await getUser(context)) ) {
+  if( !context.token.authenticated || !(user = await getUser(context)) ) {
     return left(RateLimitingErrors.Unauthenticated)
   }
 

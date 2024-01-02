@@ -1,5 +1,15 @@
 # @sonata-api/system
 
+## 1.0.12
+
+### Patch Changes
+
+- Improve DecodedToken
+- Updated dependencies
+  - @sonata-api/access-control@1.0.10
+  - @sonata-api/types@0.1.19
+  - @sonata-api/api@1.0.19
+
 ## 1.0.11
 
 ### Patch Changes
