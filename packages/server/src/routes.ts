@@ -1,5 +1,5 @@
 import type { Context } from '@sonata-api/types'
-import { makeRouter } from '@sonata-api/http'
+import { createRouter } from '@sonata-api/http'
 import { systemFunctions } from '@sonata-api/system'
 import {
   safeHandle,
@@ -14,7 +14,7 @@ export const registerRoutes = () => {
     return (context: Context) => safeHandle(fn, context)()
   }
 
-  const router = makeRouter({
+  const router = createRouter({
     exhaust: true
   })
 

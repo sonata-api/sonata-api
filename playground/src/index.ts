@@ -1,7 +1,7 @@
-import { init, makeRouter, isLeft, unwrapEither, leftSchema } from 'sonata-api'
+import { init, createRouter, isLeft, unwrapEither, leftSchema } from 'sonata-api'
 export * as collections from './collections'
 
-const router = makeRouter({
+const router = createRouter({
   exhaust: true
 })
 

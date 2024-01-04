@@ -165,7 +165,7 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any | P
   }
 }
 
-export const makeRouter = (options: Partial<RouterOptions> = {}) => {
+export const createRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
   options.base ??= DEFAULT_BASE_URI
 
