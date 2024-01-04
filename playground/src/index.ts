@@ -30,29 +30,27 @@ router.GET('/get-people', async (context) => {
   }
 
   return context.collections.person.functions.getAll()
-}, {
-  contract: [
+}, [
+  {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string'
+      }
+    }
+  },
+  [
+    leftSchema({
+      type: 'object'
+    }),
     {
-      type: 'object',
-      properties: {
-        name: {
-          type: 'string'
-        }
+      type: 'array',
+      items: {
+        $ref: 'person'
       }
     },
-    [
-      leftSchema({
-        type: 'object'
-      }),
-      {
-        type: 'array',
-        items: {
-          $ref: 'person'
-        }
-      },
-    ]
   ]
-})
+])
 
 
 init({}, (context) => {

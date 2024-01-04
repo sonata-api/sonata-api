@@ -13,7 +13,7 @@ export type RouterOptions = {
   base?: RouteUri
 }
 
-export type RouteOptions = {
+export type RouteGroupOptions = {
   base?: RouteUri
   middleware?: (context: Context) => any
   contract?: RouteContract
@@ -41,9 +41,7 @@ export type ProxiedRouter<TRouter> = TRouter & Record<
   >(
     exp: RouteUri,
     cb: TCallback,
-    routeOptions?: RouteOptions & {
-      contract?: TContract
-    }
+    contract?: TContract
   ) => ReturnType<typeof registerRoute>
 >
 
@@ -51,7 +49,7 @@ export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
   method: RequestMethod | RequestMethod[] | null,
   exp: string | RegExp,
-  options: RouteOptions
+  options: RouterOptions
 ) => {
   const { url } = req
   const { base = DEFAULT_BASE_URI } = options
@@ -81,17 +79,11 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
   method: RequestMethod | RequestMethod[],
   exp: RouteUri,
   cb: TCallback,
-  options: RouteOptions = {}
+  contract?: RouteContract,
+  options: RouterOptions = {}
 ) => {
   const match = matches(context.request, method, exp, options)
   if( match ) {
-    if( options?.middleware ) {
-      const result = await options.middleware(context)
-      if( result !== undefined ) {
-        return result
-      }
-    }
-
     if( context.request.headers['content-type'] === 'application/json' ) {
       try {
         context.request.payload = deepMerge(
@@ -112,10 +104,10 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
 
     Object.assign(context.request, match)
 
-    if( options.contract ) {
-      const payloadSchema = Array.isArray(options.contract)
-        ? options.contract[0]
-        : options.contract
+    if( contract ) {
+      const payloadSchema = Array.isArray(contract)
+        ? contract[0]
+        : contract
 
       if( payloadSchema ) {
         const validationEither = validate(context.request.payload, payloadSchema)
@@ -177,7 +169,7 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
   options.base ??= DEFAULT_BASE_URI
 
-  const routes: ((_: unknown, context: Context, groupOptions?: RouteOptions) => ReturnType<typeof registerRoute>)[] = []
+  const routes: ((_: unknown, context: Context, groupOptions?: RouteGroupOptions) => ReturnType<typeof registerRoute>)[] = []
   const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <
@@ -189,30 +181,29 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     method: RequestMethod | RequestMethod[],
     exp: RouteUri,
     cb: TCallback,
-    routeOptions?: RouteOptions & {
-      contract?: TContract
-    }
+    contract?: TContract
   ) => {
-    routesMeta[exp] = routeOptions?.contract || null
+    routesMeta[exp] = contract || null
     routes.push((_, context, groupOptions) => {
       return registerRoute(
         context,
         method,
         exp,
         cb as any,
+        contract,
         groupOptions
-          ? Object.assign(Object.assign({}, groupOptions), routeOptions || options)
-          : routeOptions || options
+          ? Object.assign(Object.assign({}, groupOptions), options)
+          : options
       )
     })
   }
 
   const group = <
     TRouter extends {
-      install: (context: Context, options?: RouteOptions) => any
+      install: (context: Context, options?: RouterOptions) => any
       routesMeta: typeof routesMeta
     }
-  >(exp: RouteUri, router: TRouter, routeOptions?: RouteOptions) => {
+  >(exp: RouteUri, router: TRouter, routeOptions?: RouteGroupOptions) => {
     const newOptions = Object.assign({}, options)
 
     for( const route in router.routesMeta ) {
@@ -247,12 +238,12 @@ export const makeRouter = (options: Partial<RouterOptions> = {}) => {
     routes,
     routesMeta,
     group,
-    install: (_context: Context, _options?: RouteOptions) => {
+    install: (_context: Context, _options?: RouterOptions) => {
       return {} as ReturnType<typeof routerPipe>
     }
   }
 
-  router.install = async (context: Context, options?: RouteOptions) => {
+  router.install = async (context: Context, options?: RouterOptions) => {
     const result = await routerPipe(undefined, context, options)
     if( exhaust && result === undefined ) {
       return left({

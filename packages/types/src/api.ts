@@ -23,7 +23,7 @@ export type DecodedToken =
     authenticated: true
     user:  {
       _id: ObjectId
-      roles?: string[]
+      roles: string[]
     }
     extra?: Record<string, any>
     allowed_functions?: FunctionPath[]

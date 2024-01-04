@@ -6,7 +6,7 @@ export const checkOwnershipRead = async (context: Context, props: AccessControlL
   const payload = Object.assign({}, props.payload)
 
   if( token.authenticated && description.owned ) {
-    if( !token.user.roles?.includes('root') ) {
+    if( !token.user.roles.includes('root') ) {
       payload.filters.owner = token.user._id
     }
   }
