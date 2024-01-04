@@ -35,10 +35,6 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
 
   const reference = getReferenceProperty(property)
   if( reference ) {
-    if( reference.$ref === 'file' ) {
-      property.isFile = true
-    }
-
     if( !reference.indexes && !reference.inline ) {
       const referenceDescriptionEither = await getCollectionAsset(reference.$ref! as keyof Collections, 'description')
       if( isLeft(referenceDescriptionEither) ) {
