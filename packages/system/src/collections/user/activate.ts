@@ -1,5 +1,6 @@
 import type { Context } from '@sonata-api/types'
 import type { description } from './description'
+import { ObjectId } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import bcrypt from 'bcrypt'
 
@@ -23,7 +24,7 @@ const activate = async (props: Props, context: Context<typeof description>) => {
     return left(ActivationErrors.InvalidLink)
   }
 
-  const user = await context.model.findOne({ _id: userId }, { password: 1 })
+  const user = await context.collection.model.findOne({ _id: new ObjectId(userId) }, { password: 1 })
 
   if( !user ) return left(ActivationErrors.UserNotFound)
   if( user.active ) return left(ActivationErrors.AlreadyActiveUser)
@@ -40,7 +41,7 @@ const activate = async (props: Props, context: Context<typeof description>) => {
       })
     }
 
-    await context.model.updateOne(
+    await context.collection.model.updateOne(
       { _id: user._id },
       {
         $set: {
@@ -53,7 +54,7 @@ const activate = async (props: Props, context: Context<typeof description>) => {
     return right(true)
   }
 
-  await context.model.updateOne(
+  await context.collection.model.updateOne(
     { _id: user._id },
     { $set: { active: true } }
   )

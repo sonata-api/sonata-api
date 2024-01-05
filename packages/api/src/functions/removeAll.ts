@@ -17,9 +17,9 @@ export const removeAll = async <TContext extends Context>(
     autoCast: true
   }))
 
-  for( const document of await context.model.find(filters).toArray() ) {
+  for( const document of await context.collection.model.find(filters).toArray() ) {
     await cascadingRemove(document, context)
   }
 
-  return context.model.deleteMany(filters)
+  return context.collection.model.deleteMany(filters)
 }

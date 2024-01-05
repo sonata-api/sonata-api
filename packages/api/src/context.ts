@@ -5,7 +5,6 @@ import type {
   IndepthCollections,
   DecodedToken,
   Collection,
-  Models
 
 } from '@sonata-api/types'
 
@@ -41,6 +40,7 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
     ...collection,
     functions: proxiedFunctions,
     originalFunctions: collection.functions,
+    model: getDatabaseCollection(collectionName)
   }
 }
 
@@ -82,20 +82,12 @@ export const internalCreateContext = async (
     context.description = await preloadDescription(description)
 
     context.collectionName = collectionName
-
     context.collection = indepthCollection(collectionName, collections, context)
-    context.model = getDatabaseCollection(collectionName)
   }
 
   context.collections = new Proxy<IndepthCollections>({}, {
     get: (_: unknown, collectionName: string) => {
       return indepthCollection(collectionName, collections, context)
-    }
-  })
-
-  context.models = new Proxy<Models>({} as Models, {
-    get: (_, collectionName: string) => {
-      return getDatabaseCollection(collectionName)
     }
   })
 

@@ -29,7 +29,7 @@ export const upload = async <TContext extends Context>(
     ? { $addToSet: { [propertyName]: file._id } }
     : { $set: { [propertyName]: file._id } }
 
-  await context.model.updateOne(
+  await context.collection.model.updateOne(
     { _id: new ObjectId(parentId) },
     insertPayload
   )

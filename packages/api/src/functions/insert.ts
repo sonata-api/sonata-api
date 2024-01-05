@@ -52,12 +52,12 @@ export const insert = async <
       updated_at: now,
     })
 
-    docId = (await context.model.insertOne(readyWhat)).insertedId
+    docId = (await context.collection.model.insertOne(readyWhat)).insertedId
 
   } else {
     readyWhat.$set ??= {}
     readyWhat.$set.updated_at = new Date()
-    await context.model.updateOne({ _id }, readyWhat)
+    await context.collection.model.updateOne({ _id }, readyWhat)
 
   }
 
@@ -69,7 +69,7 @@ export const insert = async <
     }, context, { bypassAccessControl: true }) as TDocument)
   }
 
-  const result = await context.model.findOne({ _id: docId }, { projection })
+  const result = await context.collection.model.findOne({ _id: docId }, { projection })
   return right(unsafe(await traverseDocument(result!, context.description, {
     getters: true,
     fromProperties: true,

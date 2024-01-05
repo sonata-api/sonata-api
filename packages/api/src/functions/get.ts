@@ -56,7 +56,7 @@ export const get = async <
     properties: context.description.properties,
   }))
 
-  const result = await context.model.aggregate(pipeline).next()
+  const result = await context.collection.model.aggregate(pipeline).next()
   if( !result ) {
     return null
   }

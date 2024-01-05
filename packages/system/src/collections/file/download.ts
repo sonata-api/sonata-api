@@ -10,7 +10,7 @@ export enum FileReadError {
 }
 
 const download = async (_id: string, context: Context<typeof description>) => {
-  const file = await context.model.findOne({ _id: new ObjectId(_id) }, {
+  const file = await context.collection.model.findOne({ _id: new ObjectId(_id) }, {
     absolute_path: 1,
     mime: 1
   })

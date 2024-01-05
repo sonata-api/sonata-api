@@ -9,9 +9,7 @@ export type Collection<TCollection extends Collection = any> = {
 }
 
 export type AssetType = keyof Collection
-
 export type FunctionPath = `${string}@${string}`
-export type Collections = Record<string, Collection>
 
 export type UserACProfile = {
   readonly roles: string[]
@@ -21,7 +19,7 @@ export type UserACProfile = {
 export type DecodedToken =
   | {
     authenticated: true
-    user:  {
+    user: Collections['user']['item'] & {
       _id: ObjectId
       roles: string[]
     }

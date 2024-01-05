@@ -16,7 +16,7 @@ export const remove = async <TContext extends Context>(
     autoCast: true
   }))
 
-  const target = await context.model.findOne(filters)
+  const target = await context.collection.model.findOne(filters)
   if( !target ) {
     return left({
       message: 'target not found'
@@ -24,5 +24,5 @@ export const remove = async <TContext extends Context>(
   }
 
   await cascadingRemove(target, context)
-  return context.model.findOneAndDelete(filters)
+  return context.collection.model.findOneAndDelete(filters)
 }

@@ -37,7 +37,7 @@ const internalCheckImmutability = async (
   )
 
 
-  const currentDocument: Record<string, any> | null = await context.model.findOne({ _id: new ObjectId(parentId) })
+  const currentDocument: Record<string, any> | null = await context.collection.model.findOne({ _id: new ObjectId(parentId) })
   if( !currentDocument ) {
     return left(ACErrors.ImmutabilityParentNotFound)
   }

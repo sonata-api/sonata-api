@@ -1,5 +1,6 @@
 import type { Context } from '@sonata-api/types'
 import type { description } from './description'
+import { ObjectId } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import bcrypt from 'bcrypt'
 
@@ -25,8 +26,8 @@ const getInfo = async (props: Props, context: Context<typeof description>) => {
     return left(ActivationErrors.InvalidLink)
   }
 
-  const user = await context.model.findOne({
-    _id: userId
+  const user = await context.collection.model.findOne({
+    _id: new ObjectId(userId)
   })
 
   if( !user ) return left(ActivationErrors.UserNotFound)

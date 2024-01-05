@@ -90,7 +90,7 @@ export const getAll = async <
     pipeline.push({ $sort: preferredSort })
   }
 
-  const result = await context.model.aggregate(pipeline).toArray()
+  const result = await context.collection.model.aggregate(pipeline).toArray()
   const documents: typeof result = []
 
   for( const document of result ) {

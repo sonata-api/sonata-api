@@ -124,7 +124,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     })
   }
 
-  const user = await context.model.findOne(
+  const user = await context.collection.model.findOne(
     { email: props.email },
     {
       email: 1,

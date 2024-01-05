@@ -15,11 +15,6 @@ import type {
 export type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
 
-export type Models = {
-  [K in keyof Collections]: CollectionModel<Collections[K]['description']>
-}
-
-
 type OmitContextParameter<TFunctions> = {
   [P in keyof TFunctions]: TFunctions[P] extends infer Fn
     ? Fn extends (...args: any[]) => any
@@ -38,6 +33,9 @@ export type IndepthCollection<TCollection> = TCollection extends {
     ? Omit<TCollection, 'functions'> & {
       functions: Omit<OmitContextParameter<CollFunctions>, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
       originalFunctions: CollFunctions
+      model: InferredDescription extends Description
+        ? CollectionModel<InferredDescription>
+        : never
     }
     : never
   : TCollection
@@ -55,12 +53,13 @@ export type ContextOptions<TContext> = {
 
 export type Context<TDescription extends Description = any> = {
   description: TDescription
-  model: CollectionModel<TDescription>
-  models: Models
-
-  collection: TDescription['$id'] extends keyof Collections
+  collection: (
+    TDescription['$id'] extends keyof Collections
     ? IndepthCollection<Collections[TDescription['$id']]>
     : IndepthCollection<Collection>
+  ) extends infer Coll
+    ? Coll & { model: CollectionModel<TDescription> }
+    : never
 
   collections: IndepthCollections
 

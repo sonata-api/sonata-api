@@ -1,4 +1,14 @@
-import type { Context, GenericRequest, GenericResponse, RequestMethod, InferProperty, InferResponse } from '@sonata-api/types'
+import type {
+  Context,
+  GenericRequest,
+  GenericResponse,
+  RequestMethod,
+  InferProperty,
+  InferResponse,
+  Property
+
+} from '@sonata-api/types'
+
 import { REQUEST_METHODS } from '@sonata-api/types'
 import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
@@ -21,11 +31,11 @@ export type RouteGroupOptions = {
 
 type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & {
   request: Omit<Context['request'], 'payload'> & {
-    payload: TContract extends [infer Payload, any]
+    payload: TContract extends { request: infer Payload }
       ? Payload extends null
         ? never
         : InferProperty<Payload>
-      : TContract extends Record<string, any>
+      : TContract extends Property
         ? InferProperty<TContract>
         : never
   }
@@ -34,7 +44,7 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
 export type ProxiedRouter<TRouter> = TRouter & Record<
   RequestMethod,
   <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends [any, infer TResponse]
+    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer TResponse }
       ? InferResponse<TResponse>
       : any,
     const TContract extends RouteContract
@@ -173,7 +183,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   const routesMeta = {} as Record<RouteUri, RouteContract | null>
 
   const route = <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends [any, infer TResponse]
+    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer TResponse }
       ? InferResponse<TResponse>
       : any,
     const TContract extends RouteContract
@@ -191,9 +201,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
         exp,
         cb as any,
         contract,
-        groupOptions
-          ? Object.assign(Object.assign({}, groupOptions), options)
-          : options
+        groupOptions || options
       )
     })
   }
@@ -216,6 +224,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
         : `${options.base!}${exp}`
 
       const match = matches(context.request, null, new RegExp(`^${newOptions.base}/`), newOptions)
+
       if( match ) {
         if( routeOptions?.middleware ) {
           const result = await routeOptions.middleware(context)

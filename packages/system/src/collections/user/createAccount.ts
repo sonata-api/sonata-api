@@ -63,8 +63,8 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     user.self_registered = true
   }
 
-  const { insertedId } = await context.model.insertOne(user as any)
-  const newUser = await context.model.findOne({
+  const { insertedId } = await context.collection.model.insertOne(user as any)
+  const newUser = await context.collection.model.findOne({
     _id: insertedId
   })
 

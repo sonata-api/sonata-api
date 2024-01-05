@@ -37,11 +37,11 @@ export const count = async <TContext extends Context>(
       $count: 'total'
     })
 
-    const result = await context.model.aggregate(pipeline).next()
+    const result = await context.collection.model.aggregate(pipeline).next()
     return result
       ? result.total
       : 0
   }
 
-  return context.model.countDocuments(traversedFilters)
+  return context.collection.model.countDocuments(traversedFilters)
 }

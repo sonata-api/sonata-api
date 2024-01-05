@@ -28,7 +28,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     throw new Error('filename lacks extension')
   }
 
-  const oldFile = await context.model.findOne(
+  const oldFile = await context.collection.model.findOne(
     { _id: props.what._id },
     { absolute_path: 1 }
   )
