@@ -30,8 +30,8 @@ router.GET('/get-people', async (context) => {
   }
 
   return context.collections.person.functions.getAll()
-}, [
-  {
+}, {
+  request: {
     type: 'object',
     properties: {
       name: {
@@ -39,7 +39,7 @@ router.GET('/get-people', async (context) => {
       }
     }
   },
-  [
+  response: [
     leftSchema({
       type: 'object'
     }),
@@ -50,7 +50,7 @@ router.GET('/get-people', async (context) => {
       }
     },
   ]
-])
+})
 
 
 init({}, (context) => {
