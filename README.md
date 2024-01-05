@@ -3,19 +3,18 @@
 An intuitive web framework tuned for security and efficiency.
 
 ```typescript
-router.GET('/get-pets', (context) => {
-  const filters = validateSilently(context.request.query, {
-    required: [],
-    properties: {
-      name: {
-        type: 'string'
-      }
-    }
+router.POST('/get-pets', (context) => {
+  return context.collections.pet.functions.getAll({
+    filters: context.request.payload
   })
 
-  return context.collections.pet.functions.getAll({
-    filters
-  })
+}, {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string'
+    }
+  }
 })
 ```
 
