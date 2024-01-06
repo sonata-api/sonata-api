@@ -9,10 +9,12 @@ router.POST('/get-pets', (context) => {
   })
 
 }, {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string'
+  payload: {
+    type: 'object',
+    properties: {
+      name: {
+        type: 'string'
+      }
     }
   }
 })
