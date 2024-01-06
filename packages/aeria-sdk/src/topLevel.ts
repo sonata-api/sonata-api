@@ -58,11 +58,6 @@ export const topLevel = (config: InstanceConfig) => {
           }
         }
 
-        console.log({
-          endpoint,
-          method
-        })
-
         const response = await request(
           config,
           `${apiUrl(config)}/${endpoint}`,
