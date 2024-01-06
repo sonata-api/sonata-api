@@ -59,7 +59,7 @@ export type SchemaWithId<TSchema> = Schema<TSchema> & {
   _id: ObjectId
 }
 
-export type MapSchemaUnion<TSchema> = TSchema extends (infer SchemaOption)[]
+export type MapSchemaUnion<TSchema> = TSchema extends readonly (infer SchemaOption)[]
   ? SchemaOption extends any
     ? SchemaOption extends
       | { $ref: infer K }

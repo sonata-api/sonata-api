@@ -1,4 +1,7 @@
-export type RequestParams = Omit<Parameters<typeof fetch>[1], 'headers'> & {
+import type { RequestMethod } from '@sonata-api/types'
+
+export type RequestParams = Omit<RequestInit, 'headers'> & {
+  method: RequestMethod
   headers?: Partial<Record<string, string>>
 }
 
@@ -9,18 +12,25 @@ export type RequestConfig<Return = any> = {
 }
 
 export const defaultRequestTransformer = async (url: string, payload: any, params: RequestParams) => {
-  const body = params.headers?.['content-type']?.startsWith('application/json')
-    ? JSON.stringify(payload)
-    : payload
-
-  return {
+  const request: {
+    url: string
+    params: RequestParams
+  } = {
     url,
-    payload,
-    params: {
-      ...params,
-      body
+    params
+  }
+
+  if( payload ) {
+    if( params.method === 'GET' || params.method === 'HEAD' ) {
+      request.url += `?${new URLSearchParams(payload)}`
+    } else {
+      request.params.body = params.headers?.['content-type']?.startsWith('application/json')
+        ? JSON.stringify(payload)
+        : payload
     }
   }
+
+  return request
 }
 
 export const defaultResponseTransformer = async (response: Awaited<ReturnType<typeof fetch>>) => {
@@ -31,7 +41,7 @@ export const defaultResponseTransformer = async (response: Awaited<ReturnType<ty
   result.data = await response.text()
 
   if( response.headers.get('content-type')?.startsWith('application/json') ) {
-    const data = result.data = JSON.parse(result.data as string) as {
+    const data = result.data = JSON.parse(result.data) as {
       error?: any
     }
 

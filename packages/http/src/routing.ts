@@ -5,7 +5,6 @@ import type {
   RequestMethod,
   InferProperty,
   InferResponse,
-  Property
 
 } from '@sonata-api/types'
 
@@ -33,9 +32,7 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
   request: Omit<Context['request'], 'payload' | 'query'> & {
     payload: TContract extends { payload: infer Payload }
       ? InferProperty<Payload>
-      : TContract extends Property
-        ? InferProperty<TContract>
-        : never
+      : never
     query: TContract extends { query: infer Query }
       ? InferProperty<Query>
       : any
@@ -45,8 +42,8 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
 export type ProxiedRouter<TRouter> = TRouter & Record<
   RequestMethod,
   <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer TResponse }
-      ? InferResponse<TResponse>
+    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer Response }
+      ? InferResponse<Response>
       : any,
     const TContract extends RouteContract
   >(
@@ -116,12 +113,15 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
     Object.assign(context.request, match)
 
     if( contract ) {
-      const payloadSchema = Array.isArray(contract)
-        ? contract[0]
-        : contract
+      if( 'payload' in contract && contract.payload ) {
+        const validationEither = validate(context.request.payload, contract.payload)
+        if( isLeft(validationEither) ) {
+          return validationEither
+        }
+      }
 
-      if( payloadSchema ) {
-        const validationEither = validate(context.request.payload, payloadSchema)
+      if( 'query' in contract && contract.query ) {
+        const validationEither = validate(context.request.query, contract.query)
         if( isLeft(validationEither) ) {
           return validationEither
         }
@@ -181,12 +181,12 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   options.base ??= DEFAULT_BASE_URI
 
   const routes: ((_: unknown, context: Context, groupOptions?: RouteGroupOptions) => ReturnType<typeof registerRoute>)[] = []
-  const routesMeta = {} as Record<RouteUri, RouteContract | null>
+  const routesMeta = {} as Record<RouteUri, Partial<Record<RequestMethod, RouteContract | null>>>
 
   const route = <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer TResponse }
-      ? InferResponse<TResponse>
-      : any,
+    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer Response }
+      ? InferResponse<Response>
+      : TContract,
     const TContract extends RouteContract
   >(
     method: RequestMethod | RequestMethod[],
@@ -194,7 +194,9 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
     cb: TCallback,
     contract?: TContract
   ) => {
-    routesMeta[exp] = contract || null
+    routesMeta[exp] ??= {}
+    routesMeta[exp][Array.isArray(method) ? method[0] : method] = contract || null
+
     routes.push((_, context, groupOptions) => {
       return registerRoute(
         context,

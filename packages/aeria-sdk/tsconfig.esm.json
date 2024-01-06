@@ -6,6 +6,9 @@
     "paths": {
       "@sonata-api/common": [
         "../common/dist/cjs"
+      ],
+      "@sonata-api/types": [
+        "../types/dist"
       ]
     }
   },

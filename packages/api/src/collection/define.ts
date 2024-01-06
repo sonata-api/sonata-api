@@ -6,7 +6,7 @@ export const defineCollection = <
     : never,
   const TDescription extends Description,
   const TFunctions extends {
-    [P in string]: (payload: any, context: Context<TDescription>, ...args: any[]) => any
+    [P: string]: (payload: any, context: Context<TDescription>, ...args: any[]) => any
   }
 >(
   collection: TCollection & {

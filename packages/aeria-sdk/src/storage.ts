@@ -20,7 +20,10 @@ export const getStorage = (config: InstanceConfig) => {
         case 'memo':
           return storageMemo[key]
         case 'localStorage':
-          return localStorage.getItem(storageKey(key, config))
+          const value = localStorage.getItem(storageKey(key, config))
+          return value
+            ? JSON.parse(value)
+            : null
       }
     },
     remove: (key: string) => {
@@ -33,13 +36,14 @@ export const getStorage = (config: InstanceConfig) => {
           break
       }
     },
-    set: (key: string, value: string) => {
+    set: (key: string, value: any) => {
       switch( strategy ) {
         case 'memo':
           storageMemo[key] = value
           break
         case 'localStorage':
-          return localStorage.setItem(storageKey(key, config), value)
+          const serialized = JSON.stringify(value)
+          return localStorage.setItem(storageKey(key, config), serialized)
       }
     },
   }

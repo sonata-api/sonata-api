@@ -27,6 +27,14 @@
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.js"
+    },
+    "./storage": {
+      "import": "./dist/esm/storage.js",
+      "require": "./dist/cjs/storage.js"
+    },
+    "./topLevel": {
+      "import": "./dist/esm/topLevel.js",
+      "require": "./dist/cjs/topLevel.js"
     }
   },
   "peerDependencies": {

@@ -9,18 +9,11 @@ const mirrorDts = (mirrorObj: any) => {
   const collections = mirrorObj.descriptions
 
   return `import type {
-  InferSchema,
+  InferProperty,
   InferResponse,
   SchemaWithId,
   MakeEndpoint,
-  CollectionDocument,
-  GetPayload,
-  GetAllPayload,
-  InsertPayload,
-  RemovePayload,
-  RemoveAllPayload,
-  UploadPayload,
-  RemoveFilePayload,
+  RequestMethod,
   CollectionFunctions
 
 } from '@sonata-api/types'
@@ -45,14 +38,19 @@ declare module 'aeria-sdk' {
     : never
 
   type Endpoints = {
-    [Route in keyof MirrorRouter]: MirrorRouter[Route] extends infer RouteContract
-      ? RouteContract extends [infer RoutePayload, infer RouteResponse]
-        ? RoutePayload extends null
-          ? MakeEndpoint<Route, InferResponse<RouteResponse>, undefined>
-          : MakeEndpoint<Route, InferResponse<RouteResponse>, InferSchema<RoutePayload>>
-        : RouteContract extends Record<string, any>
-          ? MakeEndpoint<Route, any, InferSchema<RouteContract>>
-          : MakeEndpoint<Route>
+    [Route in keyof MirrorRouter]: {
+      [Method in keyof MirrorRouter[Route]]: Method extends RequestMethod
+        ? MirrorRouter[Route][Method] extends infer RouteContract
+          ? RouteContract extends
+            | { response: infer RouteResponse }
+            | { payload: infer RoutePayload  }
+            | { query: infer RoutePayload  }
+            ? MakeEndpoint<Route, Method, InferResponse<RouteResponse>, InferProperty<RoutePayload>>
+            : MakeEndpoint<Route, Method>
+          : never
+        : never
+    } extends infer Methods
+      ? Methods[keyof Methods]
       : never
   } extends infer Endpoints
     ? UnionToIntersection<Endpoints[keyof Endpoints]>
@@ -60,7 +58,13 @@ declare module 'aeria-sdk' {
 
   type StrongelyTypedTLO = TopLevelObject & Endpoints & {
     [K in keyof MirrorDescriptions]: SchemaWithId<MirrorDescriptions[K]> extends infer Document
-      ? CollectionFunctions<Document> & Omit<TLOFunctions, keyof Functions>
+      ? CollectionFunctions<Document> extends infer Functions
+        ? Omit<TLOFunctions, keyof Functions> & {
+          [P in keyof Functions]: {
+            POST: Functions[P]
+          }
+        }
+        : never
       : never
   }
 
@@ -71,12 +75,11 @@ declare module 'aeria-sdk' {
 }
 
 export const runtimeCjs = (config: InstanceConfig) =>
-`const { Aeria, getStorage } from 'aeria-sdk'
-const config = ${JSON.stringify(config)}
+`const config = ${JSON.stringify(config)}
 exports.config = config
 exports.url = '${apiUrl(config)}'
-exports.aeria = Aeria(config)
-exports.storage = getStorage(config)
+exports.aeria = require('aeria-sdk/topLevel').topLevel(config)
+exports.storage = require('aeria-sdk/storage').getStorage(config)
 \n`
 
 export const runtimeEsm = (config: InstanceConfig) =>
@@ -91,7 +94,7 @@ export const mirror = async (config: InstanceConfig) => {
   const api = topLevel(config)
   const runtimeBase = path.dirname(require.resolve('aeria-sdk'))
 
-  const mirror = deserialize(await api.describe({
+  const mirror = deserialize(await api.describe.POST({
     router: true
   }))
 

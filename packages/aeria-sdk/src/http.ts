@@ -6,10 +6,7 @@ export const request = <Return = any>(config: InstanceConfig, url: string, paylo
   const requestConfig = Object.assign({}, _requestConfig)
   requestConfig.requestTransformer ??= async (url, payload, _params) => {
     const params = Object.assign({}, _params)
-    const authVal = getStorage(config).get('auth')
-    const auth = authVal
-      ? JSON.parse(authVal)
-      : {}
+    const auth = getStorage(config).get('auth') || {}
 
     if( auth.token ) {
       params.headers ??= {}

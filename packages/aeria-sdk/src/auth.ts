@@ -24,7 +24,7 @@ export const authenticate = (config: InstanceConfig) => async (payload: Authenti
   const resultEither = response.data
   if( isRight(resultEither) ) {
     const result = unwrapEither(resultEither)
-    getStorage(config).set('auth', JSON.stringify(result))
+    getStorage(config).set('auth', result)
   }
 
   return resultEither

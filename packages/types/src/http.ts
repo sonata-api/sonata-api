@@ -2,6 +2,7 @@ import type { MapSchemaUnion } from './schema'
 
 export const REQUEST_METHODS = <const>[
   'GET',
+  'HEAD',
   'POST',
   'PUT',
   'DELETE',
@@ -32,29 +33,35 @@ export type GenericResponse = {
 }
 
 export type EndpointFunction<
+  TRouteMethod extends RequestMethod,
   TRouteResponse,
   TRoutePayload
-> = TRoutePayload extends undefined
-  ? () => Promise<TRouteResponse>
-  : (payload: TRoutePayload) => Promise<TRouteResponse>
+> = (
+  TRoutePayload extends undefined
+    ? () => Promise<TRouteResponse>
+    : (payload: TRoutePayload) => Promise<TRouteResponse>
+  ) extends infer Function
+    ? Record<TRouteMethod, Function>
+    : any
 
 export type MakeEndpoint<
   TRoute extends string,
+  TRouteMethod extends RequestMethod,
   TRouteResponse = any,
   TRoutePayload = undefined,
 > = TRoute extends `/${infer RouteTail}`
-  ? MakeEndpoint<RouteTail, TRouteResponse, TRoutePayload>
+  ? MakeEndpoint<RouteTail, TRouteMethod, TRouteResponse, TRoutePayload>
     : TRoute extends `${infer Route}/${infer RouteTail}`
-      ? Record<Route, MakeEndpoint<RouteTail, TRouteResponse, TRoutePayload>>
+      ? Record<Route, MakeEndpoint<RouteTail, TRouteMethod, TRouteResponse, TRoutePayload>>
       : TRoute extends `(${string}`
-        ? Record<string, EndpointFunction<TRouteResponse, TRoutePayload>>
-        : Record<TRoute, EndpointFunction<TRouteResponse, TRoutePayload>>
+        ? Record<string, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
+        : Record<TRoute, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
 
-type UnwrapResponse<TResponse> = TResponse extends any[]
+type UnwrapResponse<TResponse> = TResponse extends readonly any[]
   ? TResponse
   : TResponse[]
 
-export type InferResponse<TResponse> = MapSchemaUnion<UnwrapResponse<TResponse>> extends infer InferredTResponse
-  ? InferredTResponse | Promise<InferredTResponse>
+export type InferResponse<TResponse> = MapSchemaUnion<UnwrapResponse<TResponse>> extends infer InferredResponse
+  ? InferredResponse | Promise<InferredResponse>
   : never
 
