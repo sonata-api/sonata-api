@@ -1,8 +1,9 @@
 import type { Property } from '@sonata-api/types'
 
 export type RouteContract = Property | {
-  request: Property | null
-  response: Property | Property[] | null
+  payload?: Property
+  response?: Property | Property[]
+  query?: Property | Property[]
 }
 
 export const defineContract = <const TRouteContract extends RouteContract>(contract: TRouteContract) => {

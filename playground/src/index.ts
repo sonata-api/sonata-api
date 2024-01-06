@@ -31,7 +31,7 @@ router.GET('/get-people', async (context) => {
 
   return context.collections.person.functions.getAll()
 }, {
-  request: {
+  payload: {
     type: 'object',
     properties: {
       name: {

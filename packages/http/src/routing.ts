@@ -30,14 +30,15 @@ export type RouteGroupOptions = {
 }
 
 type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & {
-  request: Omit<Context['request'], 'payload'> & {
-    payload: TContract extends { request: infer Payload }
-      ? Payload extends null
-        ? never
-        : InferProperty<Payload>
+  request: Omit<Context['request'], 'payload' | 'query'> & {
+    payload: TContract extends { payload: infer Payload }
+      ? InferProperty<Payload>
       : TContract extends Property
         ? InferProperty<TContract>
         : never
+    query: TContract extends { query: infer Query }
+      ? InferProperty<Query>
+      : any
   }
 }
 

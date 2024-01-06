@@ -54,9 +54,7 @@ type UnwrapResponse<TResponse> = TResponse extends any[]
   ? TResponse
   : TResponse[]
 
-export type InferResponse<TResponse> = TResponse extends null
-  ? any
-  : MapSchemaUnion<UnwrapResponse<TResponse>> extends infer InferredTResponse
-    ? InferredTResponse | Promise<InferredTResponse>
-    : never
+export type InferResponse<TResponse> = MapSchemaUnion<UnwrapResponse<TResponse>> extends infer InferredTResponse
+  ? InferredTResponse | Promise<InferredTResponse>
+  : never
 
