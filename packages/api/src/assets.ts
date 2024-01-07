@@ -79,6 +79,10 @@ export const getFunction = async <
 
   const fn = async (payload: any, context: Context) => {
     const collection = await getCollection(collectionName)
+    if( !collection ) {
+      return left(ACErrors.ResourceNotFound)
+    }
+
     if( collection.security?.rateLimiting?.[functionName] ) {
       const rateLimitingEither = await limitRate(context, collection.security.rateLimiting[functionName])
       if( isLeft(rateLimitingEither) ) {

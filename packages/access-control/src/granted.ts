@@ -24,11 +24,12 @@ const applyInheritance = async (accessControl: AccessControl, targetRole: Role) 
   return role
 }
 
-export const getAccessControl = async <TCollectionName extends string>(collectionName: TCollectionName): Promise<AccessControl> => {
+export const getAccessControl = async <TCollectionName extends string>(collectionName: TCollectionName): Promise<AccessControl | undefined> => {
   const collection = await getCollection(collectionName)
-  const accessControl = collection.accessControl || DEFAULT_ACCESS_CONTROL
-  
-  return accessControl
+  if( collection ) {
+    const accessControl = collection.accessControl || DEFAULT_ACCESS_CONTROL
+    return accessControl
+  }
 }
 
 export const getAvailableRoles = async () => {
@@ -41,7 +42,7 @@ export const getAvailableRoles = async () => {
 
   for( const collectionName in collections ) {
     const ac = await getAccessControl(collectionName)
-    if( !ac.roles ) {
+    if( !ac?.roles ) {
       continue
     }
 
@@ -58,6 +59,10 @@ export const isGranted = async (
   acProfile: ACProfile
 ) => {
   const accessControl = await getAccessControl(collectionName)
+  if( !accessControl ) {
+    return false
+  }
+
   const userRoles = (acProfile.roles || ['guest'])
 
   for( const roleName of userRoles ) {
@@ -96,7 +101,7 @@ export const grantedFor = async <
   functionName: TFunctionName
 ) => {
   const accessControl = await getAccessControl(collectionName)
-  if( !accessControl.roles ) {
+  if( !accessControl?.roles ) {
     return []
   }
 

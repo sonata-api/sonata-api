@@ -9,12 +9,12 @@ export const getEntrypoint = () => {
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (() => Collection)>> => {
   const { collections } = await getEntrypoint()
-  return { ...collections }
+  return Object.assign({}, collections)
 }
 
 export const getCollections = async () => {
   if( collectionsMemo ) {
-    return collectionsMemo
+    return Object.assign({}, collectionsMemo)
   }
 
   collectionsMemo = await internalGetCollections()
@@ -29,6 +29,10 @@ export const getCollection = async (collectionName: string) => {
   const collections = await getCollections()
 
   const candidate = collections[collectionName]
+  if( !candidate ) {
+    return
+  }
+
   const collection = typeof candidate === 'function'
     ? candidate()
     : candidate
