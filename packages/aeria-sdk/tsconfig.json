@@ -13,7 +13,8 @@
     }
   },
   "include": [
-    "aeria-sdk.d.ts",
-    "src"
+    "@types",
+    "src",
+    "aeria-sdk.d.ts"
   ]
 }

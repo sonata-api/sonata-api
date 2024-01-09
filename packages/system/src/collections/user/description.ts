@@ -50,7 +50,8 @@ export const [User, description] = defineDescriptionTuple({
       type: 'array',
       items: {
         enum: [],
-      }
+      },
+      uniqueItems: true
     },
     email: {
       type: 'string',

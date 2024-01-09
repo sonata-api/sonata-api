@@ -26,8 +26,9 @@ type OmitContextParameter<TFunctions> = {
 }
 
 export type IndepthCollection<TCollection> = TCollection extends {
-  functions: infer CollFunctions
   description: infer InferredDescription
+  functions: infer CollFunctions
+
 }
   ? CollectionFunctions<SchemaWithId<InferredDescription>> extends infer Functions
     ? Omit<TCollection, 'functions'> & {
@@ -51,14 +52,10 @@ export type ContextOptions<TContext> = {
   token?: DecodedToken
 }
 
-export type Context<TDescription extends Description = any> = {
+export type Context<TDescription extends Description = any, TFunctions = any> = {
   description: TDescription
-  collection: (
-    TDescription['$id'] extends keyof Collections
-    ? IndepthCollection<Collections[TDescription['$id']]>
-    : IndepthCollection<Collection>
-  ) extends infer Coll
-    ? Coll & { model: CollectionModel<TDescription> }
+  collection: TDescription['$id'] extends keyof Collections
+    ? IndepthCollection<{ description: TDescription, functions: TFunctions }>
     : never
 
   collections: IndepthCollections

@@ -1,4 +1,5 @@
 import type { InstanceConfig } from './types'
+import type { AuthenticationResult } from './auth'
 
 export const storageMemo: Record<string, string> = {}
 
@@ -14,18 +15,21 @@ export const getStorage = (config: InstanceConfig) => {
       ? 'memo'
       : config.storage.strategy
 
+  function get(key: 'auth'): AuthenticationResult
+  function get(key: string) {
+    switch( strategy ) {
+      case 'memo':
+        return storageMemo[key]
+      case 'localStorage':
+        const value = localStorage.getItem(storageKey(key, config))
+        return value
+          ? JSON.parse(value)
+          : null
+    }
+  }
+
   return {
-    get: (key: string) => {
-      switch( strategy ) {
-        case 'memo':
-          return storageMemo[key]
-        case 'localStorage':
-          const value = localStorage.getItem(storageKey(key, config))
-          return value
-            ? JSON.parse(value)
-            : null
-      }
-    },
+    get,
     remove: (key: string) => {
       switch( strategy ) {
         case 'memo':

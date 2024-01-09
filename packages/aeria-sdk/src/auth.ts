@@ -5,7 +5,7 @@ import { apiUrl } from './utils'
 import { getStorage } from './storage'
 
 export type AuthenticationResult = {
-  user: any
+  user: Collections['user']['item']
   token: {
     type: 'bearer'
     content: string

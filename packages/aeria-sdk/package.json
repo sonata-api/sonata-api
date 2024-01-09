@@ -1,6 +1,6 @@
 {
   "name": "aeria-sdk",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "dist/cjs/index.js",
   "types": "dist/cjs/index.d.ts",
@@ -40,8 +40,5 @@
   "peerDependencies": {
     "@sonata-api/common": "*",
     "@sonata-api/types": "*"
-  },
-  "devDependencies": {
-    "@types/node": "^20.10.4"
   }
 }

@@ -37,25 +37,27 @@ export type EndpointFunction<
   TRouteResponse,
   TRoutePayload
 > = (
-  TRoutePayload extends undefined
-    ? () => Promise<TRouteResponse>
-    : (payload: TRoutePayload) => Promise<TRouteResponse>
+    TRoutePayload extends null
+      ? (payload?: any) => Promise<TRouteResponse>
+      : TRoutePayload extends undefined
+        ? () => Promise<TRouteResponse>
+        : (payload: TRoutePayload) => Promise<TRouteResponse>
   ) extends infer Function
     ? Record<TRouteMethod, Function>
-    : any
+    : never
 
 export type MakeEndpoint<
   TRoute extends string,
   TRouteMethod extends RequestMethod,
   TRouteResponse = any,
-  TRoutePayload = undefined,
+  TRoutePayload = null,
 > = TRoute extends `/${infer RouteTail}`
   ? MakeEndpoint<RouteTail, TRouteMethod, TRouteResponse, TRoutePayload>
-    : TRoute extends `${infer Route}/${infer RouteTail}`
-      ? Record<Route, MakeEndpoint<RouteTail, TRouteMethod, TRouteResponse, TRoutePayload>>
-      : TRoute extends `(${string}`
-        ? Record<string, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
-        : Record<TRoute, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
+  : TRoute extends `${infer Route}/${infer RouteTail}`
+    ? Record<Route, MakeEndpoint<RouteTail, TRouteMethod, TRouteResponse, TRoutePayload>>
+    : TRoute extends `(${string}`
+      ? Record<string, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
+      : Record<TRoute, EndpointFunction<TRouteMethod, TRouteResponse, TRoutePayload>>
 
 type UnwrapResponse<TResponse> = TResponse extends readonly any[]
   ? TResponse

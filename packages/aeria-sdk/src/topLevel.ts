@@ -7,12 +7,8 @@ import { apiUrl } from './utils'
 
 type UserFunctions = {
   user: TLOFunctions & {
-    authenticate: {
-      POST: (payload: AuthenticationPayload) => Promise<any>
-    }
-    signout: {
-      POST: () => Promise<void>
-    }
+    authenticate: (payload: AuthenticationPayload) => Promise<any>
+    signout: () => Promise<void>
   }
 }
 
@@ -33,14 +29,12 @@ export const topLevel = (config: InstanceConfig) => {
         return target[key]
       }
 
-      const endpoint = parent
-
-      if( key === 'POST' ) {
-        switch( endpoint ) {
-          case 'user/authenticate': return authenticate(config)
-          case 'user/signout': return signout(config)
-        }
+      switch( `${parent}/${key}` ) {
+        case 'user/authenticate': return authenticate(config)
+        case 'user/signout': return signout(config)
       }
+
+      const endpoint = parent
 
       const fn = async (payload: any) => {
         const method = key as RequestMethod

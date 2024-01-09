@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.25
+
+### Patch Changes
+
+- Fix aeria-sdk types
+
+## 0.1.24
+
+### Patch Changes
+
+- Fix aeria-sdk
+
 ## 0.1.23
 
 ### Patch Changes

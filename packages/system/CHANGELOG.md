@@ -1,5 +1,14 @@
 # @sonata-api/system
 
+## 1.0.15
+
+### Patch Changes
+
+- Fix aeria-sdk
+- Updated dependencies
+  - @sonata-api/types@0.1.24
+  - @sonata-api/api@1.0.28
+
 ## 1.0.14
 
 ### Patch Changes
