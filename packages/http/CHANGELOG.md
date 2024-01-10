@@ -1,5 +1,11 @@
 # @sonata-api/http
 
+## 1.0.14
+
+### Patch Changes
+
+- Add 422 http status code
+
 ## 1.0.13
 
 ### Patch Changes

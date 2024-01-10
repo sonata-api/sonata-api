@@ -116,6 +116,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
       if( 'payload' in contract && contract.payload ) {
         const validationEither = validate(context.request.payload, contract.payload)
         if( isLeft(validationEither) ) {
+          context.response.writeHead(422)
           return validationEither
         }
       }
@@ -123,6 +124,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
       if( 'query' in contract && contract.query ) {
         const validationEither = validate(context.request.query, contract.query)
         if( isLeft(validationEither) ) {
+          context.response.writeHead(422)
           return validationEither
         }
       }
