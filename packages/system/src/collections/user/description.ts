@@ -32,13 +32,11 @@ export const [User, description] = defineDescriptionTuple({
       type: 'string'
     },
     first_name: {
-      type: 'string',
       getter: (document: any) => {
         return `${document.full_name?.split(' ')[0] || 'N/A'}`
       }
     },
     last_name: {
-      type: 'string',
       getter: (document: any) => {
         return `${document.full_name?.split(' ')[1]}`
       }

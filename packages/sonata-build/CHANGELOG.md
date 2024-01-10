@@ -1,5 +1,11 @@
 # sonata-build
 
+## 1.0.10
+
+### Patch Changes
+
+- Fix tsConfig.include
+
 ## 1.0.9
 
 ### Patch Changes

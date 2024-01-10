@@ -120,7 +120,7 @@ const autoCast = (value: any, target: any, propName: string, property: Property,
 }
 
 const getters = (value: any, target: any, _propName: string, property: Property) => {
-  if( property.getter ) {
+  if( 'getter' in property ) {
     return property.getter(target)
   }
 

@@ -51,13 +51,11 @@ export const [File, description] = defineDescriptionTuple({
       type: 'boolean'
     },
     link: {
-      type: 'string',
       getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
       }
     },
     download_link: {
-      type: 'string',
       getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
       }

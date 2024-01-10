@@ -118,6 +118,10 @@ export type LiteralProperty = {
   literal: string | number | boolean
 }
 
+export type GetterProperty = {
+  getter: (getter: any) => any
+}
+
 export type MixedProperty =
   | RefProperty
   | FileProperty
@@ -128,6 +132,7 @@ export type MixedProperty =
   | NumberProperty
   | BooleanProperty
   | LiteralProperty
+  | GetterProperty
 
 export type PropertyBase = {
   description?: string
@@ -145,7 +150,6 @@ export type PropertyBase = {
   unique?: boolean
 
   isTimestamp?: boolean
-  getter?: (value: any) => any
 }
 
 export type Property = MixedProperty & PropertyBase

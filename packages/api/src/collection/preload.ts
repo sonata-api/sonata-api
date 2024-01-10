@@ -26,7 +26,7 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
     })
   }
 
-  if( property.getter ) {
+  if( 'getter' in property ) {
     return {
       ...property,
       readOnly: true,

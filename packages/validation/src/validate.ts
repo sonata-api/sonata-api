@@ -153,7 +153,7 @@ export const validateProperty = (
     }
   }
 
-  else if( property.getter ) {
+  else if( 'getter' in property ) {
     return makePropertyError('unmatching', {
       expected: 'getters are read-only',
       got: actualType

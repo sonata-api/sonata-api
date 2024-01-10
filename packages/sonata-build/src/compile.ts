@@ -22,10 +22,18 @@ export const compile = async (fileList: string[]) => {
 
   const compilerOptions = tsConfig.compilerOptions as unknown
 
-  const selectedFiles = tsConfig.include || (tsConfig.exclude
-    ? fileList.filter((file) => !tsConfig.exclude!.some((exp) => new RegExp(exp.replace('*', '([^\/]+)'), 'g').test(file)))
-    : fileList
-  )
+  const selectedFiles = fileList.filter((file) => {
+    const testFile = (exp: string) => new RegExp(exp.replace('*', '([^\/]+)'), 'g').test(file)
+    if( tsConfig.include ) {
+      return tsConfig.include.some(testFile)
+    }
+
+    if( tsConfig.exclude ) {
+      return !tsConfig.exclude.some(testFile)
+    }
+
+    return true
+  })
 
   const program = ts.createProgram(selectedFiles, compilerOptions as ts.CompilerOptions)
   const emitResult = program.emit()
