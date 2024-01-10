@@ -116,30 +116,7 @@ export const validateProperty = (
     })
   }
 
-  if( 'type' in property && property.type === 'number' ) {
-    if(
-      (property.maximum && property.maximum < what)
-    || (property.minimum && property.minimum > what)
-    || (property.exclusiveMaximum && property.exclusiveMaximum <= what)
-    || (property.exclusiveMinimum && property.exclusiveMinimum >= what)
-    ) {
-      return makePropertyError('numeric_constraint', {
-        expected: 'number',
-        got: 'invalid_number'
-      })
-    }
-  }
-
-  else if( 'enum' in property ) {
-    if( !property.enum.includes(what) ) {
-      return makePropertyError('extraneous_element', {
-        expected: property.enum,
-        got: what
-      })
-    }
-  }
-
-  else if( 'items' in property ) {
+  if( 'items' in property ) {
     let i = 0
     for( const elem of what ) {
       const result = validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
@@ -150,6 +127,40 @@ export const validateProperty = (
       }
 
       i++
+    }
+  }
+
+  else if( 'type' in property ) {
+    if( property.type === 'integer' ) {
+      if( !Number.isInteger(what) ) {
+        return makePropertyError('numeric_constraint', {
+          expected: 'integer',
+          got: 'invalid_number'
+        })
+      }
+    }
+
+    if( property.type === 'integer' || property.type === 'number' ) {
+      if(
+        (property.maximum && property.maximum < what)
+      || (property.minimum && property.minimum > what)
+      || (property.exclusiveMaximum && property.exclusiveMaximum <= what)
+      || (property.exclusiveMinimum && property.exclusiveMinimum >= what)
+      ) {
+        return makePropertyError('numeric_constraint', {
+          expected: 'number',
+          got: 'invalid_number'
+        })
+      }
+    }
+  }
+
+  else if( 'enum' in property ) {
+    if( !property.enum.includes(what) ) {
+      return makePropertyError('extraneous_element', {
+        expected: property.enum,
+        got: what
+      })
     }
   }
 

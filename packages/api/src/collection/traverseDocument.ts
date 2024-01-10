@@ -78,6 +78,10 @@ const autoCast = (value: any, target: any, propName: string, property: Property,
     }
 
     case 'number': {
+      if( 'type' in property && property.type === 'integer' ) {
+        return parseInt(value.toString())
+      }
+
       if( 'format' in property ) {
         if( property.format === 'date' || property.format === 'date-time' ) {
           return new Date(value)
