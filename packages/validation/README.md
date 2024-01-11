@@ -1,12 +1,8 @@
 # `@sonata-api/validation`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @sonata-api/validation
-# or
-$ npm install @sonata-api/validation
-```
+This package implements [JSON Schema](https://json-schema.org/) validation.
 
 ## Usage
 

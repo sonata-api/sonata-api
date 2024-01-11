@@ -1,12 +1,8 @@
 # `@sonata-api/system`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @sonata-api/system
-# or
-$ npm install @sonata-api/system
-```
+This package implements built-in collections and functions that provide basic functionalities like authentication, logging, rate limiting, and file storage.
 
 ## Usage
 

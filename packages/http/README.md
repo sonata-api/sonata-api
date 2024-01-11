@@ -1,12 +1,8 @@
 # `@sonata-api/http`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @sonata-api/http
-# or
-$ npm install @sonata-api/http
-```
+This package implements a micro web server built on top of `node:http`. The server features runtime validation through Contracts, route grouping, and middlewares.
 
 ## Usage
 
