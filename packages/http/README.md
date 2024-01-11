@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This package implements a micro web server built on top of `node:http`. The server features runtime validation through Contracts, route grouping, and middlewares.
+This package implements a micro web server built on top of `node:http`. The server features runtime validation of input data, route grouping, and middlewares.
 
 ## Usage
 
