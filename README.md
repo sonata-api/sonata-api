@@ -1,10 +1,17 @@
 # Aeria
 
-<a href="https://github.com/sonata-api/sonata-api/actions/workflows/ci.yaml/badge.svg">
-  <img src="https://github.com/kazupon/vue-i18n/actions/workflows/ci.yml/badge.svg" alt="Continuos Integration" />
-</a>
+<p>
+  <a href="https://github.com/sonata-api/sonata-api/actions/workflows/ci.yaml/badge.svg">
+    <img
+      src="https://github.com/kazupon/vue-i18n/actions/workflows/ci.yml/badge.svg"
+      alt="Continuos Integration"
+      width="128px"
+      height="128px"
+    />
+  </a>
 
-<img src="/assets/aeria-logo.png" alt="Aeria Logo" />
+  <img src="/assets/aeria-logo.png" alt="Aeria Logo" />
+</p>
 
 An intuitive web framework tuned for security and efficiency.
 
