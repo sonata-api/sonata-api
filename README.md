@@ -12,11 +12,13 @@
 An intuitive web framework tuned for security and efficiency.
 
 ```typescript
-router.POST('/get-pets', (context) => {
+router.POST('/get-pets/(\w+)', (context) => {
   return context.collections.pet.functions.getAll({
-    filters: context.request.payload
+    filters: {
+      name: context.request.fragments[0]
+    }
   })
-}, fromLiteral({ name: '' }))
+})
 ```
 
 <br clear="left" />
