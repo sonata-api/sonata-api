@@ -8,7 +8,7 @@ export const normalizeProjection = <
   properties: TProjectedProperties,
   description: TDescription,
 ) => {
-  const target = [...properties]
+  const target = Array.from(properties)
   if( target.length === 0 ) {
     target.push(...Object.keys(description.properties) as (keyof TDescription['properties'])[])
   }
