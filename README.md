@@ -1,36 +1,20 @@
-# Aeria
+# Aeria ![https://github.com/sonata-api/sonata-api/actions/workflows/ci.yaml](https://github.com/sonata-api/sonata-api/actions/workflows/ci.yaml/badge.svg)
 
-<p>
-  <a href="https://github.com/sonata-api/sonata-api/actions/workflows/ci.yaml/badge.svg">
-    <img src="https://github.com/kazupon/vue-i18n/actions/workflows/ci.yml/badge.svg" alt="Continuos Integration" />
-  </a>
+<img
+  align="left"
+  src="/assets/aeria-logo.png"
+  alt="Aeria Logo" 
+  width="200px"
+  height="200px"
+/>
 
-  <img
-    src="/assets/aeria-logo.png"
-    alt="Aeria Logo" 
-    width="128px"
-    height="128px"
-  />
-
-  An intuitive web framework tuned for security and efficiency.
-</p>
-
+<div>An intuitive web framework tuned for security and efficiency.</div>
 
 ```typescript
 router.POST('/get-pets', (context) => {
   return context.collections.pet.functions.getAll({
     filters: context.request.payload
   })
-
-}, {
-  payload: {
-    type: 'object',
-    properties: {
-      name: {
-        type: 'string'
-      }
-    }
-  }
 })
 ```
 
