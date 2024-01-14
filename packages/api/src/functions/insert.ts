@@ -66,7 +66,7 @@ export const insert = async <
   if( context.collection.originalFunctions.get ) {
     return right(await context.collection.originalFunctions.get({
       filters: {
-        _id: docId,
+        _id: newId,
       },
     }, context, {
       bypassAccessControl: true,
@@ -74,7 +74,7 @@ export const insert = async <
   }
 
   const result = await context.collection.model.findOne({
-    _id: docId,
+    _id: newId,
   }, {
     projection,
   })

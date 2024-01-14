@@ -13,5 +13,9 @@
         "../system/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ]
 }
