@@ -47,9 +47,7 @@ export const getAvailableRoles = async () => {
     availableRoles.push(...Object.keys(ac.roles))
   }
 
-  availableRolesMemo = [
-    ...new Set(availableRoles), 
-  ]
+  availableRolesMemo = [...new Set(availableRoles)]
   return availableRolesMemo
 }
 
@@ -61,9 +59,7 @@ export const isGranted = async (collectionName: keyof Collections,
     return false
   }
 
-  const userRoles = (acProfile.roles || [
-    'guest',
-  ])
+  const userRoles = (acProfile.roles || ['guest'])
 
   for( const roleName of userRoles ) {
     const targetRole = accessControl.roles?.[roleName]
@@ -108,9 +104,7 @@ export const grantedFor = async <
   const roles = []
   for( const role in accessControl.roles ) {
     const granted = await isGranted(collectionName, functionName, {
-      roles: [
-        role,
-      ],
+      roles: [role],
     })
 
     if( granted ) {

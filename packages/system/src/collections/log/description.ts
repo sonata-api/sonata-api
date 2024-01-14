@@ -1,9 +1,6 @@
 import { defineDescriptionTuple } from '@sonata-api/api'
 
-export const [
-  Log,
-  description,
-] = defineDescriptionTuple({
+export const [Log, description] = defineDescriptionTuple({
   $id: 'log',
   required: [
     'context',
@@ -30,9 +27,7 @@ export const [
     },
   },
   icon: 'search-alt',
-  presets: [
-    'view',
-  ],
+  presets: ['view'],
   filters: [
     'context',
     'message',

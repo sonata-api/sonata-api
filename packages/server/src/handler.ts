@@ -5,9 +5,7 @@ import { ACErrors } from '@sonata-api/types'
 import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
 import { appendPagination } from './appendPagination'
 
-const postPipe = pipe([
-  appendPagination,
-])
+const postPipe = pipe([appendPagination])
 
 export const safeHandle = (fn: (context: Context)=> Promise<object>,
   context: Context) => async () => {
@@ -50,12 +48,7 @@ export const safeHandle = (fn: (context: Context)=> Promise<object>,
 }
 
 export const customVerbs = () => async (parentContext: Context) => {
-  const {
-    fragments: [
-      collectionName,
-      functionName,
-    ],
-  } = parentContext.request
+  const { fragments: [collectionName, functionName] } = parentContext.request
 
   const context = await createContext({
     parentContext,
@@ -85,12 +78,7 @@ export const customVerbs = () => async (parentContext: Context) => {
 }
 
 export const regularVerb = (functionName: keyof typeof functions) => async (parentContext: Context) => {
-  const {
-    fragments: [
-      collectionName,
-      id,
-    ],
-  } = parentContext.request
+  const { fragments: [collectionName, id] } = parentContext.request
 
   const context = await createContext({
     parentContext,
@@ -135,10 +123,7 @@ export const fileDownload = async (parentContext: Context) => {
     parentContext,
   })
 
-  const [
-    hash,
-    ...options 
-  ] = context.request.fragments
+  const [hash, ...options] = context.request.fragments
 
   const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
   if( isLeft(fileEither) ) {

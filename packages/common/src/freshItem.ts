@@ -1,10 +1,7 @@
 import type { Description } from '@sonata-api/types'
 
 export const freshItem = (description: Pick<Description, 'properties' | 'freshItem'>) => {
-  const item = Object.entries(description.properties).reduce((a, [
-    key,
-    property,
-  ]) => {
+  const item = Object.entries(description.properties).reduce((a, [key, property]) => {
     const value = (() => {
       if( '$ref' in property ) {
         return {}

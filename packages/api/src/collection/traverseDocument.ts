@@ -104,10 +104,7 @@ const autoCast = (
 
       if( Object.keys(value).length > 0 ) {
         const entries: [string, any][] = []
-        for( const [
-          k,
-          v,
-        ] of Object.entries(value) ) {
+        for( const [k, v] of Object.entries(value) ) {
           const subProperty = !k.startsWith('$')
             ? getProperty(k, property)
             : property

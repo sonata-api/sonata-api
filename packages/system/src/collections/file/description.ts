@@ -10,15 +10,10 @@ const timestamp = (lastModified: Date | undefined) => lastModified
 
 export type File = typeof File
 
-export const [
-  File,
-  description,
-] = defineDescriptionTuple({
+export const [File, description] = defineDescriptionTuple({
   $id: 'file',
   owned: 'always',
-  presets: [
-    'owned',
-  ],
+  presets: ['owned'],
   required: [
     'size',
     'last_modified',

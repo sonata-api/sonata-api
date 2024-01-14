@@ -1,3 +1,1 @@
-module.exports = [
-  require('eslint-config-aeria'),
-]
+module.exports = [require('eslint-config-aeria')]

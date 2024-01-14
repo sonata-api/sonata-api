@@ -52,14 +52,10 @@ export const warmup = async () => {
       const roles = await grantedFor(collectionName, functionName)
 
       switch( functionName ) {
-        case 'get': return colorizedRoute('green', roles)('GET', collectionName, null, [
-          'id',
-        ])
+        case 'get': return colorizedRoute('green', roles)('GET', collectionName, null, ['id'])
         case 'getAll': return colorizedRoute('green', roles)('GET', collectionName)
         case 'insert': return colorizedRoute('blue', roles)('POST', collectionName)
-        case 'remove': return colorizedRoute('red', roles)('DELETE', collectionName, null, [
-          'id',
-        ])
+        case 'remove': return colorizedRoute('red', roles)('DELETE', collectionName, null, ['id'])
         default: return colorizedRoute('white', roles)('POST', collectionName, functionName)
       }
     }))

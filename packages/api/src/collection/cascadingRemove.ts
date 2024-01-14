@@ -19,10 +19,7 @@ const getCascade = (description: Description) => {
   }
 
   const cascade: CascadingRemove = []
-  for( const [
-    propertyName,
-    property,
-  ] of Object.entries(description.properties) ) {
+  for( const [propertyName, property] of Object.entries(description.properties) ) {
     if( '$ref' in property && property.inline ) {
       cascade.push({
         propertyName,

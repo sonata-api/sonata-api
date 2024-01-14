@@ -46,9 +46,7 @@ export const describe = async (context: Context): Promise<any> => {
   const collections = await getCollections()
 
   const retrievedCollections = props.collections?.length
-    ? Object.fromEntries(Object.entries(collections).filter(([
-      key,
-    ]) => props.collections!.includes(key)))
+    ? Object.fromEntries(Object.entries(collections).filter(([key]) => props.collections!.includes(key)))
     : collections
 
   const descriptions: Record<string, Description> = {}

@@ -5,10 +5,7 @@ export const personCandidate = {
   age: 50,
 }
 
-export const [
-  Person1,
-  personValidator,
-] = validator({
+export const [Person1, personValidator] = validator({
   properties: {
     name: {
       type: 'string',
@@ -19,10 +16,7 @@ export const [
   },
 })
 
-export const [
-  Person2,
-  personSilentValidator,
-] = silentValidator({
+export const [Person2, personSilentValidator] = silentValidator({
   properties: {
     name: {
       type: 'string',

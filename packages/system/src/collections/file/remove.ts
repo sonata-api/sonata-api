@@ -12,9 +12,7 @@ type Props = {
 const remove = async (props: Props, context: Context<typeof description>) => {
   const file = await context.collection.functions.get({
     filters: props.filters,
-    project: [
-      'absolute_path',
-    ],
+    project: ['absolute_path'],
   })
 
   if( !file ) {

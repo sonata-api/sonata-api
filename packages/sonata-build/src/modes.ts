@@ -14,9 +14,7 @@ const inputOptions: InputOptions = {
     json(),
     terser(),
   ],
-  external: [
-    /node_modules/,
-  ],
+  external: [/node_modules/],
   onwarn: () => null,
 }
 

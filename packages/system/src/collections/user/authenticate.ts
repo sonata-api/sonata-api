@@ -36,9 +36,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
     filters: {
       _id: user._id,
     },
-    populate: [
-      'picture',
-    ],
+    populate: ['picture'],
   })
 
   if( !leanUser ) {
@@ -105,9 +103,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     const token = await signToken({
       user: {
         _id: null,
-        roles: [
-          'root',
-        ],
+        roles: ['root'],
       },
     })
 
@@ -116,9 +112,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
         _id: null,
         full_name: 'God Mode',
         email: '',
-        roles: [
-          'root',
-        ] as string[],
+        roles: ['root'] as string[],
         active: true,
       },
       token: {

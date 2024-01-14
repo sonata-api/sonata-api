@@ -17,9 +17,7 @@ async function main() {
   switch( opts.mode ) {
     case 'compile':
       const fileList = glob.sync('**/*.ts', {
-        ignore: [
-          'node_modules/**/*.ts',
-        ],
+        ignore: ['node_modules/**/*.ts'],
       })
 
       return compile(fileList)

@@ -8,9 +8,7 @@ export const normalizeProjection = <
   properties: TProjectedProperties,
   description: TDescription,
 ) => {
-  const target = [
-    ...properties,
-  ]
+  const target = [...properties]
   if( target.length === 0 ) {
     target.push(...Object.keys(description.properties) as (keyof TDescription['properties'])[])
   }
@@ -58,10 +56,7 @@ export const prepareInsert = (payload: any,
       || (description.writable && !description.writable.includes(key)
       )
   }
-  const prepareUpdate = () => Object.entries(rest).reduce((a: Record<string, any>, [
-    key,
-    value,
-  ]) => {
+  const prepareUpdate = () => Object.entries(rest).reduce((a: Record<string, any>, [key, value]) => {
     if( forbidden(key) ) {
       return a
     }
@@ -88,10 +83,7 @@ export const prepareInsert = (payload: any,
     $unset: {},
   })
 
-  const prepareCreate = () => Object.entries(rest).reduce((a, [
-    key,
-    value,
-  ]) => {
+  const prepareCreate = () => Object.entries(rest).reduce((a, [key, value]) => {
     if( forbidden(key) || [
       undefined,
       null,

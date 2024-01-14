@@ -112,10 +112,7 @@ export const preloadDescription = async <
 
   if( description.properties ) {
     const properties: [string, Property][] = []
-    for( const [
-      propertyName,
-      property,
-    ] of Object.entries(description.properties) ) {
+    for( const [propertyName, property] of Object.entries(description.properties) ) {
       properties.push([
         propertyName,
         await recurseProperty(property, propertyName, description),

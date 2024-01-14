@@ -24,8 +24,8 @@ importers:
         specifier: ^20.10.4
         version: 20.11.0
       eslint-config-aeria:
-        specifier: ^0.0.11
-        version: 0.0.11(@stylistic/eslint-plugin@1.5.3)(@typescript-eslint/eslint-plugin@6.18.1)(@typescript-eslint/parser@6.18.1)
+        specifier: latest
+        version: 0.0.13(@stylistic/eslint-plugin@1.5.3)(@typescript-eslint/eslint-plugin@6.18.1)(@typescript-eslint/parser@6.18.1)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -3097,8 +3097,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-aeria@0.0.11(@stylistic/eslint-plugin@1.5.3)(@typescript-eslint/eslint-plugin@6.18.1)(@typescript-eslint/parser@6.18.1):
-    resolution: {integrity: sha512-m0h9oX75bVWZmU6GV2YtAhhkwDH3wqPE36HVzkSmtNFRd9XssMPPD7Nsa/k+X3NtLFe53P1U1urWUmGj9SK9Jg==}
+  /eslint-config-aeria@0.0.13(@stylistic/eslint-plugin@1.5.3)(@typescript-eslint/eslint-plugin@6.18.1)(@typescript-eslint/parser@6.18.1):
+    resolution: {integrity: sha512-tNrk4Le3F53FaMWK1JRr8nZpYRdEetvk/FB6+2kzp92s8/d6l71xpNVTwyfmRNUzYjDxgPQpMVDhnlAsotrEPA==}
     peerDependencies:
       '@stylistic/eslint-plugin': ^1.5.1
       '@typescript-eslint/eslint-plugin': ^6.16.0

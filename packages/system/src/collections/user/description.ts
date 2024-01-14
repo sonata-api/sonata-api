@@ -6,10 +6,7 @@ export type User = Omit<typeof User, 'roles' | 'resources_usage'> & {
   resources_usage: Map<string, typeof ResourceUsage>
 }
 
-export const [
-  User,
-  description,
-] = defineDescriptionTuple({
+export const [User, description] = defineDescriptionTuple({
   $id: 'user',
   required: [
     'full_name',
@@ -24,9 +21,7 @@ export const [
     'phone',
     'picture',
   ],
-  indexes: [
-    'full_name',
-  ],
+  indexes: ['full_name'],
   freshItem: {
     active: true,
   },
@@ -70,9 +65,7 @@ export const [
     },
     picture: {
       $ref: 'file',
-      accept: [
-        'image/*',
-      ],
+      accept: ['image/*'],
     },
     group: {
       type: 'string',
@@ -134,9 +127,7 @@ export const [
     'active',
     'updated_at',
   ],
-  tableMeta: [
-    'email',
-  ],
+  tableMeta: ['email'],
   formLayout: {
     fields: {
       first_name: {

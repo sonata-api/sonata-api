@@ -47,10 +47,7 @@ export const getRelativeTimeFromNow = function(target: any) {
   const now = new Date()
   const elapsed = now as any - target
 
-  for( const [
-    u,
-    value,
-  ] of Object.entries(units) ) {
+  for( const [u, value] of Object.entries(units) ) {
     if( Math.abs(elapsed) > value || u === 'second' ) {
       return rtf.format(-1*Math.round(elapsed/value), u as Intl.RelativeTimeFormatUnit)
     }

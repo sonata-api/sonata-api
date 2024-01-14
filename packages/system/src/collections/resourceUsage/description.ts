@@ -1,9 +1,6 @@
 import { defineDescriptionTuple } from '@sonata-api/api'
 
-export const [
-  ResourceUsage,
-  description,
-] = defineDescriptionTuple({
+export const [ResourceUsage, description] = defineDescriptionTuple({
   $id: 'resourceUsage',
   required: [],
   properties: {

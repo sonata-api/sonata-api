@@ -74,9 +74,7 @@ export const useAccessControl = <
     }
 
     return chainFunctions<Required<Payload>>()(context,
-      props as any, [
-        checkOwnershipRead,
-      ])
+      props as any, [checkOwnershipRead])
   }
 
   const beforeWrite = async <const Payload extends Partial<InsertPayload<any>>>(payload?: Payload) => {

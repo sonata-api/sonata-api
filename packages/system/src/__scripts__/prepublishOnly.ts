@@ -18,9 +18,7 @@ const iconsJson = async () => {
     icons.push(...extractIcons(preset))
   }
 
-  const uniqueIcons = [
-    ...new Set(icons), 
-  ]
+  const uniqueIcons = [...new Set(icons)]
   await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 }

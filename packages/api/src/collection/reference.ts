@@ -70,10 +70,7 @@ const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<Fix
 }
 
 const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
-  const $set = Object.entries(referenceMap).reduce((a, [
-    refName,
-    refMap,
-  ]) => {
+  const $set = Object.entries(referenceMap).reduce((a, [refName, refMap]) => {
     if( !refMap!.isArray || refMap!.referencedCollection ) {
       return a
     }
@@ -117,10 +114,7 @@ export const getReferences = async (properties: NonNullable<FixedObjectProperty[
 
   const references: ReferenceMap = {}
 
-  for( const [
-    propName,
-    property,
-  ] of Object.entries(properties) ) {
+  for( const [propName, property] of Object.entries(properties) ) {
     const refProperty = getReferenceProperty(property)
     const reference: Reference = {}
 
@@ -227,10 +221,7 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
     })
   }
 
-  for( const [
-    propName,
-    reference,
-  ] of Object.entries(referenceMap) ) {
+  for( const [propName, reference] of Object.entries(referenceMap) ) {
     if( !reference ) {
       continue
     }
@@ -311,10 +302,7 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
     } else if( reference.deepReferences && depth <= maxDepth ) {
       hasDeepReferences = true
 
-      for( const [
-        refName,
-        refMap,
-      ] of Object.entries(reference.deepReferences) ) {
+      for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
         const sourceProps = reference.referencedCollection
           ? unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
           : properties

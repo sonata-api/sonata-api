@@ -17,9 +17,7 @@ const phases = [
 
 async function compilationPhase() {
   const fileList = glob.sync('**/*.ts', {
-    ignore: [
-      'node_modules/**/*.ts',
-    ],
+    ignore: ['node_modules/**/*.ts'],
   })
   const result = await compile(fileList)
 
@@ -44,9 +42,7 @@ async function compilationPhase() {
     icons.push(...extractIcons(collection.description))
   }
 
-  const uniqueIcons = [
-    ...new Set(icons), 
-  ]
+  const uniqueIcons = [...new Set(icons)]
   await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 

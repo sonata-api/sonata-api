@@ -34,12 +34,8 @@ export const person = defineCollection({
         grantEverything: true,
       },
       guest: {
-        inherit: [
-          'root',
-        ],
-        grant: [
-          'getAll',
-        ],
+        inherit: ['root'],
+        grant: ['getAll'],
       },
     },
   },
