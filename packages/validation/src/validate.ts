@@ -1,12 +1,15 @@
-import type { JsonSchema, Property, InferSchema, Description } from '@sonata-api/types'
-import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
-import {
-  ValidationErrorCodes,
+import type {
+  JsonSchema,
+  Property,
+  InferSchema,
+  Description,
   PropertyValidationErrorType,
   PropertyValidationError,
   ValidationError
-
 } from '@sonata-api/types'
+
+import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
+import { ValidationErrorCodes } from '@sonata-api/types'
 
 export type ValidateOptions = {
   extraneous?: string[] | boolean

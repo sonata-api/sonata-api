@@ -37,10 +37,11 @@ Inspired by functional languages, Aeria makes use of the much safer and runtime 
 
 ### Runtime safety
 
-All input data is optionally validated using the same schemas used during collection definition. A Role-based Access Control implementation is also shipped to allow even those who aren't familiar with AppSec to build safely without stumbling into common security weaknesses.
+All input data is optionally validated using the same schemas used during collection definition. Access Control is also shipped to allow even those who are unfamiliar with AppSec to build safely without stumbling into common security weaknesses.
 
 
 ## Resources
 
 - [Official Documentation](https://aeria.land/)
 - [Aeria Lang](https://aeria.land/)
+
