@@ -16,7 +16,7 @@ router.POST('/get-pets', (context) => {
   return context.collections.pet.functions.getAll({
     filters: context.request.payload
   })
-})
+}, fromLiteral({ name: '' }))
 ```
 
 <br clear="left" />
@@ -42,6 +42,6 @@ All input data is optionally validated using the same schemas used during collec
 
 ## Resources
 
-- [Official Documentation](https://aeria.land/)
+- [Official Documentation](https://aeria.land/aeria/)
 - [Aeria Lang](https://aeria.land/)
 
