@@ -7,7 +7,7 @@ export type RequestParams = Omit<RequestInit, 'headers'> & {
 
 export type RequestConfig<Return = any> = {
   params?: RequestParams
-  requestTransformer?: (...args: Parameters<typeof defaultRequestTransformer>) => Promise<Return>
+  requestTransformer?: (...args: Parameters<typeof defaultRequestTransformer>)=> Promise<Return>
   responseTransformer?: typeof defaultResponseTransformer
 }
 
@@ -17,7 +17,7 @@ export const defaultRequestTransformer = async (url: string, payload: any, param
     params: RequestParams
   } = {
     url,
-    params
+    params,
   }
 
   if( payload ) {
@@ -58,7 +58,7 @@ export const defaultResponseTransformer = async (response: Awaited<ReturnType<ty
 export const request = async <Return = any>(
   url: string,
   payload?: any,
-  config?: RequestConfig<Return>
+  config?: RequestConfig<Return>,
 ) => {
   const {
     requestTransformer = defaultRequestTransformer,
@@ -68,10 +68,11 @@ export const request = async <Return = any>(
         ? 'POST'
         : 'GET',
       headers: payload
-        ? { 'content-type': 'application/json' }
-        : {}
+        ? {
+          'content-type': 'application/json',
+        }
+        : {},
     },
-
   } = config || {} as RequestConfig
 
   const transformedRequest = await requestTransformer(url, payload, params)

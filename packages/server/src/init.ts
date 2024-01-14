@@ -14,8 +14,8 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
     return right(<DecodedToken>{
       authenticated: false,
       user: {
-        _id: null
-      }
+        _id: null,
+      },
     })
   }
 
@@ -23,7 +23,7 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
     const decodedToken: DecodedToken = await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
     decodedToken.authenticated = true
     decodedToken.user = unsafe(await traverseDocument(decodedToken.user, context.collections.user.description, {
-      autoCast: true
+      autoCast: true,
     }))
 
     return right(decodedToken)
@@ -37,11 +37,8 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   }
 }
 
-
-export const dryInit = async (
-  _apiConfig?: ApiConfig | null,
-  cb?: (context: Context) => any
-) => {
+export const dryInit = async (_apiConfig?: ApiConfig | null,
+  cb?: (context: Context)=> any) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, DEFAULT_API_CONFIG)
   if( _apiConfig ) {
@@ -49,7 +46,7 @@ export const dryInit = async (
   }
 
   const parentContext = await createContext({
-    apiConfig
+    apiConfig,
   })
 
   console.time('warmup')
@@ -75,12 +72,12 @@ export const dryInit = async (
       const token = unwrapEither(tokenEither)
       const context = await createContext({
         parentContext,
-        token
+        token,
       })
 
       Object.assign(context, {
         request,
-        response
+        response,
       })
 
       if( cb ) {

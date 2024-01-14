@@ -15,8 +15,8 @@ export const appendPagination = async (result: any, context: Context) => {
         recordsCount: result.length,
         recordsTotal,
         offset: context.request.payload.offset || 0,
-        limit
-      }
+        limit,
+      },
     }
   }
 

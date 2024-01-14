@@ -27,24 +27,24 @@ export type GenericRequest = {
 export type GenericResponse = {
   headersSent?: boolean
   writableEnded?: boolean
-  setHeader: (header: string, value: string) => void
-  writeHead: (status: number, headers?: Record<string, any>) => void
-  end: (content?: any) => void
+  setHeader: (header: string, value: string)=> void
+  writeHead: (status: number, headers?: Record<string, any>)=> void
+  end: (content?: any)=> void
 }
 
 export type EndpointFunction<
   TRouteMethod extends RequestMethod,
   TRouteResponse,
-  TRoutePayload
+  TRoutePayload,
 > = (
-    TRoutePayload extends null
-      ? (payload?: any) => Promise<TRouteResponse>
-      : TRoutePayload extends undefined
-        ? () => Promise<TRouteResponse>
-        : (payload: TRoutePayload) => Promise<TRouteResponse>
-  ) extends infer Function
-    ? Record<TRouteMethod, Function>
-    : never
+  TRoutePayload extends null
+    ? (payload?: any)=> Promise<TRouteResponse>
+    : TRoutePayload extends undefined
+      ? ()=> Promise<TRouteResponse>
+      : (payload: TRoutePayload)=> Promise<TRouteResponse>
+) extends infer Function
+  ? Record<TRouteMethod, Function>
+  : never
 
 export type MakeEndpoint<
   TRoute extends string,

@@ -3,23 +3,20 @@ import { checkImmutability } from '@sonata-api/access-control'
 
 export const removeFile = async <TContext extends Context>(
   payload: RemoveFilePayload,
-  context: TContext
+  context: TContext,
 ) => {
   const {
     propertyName,
     parentId,
     ...props
-
   } = payload
 
-  await checkImmutability(
-    context, {
-      propertyName,
-      parentId,
-      childId: props.filters._id,
-      payload: props
-    }
-  )
+  await checkImmutability(context, {
+    propertyName,
+    parentId,
+    childId: props.filters._id,
+    payload: props,
+  })
 
   return context.collections.file.functions!.remove(props)
 }

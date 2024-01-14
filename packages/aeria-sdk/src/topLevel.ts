@@ -1,24 +1,24 @@
 import type { RequestConfig } from '@sonata-api/common'
-import type { InstanceConfig } from  './types'
-import { RequestMethod } from '@sonata-api/types'
+import type { InstanceConfig } from './types'
+import { type RequestMethod } from '@sonata-api/types'
 import { authenticate, signout, type AuthenticationPayload } from './auth'
 import { request } from './http'
 import { apiUrl } from './utils'
 
 type UserFunctions = {
   user: TLOFunctions & {
-    authenticate: (payload: AuthenticationPayload) => Promise<any>
-    signout: () => Promise<void>
+    authenticate: (payload: AuthenticationPayload)=> Promise<any>
+    signout: ()=> Promise<void>
   }
 }
 
 export type TLOFunctions = {
-  [P: string]: Record<RequestMethod, ((payload?: any) => Promise<any>) & TLOFunctions>
+  [P: string]: Record<RequestMethod, ((payload?: any)=> Promise<any>) & TLOFunctions>
 }
 
 export type TopLevelObject = UserFunctions & {
   describe: {
-    POST: (...args: any) => Promise<any>
+    POST: (...args: any)=> Promise<any>
   }
 }
 
@@ -40,24 +40,22 @@ export const topLevel = (config: InstanceConfig) => {
         const method = key as RequestMethod
         const requestConfig: RequestConfig = {
           params: {
-            method
-          }
+            method,
+          },
         }
 
         if( method !== 'GET' && method !== 'HEAD' ) {
           if( payload ) {
             requestConfig.params!.headers = {
-              'content-type': 'application/json'
+              'content-type': 'application/json',
             }
           }
         }
 
-        const response = await request(
-          config,
+        const response = await request(config,
           `${apiUrl(config)}/${endpoint}`,
           payload,
-          requestConfig
-        )
+          requestConfig)
 
         return response.data
       }
@@ -67,7 +65,7 @@ export const topLevel = (config: InstanceConfig) => {
         : key
 
       return proxify(fn, path)
-    }
+    },
   })
 
   return proxify({})

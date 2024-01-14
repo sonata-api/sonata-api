@@ -1,4 +1,4 @@
-import type { InstanceConfig } from  './types'
+import type { InstanceConfig } from './types'
 import path from 'path'
 import { deserialize } from '@sonata-api/common'
 import { writeFile, mkdir } from 'fs/promises'
@@ -75,7 +75,7 @@ declare module 'aeria-sdk' {
 }
 
 export const runtimeCjs = (config: InstanceConfig) =>
-`const config = ${JSON.stringify(config)}
+  `const config = ${JSON.stringify(config)}
 exports.config = config
 exports.url = '${apiUrl(config)}'
 exports.aeria = require('aeria-sdk/topLevel').topLevel(config)
@@ -83,7 +83,7 @@ exports.storage = require('aeria-sdk/storage').getStorage(config)
 \n`
 
 export const runtimeEsm = (config: InstanceConfig) =>
-`import { Aeria, getStorage } from 'aeria-sdk'
+  `import { Aeria, getStorage } from 'aeria-sdk'
 export const config = ${JSON.stringify(config)}
 export const url = '${apiUrl(config)}'
 export const aeria = Aeria(config)
@@ -95,12 +95,14 @@ export const mirror = async (config: InstanceConfig) => {
   const runtimeBase = path.dirname(require.resolve('aeria-sdk'))
 
   const mirror = deserialize(await api.describe.POST({
-    router: true
+    router: true,
   }))
 
-  await mkdir(runtimeBase, { recursive: true })
+  await mkdir(runtimeBase, {
+    recursive: true,
+  })
   await writeFile(path.join(process.cwd(), 'aeria-sdk.d.ts'), mirrorDts(mirror))
-  await writeFile(path.join(runtimeBase,  '..', 'cjs', 'runtime.js'), runtimeCjs(config))
-  await writeFile(path.join(runtimeBase,  '..', 'esm', 'runtime.js'), runtimeEsm(config))
+  await writeFile(path.join(runtimeBase, '..', 'cjs', 'runtime.js'), runtimeCjs(config))
+  await writeFile(path.join(runtimeBase, '..', 'esm', 'runtime.js'), runtimeEsm(config))
 }
 

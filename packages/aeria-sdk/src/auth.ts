@@ -1,4 +1,4 @@
-import type { InstanceConfig } from  './types'
+import type { InstanceConfig } from './types'
 import { isRight, unwrapEither } from '@sonata-api/common'
 import { request } from './http'
 import { apiUrl } from './utils'

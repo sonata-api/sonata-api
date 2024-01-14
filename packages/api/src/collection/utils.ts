@@ -3,16 +3,14 @@ import { freshItem } from '@sonata-api/common'
 
 export const normalizeProjection = <
   TDescription extends Pick<Description, 'properties'>,
-  TProjectedProperties extends (keyof TDescription['properties'])[]
+  TProjectedProperties extends (keyof TDescription['properties'])[],
 >(
   properties: TProjectedProperties,
-  description: TDescription
+  description: TDescription,
 ) => {
-  if( !properties ) {
-    return null
-  }
-
-  const target = [...properties]
+  const target = [
+    ...properties,
+  ]
   if( target.length === 0 ) {
     target.push(...Object.keys(description.properties) as (keyof TDescription['properties'])[])
   }
@@ -24,7 +22,7 @@ export const normalizeProjection = <
 
     return {
       ...a,
-      [key]: 1
+      [key]: 1,
     }
   }, {})
 
@@ -35,35 +33,35 @@ export const normalizeProjection = <
 
 export const fill = <TDocument extends OptionalId<any>>(
   item: TDocument & Record<string, any>,
-  description: Pick<Description, 'properties' | 'freshItem'>
+  description: Pick<Description, 'properties' | 'freshItem'>,
 ) => {
   return Object.assign(freshItem(description), item)
 }
 
-export const prepareInsert = (
-  payload: any,
+export const prepareInsert = (payload: any,
   description: Pick<Description,
     | 'properties'
     | 'form'
     | 'writable'
     | 'owned'
     | 'defaults'
-  >
-) => {
-  const {
-    _id,
-    created_at,
-    updated_at,
-    ...rest
+  >) => {
+  const rest = Object.assign({}, payload)
+  const docId = payload._id
 
-  } = payload
+  delete rest._id
+  delete rest.created_at
+  delete rest.updated_at
 
   const forbidden = (key: string) => {
     return description.properties[key]?.readOnly
       || (description.writable && !description.writable.includes(key)
-    )
+      )
   }
-  const prepareUpdate = () => Object.entries(rest).reduce((a: Record<string, any>, [key, value]) => {
+  const prepareUpdate = () => Object.entries(rest).reduce((a: Record<string, any>, [
+    key,
+    value,
+  ]) => {
     if( forbidden(key) ) {
       return a
     }
@@ -74,7 +72,10 @@ export const prepareInsert = (
       return a
     }
 
-    if( [undefined, null].includes(value as any) ) {
+    if( [
+      undefined,
+      null,
+    ].includes(value as any) ) {
       a.$unset[key] = 1
       return a
     }
@@ -84,26 +85,32 @@ export const prepareInsert = (
 
   }, {
     $set: description.defaults || {},
-    $unset: {}
+    $unset: {},
   })
 
-  const prepareCreate = () => Object.entries(rest).reduce((a, [key, value]) => {
-    if( forbidden(key) || [undefined, null].includes(value as any) ) {
+  const prepareCreate = () => Object.entries(rest).reduce((a, [
+    key,
+    value,
+  ]) => {
+    if( forbidden(key) || [
+      undefined,
+      null,
+    ].includes(value as any) ) {
       return a
     }
 
     return {
       ...a,
-      [key]: value
+      [key]: value,
     }
   }, description.defaults || {})
 
-  const what = _id
+  const what = docId
     ? prepareUpdate()
     : prepareCreate()
 
-  Object.keys(what).forEach(k => {
-    if( what && typeof what[k] === 'object' && JSON.stringify(what) === '{}'  ) {
+  Object.keys(what).forEach((k) => {
+    if( what && typeof what[k] === 'object' && JSON.stringify(what) === '{}' ) {
       delete what[k]
     }
   })

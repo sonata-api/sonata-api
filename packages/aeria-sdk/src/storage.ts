@@ -15,11 +15,11 @@ export const getStorage = (config: InstanceConfig) => {
       ? 'memo'
       : config.storage.strategy
 
-  function get(key: 'auth'): AuthenticationResult
+  function get(key: 'auth'): AuthenticationResult | null
   function get(key: string) {
     switch( strategy ) {
       case 'memo':
-        return storageMemo[key]
+        return storageMemo[key] || null
       case 'localStorage':
         const value = localStorage.getItem(storageKey(key, config))
         return value

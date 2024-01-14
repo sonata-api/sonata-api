@@ -15,14 +15,20 @@ const colors = {
 const colorizedRoute = (color: keyof typeof colors, roles?: string[]) =>
   (verb: string, collectionName: string, path?: string|null, parameters?: string[]) => {
 
-  let line = `\x1b[1m${colors[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
-  line += `/\x1b[1m${collectionName}\x1b[0m`
+    let line = `\x1b[1m${colors[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
+    line += `/\x1b[1m${collectionName}\x1b[0m`
 
-  if( path )        line += `/${path}`
-  if( parameters )  line += `/${parameters.map(p => `{${colors.green}${p}\x1b[0m}`).join('/')}`
-  if( roles )       line += ` \x1b[90m[${roles.join('|')}]\x1b[0m`
-  return line
-}
+    if( path ) {
+      line += `/${path}`
+    }
+    if( parameters ) {
+      line += `/${parameters.map((p) => `{${colors.green}${p}\x1b[0m}`).join('/')}`
+    }
+    if( roles ) {
+      line += ` \x1b[90m[${roles.join('|')}]\x1b[0m`
+    }
+    return line
+  }
 
 export const warmup = async () => {
   const collections = await getCollections()
@@ -46,10 +52,14 @@ export const warmup = async () => {
       const roles = await grantedFor(collectionName, functionName)
 
       switch( functionName ) {
-        case 'get': return colorizedRoute('green', roles)('GET', collectionName, null, ['id'])
+        case 'get': return colorizedRoute('green', roles)('GET', collectionName, null, [
+          'id',
+        ])
         case 'getAll': return colorizedRoute('green', roles)('GET', collectionName)
         case 'insert': return colorizedRoute('blue', roles)('POST', collectionName)
-        case 'remove': return colorizedRoute('red', roles)('DELETE', collectionName, null, ['id'])
+        case 'remove': return colorizedRoute('red', roles)('DELETE', collectionName, null, [
+          'id',
+        ])
         default: return colorizedRoute('white', roles)('POST', collectionName, functionName)
       }
     }))

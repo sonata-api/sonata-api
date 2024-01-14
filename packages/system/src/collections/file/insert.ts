@@ -2,7 +2,7 @@ import type { Context, WithId } from '@sonata-api/types'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
 import { insert as originalInsert } from '@sonata-api/api'
-import { description, type File } from './description'
+import { type description, type File } from './description'
 
 type Props = {
   what: { content: string } & Pick<WithId<File>,
@@ -22,16 +22,17 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   what.owner = context.token.user._id
   const { STORAGE_PATH } = process.env
 
-
   const extension = what.filename?.split('.').pop()
   if( !extension ) {
     throw new Error('filename lacks extension')
   }
 
-  const oldFile = await context.collection.model.findOne(
-    { _id: props.what._id },
-    { absolute_path: 1 }
-  )
+  const oldFile = await context.collection.model.findOne({
+    _id: props.what._id,
+  },
+  {
+    absolute_path: 1,
+  })
 
   if( oldFile ) {
     await unlink(oldFile.absolute_path!).catch(console.trace)
@@ -46,7 +47,7 @@ const insert = async (props: Props, context: Context<typeof description>) => {
 
   return originalInsert({
     ...props,
-    what
+    what,
   }, context)
 }
 

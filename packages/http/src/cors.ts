@@ -14,7 +14,10 @@ export const cors = (req: GenericRequest, res: GenericResponse) => {
     return null
   }
 
-  Object.entries(headers).forEach(([key, value]) => {
+  Object.entries(headers).forEach(([
+    key,
+    value,
+  ]) => {
     res.setHeader(key, value)
   })
 }

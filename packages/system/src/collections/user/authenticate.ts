@@ -2,7 +2,7 @@ import type { Context } from '@sonata-api/types'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
-import { description, type User } from './description'
+import { type description, type User } from './description'
 
 type Props = {
   email: string
@@ -34,11 +34,11 @@ export enum AuthenticationErrors {
 const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description>) => {
   const leanUser = await context.collection.functions.get({
     filters: {
-      _id: user._id 
+      _id: user._id,
     },
     populate: [
-      'picture'
-    ]
+      'picture',
+    ],
   })
 
   if( !leanUser ) {
@@ -48,7 +48,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
   const tokenContent = {
     user: {
       _id: leanUser._id,
-      roles: leanUser.roles
+      roles: leanUser.roles,
     },
   }
 
@@ -56,7 +56,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
     await context.log('successful authentication', {
       email: leanUser.email,
       roles: leanUser.roles,
-      _id: leanUser._id
+      _id: leanUser._id,
     })
   }
 
@@ -68,7 +68,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
 
       return {
         ...a,
-        [prop]: obj[prop]
+        [prop]: obj[prop],
       }
     }, {})
 
@@ -82,8 +82,8 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
     user: leanUser,
     token: {
       type: 'bearer',
-      content: token
-    }
+      content: token,
+    },
   } as Return
 }
 
@@ -94,7 +94,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
       : left(AuthenticationErrors.Unauthenticated)
   }
 
-  if( typeof props?.email !== 'string' ) {
+  if( typeof props.email !== 'string' ) {
     return left(AuthenticationErrors.InvalidCredentials)
   }
 
@@ -105,7 +105,9 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     const token = await signToken({
       user: {
         _id: null,
-        roles: ['root']
+        roles: [
+          'root',
+        ],
       },
     })
 
@@ -114,24 +116,26 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
         _id: null,
         full_name: 'God Mode',
         email: '',
-        roles: ['root'] as string[],
+        roles: [
+          'root',
+        ] as string[],
         active: true,
       },
       token: {
         type: 'bearer',
-        content: token
-      }
+        content: token,
+      },
     })
   }
 
-  const user = await context.collection.model.findOne(
-    { email: props.email },
-    {
-      email: 1,
-      password: 1,
-      active: 1
-    }
-  )
+  const user = await context.collection.model.findOne({
+    email: props.email,
+  },
+  {
+    email: 1,
+    password: 1,
+    active: 1,
+  })
 
   if( !user || !await bcryptCompare(props.password, user.password!) ) {
     return left(AuthenticationErrors.InvalidCredentials)

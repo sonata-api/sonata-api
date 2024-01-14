@@ -4,22 +4,22 @@ import { traverseDocument, cascadingRemove } from '../collection'
 
 export const remove = async <TContext extends Context>(
   payload: RemovePayload<SchemaWithId<TContext['description']>>,
-  context: TContext
+  context: TContext,
 ) => {
   if( !payload.filters._id ) {
     return left({
-      message: 'you must pass an _id as filter'
+      message: 'you must pass an _id as filter',
     })
   }
 
   const filters = unsafe(await traverseDocument(payload.filters, context.description, {
-    autoCast: true
+    autoCast: true,
   }))
 
   const target = await context.collection.model.findOne(filters)
   if( !target ) {
     return left({
-      message: 'target not found'
+      message: 'target not found',
     })
   }
 

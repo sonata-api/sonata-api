@@ -22,7 +22,7 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
   if( 'properties' in property ) {
     return preloadDescription(property, {
       memoize: false,
-      timestamps: false
+      timestamps: false,
     })
   }
 
@@ -45,9 +45,7 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
       const indexes = reference.indexes = referenceDescription.indexes?.slice()
 
       if( !indexes ) {
-        throw new Error(
-          `neither indexes or inline are present on reference property or indexes is set on target description on ${description.$id}.${propertyName}`
-        )
+        throw new Error(`neither indexes or inline are present on reference property or indexes is set on target description on ${description.$id}.${propertyName}`)
       }
     }
   }
@@ -55,20 +53,20 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
   return property
 }
 
-export const applyPreset = (
-  entry: Partial<Description> | Description['properties'],
+export const applyPreset = (entry: Partial<Description> | Description['properties'],
   presetName: keyof typeof presets,
-  parentName?: string
-) => {
+  parentName?: string) => {
   const preset = presets[presetName]
-  const presetObject = Object.assign({}, parentName ? (preset[parentName as keyof typeof preset]||{}) : preset)
+  const presetObject = Object.assign({}, parentName
+    ? preset[parentName as keyof typeof preset]
+    : preset)
 
   return deepMerge(entry, presetObject, {
     callback: (_, left) => {
       if( left === null ) {
         return left
       }
-    }
+    },
   })
 }
 
@@ -76,16 +74,15 @@ export const preloadDescription = async <
   Options extends PreloadOptions,
   Return = Options extends { serialize: true }
     ? Buffer
-    : Description
+    : Description,
 >(originalDescription: Partial<Description>, options?: Options) => {
   const {
     memoize = !!originalDescription.$id,
-    timestamps = true
-
+    timestamps = true,
   } = options || {}
 
   if( memoize && preloadMemo[originalDescription.$id!] ) {
-    const description =  preloadMemo[originalDescription.$id!]
+    const description = preloadMemo[originalDescription.$id!]
     return (options?.serialize
       ? serialize(description)
       : description) as Return
@@ -107,18 +104,22 @@ export const preloadDescription = async <
   }
 
   if( descriptionPresets.length > 0 ) {
-    const merge = descriptionPresets?.reduce(
-      (a, presetName) => applyPreset(a, presetName),
-      description
-    )
+    const merge = descriptionPresets.reduce((a, presetName) => applyPreset(a, presetName),
+      description)
 
     Object.assign(description, merge)
   }
 
   if( description.properties ) {
     const properties: [string, Property][] = []
-    for( const [propertyName, property] of Object.entries(description.properties) ) {
-      properties.push([propertyName, await recurseProperty(property, propertyName, description)])
+    for( const [
+      propertyName,
+      property,
+    ] of Object.entries(description.properties) ) {
+      properties.push([
+        propertyName,
+        await recurseProperty(property, propertyName, description),
+      ])
     }
 
     description.properties = Object.fromEntries(properties)

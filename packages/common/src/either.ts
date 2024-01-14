@@ -1,13 +1,13 @@
-import { Either, Left, Right } from '@sonata-api/types'
+import { type Either, type Left, type Right } from '@sonata-api/types'
 
 export const left = <const T>(value: T): Left<T> => <const>({
   _tag: 'Left',
-  value
+  value,
 })
 
 export const right = <const T>(value: T): Right<T> => <const>({
   _tag: 'Right',
-  value
+  value,
 })
 
 export const isLeft = <L>(either: Either<L, any>): either is Left<L> => {

@@ -5,18 +5,18 @@ export const pet = defineCollection({
     $id: 'pet',
     properties: {
       name: {
-        type: 'string'
+        type: 'string',
       },
       toys: {
         type: 'object',
         properties: {
           favorite: {
-            $ref: 'petToy'
+            $ref: 'petToy',
           },
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 })
 
 export const petToy = defineCollection({
@@ -24,15 +24,15 @@ export const petToy = defineCollection({
     $id: 'petToy',
     properties: {
       name: {
-        type: 'string'
+        type: 'string',
       },
       brand: {
         enum: [
           'dogs choice',
           'the pet company',
-        ]
-      }
-    }
-  }
+        ],
+      },
+    },
+  },
 })
 

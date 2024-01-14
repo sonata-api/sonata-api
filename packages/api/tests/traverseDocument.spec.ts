@@ -9,9 +9,9 @@ describe('Traverse document', () => {
         $elemMatch: {
           date: '2023-10-31T21:57:45.943Z',
           image: '653c3d448a707ef3d327f624',
-          status: 'accepted'
-        }
-      }
+          status: 'accepted',
+        },
+      },
     }
 
     const result = await traverseDocument(what, {
@@ -24,21 +24,21 @@ describe('Traverse document', () => {
             properties: {
               date: {
                 type: 'string',
-                format: 'date-time'
+                format: 'date-time',
               },
               image: {
                 $ref: 'file',
               },
               status: {
-                type: 'string'
-              }
-            }
-          }
-        }
-      }
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
     }, {
       autoCast: true,
-      allowOperators: true
+      allowOperators: true,
     })
 
     assert(isRight(result))
@@ -50,10 +50,16 @@ describe('Traverse document', () => {
   it('autocast top-level MongoDB operators', async () => {
     const what = {
       $and: [
-        { date: '2023-10-31T21:57:45.943Z' },
-        { image: '653c3d448a707ef3d327f624' },
-        { status: 'accepted' }
-      ]
+        {
+          date: '2023-10-31T21:57:45.943Z',
+        },
+        {
+          image: '653c3d448a707ef3d327f624',
+        },
+        {
+          status: 'accepted',
+        },
+      ],
     }
 
     const result = await traverseDocument(what, {
@@ -61,18 +67,18 @@ describe('Traverse document', () => {
       properties: {
         date: {
           type: 'string',
-          format: 'date-time'
+          format: 'date-time',
         },
         image: {
           $ref: 'file',
         },
         status: {
-          type: 'string'
-        }
-      }
+          type: 'string',
+        },
+      },
     }, {
       autoCast: true,
-      allowOperators: true
+      allowOperators: true,
     })
 
     assert(isRight(result))

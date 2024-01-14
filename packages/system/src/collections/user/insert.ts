@@ -1,7 +1,7 @@
 import type { Context, PackReferences } from '@sonata-api/types'
 import * as bcrypt from 'bcrypt'
 import { functions } from '@sonata-api/api'
-import { description, type User } from './description'
+import { type description, type User } from './description'
 
 type Props = {
   what: Omit<PackReferences<User>, 'roles'>

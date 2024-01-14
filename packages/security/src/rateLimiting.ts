@@ -3,7 +3,7 @@ import { left, right } from '@sonata-api/common'
 
 export enum RateLimitingErrors {
   Unauthenticated = 'UNAUTHENTICATED',
-  LimitReached = 'LIMIT_REACHED'
+  LimitReached = 'LIMIT_REACHED',
 }
 
 const getUser = <TDescription extends Description>(context: Context<TDescription>): Promise<Record<string, any> | null> => {
@@ -11,15 +11,17 @@ const getUser = <TDescription extends Description>(context: Context<TDescription
     throw new Error()
   }
 
-  return context.collections.user.model.findOne(
-    { _id: context.token.user._id },
-    { resources_usage: 1 }
-  )
+  return context.collections.user.model.findOne({
+    _id: context.token.user._id,
+  },
+  {
+    resources_usage: 1,
+  })
 }
 
 export const limitRate = async <TDescription extends Description>(
   context: Context<TDescription>,
-  params: RateLimitingParams
+  params: RateLimitingParams,
 ) => {
   let user: Awaited<ReturnType<typeof getUser>>
 
@@ -30,24 +32,29 @@ export const limitRate = async <TDescription extends Description>(
   const {
     increment = 1,
     limit,
-    scale
+    scale,
   } = params
 
   const payload = {
     $inc: {
-      hits: increment
+      hits: increment,
     },
-    $set: {}
+    $set: {},
   }
 
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
-    const entry = await context.collections.resourceUsage.model.insertOne(<any>{ hits: increment })
-    await context.collections.user.model.updateOne(
-      { _id: user._id },
-      { $set: { [`resources_usage.${context.functionPath}`]: entry.insertedId }
-      }
-    )
+    const entry = await context.collections.resourceUsage.model.insertOne(<any>{
+      hits: increment,
+    })
+    await context.collections.user.model.updateOne({
+      _id: user._id,
+    },
+    {
+      $set: {
+        [`resources_usage.${context.functionPath}`]: entry.insertedId,
+      },
+    })
 
     return right(null)
   }
@@ -58,14 +65,14 @@ export const limitRate = async <TDescription extends Description>(
 
   if( limit && (usage.hits! % limit === 0) ) {
     payload.$set = {
-      last_maximum_reach: new Date()
+      last_maximum_reach: new Date(),
     }
   }
 
-  await context.collections.resourceUsage.model.updateOne(
-    { _id: usage._id },
-    payload
-  )
+  await context.collections.resourceUsage.model.updateOne({
+    _id: usage._id,
+  },
+  payload)
 
   return right(null)
 }

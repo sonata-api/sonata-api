@@ -5,7 +5,7 @@ export type DateFormatOptions = {
 }
 
 const rtf = new Intl.RelativeTimeFormat(undefined, {
-  numeric: 'auto'
+  numeric: 'auto',
 })
 
 const units = {
@@ -14,7 +14,7 @@ const units = {
   day: 86400000,
   hour: 3600000,
   minute: 6000,
-  second: 1000
+  second: 1000,
 }
 
 export const formatDateTime = function(date: Date | string, options?: DateFormatOptions) {
@@ -31,7 +31,7 @@ export const formatDateTime = function(date: Date | string, options?: DateFormat
     hoursOnly,
     locale = 'navigator' in globalThis
       ? navigator.language
-      : 'en-US'
+      : 'en-US',
   } = options || {}
 
   if( hoursOnly ) {
@@ -47,7 +47,10 @@ export const getRelativeTimeFromNow = function(target: any) {
   const now = new Date()
   const elapsed = now as any - target
 
-  for( const [u, value] of Object.entries(units) ) {
+  for( const [
+    u,
+    value,
+  ] of Object.entries(units) ) {
     if( Math.abs(elapsed) > value || u === 'second' ) {
       return rtf.format(-1*Math.round(elapsed/value), u as Intl.RelativeTimeFormatUnit)
     }

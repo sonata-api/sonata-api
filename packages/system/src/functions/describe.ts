@@ -18,16 +18,18 @@ export const describe = async (context: Context): Promise<any> => {
   const result = {} as {
     descriptions: typeof descriptions
     roles?: string[]
-    auth?: Awaited<ReturnType<typeof authenticate>> extends Either<infer _Left, infer Right>
+    auth?: Awaited<ReturnType<typeof authenticate>> extends Either<unknown, infer Right>
       ? Partial<Right>
       : never
     router?: any
   }
 
-  const props = context.request.payload as Props || {}
+  const props: Props = context.request.payload
 
   if( props.revalidate ) {
-    const authEither  = await authenticate({ revalidate: true }, await createContext({
+    const authEither = await authenticate({
+      revalidate: true,
+    }, await createContext({
       collectionName: 'user',
       parentContext: context,
     }))
@@ -44,7 +46,9 @@ export const describe = async (context: Context): Promise<any> => {
   const collections = await getCollections()
 
   const retrievedCollections = props.collections?.length
-    ? Object.fromEntries(Object.entries(collections).filter(([key]) => props.collections!.includes(key)))
+    ? Object.fromEntries(Object.entries(collections).filter(([
+      key,
+    ]) => props.collections!.includes(key)))
     : collections
 
   const descriptions: Record<string, Description> = {}

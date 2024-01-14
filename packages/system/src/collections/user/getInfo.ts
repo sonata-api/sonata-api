@@ -7,7 +7,7 @@ import bcrypt from 'bcrypt'
 export enum ActivationErrors {
   UserNotFound = 'USER_NOT_FOUND',
   AlreadyActiveUser = 'ALREADY_ACTIVE_USER',
-  InvalidLink = 'INVALID_LINK'
+  InvalidLink = 'INVALID_LINK',
 }
 
 type Props = {
@@ -18,8 +18,7 @@ type Props = {
 const getInfo = async (props: Props, context: Context<typeof description>) => {
   const {
     userId,
-    token
-
+    token,
   } = props
 
   if( !userId || !token ) {
@@ -27,11 +26,15 @@ const getInfo = async (props: Props, context: Context<typeof description>) => {
   }
 
   const user = await context.collection.model.findOne({
-    _id: new ObjectId(userId)
+    _id: new ObjectId(userId),
   })
 
-  if( !user ) return left(ActivationErrors.UserNotFound)
-  if( user.active ) return left(ActivationErrors.AlreadyActiveUser)
+  if( !user ) {
+    return left(ActivationErrors.UserNotFound)
+  }
+  if( user.active ) {
+    return left(ActivationErrors.AlreadyActiveUser)
+  }
 
   const equal = await bcrypt.compare(user._id.toString(), token)
   if( !equal ) {
@@ -40,7 +43,7 @@ const getInfo = async (props: Props, context: Context<typeof description>) => {
 
   return right({
     full_name: user.full_name,
-    email: user.email
+    email: user.email,
   })
 }
 

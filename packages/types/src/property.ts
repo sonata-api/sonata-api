@@ -18,10 +18,9 @@ export type PropertyFormat =
   | 'date-time'
 
 export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
-  PropertiesWithId<TDescription>,
+PropertiesWithId<TDescription>,
   Condition<TDescription> | boolean
 >>
-
 
 export type JsonSchema<TJsonSchema extends JsonSchema = any> = {
   $id: string
@@ -119,7 +118,7 @@ export type LiteralProperty = {
 }
 
 export type GetterProperty = {
-  getter: (getter: any) => any
+  getter: (getter: any)=> any
 }
 
 export type MixedProperty =

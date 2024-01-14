@@ -1,38 +1,41 @@
 import { defineDescriptionTuple } from '@sonata-api/api'
 
-export const [Log, description] = defineDescriptionTuple({
+export const [
+  Log,
+  description,
+] = defineDescriptionTuple({
   $id: 'log',
   required: [
     'context',
-    'message'
+    'message',
   ],
   properties: {
     owner: {
-      // don't use "owned: true", we want it this way
+    // don't use "owned: true", we want it this way
       $ref: 'user',
-      noForm: true
+      noForm: true,
     },
     context: {
-      type: 'string'
+      type: 'string',
     },
     message: {
-      type: 'string'
+      type: 'string',
     },
     details: {
-      type: 'object'
+      type: 'object',
     },
     created_at: {
       type: 'string',
-      format: 'date-time'
-    }
+      format: 'date-time',
+    },
   },
   icon: 'search-alt',
   presets: [
-    'view'
+    'view',
   ],
   filters: [
     'context',
     'message',
-    'owner'
-  ]
+    'owner',
+  ],
 })

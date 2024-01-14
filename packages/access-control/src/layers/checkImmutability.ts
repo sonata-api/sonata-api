@@ -2,23 +2,20 @@ import type {
   Context,
   AccessControlLayerProps,
   AccessControlLayerReadPayload,
-  AccessControlLayerWritePayload
+  AccessControlLayerWritePayload,
 } from '@sonata-api/types'
 
 import { ObjectId } from 'mongodb'
 import { ACErrors } from '@sonata-api/types'
 import { left, right, isLeft } from '@sonata-api/common'
 
-const internalCheckImmutability = async (
-  context: Context,
-  props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>
-) => {
+const internalCheckImmutability = async (context: Context,
+  props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>) => {
   const {
     propertyName = '',
     parentId,
     childId,
-    payload
-
+    payload,
   } = props
 
   const { description } = context
@@ -31,13 +28,14 @@ const internalCheckImmutability = async (
     return right(props.payload)
   }
 
-  const immutable =  parentId && (
+  const immutable = parentId && (
     description.immutable === true
     || (Array.isArray(description.immutable) && description.immutable.includes(propertyName) )
   )
 
-
-  const currentDocument: Record<string, any> | null = await context.collection.model.findOne({ _id: new ObjectId(parentId) })
+  const currentDocument: Record<string, any> | null = await context.collection.model.findOne({
+    _id: new ObjectId(parentId),
+  })
   if( !currentDocument ) {
     return left(ACErrors.ImmutabilityParentNotFound)
   }
@@ -74,7 +72,7 @@ export const checkImmutability = async (context: Context, props: AccessControlLa
     for( const propertyName of Object.keys(props.payload) ) {
       const result = await internalCheckImmutability(context, {
         ...props,
-        propertyName
+        propertyName,
       })
 
       if( isLeft(result) ) {

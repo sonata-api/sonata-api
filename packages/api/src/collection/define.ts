@@ -6,13 +6,13 @@ export const defineCollection = <
     : never,
   const TDescription extends Description,
   const TFunctions extends {
-    [P: string]: (payload: any, context: Context<TDescription>, ...args: any[]) => any
-  }
+    [P: string]: (payload: any, context: Context<TDescription>, ...args: any[])=> any
+  },
 >(
   collection: TCollection & {
     description: TDescription
     functions?: TFunctions
-  }
+  },
 ) => {
   return collection as TCollection & {
     item: SchemaWithId<TDescription>

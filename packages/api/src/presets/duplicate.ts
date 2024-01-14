@@ -5,7 +5,7 @@ export const duplicate = <const>{
     'ui:duplicate': {
       name: 'action.duplicate',
       icon: 'share-alt',
-      translate: true
-    }
-  }
+      translate: true,
+    },
+  },
 } satisfies Pick<Description, 'individualActions'>

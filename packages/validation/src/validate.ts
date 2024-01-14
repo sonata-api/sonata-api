@@ -5,7 +5,7 @@ import type {
   Description,
   PropertyValidationErrorType,
   PropertyValidationError,
-  ValidationError
+  ValidationError,
 } from '@sonata-api/types'
 
 import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
@@ -36,7 +36,10 @@ const getPropertyType = (property: Property) => {
   }
 
   if( 'format' in property ) {
-    if (['date', 'date-time'].includes(property.format!)) {
+    if ([
+      'date',
+      'date-time',
+    ].includes(property.format!)) {
       return 'datetime'
     }
   }
@@ -52,7 +55,7 @@ const makePropertyError = <
 >(type: TType, details: TDetails) => {
   return {
     type,
-    details
+    details,
   } satisfies PropertyValidationError
 }
 
@@ -60,12 +63,10 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
   return error as ValidationError
 }
 
-export const validateProperty = (
-  propName: string,
+export const validateProperty = (propName: string,
   what: any,
   property: Property,
-  options: ValidateOptions = {}
-) => {
+  options: ValidateOptions = {}): PropertyValidationError | undefined => {
   const { extraneous } = options
   if( what === undefined ) {
     return
@@ -74,7 +75,7 @@ export const validateProperty = (
   if( (Array.isArray(extraneous) && extraneous.includes(propName)) || !property ) {
     return makePropertyError('extraneous', {
       expected: 'undefined',
-      got: getValueType(what)
+      got: getValueType(what),
     })
   }
 
@@ -89,8 +90,8 @@ export const validateProperty = (
   if( 'literal' in property ) {
     if( what !== property.literal ) {
       return makePropertyError('unmatching', {
-        expected: property.literal as any,
-        got: what
+        expected: property.literal ,
+        got: what,
       })
     }
 
@@ -109,20 +110,20 @@ export const validateProperty = (
       return
     }
 
-    if( expectedType === 'boolean' && !what )  {
+    if( expectedType === 'boolean' && !what ) {
       return
     }
 
     return makePropertyError('unmatching', {
       expected: expectedType,
-      got: actualType
+      got: actualType,
     })
   }
 
   if( 'items' in property ) {
     let i = 0
     for( const elem of what ) {
-      const result = validateProperty(propName, elem, property.items, options) as PropertyValidationError | undefined
+      const result = validateProperty(propName, elem, property.items, options) 
 
       if( result ) {
         result.index = i
@@ -131,14 +132,12 @@ export const validateProperty = (
 
       i++
     }
-  }
-
-  else if( 'type' in property ) {
+  } else if( 'type' in property ) {
     if( property.type === 'integer' ) {
       if( !Number.isInteger(what) ) {
         return makePropertyError('numeric_constraint', {
           expected: 'integer',
-          got: 'invalid_number'
+          got: 'invalid_number',
         })
       }
     }
@@ -152,25 +151,21 @@ export const validateProperty = (
       ) {
         return makePropertyError('numeric_constraint', {
           expected: 'number',
-          got: 'invalid_number'
+          got: 'invalid_number',
         })
       }
     }
-  }
-
-  else if( 'enum' in property ) {
+  } else if( 'enum' in property ) {
     if( !property.enum.includes(what) ) {
       return makePropertyError('extraneous_element', {
         expected: property.enum,
-        got: what
+        got: what,
       })
     }
-  }
-
-  else if( 'getter' in property ) {
+  } else if( 'getter' in property ) {
     return makePropertyError('unmatching', {
       expected: 'getters are read-only',
-      got: actualType
+      got: actualType,
     })
   }
 }
@@ -185,26 +180,30 @@ export const validateWholeness = (what: Record<string, any>, schema: Omit<JsonSc
   if( missingProps.length > 0 ) {
     return makeValidationError({
       code: ValidationErrorCodes.MissingProperties,
-      errors: Object.fromEntries(
-        missingProps
-          .map((error) => [error, { type: 'missing' }])
-    )})
+      errors: Object.fromEntries(missingProps
+        .map((error) => [
+          error,
+          {
+            type: 'missing',
+          },
+        ])),
+    })
   }
 
 }
 
 export const validate = <
-  TWhat extends any,
-  const TJsonSchema extends Omit<Description, '$id'> | Property
+  TWhat,
+  const TJsonSchema extends Omit<Description, '$id'> | Property,
 >(
   what: TWhat | undefined,
   schema: TJsonSchema,
-  options: ValidateOptions = {}
+  options: ValidateOptions = {},
 ) => {
   if( !what ) {
     return left(makeValidationError({
       code: ValidationErrorCodes.EmptyTarget,
-      errors: {}
+      errors: {},
     }))
   }
 
@@ -223,12 +222,10 @@ export const validate = <
   const errors: Record<string, PropertyValidationError | ValidationError> = {}
 
   for( const propName in what ) {
-    const result = validateProperty(
-      propName,
+    const result = validateProperty(propName,
       what[propName],
       schema.properties?.[propName],
-      options
-    )
+      options)
 
     if( result ) {
       errors[propName] = result
@@ -238,13 +235,15 @@ export const validate = <
   if( Object.keys(errors).length > 0 ) {
     if( options.throwOnError ) {
       const error = new TypeError(ValidationErrorCodes.InvalidProperties)
-      Object.assign(error, { errors })
+      Object.assign(error, {
+        errors,
+      })
       throw error
     }
 
     return left(makeValidationError({
       code: ValidationErrorCodes.InvalidProperties,
-      errors
+      errors,
     }))
   }
 
@@ -252,12 +251,12 @@ export const validate = <
 }
 
 export const validateSilently = <
-  TWhat extends any,
-  const TJsonSchema extends Omit<Description, '$id'> | Property
+  TWhat,
+  const TJsonSchema extends Omit<Description, '$id'> | Property,
 >(
   what: TWhat | undefined,
   schema: TJsonSchema,
-  options: ValidateOptions = {}
+  options: ValidateOptions = {},
 ) => {
   const result = validate(what, schema, options)
   return isLeft(result)
@@ -267,27 +266,27 @@ export const validateSilently = <
 
 export const validator = <const TJsonSchema extends Omit<Description, '$id'> | Property>(
   schema: TJsonSchema,
-  options: ValidateOptions = {}
+  options: ValidateOptions = {},
 ) => {
 
   return <const>[
     {} as InferSchema<TJsonSchema>,
     <TWhat extends Record<string, any>>(what: TWhat) => {
       return validate(what, schema, options)
-    }
+    },
   ]
 }
 
 export const silentValidator = <const TJsonSchema extends Omit<Description, '$id'> | Property>(
   schema: TJsonSchema,
-  options: ValidateOptions = {}
+  options: ValidateOptions = {},
 ) => {
 
   return <const>[
     {} as InferSchema<TJsonSchema>,
     <TWhat extends Record<string, any>>(what: TWhat) => {
       return validateSilently(what, schema, options)
-    }
+    },
   ]
 }
 

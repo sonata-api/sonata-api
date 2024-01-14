@@ -6,13 +6,11 @@ import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
 import { appendPagination } from './appendPagination'
 
 const postPipe = pipe([
-  appendPagination
+  appendPagination,
 ])
 
-export const safeHandle = (
-  fn: (context: Context) => Promise<object>,
-  context: Context
-) => async () => {
+export const safeHandle = (fn: (context: Context)=> Promise<object>,
+  context: Context) => async () => {
   try {
     const response = await fn(context)
     return response
@@ -34,8 +32,8 @@ export const safeHandle = (
         details: error.details,
         silent: error.silent,
         logout: error.logout,
-        httpCode: error.httpCode
-      }
+        httpCode: error.httpCode,
+      },
     }
 
     if( context.request.headers['sec-fetch-mode'] === 'cors' ) {
@@ -44,7 +42,7 @@ export const safeHandle = (
 
     error.httpCode ??= 500
     context.response.writeHead(error.httpCode, {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     })
 
     context.response.end(response)
@@ -55,22 +53,20 @@ export const customVerbs = () => async (parentContext: Context) => {
   const {
     fragments: [
       collectionName,
-      functionName
-    ]
+      functionName,
+    ],
   } = parentContext.request
 
   const context = await createContext({
     parentContext,
-    collectionName
+    collectionName,
   })
 
-  const fnEither = await getFunction(
-    collectionName,
+  const fnEither = await getFunction(collectionName,
     functionName,
     context.token.authenticated
       ? context.token.user
-      : {}
-  )
+      : {})
 
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
@@ -92,13 +88,13 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
   const {
     fragments: [
       collectionName,
-      id
-    ]
+      id,
+    ],
   } = parentContext.request
 
   const context = await createContext({
     parentContext,
-    collectionName
+    collectionName,
   })
 
   const requestCopy = Object.assign({}, context.request)
@@ -106,7 +102,7 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
   if( id ) {
     requestCopy.payload.filters = {
       ...requestCopy.payload.filters||{},
-      _id: id
+      _id: id,
     }
 
     if( 'what' in requestCopy.payload ) {
@@ -114,18 +110,16 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
     }
   }
 
-  const fnEither = await getFunction(
-    collectionName,
+  const fnEither = await getFunction(collectionName,
     functionName,
     context.token.authenticated
       ? context.token.user
-      : {}
-  )
+      : {})
 
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
     return {
-      error
+      error,
     }
   }
 
@@ -138,10 +132,13 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
 export const fileDownload = async (parentContext: Context) => {
   const context = await createContext({
     collectionName: 'file',
-    parentContext
+    parentContext,
   })
 
-  const [ hash, ...options ] = context.request.fragments
+  const [
+    hash,
+    ...options 
+  ] = context.request.fragments
 
   const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
   if( isLeft(fileEither) ) {
@@ -153,7 +150,9 @@ export const fileDownload = async (parentContext: Context) => {
 
   context.response.writeHead(200, {
     'content-type': mime,
-    'content-disposition': `${options.includes('download') ? 'attachment; ' : ''}filename=${filename}`
+    'content-disposition': `${options.includes('download')
+      ? 'attachment; '
+      : ''}filename=${filename}`,
   })
 
   return content

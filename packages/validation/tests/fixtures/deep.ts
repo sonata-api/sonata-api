@@ -2,16 +2,22 @@ import type { Description } from '@sonata-api/types'
 
 export const deepCandidate = {
   status: [
-    { user_id: 'test', status: 'running' },
-    { user_id: 'test', status: 'pending' },
+    {
+      user_id: 'test',
+      status: 'running',
+    },
+    {
+      user_id: 'test',
+      status: 'pending',
+    },
   ],
   style: {
     color: {
       name: {
-        name: 'red'
-      }
-    }
-  }
+        name: 'red',
+      },
+    },
+  },
 }
 
 export const deepDescription: Omit<Description, '$id'> = {
@@ -22,16 +28,16 @@ export const deepDescription: Omit<Description, '$id'> = {
         type: 'object',
         properties: {
           user_id: {
-            type: 'string'
+            type: 'string',
           },
           status: {
             enum: [
               'running',
-              'pending'
-            ]
-          }
-        }
-      }
+              'pending',
+            ],
+          },
+        },
+      },
     },
     style: {
       type: 'object',
@@ -43,14 +49,14 @@ export const deepDescription: Omit<Description, '$id'> = {
               type: 'object',
               properties: {
                 name: {
-                  type: 'string'
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 }
 

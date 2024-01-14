@@ -1,5 +1,5 @@
 import { promisify } from 'util'
-import jwt, { Secret, SignOptions } from 'jsonwebtoken'
+import jwt, { type Secret, type SignOptions } from 'jsonwebtoken'
 
 const asyncSign = promisify<string | object | Buffer, Secret, SignOptions>(jwt.sign)
 const asyncVerify = promisify<string, Secret, any>(jwt.verify)
@@ -14,7 +14,7 @@ export const signToken = (_payload: Record<string, any>, secret?: string|null, o
   delete payload.exp
 
   const signed = asyncSign(payload, secret || APPLICATION_SECRET!, options || {
-    expiresIn: EXPIRES_IN
+    expiresIn: EXPIRES_IN,
   }) as unknown
 
   return signed as Promise<string>

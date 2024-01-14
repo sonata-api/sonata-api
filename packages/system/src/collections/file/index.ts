@@ -10,6 +10,6 @@ export const file = defineCollection({
     get,
     insert,
     download,
-    remove
-  }
+    remove,
+  },
 })

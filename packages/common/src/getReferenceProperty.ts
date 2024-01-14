@@ -8,7 +8,7 @@ export const getReferenceProperty = (property: Property) => {
     'additionalProperties' in property
       ? property.additionalProperties
       : null,
-    property
+    property,
   ]
 
   const reference = search.find((_) => !!_)

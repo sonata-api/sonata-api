@@ -12,26 +12,28 @@ const DATA_PATH = '.sonata'
 
 const phases = [
   compilationPhase,
-  buildPhase
+  buildPhase,
 ]
 
 async function compilationPhase() {
   const fileList = glob.sync('**/*.ts', {
     ignore: [
-      'node_modules/**/*.ts'
-    ]
+      'node_modules/**/*.ts',
+    ],
   })
   const result = await compile(fileList)
 
   if( !result.success ) {
-    return left(`typescript compilation produced ${result.diagnostics!.length} errors, please fix them`)
+    return left(`typescript compilation produced ${result.diagnostics.length} errors, please fix them`)
   }
 
   const collections = require(path.join(process.cwd(), 'dist', 'collections'))
   const base = path.join(process.cwd(), 'node_modules', DATA_PATH)
   const icons = []
 
-  await mkdir(base, { recursive: true })
+  await mkdir(base, {
+    recursive: true,
+  })
 
   for( const collectionName in collections ) {
     const candidate = collections[collectionName]
@@ -42,7 +44,9 @@ async function compilationPhase() {
     icons.push(...extractIcons(collection.description))
   }
 
-  const uniqueIcons = [ ...new Set(icons) ]
+  const uniqueIcons = [
+    ...new Set(icons), 
+  ]
   await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 
@@ -50,7 +54,7 @@ async function compilationPhase() {
 }
 
 async function buildPhase() {
-  const buildSucceded = await build()
+  await build()
   return right('build went without errors')
 }
 

@@ -5,7 +5,7 @@ export type Collection<TCollection extends Collection = any> = {
   item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
-  functions?: Record<string, (payload: any, context: Context, ...args: any[]) => any>
+  functions?: Record<string, (payload: any, context: Context, ...args: any[])=> any>
 }
 
 export type AssetType = keyof Collection
@@ -51,5 +51,5 @@ export type ApiConfig = {
   errorHandler?: <TError extends Error>(
     context: Context,
     error: TError
-  ) => any|Promise<any>
+  )=> any|Promise<any>
 }

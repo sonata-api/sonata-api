@@ -2,27 +2,33 @@ import { validator, silentValidator } from '../../dist'
 
 export const personCandidate = {
   name: 'Terry',
-  age: 50
+  age: 50,
 }
 
-export const [Person1, personValidator] = validator({
+export const [
+  Person1,
+  personValidator,
+] = validator({
   properties: {
     name: {
-      type: 'string'
+      type: 'string',
     },
     age: {
-      type: 'number'
-    }
-  }
+      type: 'number',
+    },
+  },
 })
 
-export const [Person2, personSilentValidator] = silentValidator({
+export const [
+  Person2,
+  personSilentValidator,
+] = silentValidator({
   properties: {
     name: {
-      type: 'string'
+      type: 'string',
     },
     age: {
-      type: 'number'
-    }
-  }
+      type: 'number',
+    },
+  },
 })

@@ -24,15 +24,14 @@ export const user = defineCollection({
   accessControl: {
     roles: {
       root: {
-        grantEverything: true
+        grantEverything: true,
       },
       guest: {
         grant: [
-          'authenticate'
-        ]
-      }
-    }
-  }
+          'authenticate',
+        ],
+      },
+    },
+  },
 })
-
 

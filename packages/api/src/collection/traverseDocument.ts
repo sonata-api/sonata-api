@@ -22,13 +22,13 @@ export type TraversePipe = {
     propName: string,
     property: Property,
     options: TraverseOptions
-  ) => any
+  )=> any
 }
 
 const getProperty = (propertyName: string, parentProperty: Property | Description) => {
   if( propertyName === '_id' ) {
     return <Property>{
-      type: 'string'
+      type: 'string',
     }
   }
 
@@ -52,7 +52,9 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 }
 
-const autoCast = (value: any, target: any, propName: string, property: Property, options?: TraverseOptions): any => {
+const autoCast = (
+  value: any, target: any, propName: string, property: Property, options?: TraverseOptions,
+): any => {
   switch( typeof value ) {
     case 'boolean': {
       return !!value
@@ -95,12 +97,17 @@ const autoCast = (value: any, target: any, propName: string, property: Property,
       }
 
       if( Array.isArray(value) ) {
-        return value.map((v) => autoCast(v, target, propName, property, options))
+        return value.map((v) => autoCast(
+          v, target, propName, property, options,
+        ))
       }
 
       if( Object.keys(value).length > 0 ) {
         const entries: [string, any][] = []
-        for( const [k, v] of Object.entries(value) ) {
+        for( const [
+          k,
+          v,
+        ] of Object.entries(value) ) {
           const subProperty = !k.startsWith('$')
             ? getProperty(k, property)
             : property
@@ -111,7 +118,9 @@ const autoCast = (value: any, target: any, propName: string, property: Property,
 
           entries.push([
             k,
-            autoCast(v, target, propName, subProperty, options)
+            autoCast(
+              v, target, propName, subProperty, options,
+            ),
           ])
         }
 
@@ -136,7 +145,7 @@ const validate = (value: any, _target: any, propName: string, property: Property
 
   if( error ) {
     return left({
-      [propName]: error
+      [propName]: error,
     })
   }
 
@@ -146,12 +155,15 @@ const validate = (value: any, _target: any, propName: string, property: Property
 const recurse = async <TRecursionTarget extends Record<string, any>>(
   target: TRecursionTarget,
   parent: Property | Description,
-  options: TraverseOptions & TraversePipe = {}
+  options: TraverseOptions & TraversePipe = {},
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
   const entrypoint = options.fromProperties && 'properties' in parent
-    ? { _id: null, ...parent.properties }
+    ? {
+      _id: null,
+      ...parent.properties,
+    }
     : target
 
   if( !parent ) {
@@ -169,7 +181,11 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     if( options.autoCast && propName === '_id' ) {
       entries.push([
         propName,
-        autoCast(value, target, propName, { $ref: '' }, {})
+        autoCast(
+          value, target, propName, {
+            $ref: '',
+          }, {},
+        ),
       ])
       continue
     }
@@ -181,7 +197,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
         if( options.allowOperators ) {
           entries.push([
             propName,
-            value
+            value,
           ])
         }
 
@@ -201,7 +217,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
         entries.push([
           propName,
-          operations
+          operations,
         ])
         continue
       }
@@ -213,7 +229,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
       entries.push([
         propName,
-        unwrapEither(operatorEither)
+        unwrapEither(operatorEither),
       ])
     }
 
@@ -237,7 +253,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
             entries.push([
               propName,
-              documents
+              documents,
             ])
             continue
           }
@@ -249,7 +265,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
           entries.push([
             propName,
-            unwrapEither(documentEither)
+            unwrapEither(documentEither),
           ])
           continue
         }
@@ -257,7 +273,9 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
       entries.push([
         propName,
-        await options.pipe!(value, target, propName, property, options)
+        await options.pipe!(
+          value, target, propName, property, options,
+        ),
       ])
     }
   }
@@ -268,7 +286,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 export const traverseDocument = async <const TWhat extends Record<string, any>>(
   what: TWhat,
   description: Description,
-  options: TraverseOptions & TraversePipe
+  options: TraverseOptions & TraversePipe,
 ) => {
   const functions = []
   let validationError: ValidationError | null = null
@@ -305,7 +323,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
         validationError = value.value
         return value
       }
-    }
+    },
   })
 
   const resultEither = await recurse(what, description, options)
@@ -316,7 +334,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
   return validationError
     ? left(makeValidationError({
       code: ValidationErrorCodes.InvalidProperties,
-      errors: validationError
+      errors: validationError,
     }))
     : right(unwrapEither(resultEither) as any)
 }

@@ -1,15 +1,13 @@
-type Rest<T extends any[]> = T extends [infer _First, ...infer Tail]
+type Rest<T extends any[]> = T extends [unknown, ...infer Tail]
   ? Tail
   : []
 
 export type PipeOptions = {
-  returnFirst?: boolean | ((value: any) => boolean)
+  returnFirst?: boolean | ((value: any)=> boolean)
 }
 
-export const pipe = <TFunction extends (...args: any) => any>(functions: TFunction[], options?: PipeOptions) => {
-  const {
-    returnFirst
-  } = options || {}
+export const pipe = <TFunction extends (...args: any)=> any>(functions: TFunction[], options?: PipeOptions) => {
+  const { returnFirst } = options || {}
 
   return async (value: Parameters<TFunction>[0], ...args: Rest<Parameters<TFunction>>) => {
     let ret: ReturnType<TFunction> = value

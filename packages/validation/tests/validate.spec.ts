@@ -10,8 +10,7 @@ import {
   deepDescription,
   personValidator,
   personSilentValidator,
-  personCandidate
-
+  personCandidate,
 } from './fixtures'
 
 describe('Validate', () => {
@@ -35,7 +34,7 @@ describe('Validate', () => {
   it('returns left with validator', () => {
     const validationEither = personValidator({
       ...personCandidate,
-      age: false
+      age: false,
     })
 
     assert(isLeft(validationEither))
@@ -46,7 +45,7 @@ describe('Validate', () => {
   it('returns null with silent validator', () => {
     const person = personSilentValidator({
       ...personCandidate,
-      age: false
+      age: false,
     })
 
     assert(person === null)
@@ -82,8 +81,12 @@ describe('Validate', () => {
   })
 
   it('conditional required', () => {
-    const validEither = validate({ id: 10 }, conditionalDescription)
-    const invalidEither = validate({ id: 9 }, conditionalDescription)
+    const validEither = validate({
+      id: 10,
+    }, conditionalDescription)
+    const invalidEither = validate({
+      id: 9,
+    }, conditionalDescription)
     assert(isRight(validEither))
     assert(isLeft(invalidEither))
   })

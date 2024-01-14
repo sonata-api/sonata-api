@@ -55,7 +55,7 @@ const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
 export const evaluateCondition = <TDescription extends Description=any>(subject: any, condition: Condition<TDescription>) => {
   const result = {
     satisfied: false,
-    else: null
+    else: null,
   }
 
   const satisfied = result.satisfied = evaluatesToTrue(subject, condition)

@@ -24,14 +24,13 @@ export type Projection<TDocument extends Record<string, any>> =
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>
 
 export type CollectionDocument<TDocument> = Pick<
-  TDocument,
-  Extract<keyof TDocument, string>
+TDocument,
+Extract<keyof TDocument, string>
 >
 
 export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
   filters?: Filters<TDocument>
 }
-
 
 export type GetPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
   filters?: Filters<TDocument>
@@ -74,13 +73,13 @@ export type UploadPayload = UploadAuxProps & {
 }
 
 export type CollectionFunctions<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  count: (payload: CountPayload<TDocument>) => Promise<number>
-  get: (payload: GetPayload<TDocument>) => Promise<TDocument | null>
-  getAll: (payload?: GetAllPayload<TDocument>) => Promise<TDocument[]>
-  insert: (payload: InsertPayload<TDocument>) => Promise<Either<ValidationError, TDocument>>
-  upload: (payload: UploadPayload) => Promise<any>
-  remove: (payload: RemovePayload<TDocument>) => Promise<TDocument>
-  removeAll: (payload: RemoveAllPayload<TDocument>) => Promise<any>
-  removeFile: (payload: RemoveFilePayload) => Promise<any>
+  count: (payload: CountPayload<TDocument>)=> Promise<number>
+  get: (payload: GetPayload<TDocument>)=> Promise<TDocument | null>
+  getAll: (payload?: GetAllPayload<TDocument>)=> Promise<TDocument[]>
+  insert: (payload: InsertPayload<TDocument>)=> Promise<Either<ValidationError, TDocument>>
+  upload: (payload: UploadPayload)=> Promise<any>
+  remove: (payload: RemovePayload<TDocument>)=> Promise<TDocument>
+  removeAll: (payload: RemoveAllPayload<TDocument>)=> Promise<any>
+  removeFile: (payload: RemoveFilePayload)=> Promise<any>
 }
 

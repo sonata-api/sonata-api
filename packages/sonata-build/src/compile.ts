@@ -5,19 +5,13 @@ import { deepMerge } from '@sonata-api/common'
 import { log } from './log'
 
 export const compile = async (fileList: string[]) => {
-  const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) as {
-    extends?: string
-    include?: string[]
-    exclude?: string[]
-  } & typeof import('./config/tsconfig.json')
+  const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) 
 
   if( tsConfig.extends ) {
     const resolvedPath = require.resolve(path.join(process.cwd(), tsConfig.extends))
 
-    Object.assign(tsConfig, deepMerge(
-      tsConfig,
-      JSON.parse((await readFile(resolvedPath)).toString())
-    ))
+    Object.assign(tsConfig, deepMerge(tsConfig,
+      JSON.parse((await readFile(resolvedPath)).toString())))
   }
 
   const compilerOptions = tsConfig.compilerOptions as unknown
@@ -43,10 +37,8 @@ export const compile = async (fileList: string[]) => {
   if( diagnostics.length ) {
     diagnostics.forEach((diagnostic) => {
       if( diagnostic.file ) {
-        const { line, character } = ts.getLineAndCharacterOfPosition(
-          diagnostic.file,
-          diagnostic.start!
-        )
+        const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file,
+          diagnostic.start!)
 
         const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
         log('error', `${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)
@@ -59,16 +51,15 @@ export const compile = async (fileList: string[]) => {
     log('error', `${diagnostics.length} errors found`)
   }
 
-
   if( emitResult.emitSkipped ) {
-    return {
+    return <const>{
       success: false,
-      diagnostics: diagnostics
+      diagnostics: diagnostics,
     }
   }
 
-  return {
+  return <const>{
     success: true,
-    program
+    program,
   }
 }

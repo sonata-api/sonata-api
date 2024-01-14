@@ -1,38 +1,40 @@
-import { Property, ObjectToSchema } from '@sonata-api/types'
+import { type Property, type ObjectToSchema } from '@sonata-api/types'
 
 const mapValueToProperty = (value: any): any => {
   if( value.constructor === Object ) {
-    return Object.assign({ type: 'object' }, fromLiteral(value))
+    return Object.assign({
+      type: 'object',
+    }, fromLiteral(value))
   }
 
   if( value === Date ) {
     return {
       type: 'string',
-      format: 'date-time'
+      format: 'date-time',
     }
   }
 
   if( Array.isArray(value) ) {
     return {
       type: 'array',
-      items: mapValueToProperty(value[0])
+      items: mapValueToProperty(value[0]),
     }
   }
 
   if( value && typeof value === 'string' ) {
     return {
-      $ref: value
+      $ref: value,
     }
   }
 
   return {
-    type: typeof value
+    type: typeof value,
   }
 }
 
 export const fromLiteral = <
   const TObject,
-  TRequired extends (keyof TObject & string)[]
+  TRequired extends (keyof TObject & string)[],
 >(object: TObject, required?: TRequired) => {
   const entries: [string, Property][] = []
   for( const propName in object ) {
@@ -41,14 +43,17 @@ export const fromLiteral = <
       continue
     }
 
-    entries.push([propName, mapValueToProperty(value)])
+    entries.push([
+      propName,
+      mapValueToProperty(value),
+    ])
   }
 
   const properties = Object.fromEntries(entries)
   return {
     type: 'object',
     required,
-    properties
+    properties,
   } as ObjectToSchema<TObject, TRequired> 
 }
 
@@ -57,10 +62,10 @@ export const leftSchema = <const TObject extends Property>(object: TObject) => {
     type: 'object',
     properties: {
       _tag: {
-        literal: 'Left'
+        literal: 'Left',
       },
-      value: object
-    }
+      value: object,
+    },
   } satisfies Property
 }
 
@@ -69,10 +74,10 @@ export const rightSchema = <const TObject extends Property>(object: TObject) => 
     type: 'object',
     properties: {
       _tag: {
-        literal: 'Right'
+        literal: 'Right',
       },
-      value: object
-    }
+      value: object,
+    },
   } satisfies Property
 }
 

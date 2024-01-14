@@ -1,8 +1,8 @@
 import type { Context } from '@sonata-api/types'
-import { sendTransactionalEmail  } from '@sonata-api/mailing'
+import { sendTransactionalEmail } from '@sonata-api/mailing'
 import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
-import { description, type User } from './description'
+import { type description, type User } from './description'
 import bcrypt from 'bcrypt'
 
 type Props = Omit<User, 'roles'>
@@ -19,28 +19,28 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     required: [
       'full_name',
       'email',
-      'phone'
+      'phone',
     ],
     properties: {
       full_name: {
-        type: 'string'
+        type: 'string',
       },
       email: {
-        type: 'string'
+        type: 'string',
       },
       phone: {
-        type: 'string'
+        type: 'string',
       },
       password: {
-        type: 'string'
-      }
-    }
+        type: 'string',
+      },
+    },
   }, {
     extraneous: [
       '_id',
       'roles',
-      'active'
-    ]
+      'active',
+    ],
   })
 
   if( isLeft(validationEither) ) {
@@ -65,7 +65,7 @@ const createAccount = async (props: Props, context: Context<typeof description>)
 
   const { insertedId } = await context.collection.model.insertOne(user as any)
   const newUser = await context.collection.model.findOne({
-    _id: insertedId
+    _id: insertedId,
   })
 
   const activationToken = await bcrypt.hash(insertedId.toString(), 10)
@@ -78,11 +78,10 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     html: `<div>
       <div>Clique no link abaixo ou copie e cole na barra do navegador para ativar o seu usuário</div>
       <a href="${link}">${link}</a>
-    </div>`
+    </div>`,
   })
 
-
-  return right(newUser!)
+  return right(newUser)
 }
 
 export default createAccount

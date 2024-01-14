@@ -11,14 +11,14 @@ type Timestamped = {
 
 type CaseOwned<
   TSchema,
-  TType
+  TType,
 > = TSchema extends { owned: true | string }
   ? TType & Owned
   : TType
 
 type CaseTimestamped<
   TSchema,
-  TType
+  TType,
 > = TSchema extends { timestamps: false }
   ? TType
   : TType & Timestamped
@@ -26,15 +26,15 @@ type CaseTimestamped<
 type TestType<T> = T & Record<string, any>
 
 export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time' }>
-  ? Date        : T extends TestType<{ type: 'string' }>
-  ? string      : T extends TestType<{ type: 'number' }>
-  ? number      : T extends TestType<{ type: 'boolean' }>
-  ? boolean     : T extends TestType<{ properties: any }>
-  ? Schema<T & { timestamps: false }> : T extends TestType<{ type: 'object' }>
-  ? any         : T extends TestType<{ literal: infer K }>
-  ? K           : T extends TestType<{ enum: ReadonlyArray<infer K> }>
-  ? K           : T extends TestType<{ items: infer K }>
-  ? InferProperty<K>[]  : never
+  ? Date : T extends TestType<{ type: 'string' }>
+    ? string : T extends TestType<{ type: 'number' }>
+      ? number : T extends TestType<{ type: 'boolean' }>
+        ? boolean : T extends TestType<{ properties: any }>
+          ? Schema<T & { timestamps: false }> : T extends TestType<{ type: 'object' }>
+            ? any : T extends TestType<{ literal: infer K }>
+              ? K : T extends TestType<{ enum: ReadonlyArray<infer K> }>
+                ? K : T extends TestType<{ items: infer K }>
+                  ? InferProperty<K>[] : never
 
 export type InferSchema<TSchema> = MergeReferences<TSchema> extends infer MappedTypes
   ? TSchema extends { required: readonly [] }
@@ -46,14 +46,14 @@ export type InferSchema<TSchema> = MergeReferences<TSchema> extends infer Mapped
           : never
         : never
       : MappedTypes
-    : never
+  : never
 
 export type Schema<TSchema> = CaseTimestamped<
-  TSchema,
-  CaseOwned<
-    TSchema,
-    InferSchema<TSchema>
-  >>
+TSchema,
+CaseOwned<
+TSchema,
+InferSchema<TSchema>
+>>
 
 export type SchemaWithId<TSchema> = Schema<TSchema> & {
   _id: ObjectId
@@ -77,15 +77,15 @@ export type ObjectToSchema<TObject, TRequired extends string[] | null = null> = 
   ? ValueToProperty<[K]>
   : keyof TObject extends never
     ? { type: 'object' }
-      : {
-        [P in keyof TObject]: TObject[P] extends infer Value
-          ? ValueToProperty<Value>
-          : never
-      } extends infer Properties
-        ? TRequired extends null
-          ? { type: 'object', properties: Properties }
-          : { type: 'object', required: TRequired, properties: Properties }
+    : {
+      [P in keyof TObject]: TObject[P] extends infer Value
+        ? ValueToProperty<Value>
         : never
+    } extends infer Properties
+      ? TRequired extends null
+        ? { type: 'object', properties: Properties }
+        : { type: 'object', required: TRequired, properties: Properties }
+      : never
 
 export type PackReferences<T> = {
   [P in keyof T]: PackReferencesAux<T[P]>
@@ -101,11 +101,11 @@ export type FilterReadonlyProperties<TProperties> = {
 type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   ? {
     -readonly [
-      P in keyof Properties as Properties[P] extends 
+    P in keyof Properties as Properties[P] extends 
         | TestType<{ $ref: string }>
         | TestType<{ items: { $ref: string } }>
-        ? P
-        : never
+      ? P
+      : never
     ]: Properties[P] extends infer Prop
       ? Prop extends TestType<{ $ref: infer K }>
         ? K extends keyof Collections
@@ -120,7 +120,7 @@ type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   }
   : never
 
-type PackReferencesAux<T> = T extends (...args: any[]) => any
+type PackReferencesAux<T> = T extends (...args: any[])=> any
   ? T
   : T extends { _id: infer Id }
     ? Id
@@ -145,14 +145,14 @@ type MergeReferences<TSchema> = CombineProperties<TSchema> extends infer Combine
   : never
 
 type ValueToProperty<TValue> = TValue extends `$${infer Ref}`
-  ? { $ref: Ref }       : TValue extends string
-  ? { type: 'string' }  : TValue extends number
-  ? { type: 'number' }  : TValue extends boolean
-  ? { type: 'boolean' } : TValue extends new () => Date
-  ? { type: 'string', format: 'date' }            : TValue extends readonly [infer K]
-  ? { type: 'array', items: ValueToProperty<K> }  : TValue extends (infer K)[]
-  ? { enum: K }         : TValue extends Record<string, any>
-  ? keyof TValue extends never
-    ? { type: 'object' }
-    : { type: 'object' } & ObjectToSchema<TValue> : never
+  ? { $ref: Ref } : TValue extends string
+    ? { type: 'string' } : TValue extends number
+      ? { type: 'number' } : TValue extends boolean
+        ? { type: 'boolean' } : TValue extends new ()=> Date
+          ? { type: 'string', format: 'date' } : TValue extends readonly [infer K]
+            ? { type: 'array', items: ValueToProperty<K> } : TValue extends (infer K)[]
+              ? { enum: K } : TValue extends Record<string, any>
+                ? keyof TValue extends never
+                  ? { type: 'object' }
+                  : { type: 'object' } & ObjectToSchema<TValue> : never
 

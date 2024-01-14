@@ -1,4 +1,4 @@
-import type { AssetType, Context, Collection, ACProfile  } from '@sonata-api/types'
+import type { AssetType, Context, Collection, ACProfile } from '@sonata-api/types'
 import { ACErrors } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { limitRate } from '@sonata-api/security'
@@ -6,14 +6,14 @@ import { isGranted } from '@sonata-api/access-control'
 import { getCollection } from '@sonata-api/entrypoint'
 
 const assetsMemo: {
-  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>>> 
+  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>> | undefined> 
 } = {
-  assets: {}
+  assets: {},
 }
 
 export const internalGetCollectionAsset = async <
   TCollectionName extends string,
-  TAssetName extends keyof Collections[TCollectionName] & AssetType
+  TAssetName extends keyof Collections[TCollectionName] & AssetType,
 >(
   collectionName: TCollectionName,
   assetName: TAssetName,
@@ -22,7 +22,9 @@ export const internalGetCollectionAsset = async <
   const asset = collection?.[assetName as AssetType]
 
   if( !asset ) {
-    if( !collection ) return left(ACErrors.ResourceNotFound)
+    if( !collection ) {
+      return left(ACErrors.ResourceNotFound)
+    }
     return left(ACErrors.AssetNotFound)
   }
 
@@ -31,7 +33,7 @@ export const internalGetCollectionAsset = async <
 
 export const getCollectionAsset = async <
   TCollectionName extends string,
-  TAssetName extends keyof Collections[TCollectionName] & AssetType
+  TAssetName extends keyof Collections[TCollectionName] & AssetType,
 >(
   collectionName: TCollectionName,
   assetName: TAssetName,
@@ -47,15 +49,15 @@ export const getCollectionAsset = async <
   }
 
   const asset = unwrapEither(assetEither) as NonNullable<Collection[TAssetName]>
-  assetsMemo.assets[collectionName as string] ??= {}
-  assetsMemo.assets[collectionName as string][assetName] = asset
+  assetsMemo.assets[collectionName] ??= {}
+  assetsMemo.assets[collectionName]![assetName] = asset
 
   return right(asset)
 }
 
 export const getFunction = async <
   TCollectionName extends string,
-  TFunctionName extends string
+  TFunctionName extends string,
 >(
   collectionName: TCollectionName,
   functionName: TFunctionName,
@@ -88,7 +90,7 @@ export const getFunction = async <
       if( isLeft(rateLimitingEither) ) {
         return left({
           error: unwrapEither(rateLimitingEither),
-          httpCode: 429
+          httpCode: 429,
         })
       }
     }

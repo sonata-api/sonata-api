@@ -14,17 +14,17 @@ export const conditionalDescription: Omit<Description, '$id'> = {
           operator: 'lt',
           term1: 'id',
           term2: 10,
-        }
-      ]
-    }
+        },
+      ],
+    },
   },
   properties: {
     id: {
-      type: 'number'
+      type: 'number',
     },
     name: {
-      type: 'string'
-    }
-  }
+      type: 'string',
+    },
+  },
 }
 

@@ -4,17 +4,17 @@ import { traverseDocument, cascadingRemove } from '../collection'
 
 export const removeAll = async <TContext extends Context>(
   payload: RemoveAllPayload<SchemaWithId<TContext['description']>>,
-  context: TContext
+  context: TContext,
 ) => {
   const filtersWithId = {
     ...payload.filters,
     _id: {
-      $in: payload.filters._id
-    }
+      $in: payload.filters._id,
+    },
   }
 
   const filters = unsafe(await traverseDocument(filtersWithId, context.description, {
-    autoCast: true
+    autoCast: true,
   }))
 
   for( const document of await context.collection.model.find(filters).toArray() ) {

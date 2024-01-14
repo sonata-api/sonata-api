@@ -7,9 +7,7 @@ import type {
   FunctionPath,
   DecodedToken,
   ApiConfig,
-  Collection,
-  CollectionFunctions
-
+  CollectionFunctions,
 } from '.'
 
 export type CollectionModel<TDescription extends Description> =
@@ -17,9 +15,9 @@ export type CollectionModel<TDescription extends Description> =
 
 type OmitContextParameter<TFunctions> = {
   [P in keyof TFunctions]: TFunctions[P] extends infer Fn
-    ? Fn extends (...args: any[]) => any
+    ? Fn extends (...args: any[])=> any
       ? Parameters<Fn> extends [infer Payload, Context, ...infer ExtraParameters]
-        ? (payload: Payload, ...args: ExtraParameters) => ReturnType<Fn>
+        ? (payload: Payload, ...args: ExtraParameters)=> ReturnType<Fn>
         : Fn
       : never
     : never
@@ -67,7 +65,7 @@ export type Context<TDescription extends Description = any, TFunctions = any> = 
   request: GenericRequest
   response: GenericResponse
 
-  log: (message: string, details?: any) => Promise<any>
+  log: (message: string, details?: any)=> Promise<any>
   apiConfig: ApiConfig
 }
 

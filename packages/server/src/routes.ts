@@ -5,8 +5,7 @@ import {
   safeHandle,
   regularVerb,
   customVerbs,
-  fileDownload
-
+  fileDownload,
 } from './handler'
 
 export const registerRoutes = () => {
@@ -15,16 +14,22 @@ export const registerRoutes = () => {
   }
 
   const router = createRouter({
-    exhaust: true
+    exhaust: true,
   })
 
-  router.route(['POST', 'GET'], '/describe', systemFunctions.describe)
+  router.route([
+    'POST',
+    'GET',
+  ], '/describe', systemFunctions.describe)
   router.GET('/file/(\\w+)(/(\\w+))*', defaultHandler(fileDownload))
   router.GET('/(\\w+)/id/(\\w+)', defaultHandler(regularVerb('get')))
   router.GET('/(\\w+)', defaultHandler(regularVerb('getAll')))
   router.POST('/(\\w+)', defaultHandler(regularVerb('insert')))
   router.DELETE('/(\\w+)/(\\w+)', defaultHandler(regularVerb('remove')))
-  router.route(['POST', 'GET'], '/(\\w+)/(\\w+)', defaultHandler(customVerbs()))
+  router.route([
+    'POST',
+    'GET',
+  ], '/(\\w+)/(\\w+)', defaultHandler(customVerbs()))
 
   return router
 }

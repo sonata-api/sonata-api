@@ -5,7 +5,6 @@ import type {
   RequestMethod,
   InferProperty,
   InferResponse,
-
 } from '@sonata-api/types'
 
 import { REQUEST_METHODS } from '@sonata-api/types'
@@ -13,7 +12,7 @@ import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import { safeJson } from './payload'
-import { RouteContract } from './contract'
+import { type RouteContract } from './contract'
 
 export type RouteUri = `/${string}`
 
@@ -24,7 +23,7 @@ export type RouterOptions = {
 
 export type RouteGroupOptions = {
   base?: RouteUri
-  middleware?: (context: Context) => any
+  middleware?: (context: Context)=> any
   contract?: RouteContract
 }
 
@@ -40,24 +39,24 @@ type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & 
 }
 
 export type ProxiedRouter<TRouter> = TRouter & Record<
-  RequestMethod,
-  <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer Response }
-      ? InferResponse<Response>
-      : any,
-    const TContract extends RouteContract
-  >(
-    exp: RouteUri,
-    cb: TCallback,
-    contract?: TContract
-  ) => ReturnType<typeof registerRoute>
+RequestMethod,
+<
+  TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
+    ? InferResponse<Response>
+    : any,
+  const TContract extends RouteContract,
+>(
+  exp: RouteUri,
+  cb: TCallback,
+  contract?: TContract
+)=> ReturnType<typeof registerRoute>
 >
 
 export const matches = <TRequest extends GenericRequest>(
   req: TRequest,
   method: RequestMethod | RequestMethod[] | null,
   exp: string | RegExp,
-  options: RouterOptions
+  options: RouterOptions,
 ) => {
   const { url } = req
   const { base = DEFAULT_BASE_URI } = options
@@ -77,34 +76,34 @@ export const matches = <TRequest extends GenericRequest>(
   if( matches ) {
     const fragments = matches.splice(1)
     return {
-      fragments
+      fragments,
     }
   }
 }
 
-export const registerRoute = async <TCallback extends (context: Context) => any>(
+export const registerRoute = async <TCallback extends (context: Context)=> any>(
   context: Context,
   method: RequestMethod | RequestMethod[],
   exp: RouteUri,
   cb: TCallback,
   contract?: RouteContract,
-  options: RouterOptions = {}
+  options: RouterOptions = {},
 ) => {
   const match = matches(context.request, method, exp, options)
   if( match ) {
     if( context.request.headers['content-type'] === 'application/json' ) {
       try {
-        context.request.payload = deepMerge(
-          safeJson(context.request.body),
+        context.request.payload = deepMerge(safeJson(context.request.body),
           context.request.payload || {},
-          { arrays: false }
-        )
+          {
+            arrays: false,
+          })
 
       } catch( err ) {
         context.response.writeHead(500)
         context.response.end(left({
           httpCode: 500,
-          message: 'Invalid JSON'
+          message: 'Invalid JSON',
         }))
         return null
       }
@@ -137,7 +136,7 @@ export const registerRoute = async <TCallback extends (context: Context) => any>
   }
 }
 
-export const wrapRouteExecution = async (res: GenericResponse, cb: () => any | Promise<any>) => {
+export const wrapRouteExecution = async (res: GenericResponse, cb: ()=> any | Promise<any>) => {
   try {
     const result = await cb()
     if( result === null ) {
@@ -170,7 +169,7 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: () => any | P
     if( !res.writableEnded ) {
       const error = left({
         httpCode: 500,
-        message: 'Internal server error'
+        message: 'Internal server error',
       })
 
       res.end(error)
@@ -182,22 +181,24 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   const { exhaust } = options
   options.base ??= DEFAULT_BASE_URI
 
-  const routes: ((_: unknown, context: Context, groupOptions?: RouteGroupOptions) => ReturnType<typeof registerRoute>)[] = []
-  const routesMeta = {} as Record<RouteUri, Partial<Record<RequestMethod, RouteContract | null>>>
+  const routes: ((_: unknown, context: Context, groupOptions?: RouteGroupOptions)=> ReturnType<typeof registerRoute>)[] = []
+  const routesMeta = {} as Record<RouteUri, Partial<Record<RequestMethod, RouteContract | null> | undefined>>
 
   const route = <
-    TCallback extends (context: TypedContext<TContract>) => TContract extends { response: infer Response }
+    TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
       ? InferResponse<Response>
       : TContract,
-    const TContract extends RouteContract
+    const TContract extends RouteContract,
   >(
     method: RequestMethod | RequestMethod[],
     exp: RouteUri,
     cb: TCallback,
-    contract?: TContract
+    contract?: TContract,
   ) => {
     routesMeta[exp] ??= {}
-    routesMeta[exp][Array.isArray(method) ? method[0] : method] = contract || null
+    routesMeta[exp]![Array.isArray(method)
+      ? method[0]
+      : method] = contract || null
 
     routes.push((_, context, groupOptions) => {
       return registerRoute(
@@ -206,16 +207,16 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
         exp,
         cb as any,
         contract,
-        groupOptions || options
+        groupOptions || options,
       )
     })
   }
 
   const group = <
     TRouter extends {
-      install: (context: Context, options?: RouterOptions) => any
+      install: (context: Context, options?: RouterOptions)=> any
       routesMeta: typeof routesMeta
-    }
+    },
   >(exp: RouteUri, router: TRouter, routeOptions?: RouteGroupOptions) => {
     const newOptions = Object.assign({}, options)
 
@@ -244,7 +245,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   }
 
   const routerPipe = pipe(routes, {
-    returnFirst: true
+    returnFirst: true,
   })
 
   const router = {
@@ -254,7 +255,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
     group,
     install: (_context: Context, _options?: RouterOptions) => {
       return {} as ReturnType<typeof routerPipe>
-    }
+    },
   }
 
   router.install = async (context: Context, options?: RouterOptions) => {
@@ -262,7 +263,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
     if( exhaust && result === undefined ) {
       return left({
         httpCode: 404,
-        message: 'Not found'
+        message: 'Not found',
       })
     }
 
@@ -272,15 +273,13 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   return new Proxy(router as ProxiedRouter<typeof router>, {
     get: (target, key) => {
       if( REQUEST_METHODS.includes(key as any) ) {
-        return (
-          ...args: Parameters<typeof target.route> extends [any, ...infer Params]
-            ? Params
-            : never
-        ) => target.route(key as RequestMethod, ...args)
+        return (...args: Parameters<typeof target.route> extends [any, ...infer Params]
+          ? Params
+          : never) => target.route(key as RequestMethod, ...args)
       }
 
       return target[key as keyof typeof target]
-    }
+    },
   })
 }
 

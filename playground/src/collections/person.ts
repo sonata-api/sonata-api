@@ -12,16 +12,16 @@ export const person = defineCollection({
           'driver',
           'baker',
           'programmer',
-          'policeman'
-        ]
+          'policeman',
+        ],
       },
       pets: {
         type: 'array',
         items: {
-          $ref: 'pet'
-        }
-      }
-    }
+          $ref: 'pet',
+        },
+      },
+    },
   },
   functions: {
     get,
@@ -31,17 +31,17 @@ export const person = defineCollection({
   accessControl: {
     roles: {
       root: {
-        grantEverything: true
+        grantEverything: true,
       },
       guest: {
         inherit: [
-          'root'
+          'root',
         ],
         grant: [
-          'getAll'
-        ]
-      }
-    }
-  }
+          'getAll',
+        ],
+      },
+    },
+  },
 })
 

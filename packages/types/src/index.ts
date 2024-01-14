@@ -10,4 +10,6 @@ export * from './property'
 export * from './schema'
 export * from './security'
 export * from './validation'
-export { ObjectId, WithId, OptionalId } from 'mongodb'
+export {
+  ObjectId, WithId, OptionalId,
+} from 'mongodb'

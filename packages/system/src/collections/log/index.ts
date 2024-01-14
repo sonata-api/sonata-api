@@ -6,6 +6,6 @@ export const log = defineCollection({
   functions: {
     get,
     getAll,
-    insert
-  }
+    insert,
+  },
 })

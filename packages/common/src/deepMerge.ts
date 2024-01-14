@@ -1,17 +1,14 @@
 export type MergeOptions = {
   arrays?: false
-  callback?: (key: string, leftVal: any, rightVal: any) => any
+  callback?: (key: string, leftVal: any, rightVal: any)=> any
 }
 
 export const deepMerge = <
   TLeft extends Partial<Record<keyof TRight, any>>,
-  TRight extends object
+  TRight extends object,
 >(left: TLeft, right: TRight, options?: MergeOptions) => {
   const result = Object.assign({}, left)
-  const {
-    arrays = true
-
-  } = options || {}
+  const { arrays = true } = options || {}
 
   for( const key in right ) {
     const leftVal: any = result[key]

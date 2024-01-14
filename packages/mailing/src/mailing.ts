@@ -6,7 +6,7 @@ const memo: {
 } = {}
 
 export enum MailingErrors {
-  DependencyMissing = 'DEPENDENCY_MISSING'
+  DependencyMissing = 'DEPENDENCY_MISSING',
 }
 
 export type TransactionalEmail = {
@@ -30,8 +30,8 @@ export const getMailingTransporter = async () => {
       port: Number(process.env.MAILING_SMTP_PORT),
       auth: {
         user: process.env.MAILING_SMTP_USERNAME,
-        pass: process.env.MAILING_SMTP_PASSWORD
-      }
+        pass: process.env.MAILING_SMTP_PASSWORD,
+      },
     })
 
     return right(memo.transporter)
@@ -65,7 +65,7 @@ export const sendTransactionalEmail = async (email: TransactionalEmail) => {
     from: makeAddress(fullEmail.senderName, fullEmail.senderEmail),
     to: makeAddress(fullEmail.receiverName, fullEmail.receiverEmail),
     subject: fullEmail.subject,
-    html: fullEmail.html
+    html: fullEmail.html,
   })
   
   return right('ok')

@@ -15,6 +15,6 @@ export const timestamped = <const>{
       noForm: true,
       readOnly: true,
       isTimestamp: true,
-    }
-  }
+    },
+  },
 } satisfies Pick<JsonSchema, 'properties'>

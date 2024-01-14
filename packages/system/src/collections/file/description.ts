@@ -4,28 +4,31 @@ const link = (_id: string) => {
   return `${process.env.API_URL}/file/${_id}`
 }
 
-const timestamp = (last_modified: Date) => last_modified
-  ? new Date(last_modified).getTime()
+const timestamp = (lastModified: Date | undefined) => lastModified
+  ? new Date(lastModified).getTime()
   : 'fresh'
 
 export type File = typeof File
 
-export const [File, description] = defineDescriptionTuple({
+export const [
+  File,
+  description,
+] = defineDescriptionTuple({
   $id: 'file',
   owned: 'always',
   presets: [
-    'owned'
+    'owned',
   ],
   required: [
     'size',
     'last_modified',
     'filename',
-    'mime'
+    'mime',
   ],
   indexes: [
     'filename',
     'link',
-    'mime'
+    'mime',
   ],
   properties: {
     mime: {
@@ -36,43 +39,43 @@ export const [File, description] = defineDescriptionTuple({
     },
     last_modified: {
       type: 'string',
-      format: 'date-time'
+      format: 'date-time',
     },
     filename: {
       type: 'string',
     },
     absolute_path: {
-      type: 'string'
+      type: 'string',
     },
     relative_path: {
-      type: 'string'
+      type: 'string',
     },
     immutable: {
-      type: 'boolean'
+      type: 'boolean',
     },
     link: {
       getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
-      }
+      },
     },
     download_link: {
       getter: (value: any) => {
         return `${link(value._id)}/download/${timestamp(value.last_modified)}`
-      }
-    }
+      },
+    },
   },
   actions: {
     deleteAll: {
       name: 'Remover',
       ask: true,
-      selection: true
-    }
+      selection: true,
+    },
   },
   individualActions: {
     remove: {
       name: 'Remover',
       icon: 'trash-alt',
-      ask: true
-    }
+      ask: true,
+    },
   },
 })

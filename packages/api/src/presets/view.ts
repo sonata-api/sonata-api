@@ -5,7 +5,7 @@ export const view = <const>{
     'ui:spawnView': {
       name: 'action.view',
       icon: 'search-plus',
-      translate: true
-    }
-  }
+      translate: true,
+    },
+  },
 } satisfies Pick<Description, 'individualActions'>

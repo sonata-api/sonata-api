@@ -1,6 +1,8 @@
 import type { PackReferences } from '@sonata-api/types'
 import { MongoClient } from 'mongodb'
-export { ObjectId } from 'mongodb'
+export {
+  ObjectId,
+} from 'mongodb'
 
 const dbMemo = {} as {
   client: MongoClient
@@ -12,9 +14,7 @@ export const getDatabase = async () => {
     const mongodbUri = await (async () => {
       const envUri = process.env.MONGODB_URI
       if( !envUri ) {
-        console.warn(
-          `mongo URI wasn't supplied, fallbacking to memory storage (this means your data will only be alive during runtime)`
-        )
+        console.warn('mongo URI wasn\'t supplied, fallbacking to memory storage (this means your data will only be alive during runtime)')
 
         const { MongoMemoryServer } = require('mongodb-memory-server')
         const mongod = await MongoMemoryServer.create()
@@ -25,7 +25,7 @@ export const getDatabase = async () => {
     })()
 
     const client = new MongoClient(mongodbUri, {
-      monitorCommands: process.env.NODE_ENV === 'development'
+      monitorCommands: process.env.NODE_ENV === 'development',
     })
 
     if( process.env.NODE_ENV === 'development' ) {

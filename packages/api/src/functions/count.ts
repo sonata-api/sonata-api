@@ -5,9 +5,9 @@ import { traverseDocument } from '../collection'
 
 export const count = async <TContext extends Context>(
   payload: CountPayload<SchemaWithId<Context['description']>>,
-  context: TContext extends Context<infer Description>
+  context: TContext extends Context<any>
     ? TContext
-    : never
+    : never,
 ) => {
   const accessControl = useAccessControl(context)
   const { filters } = unsafe(await accessControl.beforeRead(payload))
@@ -15,26 +15,25 @@ export const count = async <TContext extends Context>(
 
   const traversedFilters = unsafe(await traverseDocument(filtersRest, context.description, {
     autoCast: true,
-    allowOperators: true
+    allowOperators: true,
   }))
-
 
   if( $text ) {
     const pipeline = []
     if( $text ) {
       pipeline.push({
         $match: {
-          $text
-        }
+          $text,
+        },
       })
     }
 
     pipeline.push({
-      $match: traversedFilters
+      $match: traversedFilters,
     })
 
     pipeline.push({
-      $count: 'total'
+      $count: 'total',
     })
 
     const result = await context.collection.model.aggregate(pipeline).next()

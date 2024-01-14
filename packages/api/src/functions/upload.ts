@@ -5,34 +5,39 @@ import { checkImmutability } from '@sonata-api/access-control'
 
 export const upload = async <TContext extends Context>(
   payload: UploadPayload,
-  context: TContext
+  context: TContext,
 ) => {
   const {
     propertyName,
     parentId,
     ...props
-
   } = payload
 
-  await checkImmutability(
-    context, {
-      propertyName,
-      parentId,
-      childId: props.what._id,
-      payload: props
-    }
-  )
+  await checkImmutability(context, {
+    propertyName,
+    parentId,
+    childId: props.what._id,
+    payload: props,
+  })
 
   const file: any = unsafe(await context.collections.file.functions!.insert(payload))
 
   const insertPayload = 'items' in context.description.properties[propertyName]
-    ? { $addToSet: { [propertyName]: file._id } }
-    : { $set: { [propertyName]: file._id } }
+    ? {
+      $addToSet: {
+        [propertyName]: file._id,
+      },
+    }
+    : {
+      $set: {
+        [propertyName]: file._id,
+      },
+    }
 
-  await context.collection.model.updateOne(
-    { _id: new ObjectId(parentId) },
-    insertPayload
-  )
+  await context.collection.model.updateOne({
+    _id: new ObjectId(parentId),
+  },
+  insertPayload)
 
   return file
 }

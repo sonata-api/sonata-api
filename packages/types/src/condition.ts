@@ -1,4 +1,4 @@
-import { Description, PropertiesWithId } from './description'
+import { type Description, type PropertiesWithId } from './description'
 
 export type FinalOperator =
   | 'equal'

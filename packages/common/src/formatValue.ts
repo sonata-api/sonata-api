@@ -4,7 +4,7 @@ import { getReferenceProperty } from '.'
 
 export const formatValue = (value: any, key: string, property?: Property, index?: string): string => {
   if( Array.isArray(value) ) {
-    return value.map(v => formatValue(v, key, property, index)).join(', ')
+    return value.map((v) => formatValue(v, key, property, index)).join(', ')
   }
   
   const firstValue = (() => {
@@ -31,21 +31,27 @@ export const formatValue = (value: any, key: string, property?: Property, index?
     }
 
     if( 'type' in property ) {
-      if( property.type  === 'boolean' ) {
+      if( property.type === 'boolean' ) {
         return firstValue
           ? 'true'
           : false
       }
     }
     if( 'format' in property ) {
-      if( ['date', 'date-time'].includes(property.format!) ) {
+      if( [
+        'date',
+        'date-time',
+      ].includes(property.format!) ) {
         return formatDateTime(String(value), {
-          hours: property.format === 'date-time'
+          hours: property.format === 'date-time',
         })
       }
     }
 
-    if( [undefined, null].includes(firstValue) ) {
+    if( [
+      undefined,
+      null,
+    ].includes(firstValue) ) {
       return '-'
     }
 

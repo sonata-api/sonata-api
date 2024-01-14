@@ -2,7 +2,7 @@ import type { Context } from '@sonata-api/types'
 import { readFile } from 'fs/promises'
 import { ObjectId } from 'mongodb'
 import { left, right } from '@sonata-api/common'
-import { description } from './description'
+import { type description } from './description'
 
 export enum FileReadError {
   DocumentNotFound = 'DOCUMENT_NOT_FOUND',
@@ -10,9 +10,11 @@ export enum FileReadError {
 }
 
 const download = async (_id: string, context: Context<typeof description>) => {
-  const file = await context.collection.model.findOne({ _id: new ObjectId(_id) }, {
+  const file = await context.collection.model.findOne({
+    _id: new ObjectId(_id),
+  }, {
     absolute_path: 1,
-    mime: 1
+    mime: 1,
   })
 
   try {
@@ -22,7 +24,7 @@ const download = async (_id: string, context: Context<typeof description>) => {
 
     const content = await readFile(file.absolute_path!)
     Object.assign(file, {
-      content
+      content,
     })
 
   } catch( err ) {

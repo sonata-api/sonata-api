@@ -6,12 +6,15 @@ export type User = Omit<typeof User, 'roles' | 'resources_usage'> & {
   resources_usage: Map<string, typeof ResourceUsage>
 }
 
-export const [User, description] = defineDescriptionTuple({
+export const [
+  User,
+  description,
+] = defineDescriptionTuple({
   $id: 'user',
   required: [
     'full_name',
     'roles',
-    'email'
+    'email',
   ],
   form: [
     'full_name',
@@ -19,27 +22,27 @@ export const [User, description] = defineDescriptionTuple({
     'roles',
     'email',
     'phone',
-    'picture'
+    'picture',
   ],
   indexes: [
-    'full_name'
+    'full_name',
   ],
   freshItem: {
-    active: true
+    active: true,
   },
   properties: {
     full_name: {
-      type: 'string'
+      type: 'string',
     },
     first_name: {
       getter: (document: any) => {
         return `${document.full_name?.split(' ')[0] || 'N/A'}`
-      }
+      },
     },
     last_name: {
       getter: (document: any) => {
         return `${document.full_name?.split(' ')[1]}`
-      }
+      },
     },
     active: {
       type: 'boolean',
@@ -49,7 +52,7 @@ export const [User, description] = defineDescriptionTuple({
       items: {
         enum: [],
       },
-      uniqueItems: true
+      uniqueItems: true,
     },
     email: {
       type: 'string',
@@ -63,7 +66,7 @@ export const [User, description] = defineDescriptionTuple({
     },
     phone: {
       type: 'string',
-      mask: '(##) #####-####'
+      mask: '(##) #####-####',
     },
     picture: {
       $ref: 'file',
@@ -76,24 +79,24 @@ export const [User, description] = defineDescriptionTuple({
     },
     self_registered: {
       type: 'boolean',
-      readOnly: true
+      readOnly: true,
     },
     resources_usage: {
       type: 'object',
       additionalProperties: {
         $ref: 'resourceUsage',
-        inline: true
+        inline: true,
       },
     },
     updated_at: {
       type: 'string',
-      format: 'date-time'
+      format: 'date-time',
     },
   },
   presets: [
     'crud',
     'view',
-    'duplicate'
+    'duplicate',
   ],
   layout: {
     name: 'grid',
@@ -103,8 +106,8 @@ export const [User, description] = defineDescriptionTuple({
       picture: 'picture',
       information: 'email',
       active: 'active',
-      translateBadge: true
-    }
+      translateBadge: true,
+    },
   },
   individualActions: {
     'ui:spawnEdit': {
@@ -114,25 +117,25 @@ export const [User, description] = defineDescriptionTuple({
     'route:/dashboard/user/changepass': {
       name: 'Mudar senha',
       icon: 'key-skeleton',
-      fetchItem: true
-    }
+      fetchItem: true,
+    },
   },
   icon: 'users-alt',
   filters: [
     'full_name',
     'roles',
     'email',
-    'phone'
+    'phone',
   ],
   table: [
     'full_name',
     'roles',
     'picture',
     'active',
-    'updated_at'
+    'updated_at',
   ],
   tableMeta: [
-    'email'
+    'email',
   ],
   formLayout: {
     fields: {
@@ -140,8 +143,8 @@ export const [User, description] = defineDescriptionTuple({
         span: 3,
       },
       last_name: {
-        span: 3
-      }
-    }
-  }
+        span: 3,
+      },
+    },
+  },
 })

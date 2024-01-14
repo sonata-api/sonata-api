@@ -5,10 +5,10 @@ import { traverseDocument, normalizeProjection, prepareInsert } from '../collect
 
 export const insert = async <
   TContext extends Context,
-  TDocument = SchemaWithId<TContext['description']>
+  TDocument = SchemaWithId<TContext['description']>,
 >(
   payload: InsertPayload<SchemaWithId<TContext['description']>>,
-  context: TContext
+  context: TContext,
 ) => {
   const accessControl = useAccessControl(context)
 
@@ -24,7 +24,7 @@ export const insert = async <
     validate: true,
     validateRequired: payload.what._id
       ? []
-      : context.description.required
+      : context.description.required,
   })
 
   if( isLeft(whatEither) ) {
@@ -34,7 +34,7 @@ export const insert = async <
 
   const what = unwrapEither(whatEither)
 
-  const _id = '_id' in what
+  const docId = '_id' in what
     ? what._id
     : null
 
@@ -43,36 +43,46 @@ export const insert = async <
     ? normalizeProjection(payload.project, context.description)
     : {}
 
-  let docId: ObjectId = _id
+  let newId: ObjectId = docId
 
-  if( !_id ) {
+  if( !newId ) {
     const now = new Date()
     Object.assign(readyWhat, {
       created_at: now,
       updated_at: now,
     })
 
-    docId = (await context.collection.model.insertOne(readyWhat)).insertedId
+    newId = (await context.collection.model.insertOne(readyWhat)).insertedId
 
   } else {
     readyWhat.$set ??= {}
     readyWhat.$set.updated_at = new Date()
-    await context.collection.model.updateOne({ _id }, readyWhat)
+    await context.collection.model.updateOne({
+      _id: docId,
+    }, readyWhat)
 
   }
 
   if( context.collection.originalFunctions.get ) {
     return right(await context.collection.originalFunctions.get({
       filters: {
-        _id: docId
-      }
-    }, context, { bypassAccessControl: true }) as TDocument)
+        _id: docId,
+      },
+    }, context, {
+      bypassAccessControl: true,
+    }) as TDocument)
   }
 
-  const result = await context.collection.model.findOne({ _id: docId }, { projection })
+  const result = await context.collection.model.findOne({
+    _id: docId,
+  }, {
+    projection,
+  })
+
+  /* eslint-disable-next-line */
   return right(unsafe(await traverseDocument(result!, context.description, {
     getters: true,
     fromProperties: true,
-    recurseReferences: true
+    recurseReferences: true,
   })))
 }

@@ -1,4 +1,4 @@
-import { rollup, InputOptions, OutputOptions } from 'rollup'
+import { rollup, type InputOptions, type OutputOptions } from 'rollup'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
@@ -8,18 +8,17 @@ const inputOptions: InputOptions = {
   input: `${process.cwd()}/dist/index.js`,
   plugins: [
     commonjs({
-      ignoreDynamicRequires: true
+      ignoreDynamicRequires: true,
     }),
     nodeResolve(),
     json(),
-    terser()
+    terser(),
   ],
   external: [
     /node_modules/,
   ],
-  onwarn: () => null
+  onwarn: () => null,
 }
-
 
 const outputOptions: OutputOptions = {
   dir: 'release',
@@ -31,5 +30,5 @@ export const build = async () => {
   const bundle = await rollup(inputOptions)
   await bundle.write(outputOptions)
 
-  bundle?.close()
+  bundle.close()
 }

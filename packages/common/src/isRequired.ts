@@ -10,10 +10,10 @@ export const isRequired = (propName: string, required: NonNullable<Description['
     return false
   }
 
-  const requiredProp = required[propName as any] as Condition<any> | boolean
+  const requiredProp = required[propName as any] 
   if( typeof requiredProp === 'boolean' ) {
     return requiredProp
   }
 
-  return evaluateCondition(subject, requiredProp).satisfied
+  return evaluateCondition(subject, requiredProp as Condition<any>).satisfied
 }

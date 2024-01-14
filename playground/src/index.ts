@@ -2,14 +2,14 @@ import { init, createRouter, isLeft, unwrapEither, leftSchema } from 'sonata-api
 export * as collections from './collections'
 
 const router = createRouter({
-  exhaust: true
+  exhaust: true,
 })
 
 router.GET('/get-people', async (context) => {
   const personEither = await context.collections.person.functions.insert({
     what: {
       name: context.request.payload.name,
-      job: 'programmer'
+      job: 'programmer',
     },
   })
 
@@ -35,23 +35,22 @@ router.GET('/get-people', async (context) => {
     type: 'object',
     properties: {
       name: {
-        type: 'string'
-      }
-    }
+        type: 'string',
+      },
+    },
   },
   response: [
     leftSchema({
-      type: 'object'
+      type: 'object',
     }),
     {
       type: 'array',
       items: {
-        $ref: 'person'
-      }
+        $ref: 'person',
+      },
     },
-  ]
+  ],
 })
-
 
 init({}, (context) => {
   return router.install(context)

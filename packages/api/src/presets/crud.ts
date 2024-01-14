@@ -6,20 +6,20 @@ export const crud = <const>{
       name: 'action.add',
       icon: 'plus',
       translate: true,
-      button: true
-    }
+      button: true,
+    },
   },
   individualActions: {
     'ui:spawnEdit': {
       name: 'action.edit',
       icon: 'edit',
-      translate: true
+      translate: true,
     },
     'remove': {
       name: 'action.remove',
       icon: 'trash-alt',
       ask: true,
-      translate: true
-    }
-  }
+      translate: true,
+    },
+  },
 } satisfies Pick<Description, 'actions' | 'individualActions'>

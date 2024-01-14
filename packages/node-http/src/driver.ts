@@ -24,7 +24,7 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
       ? parseUrl(url, true).query
       : {},
     payload: {},
-    fragments: []
+    fragments: [],
   }
 
   return req
@@ -40,7 +40,7 @@ export const abstractResponse = (response: http.ServerResponse): GenericResponse
       if( typeof value === 'object' && !(value instanceof Buffer) ) {
         if( !response.headersSent ) {
           response.writeHead(200, {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
           })
         }
 
@@ -52,7 +52,7 @@ export const abstractResponse = (response: http.ServerResponse): GenericResponse
         : String(value)
 
       return end.bind(response)(endVal)
-    }
+    },
   })
 }
 
@@ -62,15 +62,15 @@ const abstractTransaction = async ($req: http.IncomingMessage, $res: http.Server
 
   return {
     req,
-    res
+    res,
   }
 }
 
-export const registerServer = (options: ServerOptions, cb: (req: GenericRequest, res: GenericResponse) => void|Promise<void>) => {
+export const registerServer = (options: ServerOptions, cb: (req: GenericRequest, res: GenericResponse)=> void|Promise<void>) => {
   const server = http.createServer(async ($req, $res) => {
     const {
       req,
-      res
+      res,
     } = await abstractTransaction($req, $res)
 
     cb(req, res)
@@ -78,7 +78,7 @@ export const registerServer = (options: ServerOptions, cb: (req: GenericRequest,
 
   return {
     server,
-    listen: () => server.listen(options.port, options.host)
+    listen: () => server.listen(options.port, options.host),
   }
 }
 

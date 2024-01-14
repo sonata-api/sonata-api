@@ -11,19 +11,22 @@ type CascadingRemoveSubject = {
 
 type CascadingRemove = CascadingRemoveSubject[]
 
-const cascadingRemoveMemo: Record<string, CascadingRemove> = {}
+const cascadingRemoveMemo: Record<string, CascadingRemove | undefined> = {}
 
 const getCascade = (description: Description) => {
   if( cascadingRemoveMemo[description.$id] ) {
-    return cascadingRemoveMemo[description.$id] 
+    return cascadingRemoveMemo[description.$id]!
   }
 
   const cascade: CascadingRemove = []
-  for( const [propertyName, property] of Object.entries(description.properties) ) {
+  for( const [
+    propertyName,
+    property,
+  ] of Object.entries(description.properties) ) {
     if( '$ref' in property && property.inline ) {
       cascade.push({
         propertyName,
-        collectionName: property.$ref
+        collectionName: property.$ref,
       })
     }
   }
@@ -40,14 +43,14 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
     if( isRight(removeAllEither) ) {
       const removeAll = unwrapEither(removeAllEither)
       return removeAll({
-        filters: targetId
+        filters: targetId,
       }, context)
     }
 
     return coll.deleteMany({
       _id: {
-        $in: targetId
-      }
+        $in: targetId,
+      },
     })
   }
 
@@ -55,18 +58,18 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
   if( isRight(removeEither) ) {
     const remove = unwrapEither(removeEither)
     return remove({
-      filters: targetId
+      filters: targetId,
     }, context)
   }
 
   return coll.deleteOne({
-    _id: targetId
+    _id: targetId,
   })
 }
 
 export const cascadingRemove = async <TContext extends Context>(
   doc: Record<string, any>,
-  context: TContext
+  context: TContext,
 ) => {
   const cascade = getCascade(context.description)
   for( const subject of cascade ) {

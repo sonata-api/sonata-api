@@ -6,29 +6,29 @@ import type {
   AccessControlLayerProps,
   Description,
   GetAllPayload,
-  InsertPayload
-
+  InsertPayload,
 } from '@sonata-api/types'
 
 import {
   checkImmutability,
   checkOwnershipRead,
-  checkOwnershipWrite
-
+  checkOwnershipWrite,
 } from './layers'
 
 const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayload<any>>>() => async <
   TContext,
   TFunction extends AccessControlLayer | undefined,
-  TProps extends AccessControlLayerProps<TPayload>
+  TProps extends AccessControlLayerProps<TPayload>,
 >(
-  context: TContext extends Context<infer _Description>
+  context: TContext extends Context<any>
     ? TContext
     : never,
   _props: TProps,
-  functions: TFunction[]
+  functions: TFunction[],
 ) => {
-  const props = Object.assign({ filters: {} }, _props)
+  const props = Object.assign({
+    filters: {},
+  }, _props)
 
   for( const fn of functions ) {
     if( !fn ) {
@@ -49,7 +49,7 @@ const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayl
 
 export const useAccessControl = <
   TDescription extends Description,
-  TAccessControl extends AccessControl<any, TAccessControl>=any
+  TAccessControl extends AccessControl<any, TAccessControl>=any,
 >(context: Context<TDescription>) => {
   const options = context.description.options
     ? Object.assign({}, context.description.options)
@@ -65,39 +65,37 @@ export const useAccessControl = <
       : Number(process.env.PAGINATION_LIMIT || 35)
 
     if( options.queryPreset ) {
-      Object.assign(newPayload, deepMerge(
-        newPayload,
-        options.queryPreset
-      ))
+      Object.assign(newPayload, deepMerge(newPayload,
+        options.queryPreset))
     }
 
     const props = {
-      payload: newPayload
+      payload: newPayload,
     }
 
-    return chainFunctions<Required<Payload>>()(
-      context,
+    return chainFunctions<Required<Payload>>()(context,
       props as any, [
-        checkOwnershipRead
-    ])
+        checkOwnershipRead,
+      ])
   }
 
   const beforeWrite = async <const Payload extends Partial<InsertPayload<any>>>(payload?: Payload) => {
-    const newPayload = Object.assign({ what: {} }, payload)
+    const newPayload = Object.assign({
+      what: {},
+    }, payload)
     const props = {
-      payload: newPayload
+      payload: newPayload,
     }
 
-    return chainFunctions<Payload>()(
-      context,
+    return chainFunctions<Payload>()(context,
       props, [
         checkOwnershipWrite,
-        checkImmutability
-    ])
+        checkImmutability,
+      ])
   }
 
   return {
     beforeRead,
-    beforeWrite
+    beforeWrite,
   }
 }

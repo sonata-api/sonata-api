@@ -5,7 +5,6 @@ import type {
   IndepthCollections,
   DecodedToken,
   Collection,
-
 } from '@sonata-api/types'
 
 import { unsafe } from '@sonata-api/common'
@@ -13,7 +12,7 @@ import { getCollections } from '@sonata-api/entrypoint'
 import { getDatabaseCollection } from './database'
 import { preloadDescription } from './collection/preload'
 
-const indepthCollection = (collectionName: string, collections: Record<string, Collection | (() => Collection)>, parentContext: Context) => {
+const indepthCollection = (collectionName: string, collections: Record<string, Collection | (()=> Collection)>, parentContext: Context) => {
   const candidate = collections[collectionName]
   const collection = typeof candidate === 'function'
     ? candidate()
@@ -28,35 +27,32 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
 
         const childContext = await createContext({
           parentContext,
-          collectionName
+          collectionName,
         })
 
         return collection.functions[functionName](props, childContext, ...args)
       }
-    }
+    },
   })
 
   return {
     ...collection,
     functions: proxiedFunctions,
     originalFunctions: collection.functions,
-    model: getDatabaseCollection(collectionName)
+    model: getDatabaseCollection(collectionName),
   }
 }
 
-export const internalCreateContext = async (
-  options: Pick<ContextOptions<any>,
+export const internalCreateContext = async (options: Pick<ContextOptions<any>,
     | 'collectionName'
     | 'apiConfig'
     | 'token'
-  >,
-  parentContext: Context
-) => {
+>,
+parentContext: Context) => {
   const {
     collectionName,
-    token = {} as DecodedToken
-
-  } = options || {}
+    token = {} as DecodedToken,
+  } = options
 
   const { getCollectionAsset } = await import('./assets')
   const collections = await getCollections()
@@ -72,13 +68,13 @@ export const internalCreateContext = async (
       owner: token.authenticated
         ? token.user._id
         // @ts-ignore
-        : options?.parentContext?.token.user._id,
-      created_at: new Date
+        : options.parentContext?.token.user._id,
+      created_at: new Date,
     })
   }
 
   if( collectionName ) {
-    const description = unsafe(await getCollectionAsset(collectionName as any, 'description'))
+    const description = unsafe(await getCollectionAsset(collectionName , 'description'))
     context.description = await preloadDescription(description)
 
     context.collectionName = collectionName
@@ -88,18 +84,18 @@ export const internalCreateContext = async (
   context.collections = new Proxy<IndepthCollections>({}, {
     get: (_: unknown, collectionName: string) => {
       return indepthCollection(collectionName, collections, context)
-    }
+    },
   })
 
   return context
 }
 
 export const createContext = async <TContextOptions>(
-  _options?: TContextOptions extends ContextOptions<infer ParentContext>
+  _options?: TContextOptions extends ContextOptions<any>
     ? TContextOptions & {
       parentContext?: any
     }
-    : never
+    : never,
 ) => {
   const options = _options as ContextOptions<Context>
   const context = Object.assign({}, options?.parentContext || {}) as Context

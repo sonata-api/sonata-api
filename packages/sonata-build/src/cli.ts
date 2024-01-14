@@ -8,9 +8,9 @@ const { values: opts } = parseArgs({
   options: {
     mode: {
       type: 'string',
-      short: 'm'
-    }
-  }
+      short: 'm',
+    },
+  },
 })
 
 async function main() {
@@ -18,11 +18,11 @@ async function main() {
     case 'compile':
       const fileList = glob.sync('**/*.ts', {
         ignore: [
-          'node_modules/**/*.ts'
-        ]
+          'node_modules/**/*.ts',
+        ],
       })
 
-      return await compile(fileList)
+      return compile(fileList)
     case 'build':
       return build()
 
@@ -30,9 +30,7 @@ async function main() {
       return pipeline()
 
     default:
-      throw new Error(
-        `mode ${opts.mode} not found`
-      )
+      throw new Error(`mode ${opts.mode} not found`)
   }
 }
 

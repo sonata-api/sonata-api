@@ -9,7 +9,7 @@ export enum ACErrors {
   OwnershipError = 'OWNERSHIP_ERROR',
   ResourceNotFound = 'RESOURCE_NOT_FOUND',
   AssetNotFound = 'ASSET_NOT_FOUND',
-  FunctionNotFound = 'FUNCTION_NOT_FOUND'
+  FunctionNotFound = 'FUNCTION_NOT_FOUND',
 }
 
 export type AccessControlLayerReadPayload = {
@@ -30,14 +30,14 @@ export type AccessControlLayerProps<TPayload extends Record<string, any> = any> 
   payload: TPayload
 }
 
-export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccessControl> = any> = (context: Context, props: AccessControlLayerProps) => Promise<Either<
-  ACErrors,
+export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccessControl> = any> = (context: Context, props: AccessControlLayerProps)=> Promise<Either<
+ACErrors,
   GetAllPayload<any> | InsertPayload<any>
 >>
 
 export type Role<
   TCollection extends Collection = any,
-  TAccessControl extends AccessControl<TCollection> = any
+  TAccessControl extends AccessControl<TCollection> = any,
 > = {
   inherit?: (keyof TAccessControl['roles'])[]
   grantEverything?: boolean
@@ -47,12 +47,12 @@ export type Role<
 
 export type Roles<
   TCollection extends Collection = any,
-  TAccessControl extends AccessControl<TCollection> = any
+  TAccessControl extends AccessControl<TCollection> = any,
 > = Record<string, Role<TCollection, TAccessControl>>
 
 export type InternalAccessControl<
   TCollection extends Collection = any,
-  TAccessControl extends AccessControl<TCollection, TAccessControl> = any
+  TAccessControl extends AccessControl<TCollection, TAccessControl> = any,
 > = {
   roles?: Roles<TCollection, TAccessControl>
   availableRoles?: keyof TAccessControl['roles']
@@ -61,9 +61,8 @@ export type InternalAccessControl<
 
 export type AccessControl<
   TCollection extends Collection = any,
-  TAccessControl extends AccessControl<TCollection, TAccessControl> = any
+  TAccessControl extends AccessControl<TCollection, TAccessControl> = any,
 > = InternalAccessControl<TCollection, TAccessControl>
-
 
 export type ACProfile = {
   readonly roles?: string[]
