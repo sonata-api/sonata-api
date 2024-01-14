@@ -8,7 +8,8 @@
   height="200px"
 />
 
-<div>An intuitive web framework tuned for security and efficiency.</div>
+
+An intuitive web framework tuned for security and efficiency.
 
 ```typescript
 router.POST('/get-pets', (context) => {
@@ -18,15 +19,23 @@ router.POST('/get-pets', (context) => {
 })
 ```
 
+<br clear="left" />
+
+## Features
+
 ### Minimalistically typed
 
 A type-driven experience is provided with state-of-the-art TypeScript, no code generation required. Define your collection structure with a runtime Javascript object then it's type will be made universally available, even to the frontend.
 
 ### A more cohesive fullstack
 
-Aeria makes your backend metadata fully available to the frontend and extends [JSON Schema](https://json-schema.org/) with visual representation attributes, allowing third parties to quickly grasp how your data should be rendered. It also has an official counterpart library called [Aeria UI]() that implements all those attributes.
+Aeria makes your backend metadata fully available to the frontend with [JSON Schema](https://json-schema.org/), allowing third parties to quickly grasp how your data should be rendered. It also has an official counterpart library called [Aeria UI]() that automatically picks the best visual representation for your data into a Vue frontend.
 
 ### Better error handling
 
 Inspired by functional languages, Aeria makes use of the much safer and runtime efficient `Either` approach to error handling. Route callbacks have their exceptions handled by default, so your application won't crash if you miss a try/catch block.
 
+
+## Resources
+
+- [Official Documentation](https://aeria.land/)
