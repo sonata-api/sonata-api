@@ -41,27 +41,15 @@ importers:
 
   packages/access-control:
     dependencies:
-      '@sonata-api/api':
-        specifier: '*'
-        version: link:../api
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
       '@sonata-api/entrypoint':
         specifier: '*'
         version: link:../entrypoint
-      '@sonata-api/server':
-        specifier: '*'
-        version: link:../server
-      '@sonata-api/system':
-        specifier: '*'
-        version: link:../system
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
-      mongodb:
-        specifier: ^6.1.0
-        version: 6.3.0
 
   packages/aeria-sdk:
     dependencies:
@@ -171,15 +159,15 @@ importers:
 
   packages/security:
     dependencies:
-      '@sonata-api/access-control':
-        specifier: '*'
-        version: link:../access-control
       '@sonata-api/api':
         specifier: '*'
         version: link:../api
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
+      '@sonata-api/types':
+        specifier: '*'
+        version: link:../types
 
   packages/server:
     dependencies:
@@ -2615,7 +2603,7 @@ packages:
     dependencies:
       function-bind: 1.1.2
       get-intrinsic: 1.2.2
-      set-function-length: 1.1.1
+      set-function-length: 1.2.0
     dev: true
 
   /callsites@3.1.0:
@@ -5002,11 +4990,12 @@ packages:
   /set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
 
-  /set-function-length@1.1.1:
-    resolution: {integrity: sha512-VoaqjbBJKiWtg4yRcKBQ7g7wnGnLV3M8oLvVWwOk2PdYY6PEFegR1vezXR0tw6fZGF9csVakIRjrJiy2veSBFQ==}
+  /set-function-length@1.2.0:
+    resolution: {integrity: sha512-4DBHDoyHlM1IRPGYcoxexgh67y4ueR53FKV1yyxwFMY7aCqcN/38M1+SwZ/qJQ8iLv7+ck385ot4CcisOAPT9w==}
     engines: {node: '>= 0.4'}
     dependencies:
       define-data-property: 1.1.1
+      function-bind: 1.1.2
       get-intrinsic: 1.2.2
       gopd: 1.0.1
       has-property-descriptors: 1.0.1

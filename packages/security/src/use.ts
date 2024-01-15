@@ -11,7 +11,7 @@ import {
   checkImmutability,
   checkOwnershipRead,
   checkOwnershipWrite,
-  paginationLimit,
+  checkPagination,
 } from '.'
 
 const chainFunctions = async <
@@ -64,7 +64,7 @@ export const useSecurity = <TDescription extends Description>(context: Context<T
     return chainFunctions(context,
       props,
       [
-        paginationLimit,
+        checkPagination,
         checkOwnershipRead,
       ])
   }
