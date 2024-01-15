@@ -12,12 +12,6 @@
       "@sonata-api/common": [
         "../common/dist/cjs"
       ],
-      "@sonata-api/access-control": [
-        "../access-control/dist"
-      ],
-      "@sonata-api/system": [
-        "../system/dist"
-      ],
       "@sonata-api/types": [
         "../types/dist"
       ]

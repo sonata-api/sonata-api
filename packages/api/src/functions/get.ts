@@ -1,6 +1,6 @@
 import type { Context, SchemaWithId, GetPayload } from '@sonata-api/types'
 import type { Document } from 'mongodb'
-import { useAccessControl } from '@sonata-api/access-control'
+import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
 import {
   traverseDocument,
@@ -11,7 +11,7 @@ import {
 } from '../collection'
 
 export type GetOptions = {
-  bypassAccessControl?: boolean
+  bypassSecurity?: boolean
 }
 
 export const get = async <
@@ -24,13 +24,13 @@ export const get = async <
     : never,
   options?: GetOptions,
 ) => {
-  const accessControl = useAccessControl(context)
+  const security = useSecurity(context)
 
   const {
     filters = {},
     project = [],
-  } = !options?.bypassAccessControl
-    ? unsafe(await accessControl.beforeRead(payload))
+  } = !options?.bypassSecurity
+    ? unsafe(await security.beforeRead(payload))
     : payload
 
   const pipeline: Document[] = []

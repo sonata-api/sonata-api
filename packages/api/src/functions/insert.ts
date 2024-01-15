@@ -1,5 +1,5 @@
 import type { Context, SchemaWithId, InsertPayload, ObjectId } from '@sonata-api/types'
-import { useAccessControl } from '@sonata-api/access-control'
+import { useSecurity } from '@sonata-api/security'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
@@ -10,9 +10,9 @@ export const insert = async <
   payload: InsertPayload<SchemaWithId<TContext['description']>>,
   context: TContext,
 ) => {
-  const accessControl = useAccessControl(context)
+  const security = useSecurity(context)
 
-  const queryEither = await accessControl.beforeWrite(payload)
+  const queryEither = await security.beforeWrite(payload)
   if( isLeft(queryEither) ) {
     const error = unsafe(queryEither)
     throw new Error(error)
@@ -69,7 +69,7 @@ export const insert = async <
         _id: newId,
       },
     }, context, {
-      bypassAccessControl: true,
+      bypassSecurity: true,
     }) as TDocument)
   }
 

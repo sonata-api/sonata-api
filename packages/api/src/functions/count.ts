@@ -1,5 +1,5 @@
 import type { Context, SchemaWithId, CountPayload } from '@sonata-api/types'
-import { useAccessControl } from '@sonata-api/access-control'
+import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
 import { traverseDocument } from '../collection'
 
@@ -9,8 +9,8 @@ export const count = async <TContext extends Context>(
     ? TContext
     : never,
 ) => {
-  const accessControl = useAccessControl(context)
-  const { filters } = unsafe(await accessControl.beforeRead(payload))
+  const security = useSecurity(context)
+  const { filters } = unsafe(await security.beforeRead(payload))
   const { $text, ...filtersRest } = filters
 
   const traversedFilters = unsafe(await traverseDocument(filtersRest, context.description, {
@@ -44,3 +44,4 @@ export const count = async <TContext extends Context>(
 
   return context.collection.model.countDocuments(traversedFilters)
 }
+

@@ -39,7 +39,7 @@ Inspired by functional languages, Aeria makes use of the much safer and runtime 
 
 ### Runtime safety
 
-All input data is optionally validated using the same schemas used during collection definition. Access Control is also shipped to allow even those who are unfamiliar with AppSec to build safely without stumbling into common security weaknesses.
+All input data is optionally validated using the same schemas used during collection definition. Role-based access control and security checks for [common security weaknesses](https://github.com/sonata-api/sonata-api/tree/master/packages/security) are also shipped to allow even those who are unfamiliar with AppSec to build safely.
 
 
 ## Resources

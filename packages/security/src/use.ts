@@ -1,9 +1,7 @@
 import { deepMerge, right, isLeft, unwrapEither } from '@sonata-api/common'
+import type { SecurityCheck, SecurityCheckProps } from './types'
 import type {
   Context,
-  AccessControl,
-  AccessControlLayer,
-  AccessControlLayerProps,
   Description,
   GetAllPayload,
   InsertPayload,
@@ -13,12 +11,14 @@ import {
   checkImmutability,
   checkOwnershipRead,
   checkOwnershipWrite,
-} from './layers'
+  paginationLimit,
+} from '.'
 
-const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayload<any>>>() => async <
+const chainFunctions = async <
   TContext,
-  TFunction extends AccessControlLayer | undefined,
-  TProps extends AccessControlLayerProps<TPayload>,
+  TPayload extends Record<string, any>,
+  TFunction extends SecurityCheck,
+  TProps extends SecurityCheckProps<TPayload>,
 >(
   context: TContext extends Context<any>
     ? TContext
@@ -31,11 +31,7 @@ const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayl
   }, _props)
 
   for( const fn of functions ) {
-    if( !fn ) {
-      continue
-    }
-
-    const resultEither = await fn(context as any, props)
+    const resultEither = await fn(context, props)
     if( isLeft(resultEither) ) {
       return resultEither
     }
@@ -47,22 +43,14 @@ const chainFunctions = <TPayload extends Partial<GetAllPayload<any> | InsertPayl
   return right(props.payload)
 }
 
-export const useAccessControl = <
-  TDescription extends Description,
-  TAccessControl extends AccessControl<any, TAccessControl>=any,
->(context: Context<TDescription>) => {
+export const useSecurity = <TDescription extends Description>(context: Context<TDescription>) => {
   const options = context.description.options
     ? Object.assign({}, context.description.options)
     : {}
 
-  const beforeRead = async <const Payload extends Partial<GetAllPayload<any>>>(payload?: Payload) => {
-    const newPayload = Object.assign({}, payload) as GetAllPayload<any>
+  const beforeRead = async <TPayload extends Partial<GetAllPayload<any>>>(payload?: TPayload) => {
+    const newPayload = Object.assign({}, payload)
     newPayload.filters ??= {}
-    newPayload.limit = newPayload.limit
-      ? newPayload.limit > 150
-        ? 100
-        : newPayload.limit
-      : Number(process.env.PAGINATION_LIMIT || 35)
 
     if( options.queryPreset ) {
       Object.assign(newPayload, deepMerge(newPayload,
@@ -73,11 +61,15 @@ export const useAccessControl = <
       payload: newPayload,
     }
 
-    return chainFunctions<Required<Payload>>()(context,
-      props as any, [checkOwnershipRead])
+    return chainFunctions(context,
+      props,
+      [
+        paginationLimit,
+        checkOwnershipRead,
+      ])
   }
 
-  const beforeWrite = async <const Payload extends Partial<InsertPayload<any>>>(payload?: Payload) => {
+  const beforeWrite = async <TPayload extends Partial<InsertPayload<any>>>(payload?: TPayload) => {
     const newPayload = Object.assign({
       what: {},
     }, payload)
@@ -85,7 +77,7 @@ export const useAccessControl = <
       payload: newPayload,
     }
 
-    return chainFunctions<Payload>()(context,
+    return chainFunctions(context,
       props, [
         checkOwnershipWrite,
         checkImmutability,
@@ -97,3 +89,4 @@ export const useAccessControl = <
     beforeWrite,
   }
 }
+

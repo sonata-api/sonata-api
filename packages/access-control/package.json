@@ -23,12 +23,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "@sonata-api/api": "*",
     "@sonata-api/common": "*",
     "@sonata-api/entrypoint": "*",
-    "@sonata-api/server": "*",
-    "@sonata-api/system": "*",
-    "@sonata-api/types": "*",
-    "mongodb": "^6.1.0"
+    "@sonata-api/types": "*"
   }
 }

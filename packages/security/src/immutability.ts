@@ -1,16 +1,11 @@
-import type {
-  Context,
-  AccessControlLayerProps,
-  AccessControlLayerReadPayload,
-  AccessControlLayerWritePayload,
-} from '@sonata-api/types'
+import type { Context } from '@sonata-api/types'
+import type { SecurityCheckProps, SecurityCheckReadPayload, SecurityCheckWritePayload } from './types'
 
-import { ObjectId } from 'mongodb'
-import { ACErrors } from '@sonata-api/types'
+import { ACErrors, ObjectId } from '@sonata-api/types'
 import { left, right, isLeft } from '@sonata-api/common'
 
 const internalCheckImmutability = async (context: Context,
-  props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>) => {
+  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>) => {
   const {
     propertyName = '',
     parentId,
@@ -63,23 +58,23 @@ const internalCheckImmutability = async (context: Context,
   return right(props.payload)
 }
 
-export const checkImmutability = async (context: Context, props: AccessControlLayerProps<AccessControlLayerReadPayload | AccessControlLayerWritePayload>) => {
+export const checkImmutability = async (context: Context,
+  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>) => {
   if( !props.parentId ) {
     return right(props.payload)
   }
 
-  if( props.payload ) {
-    for( const propertyName of Object.keys(props.payload) ) {
-      const result = await internalCheckImmutability(context, {
-        ...props,
-        propertyName,
-      })
+  for( const propertyName of Object.keys(props.payload) ) {
+    const result = await internalCheckImmutability(context, {
+      ...props,
+      propertyName,
+    })
 
-      if( isLeft(result) ) {
-        return result
-      }
+    if( isLeft(result) ) {
+      return result
     }
   }
 
   return internalCheckImmutability(context, props)
 }
+

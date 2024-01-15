@@ -1,4 +1,4 @@
-import type { Context, Collection, Either, GetAllPayload, InsertPayload } from '.'
+import type { Collection } from '.'
 
 export enum ACErrors {
   AuthorizationError = 'AUTHORIZATION_ERROR',
@@ -10,30 +10,8 @@ export enum ACErrors {
   ResourceNotFound = 'RESOURCE_NOT_FOUND',
   AssetNotFound = 'ASSET_NOT_FOUND',
   FunctionNotFound = 'FUNCTION_NOT_FOUND',
+  InvalidLimit = 'INVALID_LIMIT',
 }
-
-export type AccessControlLayerReadPayload = {
-  filters: Record<string, any>
-  sort?: Record<string, any>
-  limit?: number
-  offset?: number
-}
-
-export type AccessControlLayerWritePayload = {
-  what: Record<string, any>
-}
-
-export type AccessControlLayerProps<TPayload extends Record<string, any> = any> = {
-  propertyName?: string
-  parentId?: string
-  childId?: string
-  payload: TPayload
-}
-
-export type AccessControlLayer<TAccessControl extends AccessControl<any, TAccessControl> = any> = (context: Context, props: AccessControlLayerProps)=> Promise<Either<
-ACErrors,
-  GetAllPayload<any> | InsertPayload<any>
->>
 
 export type Role<
   TCollection extends Collection = any,
@@ -68,3 +46,4 @@ export type ACProfile = {
   readonly roles?: string[]
   readonly allowed_functions?: string[]
 }
+

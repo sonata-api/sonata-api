@@ -1,7 +1,7 @@
 import type { Context, UploadPayload } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
 import { unsafe } from '@sonata-api/common'
-import { checkImmutability } from '@sonata-api/access-control'
+import { checkImmutability } from '@sonata-api/security'
 
 export const upload = async <TContext extends Context>(
   payload: UploadPayload,

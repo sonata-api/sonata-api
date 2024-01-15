@@ -1,7 +1,8 @@
 import type { Context, SchemaWithId, GetAllPayload } from '@sonata-api/types'
 import type { Document } from 'mongodb'
-import { useAccessControl } from '@sonata-api/access-control'
+import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
+import { DEFAULT_PAGINATION_LIMIT } from '../constants'
 import {
   traverseDocument,
   normalizeProjection,
@@ -11,7 +12,7 @@ import {
 } from '../collection'
 
 export type GetAllOptions = {
-  bypassAccessControl?: boolean
+  bypassSecurity?: boolean
 }
 
 export const getAll = async <
@@ -22,17 +23,17 @@ export const getAll = async <
   context: TContext,
   options?: GetAllOptions,
 ) => {
-  const accessControl = useAccessControl(context)
+  const security = useSecurity(context)
   const payload = _payload || {}
 
   const {
     filters = {},
-    limit = 0,
+    limit = DEFAULT_PAGINATION_LIMIT,
     sort,
     project = [],
     offset = 0,
-  } = !options?.bypassAccessControl
-    ? unsafe(await accessControl.beforeRead(payload))
+  } = !options?.bypassSecurity
+    ? unsafe(await security.beforeRead(payload))
     : payload
 
   const { $text, ...filtersRest } = filters
