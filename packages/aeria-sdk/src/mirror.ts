@@ -40,8 +40,8 @@ declare module 'aeria-sdk' {
   type Endpoints = {
     [Route in keyof MirrorRouter]: {
       [Method in keyof MirrorRouter[Route]]: Method extends RequestMethod
-        ? MirrorRouter[Route][Method] extends infer RouteContract
-          ? RouteContract extends
+        ? MirrorRouter[Route][Method] extends infer Contract
+          ? Contract extends
             | { response: infer RouteResponse }
             | { payload: infer RoutePayload  }
             | { query: infer RoutePayload  }

@@ -12,7 +12,7 @@ import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import { safeJson } from './payload'
-import { type RouteContract } from './contract'
+import { type Contract } from './contract'
 
 export type RouteUri = `/${string}`
 
@@ -21,13 +21,13 @@ export type RouterOptions = {
   base?: RouteUri
 }
 
+export type Middleware = (context: Context)=> any
+
 export type RouteGroupOptions = {
   base?: RouteUri
-  middleware?: (context: Context)=> any
-  contract?: RouteContract
 }
 
-type TypedContext<TContract extends RouteContract> = Omit<Context, 'request'> & {
+type TypedContext<TContract extends Contract> = Omit<Context, 'request'> & {
   request: Omit<Context['request'], 'payload' | 'query'> & {
     payload: TContract extends { payload: infer Payload }
       ? InferProperty<Payload>
@@ -44,7 +44,7 @@ RequestMethod,
   TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
     ? InferResponse<Response>
     : any,
-  const TContract extends RouteContract,
+  const TContract extends Contract,
 >(
   exp: RouteUri,
   cb: TCallback,
@@ -86,7 +86,7 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
   method: RequestMethod | RequestMethod[],
   exp: RouteUri,
   cb: TCallback,
-  contract?: RouteContract,
+  contract?: Contract,
   options: RouterOptions = {},
 ) => {
   const match = matches(context.request, method, exp, options)
@@ -182,13 +182,13 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
   options.base ??= DEFAULT_BASE_URI
 
   const routes: ((_: unknown, context: Context, groupOptions?: RouteGroupOptions)=> ReturnType<typeof registerRoute>)[] = []
-  const routesMeta = {} as Record<RouteUri, Partial<Record<RequestMethod, RouteContract | null> | undefined>>
+  const routesMeta = {} as Record<RouteUri, Partial<Record<RequestMethod, Contract | null> | undefined>>
 
   const route = <
     TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
       ? InferResponse<Response>
       : TContract,
-    const TContract extends RouteContract,
+    const TContract extends Contract,
   >(
     method: RequestMethod | RequestMethod[],
     exp: RouteUri,
@@ -217,7 +217,7 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
       install: (context: Context, options?: RouterOptions)=> any
       routesMeta: typeof routesMeta
     },
-  >(exp: RouteUri, router: TRouter, routeOptions?: RouteGroupOptions) => {
+  >(exp: RouteUri, router: TRouter, middleware?: Middleware) => {
     const newOptions = Object.assign({}, options)
 
     for( const route in router.routesMeta ) {
@@ -232,8 +232,8 @@ export const createRouter = (options: Partial<RouterOptions> = {}) => {
       const match = matches(context.request, null, new RegExp(`^${newOptions.base}/`), newOptions)
 
       if( match ) {
-        if( routeOptions?.middleware ) {
-          const result = await routeOptions.middleware(context)
+        if( middleware ) {
+          const result = await middleware(context)
           if( result ) {
             return result
           }

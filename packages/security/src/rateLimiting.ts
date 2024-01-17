@@ -44,9 +44,10 @@ export const limitRate = async <TDescription extends Description>(
 
   const usage = user.resources_usage?.get(context.functionPath)
   if( !usage ) {
-    const entry = await context.collections.resourceUsage.model.insertOne(<any>{
+    const entry = await context.collections.resourceUsage.model.insertOne({
       hits: increment,
     })
+
     await context.collections.user.model.updateOne({
       _id: user._id,
     },
