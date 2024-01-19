@@ -28,5 +28,9 @@
         "../validation/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "@types/*.d.ts",
+    "src"
+  ]
 }

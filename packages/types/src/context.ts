@@ -7,36 +7,38 @@ import type {
   FunctionPath,
   DecodedToken,
   ApiConfig,
+  CollectionDocument,
   CollectionFunctions,
 } from '.'
 
 export type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
 
-type OmitContextParameter<TFunctions> = {
-  [P in keyof TFunctions]: TFunctions[P] extends infer Fn
-    ? Fn extends (...args: any[])=> any
-      ? Parameters<Fn> extends [infer Payload, Context, ...infer ExtraParameters]
-        ? (payload: Payload, ...args: ExtraParameters)=> ReturnType<Fn>
-        : Fn
+type OmitContextParameter<TFunction> = TFunction extends (payload: infer Payload, context: Context, ...args: infer Rest) => infer Return
+  ? (payload: Payload, ...args: Rest) => Return
+  : never
+    
+type UnionFunctions<TFunctions, TSchema extends CollectionDocument<any>> = {
+  [P in keyof TFunctions]: P extends keyof CollectionFunctions<any>
+    ? CollectionFunctions<TSchema>[P] extends infer CollFunction
+      ? CollFunction extends (...args: any[]) => any
+        ? (payload: Parameters<CollFunction>[0], ...args: TFunctions[P] extends (payload: any, context: Context, ...args: infer Rest) => any ? Rest : never) => ReturnType<CollFunction>
+        : never
       : never
-    : never
+    : OmitContextParameter<TFunctions[P]>
 }
 
 export type IndepthCollection<TCollection> = TCollection extends {
   description: infer InferredDescription
   functions: infer CollFunctions
-
 }
-  ? CollectionFunctions<SchemaWithId<InferredDescription>> extends infer Functions
-    ? Omit<TCollection, 'functions'> & {
-      functions: Omit<OmitContextParameter<CollFunctions>, keyof Functions> & Pick<Functions, Extract<keyof CollFunctions, keyof Functions>>
-      originalFunctions: CollFunctions
-      model: InferredDescription extends Description
-        ? CollectionModel<InferredDescription>
-        : never
-    }
-    : never
+  ? Omit<TCollection, 'functions'> & {
+    functions: UnionFunctions<CollFunctions, SchemaWithId<InferredDescription>>
+    originalFunctions: CollFunctions
+    model: InferredDescription extends Description
+      ? CollectionModel<InferredDescription>
+      : never
+  }
   : TCollection
 
 export type IndepthCollections = {

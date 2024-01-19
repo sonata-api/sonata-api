@@ -3,22 +3,24 @@ import { useSecurity } from '@sonata-api/security'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
 
+export type InsertOptions = {
+  bypassSecurity?: boolean
+}
+
 export const insert = async <
   TContext extends Context,
   TDocument = SchemaWithId<TContext['description']>,
 >(
   payload: InsertPayload<SchemaWithId<TContext['description']>>,
   context: TContext,
+  options?: InsertOptions,
 ) => {
   const security = useSecurity(context)
 
-  const queryEither = await security.beforeWrite(payload)
-  if( isLeft(queryEither) ) {
-    const error = unsafe(queryEither)
-    throw new Error(error)
-  }
+  const query = options?.bypassSecurity
+    ? unsafe(await security.beforeWrite(payload))
+    : payload
 
-  const query = unsafe(queryEither)
   const whatEither = await traverseDocument(query.what, context.description, {
     autoCast: true,
     validate: true,

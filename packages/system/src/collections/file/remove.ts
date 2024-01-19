@@ -10,9 +10,10 @@ type Props = {
 }
 
 const remove = async (props: Props, context: Context<typeof description>) => {
-  const file = await context.collection.functions.get({
-    filters: props.filters,
-    project: ['absolute_path'],
+  const file = await context.collection.model.findOne(props.filters, {
+    projection: [
+      'absolute_path'
+    ]
   })
 
   if( !file ) {

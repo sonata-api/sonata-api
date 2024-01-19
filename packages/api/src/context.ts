@@ -18,7 +18,7 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
     ? candidate()
     : candidate
 
-  const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<Collection>['functions']>>({}, {
+  const proxiedFunctions = new Proxy<NonNullable<IndepthCollection<any>['functions']>>({}, {
     get: (_: unknown, functionName: string) => {
       return async (props: any, ...args: any[]) => {
         if( !collection.functions ) {
