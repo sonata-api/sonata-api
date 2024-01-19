@@ -4,8 +4,10 @@ import type { SecurityCheckProps, SecurityCheckReadPayload, SecurityCheckWritePa
 import { ACErrors, ObjectId } from '@sonata-api/types'
 import { left, right, isLeft } from '@sonata-api/common'
 
-const internalCheckImmutability = async (context: Context,
-  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>) => {
+const internalCheckImmutability = async (
+  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>,
+  context: Context
+) => {
   const {
     propertyName = '',
     parentId,
@@ -58,23 +60,25 @@ const internalCheckImmutability = async (context: Context,
   return right(props.payload)
 }
 
-export const checkImmutability = async (context: Context,
-  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>) => {
+export const checkImmutability = async (
+  props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>,
+  context: Context
+) => {
   if( !props.parentId ) {
     return right(props.payload)
   }
 
   for( const propertyName of Object.keys(props.payload) ) {
-    const result = await internalCheckImmutability(context, {
+    const result = await internalCheckImmutability({
       ...props,
       propertyName,
-    })
+    }, context)
 
     if( isLeft(result) ) {
       return result
     }
   }
 
-  return internalCheckImmutability(context, props)
+  return internalCheckImmutability(props, context)
 }
 

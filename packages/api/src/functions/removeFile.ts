@@ -11,12 +11,12 @@ export const removeFile = async <TContext extends Context>(
     ...props
   } = payload
 
-  await checkImmutability(context, {
+  await checkImmutability({
     propertyName,
     parentId,
     childId: props.filters._id,
     payload: props,
-  })
+  }, context)
 
   return context.collections.file.functions!.remove(props)
 }

@@ -18,7 +18,7 @@ export type PropertyFormat =
   | 'date-time'
 
 export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
-PropertiesWithId<TDescription>,
+  PropertiesWithId<TDescription>,
   Condition<TDescription> | boolean
 >>
 

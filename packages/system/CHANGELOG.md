@@ -1,5 +1,16 @@
 # @sonata-api/system
 
+## 1.0.17
+
+### Patch Changes
+
+- Update
+- Updated dependencies
+  - @sonata-api/types@0.1.27
+  - @sonata-api/api@1.0.30
+  - @sonata-api/common@0.1.16
+  - @sonata-api/validation@1.0.11
+
 ## 1.0.16
 
 ### Patch Changes

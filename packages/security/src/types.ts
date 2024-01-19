@@ -18,7 +18,7 @@ export type SecurityCheckProps<TPayload extends Record<string, any> = any> = {
   payload: TPayload
 }
 
-export type SecurityCheck = (context: Context, props: SecurityCheckProps)=> Promise<Either<
-ACErrors,
+export type SecurityCheck = (props: SecurityCheckProps, context: Context)=> Promise<Either<
+  ACErrors,
   GetAllPayload<any> | InsertPayload<any>
 >>

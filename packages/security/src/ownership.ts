@@ -3,7 +3,7 @@ import type { SecurityCheckProps, SecurityCheckReadPayload } from './types'
 import { ACErrors } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
 
-export const checkOwnershipRead = async (context: Context, props: SecurityCheckProps<SecurityCheckReadPayload>) => {
+export const checkOwnershipRead = async (props: SecurityCheckProps<SecurityCheckReadPayload>, context: Context) => {
   const { token, description } = context
   const payload = Object.assign({}, props.payload)
 
@@ -16,7 +16,7 @@ export const checkOwnershipRead = async (context: Context, props: SecurityCheckP
   return right(payload)
 }
 
-export const checkOwnershipWrite = async (context: Context, props: SecurityCheckProps<InsertPayload<any>>) => {
+export const checkOwnershipWrite = async (props: SecurityCheckProps<InsertPayload<any>>, context: Context) => {
   const { token, description } = context
   const { parentId } = props
 

@@ -39,17 +39,17 @@ type TypedContext<TContract extends Contract> = Omit<Context, 'request'> & {
 }
 
 export type ProxiedRouter<TRouter> = TRouter & Record<
-RequestMethod,
-<
-  TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
-    ? InferResponse<Response>
-    : any,
-  const TContract extends Contract,
->(
-  exp: RouteUri,
-  cb: TCallback,
-  contract?: TContract
-)=> ReturnType<typeof registerRoute>
+  RequestMethod,
+  <
+    TCallback extends (context: TypedContext<TContract>)=> TContract extends { response: infer Response }
+      ? InferResponse<Response>
+      : any,
+    const TContract extends Contract,
+  >(
+    exp: RouteUri,
+    cb: TCallback,
+    contract?: TContract
+  )=> ReturnType<typeof registerRoute>
 >
 
 export const matches = <TRequest extends GenericRequest>(

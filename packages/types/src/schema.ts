@@ -49,11 +49,11 @@ export type InferSchema<TSchema> = MergeReferences<TSchema> extends infer Mapped
   : never
 
 export type Schema<TSchema> = CaseTimestamped<
-TSchema,
-CaseOwned<
-TSchema,
-InferSchema<TSchema>
->>
+  TSchema,
+  CaseOwned<
+    TSchema,
+    InferSchema<TSchema>
+  >>
 
 export type SchemaWithId<TSchema> = Schema<TSchema> & {
   _id: ObjectId

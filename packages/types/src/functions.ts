@@ -24,8 +24,8 @@ export type Projection<TDocument extends Record<string, any>> =
 export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1|-1>
 
 export type CollectionDocument<TDocument> = Pick<
-TDocument,
-Extract<keyof TDocument, string>
+  TDocument,
+  Extract<keyof TDocument, string>
 >
 
 export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {

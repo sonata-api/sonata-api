@@ -20,10 +20,10 @@ const chainFunctions = async <
   TFunction extends SecurityCheck,
   TProps extends SecurityCheckProps<TPayload>,
 >(
+  _props: TProps,
   context: TContext extends Context<any>
     ? TContext
     : never,
-  _props: TProps,
   functions: TFunction[],
 ) => {
   const props = Object.assign({
@@ -31,7 +31,7 @@ const chainFunctions = async <
   }, _props)
 
   for( const fn of functions ) {
-    const resultEither = await fn(context, props)
+    const resultEither = await fn(props, context)
     if( isLeft(resultEither) ) {
       return resultEither
     }
@@ -61,12 +61,10 @@ export const useSecurity = <TDescription extends Description>(context: Context<T
       payload: newPayload,
     }
 
-    return chainFunctions(context,
-      props,
-      [
-        checkPagination,
-        checkOwnershipRead,
-      ])
+    return chainFunctions(props, context, [
+      checkPagination,
+      checkOwnershipRead,
+    ])
   }
 
   const beforeWrite = async <TPayload extends Partial<InsertPayload<any>>>(payload?: TPayload) => {
@@ -77,11 +75,10 @@ export const useSecurity = <TDescription extends Description>(context: Context<T
       payload: newPayload,
     }
 
-    return chainFunctions(context,
-      props, [
-        checkOwnershipWrite,
-        checkImmutability,
-      ])
+    return chainFunctions(props, context, [
+      checkOwnershipWrite,
+      checkImmutability,
+    ])
   }
 
   return {

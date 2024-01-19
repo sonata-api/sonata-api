@@ -17,7 +17,7 @@ export const insert = async <
 ) => {
   const security = useSecurity(context)
 
-  const query = options?.bypassSecurity
+  const query = !options?.bypassSecurity
     ? unsafe(await security.beforeWrite(payload))
     : payload
 

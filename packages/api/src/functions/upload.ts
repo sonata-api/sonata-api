@@ -13,12 +13,12 @@ export const upload = async <TContext extends Context>(
     ...props
   } = payload
 
-  await checkImmutability(context, {
+  await checkImmutability({
     propertyName,
     parentId,
     childId: props.what._id,
     payload: props,
-  })
+  }, context)
 
   const file: any = unsafe(await context.collections.file.functions!.insert(payload))
 
