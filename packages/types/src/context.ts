@@ -14,15 +14,21 @@ import type {
 export type CollectionModel<TDescription extends Description> =
   MongoCollection<Omit<PackReferences<SchemaWithId<TDescription>>, '_id'>>
 
-type OmitContextParameter<TFunction> = TFunction extends (payload: infer Payload, context: Context, ...args: infer Rest) => infer Return
-  ? (payload: Payload, ...args: Rest) => Return
+type OmitContextParameter<TFunction> = TFunction extends (payload: infer Payload, context: Context, ...args: infer Rest)=> infer Return
+  ? (payload: Payload, ...args: Rest)=> Return
+  : never
+
+type RestParameters<TFunction> = TFunction extends (payload: any, context: Context, ...args: infer Rest)=> any
+  ? Rest
   : never
     
 type UnionFunctions<TFunctions, TSchema extends CollectionDocument<any>> = {
   [P in keyof TFunctions]: P extends keyof CollectionFunctions<any>
     ? CollectionFunctions<TSchema>[P] extends infer CollFunction
-      ? CollFunction extends (...args: any[]) => any
-        ? (payload: Parameters<CollFunction>[0], ...args: TFunctions[P] extends (payload: any, context: Context, ...args: infer Rest) => any ? Rest : never) => ReturnType<CollFunction>
+      ? CollFunction extends (...args: any[])=> any
+        ? Parameters<CollFunction>[0] extends undefined
+          ? (payload: Parameters<CollFunction>[0], ...args: RestParameters<TFunctions[P]>)=> ReturnType<CollFunction>
+          : (payload?: Parameters<CollFunction>[0], ...args: RestParameters<TFunctions[P]>)=> ReturnType<CollFunction>
         : never
       : never
     : OmitContextParameter<TFunctions[P]>
