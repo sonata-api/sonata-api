@@ -22,7 +22,6 @@ export const defineCollection = <
     item: SchemaWithId<TDescription>
     description: TDescription
     functions: TFunctions
-    c: SchemaWithId<TDescription>
   }
 }
 
