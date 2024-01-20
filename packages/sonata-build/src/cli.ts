@@ -8,7 +8,7 @@ const { values: opts } = parseArgs({
   options: {
     watch: {
       type: 'boolean',
-      short: 'w'
+      short: 'w',
     },
     mode: {
       type: 'string',

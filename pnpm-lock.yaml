@@ -263,6 +263,15 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@3.29.4)(tslib@2.6.2)(typescript@5.3.3)
+      '@sonata-api/common':
+        specifier: '*'
+        version: link:../common
+      '@sonata-api/system':
+        specifier: '*'
+        version: link:../system
+      '@sonata-api/types':
+        specifier: '*'
+        version: link:../types
       chokidar:
         specifier: ^3.5.3
         version: 3.5.3
