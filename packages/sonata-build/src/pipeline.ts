@@ -1,9 +1,8 @@
-import glob from 'glob'
 import path from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { log } from './log'
 
-import { build } from './modes'
+import { build } from './build'
 import { compile } from './compile'
 import { extractIcons, iconsContent, iconsDtsContent } from '@sonata-api/system'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
@@ -16,10 +15,7 @@ const phases = [
 ]
 
 async function compilationPhase() {
-  const fileList = glob.sync('**/*.ts', {
-    ignore: ['node_modules/**/*.ts'],
-  })
-  const result = await compile(fileList)
+  const result = await compile()
 
   if( !result.success ) {
     return left(`typescript compilation produced ${result.diagnostics.length} errors, please fix them`)

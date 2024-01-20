@@ -1,10 +1,15 @@
 import ts from 'typescript'
 import path from 'path'
+import glob from 'glob'
 import { readFile } from 'fs/promises'
 import { deepMerge } from '@sonata-api/common'
 import { log } from './log'
 
-export const compile = async (fileList: string[]) => {
+export const compile = async () => {
+  const fileList = glob.sync('**/*.ts', {
+    ignore: ['node_modules/**/*.ts'],
+  })
+
   const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) 
 
   if( tsConfig.extends ) {
