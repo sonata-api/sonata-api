@@ -31,7 +31,7 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description, Collections['user']['functions']>) => {
+const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description, Collections['user']['functions']>): Promise<Return> => {
   const leanUser = await context.collection.functions.get({
     filters: {
       _id: user._id,
@@ -82,7 +82,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
       type: 'bearer',
       content: token,
     },
-  } as Return
+  }
 }
 
 const authenticate = async (props: Props, context: Context<typeof description>) => {
@@ -107,12 +107,12 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
       },
     })
 
-    return right({
+    return right(<Return>{
       user: {
         _id: null,
         full_name: 'God Mode',
         email: '',
-        roles: ['root'] as string[],
+        roles: ['root'],
         active: true,
       },
       token: {
