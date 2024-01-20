@@ -131,7 +131,7 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
     active: 1,
   })
 
-  if( !user || !await bcryptCompare(props.password, user.password!) ) {
+  if( !user || !user.password || !await bcryptCompare(props.password, user.password) ) {
     return left(AuthenticationErrors.InvalidCredentials)
   }
 

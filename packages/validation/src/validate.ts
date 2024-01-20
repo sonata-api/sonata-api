@@ -35,11 +35,11 @@ const getPropertyType = (property: Property) => {
     return typeof property.enum[0]
   }
 
-  if( 'format' in property ) {
+  if( 'format' in property && property.format ) {
     if ([
       'date',
       'date-time',
-    ].includes(property.format!)) {
+    ].includes(property.format)) {
       return 'datetime'
     }
   }

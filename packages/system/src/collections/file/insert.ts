@@ -34,8 +34,8 @@ const insert = async (props: Props, context: Context<typeof description>) => {
     absolute_path: 1,
   })
 
-  if( oldFile ) {
-    await unlink(oldFile.absolute_path!).catch(console.trace)
+  if( oldFile && oldFile.absolute_path ) {
+    await unlink(oldFile.absolute_path).catch(console.trace)
   }
 
   const filenameHash = createHash('sha1')

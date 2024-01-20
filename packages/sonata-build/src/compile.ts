@@ -36,9 +36,9 @@ export const compile = async (fileList: string[]) => {
 
   if( diagnostics.length ) {
     diagnostics.forEach((diagnostic) => {
-      if( diagnostic.file ) {
+      if( diagnostic.file && diagnostic.start ) {
         const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file,
-          diagnostic.start!)
+          diagnostic.start)
 
         const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
         log('error', `${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)
