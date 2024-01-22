@@ -26,7 +26,7 @@ export const [Log, description] = defineDescriptionTuple({
       format: 'date-time',
     },
   },
-  icon: 'search-alt',
+  icon: 'magnifying-glass',
   presets: ['view'],
   filters: [
     'context',

@@ -4,7 +4,7 @@ export const remove = <const>{
   individualActions: {
     remove: {
       name: 'action.remove',
-      icon: 'trash-alt',
+      icon: 'trash',
       ask: true,
       translate: true,
     },

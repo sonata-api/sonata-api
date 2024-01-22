@@ -12,12 +12,12 @@ export const crud = <const>{
   individualActions: {
     'ui:spawnEdit': {
       name: 'action.edit',
-      icon: 'edit',
+      icon: 'pencil-simple',
       translate: true,
     },
     'remove': {
       name: 'action.remove',
-      icon: 'trash-alt',
+      icon: 'trash',
       ask: true,
       translate: true,
     },

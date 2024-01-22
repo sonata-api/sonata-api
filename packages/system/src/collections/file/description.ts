@@ -69,7 +69,7 @@ export const [File, description] = defineDescriptionTuple({
   individualActions: {
     remove: {
       name: 'Remover',
-      icon: 'trash-alt',
+      icon: 'trash',
       ask: true,
     },
   },

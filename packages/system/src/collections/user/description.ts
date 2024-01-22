@@ -105,15 +105,15 @@ export const [User, description] = defineDescriptionTuple({
   individualActions: {
     'ui:spawnEdit': {
       name: 'Editar',
-      icon: 'edit',
+      icon: 'pencil',
     },
     'route:/dashboard/user/changepass': {
       name: 'Mudar senha',
-      icon: 'key-skeleton',
+      icon: 'key',
       fetchItem: true,
     },
   },
-  icon: 'users-alt',
+  icon: 'users',
   filters: [
     'full_name',
     'roles',
