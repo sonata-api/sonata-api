@@ -134,12 +134,6 @@ importers:
         specifier: '*'
         version: link:../validation
 
-  packages/icons-meta:
-    devDependencies:
-      '@phosphor-icons/core':
-        specifier: ^2.0.4
-        version: 2.0.4
-
   packages/mailing:
     dependencies:
       '@sonata-api/common':
@@ -1468,10 +1462,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.16.0
-    dev: true
-
-  /@phosphor-icons/core@2.0.4:
-    resolution: {integrity: sha512-VLSxdZvcplDn2afkxiDMrHbTFNudFwzxrplPqyU5a6uerqCHRl18kZ2yGFu7fI9ET+d1+kbYkdS02D24rMA6tA==}
     dev: true
 
   /@phosphor-icons/core@2.0.6:
