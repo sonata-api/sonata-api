@@ -14,7 +14,9 @@ export const defineCollection = <
   },
 >(
   collection: TCollection & {
-    description: TDescription
+    description: TDescription & {
+      properties: Description['properties']
+    }
     functions?: TFunctions
   },
 ) => {

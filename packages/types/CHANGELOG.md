@@ -1,5 +1,19 @@
 # @sonata-api/types
 
+## 0.1.29
+
+### Patch Changes
+
+- Fix package.json
+
+## 0.1.28
+
+### Patch Changes
+
+- Strongly typed icons
+- Updated dependencies
+  - @sonata-api/types@0.1.28
+
 ## 0.1.27
 
 ### Patch Changes

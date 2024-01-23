@@ -119,7 +119,7 @@ export type LiteralProperty = {
 }
 
 export type GetterProperty = {
-  getter: (getter: any)=> any
+  getter: (document: any)=> any
 }
 
 export type MixedProperty =
@@ -153,3 +153,4 @@ export type PropertyBase = {
 }
 
 export type Property = MixedProperty & PropertyBase
+
