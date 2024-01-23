@@ -1,3 +1,4 @@
+import type { PhosphorIcon } from '@phosphor-icons/core'
 import type { Description, Condition, PropertiesWithId } from '.'
 
 export type PropertyArrayElement =
@@ -138,7 +139,7 @@ export type PropertyBase = {
   readOnly?: boolean
   focus?: boolean
 
-  icon?: string
+  icon?: PhosphorIcon['name']
   translate?: boolean
   hint?: string
   componentProps?: Record<string, any>

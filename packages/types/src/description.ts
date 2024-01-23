@@ -1,3 +1,4 @@
+import type { PhosphorIcon } from '@phosphor-icons/core'
 import type { JsonSchema } from './property'
 import type { Condition } from './condition'
 
@@ -15,7 +16,7 @@ export type CollectionPresets =
 
 export type CollectionAction<TDescription extends Description> = Readonly<{
   name: string
-  icon?: string
+  icon?: PhosphorIcon['name']
   ask?: boolean
   selection?: boolean
   effect?: string
@@ -58,7 +59,7 @@ export type TableLayout<TDescription extends Description> = {
 
 export type FiltersPreset<TDescription extends Description> = {
   name?: string
-  icon?: string
+  icon?: PhosphorIcon['name']
   filters: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
   table?: readonly PropertiesWithId<TDescription>[]
   badgeFunction?: string
@@ -106,7 +107,7 @@ export type Description<TDescription extends Description = any> = JsonSchema<TDe
 
   preferred?: Record<string, Partial<TDescription | Description>>
 
-  icon?: string
+  icon?: PhosphorIcon['name']
   options?: CollectionOptions<TDescription>
 
   indexes?: ReadonlyArray<string>

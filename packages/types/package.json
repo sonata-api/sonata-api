@@ -24,6 +24,13 @@
     "dist"
   ],
   "devDependencies": {
+    "@phosphor-icons/core": "^2.0.6",
     "mongodb": "^6.1.0"
+  },
+  "peerDependencies": {
+    "@phosphor-icons/core": "^2.0.6"
+  },
+  "dependencies": {
+    "@sonata-api/types": "link:"
   }
 }

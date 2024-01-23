@@ -134,6 +134,12 @@ importers:
         specifier: '*'
         version: link:../validation
 
+  packages/icons-meta:
+    devDependencies:
+      '@phosphor-icons/core':
+        specifier: ^2.0.4
+        version: 2.0.4
+
   packages/mailing:
     dependencies:
       '@sonata-api/common':
@@ -317,7 +323,14 @@ importers:
         version: 6.3.0
 
   packages/types:
+    dependencies:
+      '@sonata-api/types':
+        specifier: 'link:'
+        version: 'link:'
     devDependencies:
+      '@phosphor-icons/core':
+        specifier: ^2.0.6
+        version: 2.0.6
       mongodb:
         specifier: ^6.1.0
         version: 6.3.0
@@ -1455,6 +1468,14 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.16.0
+    dev: true
+
+  /@phosphor-icons/core@2.0.4:
+    resolution: {integrity: sha512-VLSxdZvcplDn2afkxiDMrHbTFNudFwzxrplPqyU5a6uerqCHRl18kZ2yGFu7fI9ET+d1+kbYkdS02D24rMA6tA==}
+    dev: true
+
+  /@phosphor-icons/core@2.0.6:
+    resolution: {integrity: sha512-iV0VHw6KCBcz5W++8VW9Bbb6ioxb3mPwMuV5ljHtrOh/fgEJlpbFXXaTS6OPHl6UszzbdK2MhckUvc25UOIq0w==}
     dev: true
 
   /@rollup/plugin-commonjs@25.0.7(rollup@3.29.4):
