@@ -5,6 +5,7 @@ import type {
   RequestMethod,
   InferProperty,
   InferResponse,
+  PackReferences,
 } from '@sonata-api/types'
 
 import { REQUEST_METHODS } from '@sonata-api/types'
@@ -30,7 +31,7 @@ export type RouteGroupOptions = {
 type TypedContext<TContract extends Contract> = Omit<Context, 'request'> & {
   request: Omit<Context['request'], 'payload' | 'query'> & {
     payload: TContract extends { payload: infer Payload }
-      ? InferProperty<Payload>
+      ? PackReferences<InferProperty<Payload>>
       : never
     query: TContract extends { query: infer Query }
       ? InferProperty<Query>
@@ -115,7 +116,9 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
       if( 'payload' in contract && contract.payload ) {
         const validationEither = validate(context.request.payload, contract.payload)
         if( isLeft(validationEither) ) {
-          context.response.writeHead(422)
+          context.response.writeHead(422, {
+            'content-type': 'application/json'
+          })
           return validationEither
         }
       }
@@ -123,7 +126,9 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
       if( 'query' in contract && contract.query ) {
         const validationEither = validate(context.request.query, contract.query)
         if( isLeft(validationEither) ) {
-          context.response.writeHead(422)
+          context.response.writeHead(422, {
+            'content-type': 'application/json'
+          })
           return validationEither
         }
       }

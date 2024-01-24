@@ -232,7 +232,10 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
     if( property ) {
       if( options.recurseReferences ) {
-        const propCast = property
+        const propCast = 'items' in property
+          ? property.items
+          : property
+
         if( '$ref' in propCast && value && !(value instanceof ObjectId) ) {
           const targetDescription = await preloadDescription(unsafe(await getCollectionAsset(propCast.$ref, 'description')))
 

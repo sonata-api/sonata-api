@@ -7,5 +7,6 @@ export const checkForUndefined = (property: Property, propertyName: string, what
 
   return what[propertyName] === null
     || what[propertyName] === undefined
+    || what[propertyName] === ''
 }
 

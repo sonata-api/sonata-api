@@ -8,6 +8,7 @@ import type {
   ValidationError,
 } from '@sonata-api/types'
 
+import { ObjectId } from '@sonata-api/types'
 import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
 import { ValidationErrorCodes } from '@sonata-api/types'
 
@@ -112,6 +113,12 @@ export const validateProperty = (propName: string,
 
     if( expectedType === 'boolean' && !what ) {
       return
+    }
+
+    if( '$ref' in property && actualType === 'string' ) {
+      if( ObjectId.isValid(what) ) {
+        return
+      }
     }
 
     return makePropertyError('unmatching', {
