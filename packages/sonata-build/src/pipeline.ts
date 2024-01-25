@@ -1,9 +1,9 @@
 import path from 'path'
 import { writeFile, mkdir } from 'fs/promises'
 import { log } from './log'
-
-import { build } from './build'
+import { bundle } from './bundle'
 import { compile } from './compile'
+import { migrate } from './migrate'
 import { extractIcons, iconsContent, iconsDtsContent } from '@sonata-api/system'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 
@@ -11,7 +11,8 @@ const DATA_PATH = '.sonata'
 
 const phases = [
   compilationPhase,
-  buildPhase,
+  migrate,
+  bundle,
 ]
 
 async function compilationPhase() {
@@ -42,23 +43,19 @@ async function compilationPhase() {
   await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 
-  return right('compilation went without errors')
+  return right('compilation succeeded')
 }
 
-async function buildPhase() {
-  await build()
-  return right('build went without errors')
-}
-
-export default function pipeline() {
+export const pipeline = () => {
   return phases.reduce(async (a: any, phase) => {
-    if( !a ) {
+    if( !await a ) {
       return
     }
 
     const resultEither = await phase()
     if( isLeft(resultEither) ) {
       log('error', unwrapEither(resultEither))
+      log('info', 'pipeline aborted')
       return
     }
 

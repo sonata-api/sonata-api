@@ -263,6 +263,9 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^11.0.0
         version: 11.1.6(rollup@3.29.4)(tslib@2.6.2)(typescript@5.3.3)
+      '@sonata-api/api':
+        specifier: '*'
+        version: link:../api
       '@sonata-api/common':
         specifier: '*'
         version: link:../common

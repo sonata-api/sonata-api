@@ -1,4 +1,4 @@
-import type { ObjectId, Context, Description, SecurityPolicy, AccessControl } from '.'
+import type { ObjectId, Context, Description, SecurityPolicy, AccessControl, PackReferences } from '.'
 
 export type Collection<TCollection extends Collection = any> = {
   description: Description
@@ -19,7 +19,7 @@ export type UserACProfile = {
 export type DecodedToken =
   | {
     authenticated: true
-    user: Collections['user']['item'] & {
+    user: PackReferences<Collections['user']['item']> & {
       _id: ObjectId
       roles: string[]
     }

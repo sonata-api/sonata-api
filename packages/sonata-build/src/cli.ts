@@ -1,8 +1,9 @@
 import { parseArgs } from 'node:util'
-import { build } from './build'
+import { bundle } from './bundle'
 import { compile } from './compile'
 import { watch } from './watch'
-import pipeline from './pipeline'
+import { migrate } from './migrate'
+import { pipeline } from './pipeline'
 
 const { values: opts } = parseArgs({
   options: {
@@ -14,27 +15,37 @@ const { values: opts } = parseArgs({
       type: 'string',
       short: 'm',
     },
+    migrate: {
+      type: 'boolean',
+      short: 'M',
+    },
   },
 })
 
-async function main() {
-  const mode = opts.mode
-    ? opts.mode
-    : opts.watch
-      ? 'watch'
-      : 'pipeline'
+const mode = () => {
+  if( opts.watch ) {
+    return 'watch'
+  }
 
-  switch( mode ) {
+  if( opts.migrate ) {
+    return 'migrate'
+  }
+
+  return opts.mode || 'pipeline'
+}
+
+async function main() {
+  switch( mode() ) {
     case 'compile':
       return compile()
-    case 'build':
-      return build()
-
+    case 'bundle':
+      return bundle()
     case 'pipeline':
       return pipeline()
-
     case 'watch':
       return watch()
+    case 'migrate':
+      return migrate()
 
     default:
       throw new Error(`mode ${mode} not found`)
@@ -42,3 +53,4 @@ async function main() {
 }
 
 main()
+

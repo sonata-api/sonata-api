@@ -1,4 +1,5 @@
 import { rollup, type InputOptions, type OutputOptions } from 'rollup'
+import { right } from '@sonata-api/common'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'
@@ -24,9 +25,10 @@ const outputOptions: OutputOptions = {
   sourcemap: false,
 }
 
-export const build = async () => {
+export const bundle = async () => {
   const bundle = await rollup(inputOptions)
   await bundle.write(outputOptions)
 
   bundle.close()
+  return right('bundle succeeded')
 }

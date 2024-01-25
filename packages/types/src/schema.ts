@@ -1,7 +1,7 @@
 import type { ObjectId } from 'mongodb'
 
 type Owned = {
-  owner?: ObjectId
+  owner?: Collections['user']['item']
 }
 
 type Timestamped = {

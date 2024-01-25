@@ -68,6 +68,10 @@ const createAccount = async (props: Props, context: Context<typeof description>)
     _id: insertedId,
   })
 
+  if( !newUser ) {
+    throw new Error()
+  }
+
   const activationToken = await bcrypt.hash(insertedId.toString(), 10)
   const link = `${process.env.API_URL}/user/activate?u=${insertedId.toString()}&t=${activationToken}`
 

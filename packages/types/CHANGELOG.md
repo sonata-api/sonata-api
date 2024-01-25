@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.31
+
+### Patch Changes
+
+- Fix owner type
+
+## 0.1.30
+
+### Patch Changes
+
+- Fixes
+
 ## 0.1.29
 
 ### Patch Changes

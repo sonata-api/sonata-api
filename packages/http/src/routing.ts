@@ -117,7 +117,7 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
         const validationEither = validate(context.request.payload, contract.payload)
         if( isLeft(validationEither) ) {
           context.response.writeHead(422, {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
           })
           return validationEither
         }
@@ -127,7 +127,7 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
         const validationEither = validate(context.request.query, contract.query)
         if( isLeft(validationEither) ) {
           context.response.writeHead(422, {
-            'content-type': 'application/json'
+            'content-type': 'application/json',
           })
           return validationEither
         }

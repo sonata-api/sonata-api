@@ -21,11 +21,11 @@ export type ExistsCondition<TDescription extends Description> = {
 }
 
 export type OrCondition<TDescription extends Description> = {
-  or: Condition<TDescription>[]
+  or: readonly Condition<TDescription>[]
 }
 
 export type AndCondition<TDescription extends Description> = {
-  and: Condition<TDescription>[]
+  and: readonly Condition<TDescription>[]
 }
 
 export type NotCondition<TDescription extends Description> = {

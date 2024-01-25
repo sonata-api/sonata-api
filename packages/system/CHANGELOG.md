@@ -1,5 +1,18 @@
 # @sonata-api/system
 
+## 1.0.19
+
+### Patch Changes
+
+- Fixes
+- Updated dependencies
+  - @sonata-api/access-control@1.0.14
+  - @sonata-api/api@1.0.31
+  - @sonata-api/common@0.1.17
+  - @sonata-api/entrypoint@0.0.9
+  - @sonata-api/types@0.1.30
+  - @sonata-api/validation@1.0.12
+
 ## 1.0.18
 
 ### Patch Changes
