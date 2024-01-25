@@ -7,13 +7,13 @@ import path from 'path'
 export const migrate = async () => {
   const collections = require(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
     | Collection
-    | (() => Collection)
+    | (()=> Collection)
   >
 
   const session = await getDatabase()
 
   for( const collectionName in collections ) {
-    const candidate = collections[collectionName as keyof typeof collections]
+    const candidate = collections[collectionName ]
     const collection = typeof candidate === 'function'
       ? candidate()
       : candidate
@@ -33,7 +33,7 @@ export const migrate = async () => {
 
         await model.createIndex(searchIndexes.reduce((a, index) => ({
           ...a,
-          [index]: 'text'
+          [index]: 'text',
         }), {}))
 
         log('info', `new text index created for ${collectionName}`)
@@ -55,7 +55,7 @@ export const migrate = async () => {
 
         if( !hasIndex ) {
           await model.createIndex({
-            [index]: 1
+            [index]: 1,
           })
 
           newIndexes++

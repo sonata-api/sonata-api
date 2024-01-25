@@ -113,8 +113,7 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
     Object.assign(context.request, match)
 
     if( contract ) {
-      if( 'payload' in contract && contract.payload ) {
-        const validationEither = validate(context.request.payload, contract.payload)
+      const checkUnprocessable = (validationEither: ReturnType<typeof validate>) => {
         if( isLeft(validationEither) ) {
           context.response.writeHead(422, {
             'content-type': 'application/json',
@@ -123,13 +122,19 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
         }
       }
 
+      if( 'payload' in contract && contract.payload ) {
+        const validationEither = validate(context.request.payload, contract.payload)
+        const error = checkUnprocessable(validationEither)
+        if( error ) {
+          return error
+        }
+      }
+
       if( 'query' in contract && contract.query ) {
         const validationEither = validate(context.request.query, contract.query)
-        if( isLeft(validationEither) ) {
-          context.response.writeHead(422, {
-            'content-type': 'application/json',
-          })
-          return validationEither
+        const error = checkUnprocessable(validationEither)
+        if( error ) {
+          return error
         }
       }
     }
