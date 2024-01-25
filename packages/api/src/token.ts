@@ -6,7 +6,7 @@ const asyncVerify = promisify<string, Secret, any>(jwt.verify)
 
 export const EXPIRES_IN = 36000
 
-export const signToken = (_payload: Record<string, any>, secret?: string|null, options?: SignOptions) => {
+export const signToken = (_payload: Record<string, any>, secret?: string | null, options?: SignOptions) => {
   const { APPLICATION_SECRET } = process.env
   const payload = Object.assign({}, _payload)
 

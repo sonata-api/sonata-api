@@ -43,12 +43,7 @@ const indepthCollection = (collectionName: string, collections: Record<string, C
   }
 }
 
-export const internalCreateContext = async (options: Pick<ContextOptions<any>,
-    | 'collectionName'
-    | 'apiConfig'
-    | 'token'
->,
-parentContext: Context) => {
+export const internalCreateContext = async (options: ContextOptions<any>, parentContext: Context) => {
   const {
     collectionName,
     token = {} as DecodedToken,
@@ -67,7 +62,6 @@ parentContext: Context) => {
       context: collectionName,
       owner: token.authenticated
         ? token.user._id
-        // @ts-ignore
         : options.parentContext?.token.user._id,
       created_at: new Date,
     })
