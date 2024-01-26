@@ -1,3 +1,4 @@
+import type { ServerResponse } from 'http'
 import type { MapSchemaUnion } from './schema'
 
 export const REQUEST_METHODS = <const>[
@@ -24,13 +25,7 @@ export type GenericRequest = {
   fragments: string[]
 }
 
-export type GenericResponse = {
-  headersSent?: boolean
-  writableEnded?: boolean
-  setHeader: (header: string, value: string)=> void
-  writeHead: (status: number, headers?: Record<string, any>)=> void
-  end: (content?: any)=> void
-}
+export type GenericResponse = ServerResponse
 
 export type EndpointFunction<
   TRouteMethod extends RequestMethod,

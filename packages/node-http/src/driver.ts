@@ -49,7 +49,7 @@ export const abstractResponse = (response: http.ServerResponse): GenericResponse
 
       const endVal = value instanceof Buffer
         ? value
-        : String(value)
+        : String(value || '')
 
       return end.bind(response)(endVal)
     },

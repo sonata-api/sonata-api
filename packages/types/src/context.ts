@@ -62,7 +62,7 @@ export type Context<TDescription extends Description = any, TFunctions = any> = 
   description: TDescription
   collection: TDescription['$id'] extends keyof Collections
     ? IndepthCollection<{ description: TDescription, functions: TFunctions }>
-    : never
+    : TDescription
 
   collections: IndepthCollections
 

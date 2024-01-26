@@ -9,6 +9,7 @@ import type {
 } from '@sonata-api/types'
 
 import { REQUEST_METHODS } from '@sonata-api/types'
+import { Stream } from 'stream'
 import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
@@ -162,6 +163,11 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: ()=> any | Pr
       if( error.httpCode ) {
         res.writeHead(error.httpCode)
       }
+    }
+
+    if( result instanceof Stream ) {
+      result.pipe(res)
+      return
     }
 
     if( !res.writableEnded ) {
