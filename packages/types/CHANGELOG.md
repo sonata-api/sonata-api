@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.33
+
+### Patch Changes
+
+- Export Icon type
+
 ## 0.1.32
 
 ### Patch Changes
