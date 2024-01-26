@@ -31,10 +31,7 @@ export const migrate = async () => {
           await model.dropIndex(textIndex.name)
         }
 
-        await model.createIndex(searchIndexes.reduce((a, index) => ({
-          ...a,
-          [index]: 'text',
-        }), {}))
+        await model.createIndex(Object.fromEntries(searchIndexes.map((index) => [index, 'text'])))
 
         log('info', `new text index created for ${collectionName}`)
       }

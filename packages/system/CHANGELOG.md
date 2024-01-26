@@ -1,5 +1,11 @@
 # @sonata-api/system
 
+## 1.0.20
+
+### Patch Changes
+
+- User authentication type
+
 ## 1.0.19
 
 ### Patch Changes
