@@ -1,11 +1,11 @@
 import type { Context } from '@sonata-api/types'
 import { createRouter } from '@sonata-api/http'
+import { createContext } from '@sonata-api/api'
 import { systemFunctions } from '@sonata-api/system'
 import {
   safeHandle,
   regularVerb,
   customVerbs,
-  fileDownload,
 } from './handler'
 
 export const registerRoutes = () => {
@@ -21,7 +21,20 @@ export const registerRoutes = () => {
     'POST',
     'GET',
   ], '/describe', systemFunctions.describe)
-  router.GET('/file/(\\w+)(/(\\w+))*', defaultHandler(fileDownload))
+
+  router.GET('/file/(\\w+)((/(\\w+))*)', defaultHandler(async (parentContext) => {
+    const context = await createContext({
+      collectionName: 'file',
+      parentContext
+    })
+
+    const [fileId, options] = context.request.fragments
+    return context.collections.file.functions.download({
+      fileId,
+      options: options.split('/') as any[]
+    })
+  }))
+
   router.GET('/(\\w+)/id/(\\w+)', defaultHandler(regularVerb('get')))
   router.GET('/(\\w+)', defaultHandler(regularVerb('getAll')))
   router.POST('/(\\w+)', defaultHandler(regularVerb('insert')))

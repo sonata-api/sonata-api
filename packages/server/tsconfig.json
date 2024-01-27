@@ -31,5 +31,9 @@
         "../node-http/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "@types/*.d.ts",
+    "src"
+  ]
 }

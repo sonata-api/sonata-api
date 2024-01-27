@@ -2,7 +2,7 @@ import type { Context } from '@sonata-api/types'
 import type { functions } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/types'
-import { isLeft, unwrapEither, unsafe, pipe } from '@sonata-api/common'
+import { isLeft, unwrapEither, pipe } from '@sonata-api/common'
 import { appendPagination } from './appendPagination'
 
 const postPipe = pipe([appendPagination])
@@ -117,28 +117,3 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
   return postPipe(result, context)
 }
 
-export const fileDownload = async (parentContext: Context) => {
-  const context = await createContext({
-    collectionName: 'file',
-    parentContext,
-  })
-
-  const [hash, ...options] = context.request.fragments
-
-  const fileEither = await (unsafe(await getFunction('file', 'download')))(hash, context)
-  if( isLeft(fileEither) ) {
-    const error = unwrapEither(fileEither)
-    return error
-  }
-
-  const { filename, content, mime } = unwrapEither(fileEither) as any
-
-  context.response.writeHead(200, {
-    'content-type': mime,
-    'content-disposition': `${options.includes('download')
-      ? 'attachment; '
-      : ''}filename=${filename}`,
-  })
-
-  return content
-}
