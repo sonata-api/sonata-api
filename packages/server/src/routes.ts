@@ -25,13 +25,13 @@ export const registerRoutes = () => {
   router.GET('/file/(\\w+)((/(\\w+))*)', defaultHandler(async (parentContext) => {
     const context = await createContext({
       collectionName: 'file',
-      parentContext
+      parentContext,
     })
 
     const [fileId, options] = context.request.fragments
     return context.collections.file.functions.download({
       fileId,
-      options: options.split('/') as any[]
+      options: options.split('/') as any[],
     })
   }))
 

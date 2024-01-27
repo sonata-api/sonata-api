@@ -20,7 +20,7 @@ type Props = {
 const download = async (props: Props, context: Context<typeof description>) => {
   const {
     fileId,
-    options = []
+    options = [],
   } = props
 
   const file = await context.collection.model.findOne({
@@ -33,7 +33,7 @@ const download = async (props: Props, context: Context<typeof description>) => {
 
   if( !file || !file.absolute_path ) {
     context.response.writeHead(404, {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     })
     return left(FileReadError.DocumentNotFound)
   }
@@ -43,7 +43,7 @@ const download = async (props: Props, context: Context<typeof description>) => {
     stat = await fs.promises.stat(file.absolute_path)
   } catch( e ) {
     context.response.writeHead(404, {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     })
     return left(FileReadError.FileNotFound)
   }
@@ -53,7 +53,7 @@ const download = async (props: Props, context: Context<typeof description>) => {
     const parts = range.replace(/bytes=/, '').split('-')
     const start = parseInt(parts[0])
     const end = parts[1]
-      ? parseInt(parts[0])
+      ? parseInt(parts[1])
       : stat.size - 1
 
     const chunkSize = (end - start) + 1
@@ -70,7 +70,7 @@ const download = async (props: Props, context: Context<typeof description>) => {
 
     return fs.createReadStream(file.absolute_path, {
       start,
-      end
+      end,
     })
   }
 
