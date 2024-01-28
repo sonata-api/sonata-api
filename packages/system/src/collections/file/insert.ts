@@ -1,11 +1,11 @@
-import type { Context, WithId } from '@sonata-api/types'
+import type { Context, SchemaWithId } from '@sonata-api/types'
+import type { description } from './description'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
 import { insert as originalInsert } from '@sonata-api/api'
-import { type description, type File } from './description'
 
 type Props = {
-  what: { content: string } & Pick<WithId<File>,
+  what: { content: string } & Pick<SchemaWithId<typeof description>,
     | '_id'
     | 'filename'
     | 'owner'
@@ -13,7 +13,7 @@ type Props = {
   >
 }
 
-const insert = async (props: Props, context: Context<typeof description>) => {
+export const insert = async (props: Props, context: Context<typeof description>) => {
   if( !context.token.authenticated ) {
     throw new Error('')
   }
@@ -51,4 +51,3 @@ const insert = async (props: Props, context: Context<typeof description>) => {
   }, context)
 }
 
-export default insert

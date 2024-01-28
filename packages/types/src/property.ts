@@ -46,6 +46,7 @@ export type RefProperty = {
 export type FileProperty = Omit<RefProperty, '$ref'> & {
   $ref: 'file'
   accept?: ReadonlyArray<string>
+  extensions?: ReadonlyArray<string>
 }
 
 export type EnumProperty = {

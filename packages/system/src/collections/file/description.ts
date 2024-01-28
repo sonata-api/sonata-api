@@ -1,4 +1,4 @@
-import { defineDescriptionTuple } from '@sonata-api/api'
+import { defineDescription } from '@sonata-api/api'
 
 const link = (_id: string) => {
   return `${process.env.API_URL}/file/${_id}`
@@ -8,9 +8,7 @@ const timestamp = (lastModified: Date | undefined) => lastModified
   ? new Date(lastModified).getTime()
   : 'fresh'
 
-export type File = typeof File
-
-export const [File, description] = defineDescriptionTuple({
+export const description = defineDescription({
   $id: 'file',
   owned: 'always',
   presets: ['owned'],

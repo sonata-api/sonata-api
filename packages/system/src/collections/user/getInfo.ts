@@ -15,7 +15,7 @@ type Props = {
   token: string
 }
 
-const getInfo = async (props: Props, context: Context<typeof description>) => {
+export const getInfo = async (props: Props, context: Context<typeof description>) => {
   const {
     userId,
     token,
@@ -47,4 +47,3 @@ const getInfo = async (props: Props, context: Context<typeof description>) => {
   })
 }
 
-export default getInfo

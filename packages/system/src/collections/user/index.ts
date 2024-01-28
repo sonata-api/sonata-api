@@ -1,11 +1,10 @@
 import { defineCollection, get, getAll, remove, upload, removeFile } from '@sonata-api/api'
 import { description } from './description'
-
-import authenticate from './authenticate'
-import activate from './activate'
-import insert from './insert'
-import createAccount from './createAccount'
-import getInfo from './getInfo'
+import { authenticate } from './authenticate'
+import { activate } from './activate'
+import { insert } from './insert'
+import { createAccount } from './createAccount'
+import { getInfo } from './getInfo'
 
 export const user = defineCollection({
   description,

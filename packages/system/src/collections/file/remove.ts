@@ -9,19 +9,21 @@ type Props = {
   }
 }
 
-const remove = async (props: Props, context: Context<typeof description>) => {
+export const remove = async (props: Props, context: Context<typeof description>) => {
   const file = await context.collection.model.findOne(props.filters, {
-    projection: ['absolute_path'],
+    projection: {
+      absolute_path: 1
+    }
   })
 
   if( !file ) {
-    throw new Error('file not found')
+    throw new Error()
   }
 
   if( file.absolute_path ) {
     await unlink(file.absolute_path).catch(() => null)
   }
+
   return functions.remove(props, context)
 }
 
-export default remove

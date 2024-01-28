@@ -19,12 +19,15 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
     url,
     method: (request.method || '') as RequestMethod,
     headers: request.headers || {},
-    body: await getBody(request),
+    body: request.headers['x-stream-request']
+      ? undefined
+      : await getBody(request),
     query: url.includes('?')
       ? parseUrl(url, true).query
       : {},
     payload: {},
     fragments: [],
+    nodeRequest: request
   }
 
   return req

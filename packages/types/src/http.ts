@@ -1,4 +1,4 @@
-import type { ServerResponse } from 'http'
+import type { ServerResponse, IncomingMessage } from 'http'
 import type { MapSchemaUnion } from './schema'
 
 export const REQUEST_METHODS = <const>[
@@ -23,6 +23,7 @@ export type GenericRequest = {
   query: Record<string, any>
   payload: Record<string, any>
   fragments: string[]
+  nodeRequest: IncomingMessage
 }
 
 export type GenericResponse = ServerResponse

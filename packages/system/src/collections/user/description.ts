@@ -1,12 +1,6 @@
-import { defineDescriptionTuple } from '@sonata-api/api'
-import type { ResourceUsage } from '../resourceUsage/description'
+import { defineDescription } from '@sonata-api/api'
 
-export type User = Omit<typeof User, 'roles' | 'resources_usage'> & {
-  roles: string[]
-  resources_usage: Map<string, typeof ResourceUsage>
-}
-
-export const [User, description] = defineDescriptionTuple({
+export const description = defineDescription({
   $id: 'user',
   required: [
     'full_name',
@@ -139,3 +133,4 @@ export const [User, description] = defineDescriptionTuple({
     },
   },
 })
+

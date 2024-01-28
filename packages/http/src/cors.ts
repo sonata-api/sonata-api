@@ -1,10 +1,22 @@
 import type { GenericRequest, GenericResponse } from '@sonata-api/types'
 
 export const cors = (req: GenericRequest, res: GenericResponse) => {
-  const headers = <const>{
+  const allowedHeaders = [
+    'Accept',
+    'Accept-Version',
+    'Authorization',
+    'Content-Length',
+    'Content-MD5',
+    'Content-Type',
+    'Date',
+    'X-Api-Version',
+    'X-Stream-Request',
+  ]
+
+  const headers = {
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': '*',
-    'Access-Control-Allow-Headers': 'Accept,Accept-Version,Authorization,Content-Length,Content-MD5,Content-Type,Date,X-Api-Version',
+    'Access-Control-Allow-Headers': allowedHeaders.join(','),
     'Access-Control-Max-Age': '2592000',
   }
 

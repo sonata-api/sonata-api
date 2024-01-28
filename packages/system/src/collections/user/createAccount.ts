@@ -1,13 +1,13 @@
-import type { Context } from '@sonata-api/types'
+import type { Context, Schema } from '@sonata-api/types'
+import type { description } from './description'
 import { sendTransactionalEmail } from '@sonata-api/mailing'
 import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
-import { type description, type User } from './description'
 import bcrypt from 'bcrypt'
 
-type Props = Omit<User, 'roles'>
+type Props = Omit<Schema<typeof description>, 'roles'>
 
-const createAccount = async (props: Props, context: Context<typeof description>) => {
+export const createAccount = async (props: Props, context: Context<typeof description>) => {
   const user = Object.assign({}, props)
 
   if( !context.apiConfig.allowSignup ) {
@@ -60,7 +60,9 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   }
 
   if( !context.token.authenticated ) {
-    user.self_registered = true
+    Object.assign(user, {
+      self_registered: true
+    })
   }
 
   const { insertedId } = await context.collection.model.insertOne(user as any)
@@ -88,4 +90,3 @@ const createAccount = async (props: Props, context: Context<typeof description>)
   return right(newUser)
 }
 
-export default createAccount

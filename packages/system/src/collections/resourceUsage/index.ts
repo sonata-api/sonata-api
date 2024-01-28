@@ -1,6 +1,17 @@
 import { defineCollection } from '@sonata-api/api'
-import { description } from './description'
 
 export const resourceUsage = defineCollection({
-  description,
+  description: {
+    $id: 'resourceUsage',
+    required: [],
+    properties: {
+      hits: {
+        type: 'integer',
+      },
+      last_maximum_reach: {
+        type: 'string',
+        format: 'date-time',
+      },
+    },
+  },
 })

@@ -14,7 +14,7 @@ type Props = {
   password: string
 }
 
-const activate = async (props: Props, context: Context<typeof description>) => {
+export const activate = async (props: Props, context: Context<typeof description>) => {
   const {
     u: userId,
     t: token,
@@ -76,4 +76,3 @@ const activate = async (props: Props, context: Context<typeof description>) => {
   })
 }
 
-export default activate

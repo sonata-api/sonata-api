@@ -4,7 +4,7 @@ import { createContext, preloadDescription } from '@sonata-api/api'
 import { getCollections, getRouter } from '@sonata-api/entrypoint'
 import { serialize, isLeft, left, unwrapEither } from '@sonata-api/common'
 import { getAvailableRoles } from '@sonata-api/access-control'
-import { default as authenticate } from '../collections/user/authenticate'
+import { authenticate } from '../collections/user/authenticate'
 
 type Props = {
   collections?: string[]

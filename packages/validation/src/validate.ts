@@ -73,7 +73,11 @@ export const validateProperty = (propName: string,
     return
   }
 
-  if( (Array.isArray(extraneous) && extraneous.includes(propName)) || !property ) {
+  if( !property ) {
+    if( extraneous || (Array.isArray(extraneous) && extraneous.includes(propName)) ) {
+      return
+    }
+
     return makePropertyError('extraneous', {
       expected: 'undefined',
       got: getValueType(what),

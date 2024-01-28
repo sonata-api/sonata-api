@@ -17,7 +17,7 @@ type Props = {
   )[]
 }
 
-const download = async (props: Props, context: Context<typeof description>) => {
+export const download = async (props: Props, context: Context<typeof description>) => {
   const {
     fileId,
     options = [],
@@ -38,7 +38,7 @@ const download = async (props: Props, context: Context<typeof description>) => {
     return left(FileReadError.DocumentNotFound)
   }
 
-  let stat: fs.StatsBase<any>
+  let stat: fs.StatsBase<number>
   try {
     stat = await fs.promises.stat(file.absolute_path)
   } catch( e ) {
@@ -83,6 +83,4 @@ const download = async (props: Props, context: Context<typeof description>) => {
 
   return fs.createReadStream(file.absolute_path)
 }
-
-export default download
 

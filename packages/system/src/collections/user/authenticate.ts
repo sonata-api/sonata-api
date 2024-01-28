@@ -1,8 +1,8 @@
-import type { Context } from '@sonata-api/types'
+import type { Context, SchemaWithId } from '@sonata-api/types'
+import type { description } from './description'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
-import { type description, type User } from './description'
 
 type Props = {
   email: string
@@ -12,7 +12,7 @@ type Props = {
 }
 
 type Return = {
-  user: Pick<User,
+  user: Pick<SchemaWithId<typeof description>,
     | '_id'
     | 'full_name'
     | 'email'
@@ -31,7 +31,10 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (user: Pick<User, '_id'>, context: Context<typeof description, Collections['user']['functions']>): Promise<Return> => {
+const getUser = async (
+  user: Pick<SchemaWithId<typeof description>, '_id'>,
+  context: Context<typeof description, Collections['user']['functions']>
+): Promise<Return> => {
   const leanUser = await context.collection.functions.get({
     filters: {
       _id: user._id,
@@ -85,7 +88,7 @@ const getUser = async (user: Pick<User, '_id'>, context: Context<typeof descript
   }
 }
 
-const authenticate = async (props: Props, context: Context<typeof description>) => {
+export const authenticate = async (props: Props, context: Context<typeof description>) => {
   if( 'revalidate' in props ) {
     return context.token.authenticated
       ? right(await getUser(context.token.user, context))
@@ -141,5 +144,3 @@ const authenticate = async (props: Props, context: Context<typeof description>) 
 
   return right(await getUser(user, context))
 }
-
-export default authenticate
