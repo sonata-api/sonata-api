@@ -39,10 +39,6 @@ const streamToFs = (metadata: typeof FileMetadata, context: Context) => {
 }
 
 export const upload = async <TContext extends Context>(_props: unknown, context: TContext) => {
-  if( !context.request.headers['x-stream-request'] ) {
-    return left('please pass in x-stream-request to upload a file')
-  }
-
   const headersEither = validate(context.request.headers, {
     type: 'object',
     properties: {
