@@ -1,5 +1,4 @@
-import type { Context, IndepthCollection, Property } from '@sonata-api/types'
-import type { fileTemp } from '@sonata-api/system'
+import type { Context, Property } from '@sonata-api/types'
 import { isLeft, unwrapEither, left, getValueFromPath } from '@sonata-api/common'
 import { validate, validator } from '@sonata-api/validation'
 
@@ -11,12 +10,12 @@ const [FileMetadata, validateFileMetadata] = validator({
   type: 'object',
   properties: {
     ref: {
-      type: 'string'
+      type: 'string',
     },
     filename: {
-      type: 'string'
-    }
-  }
+      type: 'string',
+    },
+  },
 })
 
 const streamToFs = (metadata: typeof FileMetadata, context: Context) => {
@@ -33,17 +32,9 @@ const streamToFs = (metadata: typeof FileMetadata, context: Context) => {
   return new Promise<string>((resolve, reject) => {
     const stream = createWriteStream(absolutePath)
 
-    stream.on('open', () => {
-      context.request.nodeRequest.pipe(stream)
-    })
-
-    stream.on('close', () => {
-      resolve(absolutePath)
-    })
-
-    stream.on('error', (error) => {
-      reject(error)
-    })
+    stream.on('open', () => context.request.nodeRequest.pipe(stream))
+    stream.on('close', () => resolve(absolutePath))
+    stream.on('error', (error) => reject(error))
   })
 }
 
@@ -56,14 +47,14 @@ export const upload = async <TContext extends Context>(_props: unknown, context:
     type: 'object',
     properties: {
       'x-stream-request': {
-        literal: '1'
+        literal: '1',
       },
       'content-type': {
-        type: 'string'
-      }
-    }
+        type: 'string',
+      },
+    },
   }, {
-    extraneous: true
+    extraneous: true,
   })
 
   if( isLeft(headersEither) ) {
@@ -83,17 +74,17 @@ export const upload = async <TContext extends Context>(_props: unknown, context:
   }
 
   const path = await streamToFs(metadata, context)
-  const file = await (context.collections.fileTemp as IndepthCollection<typeof fileTemp>).model.insertOne({
+  const file = await context.collections.fileTemp.model.insertOne({
     absolute_path: path,
     size: context.request.headers['content-length'],
     collection: context.description.$id,
     ref: metadata.ref,
-    filename: metadata.filename
+    filename: metadata.filename,
   })
 
   return {
     path,
-    id: file.insertedId
+    id: file.insertedId,
   }
 }
 

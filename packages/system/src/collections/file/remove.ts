@@ -12,8 +12,8 @@ type Props = {
 export const remove = async (props: Props, context: Context<typeof description>) => {
   const file = await context.collection.model.findOne(props.filters, {
     projection: {
-      absolute_path: 1
-    }
+      absolute_path: 1,
+    },
   })
 
   if( !file ) {

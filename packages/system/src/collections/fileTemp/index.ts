@@ -5,20 +5,20 @@ export const fileTemp = defineCollection({
     $id: 'fileTemp',
     properties: {
       absolute_path: {
-        type: 'string'
+        type: 'string',
       },
       size: {
-        type: 'number'
+        type: 'number',
       },
       collection: {
-        type: 'string'
+        type: 'string',
       },
       ref: {
-        type: 'string'
+        type: 'string',
       },
       filename: {
-        type: 'string'
-      }
-    }
-  }
+        type: 'string',
+      },
+    },
+  },
 })

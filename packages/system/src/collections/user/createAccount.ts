@@ -61,7 +61,7 @@ export const createAccount = async (props: Props, context: Context<typeof descri
 
   if( !context.token.authenticated ) {
     Object.assign(user, {
-      self_registered: true
+      self_registered: true,
     })
   }
 

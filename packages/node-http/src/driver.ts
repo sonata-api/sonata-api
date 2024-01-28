@@ -27,7 +27,7 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
       : {},
     payload: {},
     fragments: [],
-    nodeRequest: request
+    nodeRequest: request,
   }
 
   return req
