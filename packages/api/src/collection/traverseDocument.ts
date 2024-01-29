@@ -60,18 +60,11 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
 
 const deleteFiles = async (target: any, propName: string, options: TraverseOptions & TraverseNormalized) => {
   const doc = await getDatabaseCollection(options.description.$id).findOne({
-    _id: new ObjectId(target._id)
+    _id: new ObjectId(target._id),
   }, {
     projection: {
-      [propName]: 1
-    }
-  })
-
-  console.log({
-    target,
-    id: options.description.$id,
-    propName,
-    doc
+      [propName]: 1,
+    },
   })
 
   if( !doc ) {
@@ -82,14 +75,14 @@ const deleteFiles = async (target: any, propName: string, options: TraverseOptio
     _id: {
       $in: Array.isArray(doc[propName])
         ? doc[propName]
-        : [doc[propName]]
-    }
+        : [doc[propName]],
+    },
   }
 
   const files = await getDatabaseCollection('file').find(fileFilters, {
     projection: {
-      absolute_path: 1
-    }
+      absolute_path: 1,
+    },
   }).toArray()
 
   for( const file of files ) {
@@ -99,7 +92,9 @@ const deleteFiles = async (target: any, propName: string, options: TraverseOptio
   return getDatabaseCollection('file').deleteMany(fileFilters)
 }
 
-const autoCast = (value: any, target: any, propName: string, property: Property, options: TraverseOptions): any => {
+const autoCast = (
+  value: any, target: any, propName: string, property: Property, options: TraverseOptions,
+): any => {
   switch( typeof value ) {
     case 'boolean': {
       return !!value
@@ -202,14 +197,8 @@ const moveFiles = async (
   target: any,
   propName: string,
   property: Property,
-  options: TraverseOptions & TraverseNormalized
+  options: TraverseOptions & TraverseNormalized,
 ) => {
-  console.log({
-    propName,
-    property,
-    value
-  })
-
   if( !('$ref' in property) || property.$ref !== 'file' || value instanceof ObjectId ) {
     return value
   }
@@ -223,7 +212,7 @@ const moveFiles = async (
   }
 
   const tempFile = await getDatabaseCollection('tempFile').findOne({
-    _id: new ObjectId(value.tempId)
+    _id: new ObjectId(value.tempId),
   })
 
   if( !tempFile ) {
@@ -245,7 +234,7 @@ const recurseDeep = async (
   target: any,
   propName: string,
   property: Property,
-  options: TraverseOptions & TraverseNormalized
+  options: TraverseOptions & TraverseNormalized,
 ) => {
   if( 'properties' in property ) {
     const resultEither = await recurse(value, property, options)
@@ -260,7 +249,7 @@ const recurseDeep = async (
         target,
         propName,
         property.items,
-        options
+        options,
       )
 
       items.push(result)
@@ -275,7 +264,7 @@ const recurseDeep = async (
 const recurse = async <TRecursionTarget extends Record<string, any>>(
   target: TRecursionTarget,
   parent: Property | Description,
-  options: TraverseOptions & TraverseNormalized
+  options: TraverseOptions & TraverseNormalized,
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
@@ -413,7 +402,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 export const traverseDocument = async <const TWhat extends Record<string, any>>(
   what: TWhat,
   description: Description,
-  _options: TraverseOptions
+  _options: TraverseOptions,
 ) => {
   const options = Object.assign({}, _options) as TraverseOptions & TraverseNormalized
   const functions = []

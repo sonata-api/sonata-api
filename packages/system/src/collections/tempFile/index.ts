@@ -5,12 +5,12 @@ export const tempFile = defineCollection({
     $id: 'tempFile',
     temporary: {
       index: 'created_at',
-      expireAfterSeconds: 3600
+      expireAfterSeconds: 3600,
     },
     properties: {
       created_at: {
         type: 'string',
-        format: 'date-time'
+        format: 'date-time',
       },
       absolute_path: {
         type: 'string',

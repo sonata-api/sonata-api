@@ -81,9 +81,9 @@ export const migrate = async () => {
 
       if( !hasIndex ) {
         await model.createIndex({
-          [temporaryIndex]: 1
+          [temporaryIndex]: 1,
         }, {
-          expireAfterSeconds
+          expireAfterSeconds,
         })
 
         log('info', `temporary index created for ${collectionName}`)
