@@ -20,16 +20,16 @@ export type TraverseOptions = {
   recurseReferences?: boolean
 }
 
-export type PhaseContext = {
+export type TraverseNormalized = {
+  description: Description
+  pipe: (value: any, phaseContext: PhaseContext)=> any
+}
+
+type PhaseContext = {
   target: any
   propName: string
   property: Property
   options: TraverseOptions & TraverseNormalized
-}
-
-export type TraverseNormalized = {
-  description: Description
-  pipe: (value: any, phaseContext: PhaseContext)=> any
 }
 
 const getProperty = (propertyName: string, parentProperty: Property | Description) => {
@@ -155,7 +155,7 @@ const autoCast = (value: any, ctx: Omit<PhaseContext, 'options'> & { options: (T
               k,
               autoCast(v, {
                 ...ctx,
-                property: subProperty
+                property: subProperty,
               }),
             ])
           }
@@ -277,9 +277,9 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
           target,
           propName,
           property: {
-            $ref: ''
+            $ref: '',
           },
-          options: {}
+          options: {},
         }),
       ])
 
