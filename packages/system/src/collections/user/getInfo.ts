@@ -42,7 +42,7 @@ export const getInfo = async (props: Props, context: Context<typeof description>
   }
 
   return right({
-    full_name: user.full_name,
+    name: user.name,
     email: user.email,
   })
 }

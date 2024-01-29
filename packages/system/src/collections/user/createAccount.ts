@@ -17,12 +17,12 @@ export const createAccount = async (props: Props, context: Context<typeof descri
   const validationEither = validate(user, {
     type: 'object',
     required: [
-      'full_name',
+      'name',
       'email',
       'phone',
     ],
     properties: {
-      full_name: {
+      name: {
         type: 'string',
       },
       email: {
@@ -78,7 +78,7 @@ export const createAccount = async (props: Props, context: Context<typeof descri
   const link = `${process.env.API_URL}/user/activate?u=${insertedId.toString()}&t=${activationToken}`
 
   await sendTransactionalEmail({
-    receiverName: user.full_name,
+    receiverName: user.name,
     receiverEmail: user.email,
     subject: 'Falta pouco para completar o seu cadastro',
     html: `<div>

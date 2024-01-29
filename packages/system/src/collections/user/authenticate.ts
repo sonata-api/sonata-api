@@ -14,7 +14,7 @@ type Props = {
 type Return = {
   user: Pick<SchemaWithId<typeof description>,
     | '_id'
-    | 'full_name'
+    | 'name'
     | 'email'
     | 'roles'
     | 'active'
@@ -37,7 +37,7 @@ const getUser = async (user: Pick<SchemaWithId<typeof description>, '_id'>,
     filters: {
       _id: user._id,
     },
-    populate: ['picture'],
+    populate: ['picture_file'],
   })
 
   if( !leanUser ) {
@@ -111,7 +111,7 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     return right(<Return>{
       user: {
         _id: null,
-        full_name: 'God Mode',
+        name: 'God Mode',
         email: '',
         roles: ['root'],
         active: true,

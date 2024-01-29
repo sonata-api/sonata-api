@@ -1,36 +1,41 @@
 import { defineDescription } from '@sonata-api/api'
 
+/**
+ * This description complies with JWT claims specified in RFC-7519.
+ * Reference: https://www.iana.org/assignments/jwt/jwt.xhtml#claims
+ */
+
 export const description = defineDescription({
   $id: 'user',
   required: [
-    'full_name',
+    'name',
     'roles',
     'email',
   ],
   form: [
-    'full_name',
+    'name',
     'active',
     'roles',
     'email',
-    'phone',
+    'phone_number',
     'picture',
   ],
-  indexes: ['full_name'],
+  indexes: ['name'],
   freshItem: {
     active: true,
   },
   properties: {
-    full_name: {
+    name: {
       type: 'string',
     },
-    first_name: {
+    given_name: {
       getter: (document: any) => {
-        return `${document.full_name?.split(' ')[0] || 'N/A'}`
+        return `${document.name?.split(' ')[0] || 'N/A'}`
       },
     },
-    last_name: {
+    family_name: {
       getter: (document: any) => {
-        return `${document.full_name?.split(' ')[1]}`
+        return `${document.name?.split(' ')[1]}`
       },
     },
     active: {
@@ -53,13 +58,18 @@ export const description = defineDescription({
       inputType: 'password',
       hidden: true,
     },
-    phone: {
+    phone_number: {
       type: 'string',
       mask: '(##) #####-####',
     },
-    picture: {
+    picture_file: {
       $ref: 'file',
       accept: ['image/*'],
+    },
+    picture: {
+      getter: (value: any) => {
+        return value.picture_file?.link
+      }
     },
     group: {
       type: 'string',
@@ -88,7 +98,7 @@ export const description = defineDescription({
   layout: {
     name: 'grid',
     options: {
-      title: 'full_name',
+      title: 'name',
       badge: 'roles',
       picture: 'picture',
       information: 'email',
@@ -109,13 +119,13 @@ export const description = defineDescription({
   },
   icon: 'users',
   filters: [
-    'full_name',
+    'name',
     'roles',
     'email',
-    'phone',
+    'phone_number',
   ],
   table: [
-    'full_name',
+    'name',
     'roles',
     'picture',
     'active',
@@ -124,10 +134,10 @@ export const description = defineDescription({
   tableMeta: ['email'],
   formLayout: {
     fields: {
-      first_name: {
+      given_name: {
         span: 3,
       },
-      last_name: {
+      family_name: {
         span: 3,
       },
     },

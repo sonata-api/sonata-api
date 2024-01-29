@@ -29,6 +29,7 @@ export const watch = async () => {
     }
 
     log('info', `change detected in file: ${path}`)
+    log('info', `compiling...`)
     runningApi = await compileAndSpawn()
   })
 }
