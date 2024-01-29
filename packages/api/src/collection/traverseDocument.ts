@@ -20,15 +20,16 @@ export type TraverseOptions = {
   recurseReferences?: boolean
 }
 
+export type PhaseContext = {
+  target: any
+  propName: string
+  property: Property
+  options: TraverseOptions & TraverseNormalized
+}
+
 export type TraverseNormalized = {
   description: Description
-  pipe: (
-    value: any,
-    target: any,
-    propName: string,
-    property: Property,
-    options: TraverseOptions & TraverseNormalized
-  )=> any
+  pipe: (value: any, phaseContext: PhaseContext)=> any
 }
 
 const getProperty = (propertyName: string, parentProperty: Property | Description) => {
@@ -58,12 +59,12 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 }
 
-const deleteFiles = async (target: any, propName: string, options: TraverseOptions & TraverseNormalized) => {
-  const doc = await getDatabaseCollection(options.description.$id).findOne({
-    _id: new ObjectId(target._id),
+const deleteFiles = async (ctx: PhaseContext) => {
+  const doc = await getDatabaseCollection(ctx.options.description.$id).findOne({
+    _id: new ObjectId(ctx.target._id),
   }, {
     projection: {
-      [propName]: 1,
+      [ctx.propName]: 1,
     },
   })
 
@@ -73,9 +74,9 @@ const deleteFiles = async (target: any, propName: string, options: TraverseOptio
 
   const fileFilters = {
     _id: {
-      $in: Array.isArray(doc[propName])
-        ? doc[propName]
-        : [doc[propName]],
+      $in: Array.isArray(doc[ctx.propName])
+        ? doc[ctx.propName]
+        : [doc[ctx.propName]],
     },
   }
 
@@ -92,23 +93,21 @@ const deleteFiles = async (target: any, propName: string, options: TraverseOptio
   return getDatabaseCollection('file').deleteMany(fileFilters)
 }
 
-const autoCast = (
-  value: any, target: any, propName: string, property: Property, options: TraverseOptions,
-): any => {
+const autoCast = (value: any, ctx: Omit<PhaseContext, 'options'> & { options: (TraverseOptions & TraverseNormalized) | {} }): any => {
   switch( typeof value ) {
     case 'boolean': {
       return !!value
     }
 
     case 'string': {
-      if( isReference(property) ) {
+      if( isReference(ctx.property) ) {
         return ObjectId.isValid(value)
           ? new ObjectId(value)
           : value
       }
 
-      if( 'format' in property ) {
-        if( property.format === 'date' || property.format === 'date-time' ) {
+      if( 'format' in ctx.property ) {
+        if( ctx.property.format === 'date' || ctx.property.format === 'date-time' ) {
           const timestamp = Date.parse(value)
           return !Number.isNaN(timestamp)
             ? new Date(timestamp)
@@ -120,12 +119,12 @@ const autoCast = (
     }
 
     case 'number': {
-      if( 'type' in property && property.type === 'integer' ) {
+      if( 'type' in ctx.property && ctx.property.type === 'integer' ) {
         return parseInt(value.toString())
       }
 
-      if( 'format' in property ) {
-        if( property.format === 'date' || property.format === 'date-time' ) {
+      if( 'format' in ctx.property ) {
+        if( ctx.property.format === 'date' || ctx.property.format === 'date-time' ) {
           return new Date(value)
         }
       }
@@ -136,19 +135,17 @@ const autoCast = (
         return value
       }
 
-      if( !options.recurseDeep ) {
+      if( !('description' in ctx.options) || !ctx.options.recurseDeep ) {
         if( Array.isArray(value) ) {
-          return value.map((v) => autoCast(
-            v, target, propName, property, options,
-          ))
+          return value.map((v) => autoCast(v, ctx))
         }
 
         if( Object.keys(value).length > 0 ) {
           const entries: [string, any][] = []
           for( const [k, v] of Object.entries(value) ) {
             const subProperty = !k.startsWith('$')
-              ? getProperty(k, property)
-              : property
+              ? getProperty(k, ctx.property)
+              : ctx.property
 
             if( !subProperty ) {
               continue
@@ -156,9 +153,10 @@ const autoCast = (
 
             entries.push([
               k,
-              autoCast(
-                v, target, propName, subProperty, options,
-              ),
+              autoCast(v, {
+                ...ctx,
+                property: subProperty
+              }),
             ])
           }
 
@@ -172,40 +170,34 @@ const autoCast = (
   return value
 }
 
-const getters = (value: any, target: any, _propName: string, property: Property) => {
-  if( 'getter' in property ) {
-    return property.getter(target)
+const getters = (value: any, ctx: PhaseContext) => {
+  if( 'getter' in ctx.property ) {
+    return ctx.property.getter(ctx.target)
   }
 
   return value
 }
 
-const validate = (value: any, _target: any, propName: string, property: Property) => {
-  const error = validateProperty(propName, value, property)
+const validate = (value: any, ctx: PhaseContext) => {
+  const error = validateProperty(ctx.propName, value, ctx.property)
 
   if( error ) {
     return left({
-      [propName]: error,
+      [ctx.propName]: error,
     })
   }
 
   return value
 }
 
-const moveFiles = async (
-  value: any,
-  target: any,
-  propName: string,
-  property: Property,
-  options: TraverseOptions & TraverseNormalized,
-) => {
-  if( !('$ref' in property) || property.$ref !== 'file' || value instanceof ObjectId ) {
+const moveFiles = async (value: any, ctx: PhaseContext) => {
+  if( !('$ref' in ctx.property) || ctx.property.$ref !== 'file' || value instanceof ObjectId ) {
     return value
   }
 
   if( !value ) {
-    if( target._id ) {
-      await deleteFiles(target, propName, options)
+    if( ctx.target._id ) {
+      await deleteFiles(ctx)
     }
 
     return null
@@ -219,8 +211,8 @@ const moveFiles = async (
     return left('invalid tempfile')
   }
 
-  if( target._id ) {
-    await deleteFiles(target, propName, options)
+  if( ctx.target._id ) {
+    await deleteFiles(ctx)
   }
 
   delete tempFile._id
@@ -229,28 +221,19 @@ const moveFiles = async (
   return file.insertedId
 }
 
-const recurseDeep = async (
-  value: any,
-  target: any,
-  propName: string,
-  property: Property,
-  options: TraverseOptions & TraverseNormalized,
-) => {
-  if( 'properties' in property ) {
-    const resultEither = await recurse(value, property, options)
+const recurseDeep = async (value: any, ctx: PhaseContext) => {
+  if( 'properties' in ctx.property ) {
+    const resultEither = await recurse(value, ctx.property, ctx.options)
     return unwrapEither(resultEither)
   }
 
-  if( 'items' in property ) {
+  if( 'items' in ctx.property ) {
     const items = []
     for( const item of value ) {
-      const result = await options.pipe(
-        item,
-        target,
-        propName,
-        property.items,
-        options,
-      )
+      const result = await ctx.options.pipe(item, {
+        ...ctx,
+        property: ctx.property.items,
+      })
 
       items.push(result)
     }
@@ -290,12 +273,16 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     if( options.autoCast && propName === '_id' ) {
       entries.push([
         propName,
-        autoCast(
-          value, target, propName, {
-            $ref: '',
-          }, {},
-        ),
+        autoCast(value, {
+          target,
+          propName,
+          property: {
+            $ref: ''
+          },
+          options: {}
+        }),
       ])
+
       continue
     }
 
@@ -385,13 +372,12 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
       entries.push([
         propName,
-        await options.pipe(
-          value,
+        await options.pipe(value, {
           target,
           propName,
           property,
           options,
-        ),
+        }),
       ])
     }
   }
