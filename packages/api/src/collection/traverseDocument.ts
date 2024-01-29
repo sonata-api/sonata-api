@@ -4,8 +4,8 @@ import { validateProperty, validateWholeness, makeValidationError } from '@sonat
 import { ValidationErrorCodes } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets'
-import { preloadDescription } from './preload'
 import { getDatabaseCollection } from '../database'
+import { preloadDescription } from './preload'
 import fs from 'fs/promises'
 
 export type TraverseOptions = {
