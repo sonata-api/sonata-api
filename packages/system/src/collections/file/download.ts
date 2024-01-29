@@ -65,7 +65,7 @@ export const download = async (props: Props, context: Context<typeof description
       'content-type': file.mime,
       'content-disposition': `${options.includes('download')
         ? 'attachment; '
-        : ''}filename=${file.filename}`,
+        : ''}filename=${encodeURI(file.filename)}`,
     })
 
     return fs.createReadStream(file.absolute_path, {
@@ -78,7 +78,7 @@ export const download = async (props: Props, context: Context<typeof description
     'content-type': file.mime,
     'content-disposition': `${options.includes('download')
       ? 'attachment; '
-      : ''}filename=${file.filename}`,
+      : ''}filename=${encodeURI(file.filename)}`,
   })
 
   return fs.createReadStream(file.absolute_path)
