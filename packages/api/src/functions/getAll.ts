@@ -110,6 +110,7 @@ export const getAll = async <
       getters: true,
       fromProperties: true,
       recurseReferences: true,
+      recurseDeep: true,
     })))
   }
 

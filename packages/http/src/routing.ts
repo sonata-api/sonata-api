@@ -166,7 +166,10 @@ export const wrapRouteExecution = async (res: GenericResponse, cb: ()=> any | Pr
     }
 
     if( result instanceof Stream ) {
-      result.pipe(res)
+      try {
+        result.pipe(res)
+      } catch( err ) {
+      }
       return
     }
 

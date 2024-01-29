@@ -48,7 +48,7 @@ export const description = defineDescription({
     },
     link: {
       getter: (value: any) => {
-        return `${link(value._id)}/download/${timestamp(value.last_modified)}`
+        return `${link(value._id)}/${timestamp(value.last_modified)}`
       },
     },
     download_link: {

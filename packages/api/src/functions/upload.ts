@@ -1,5 +1,5 @@
-import type { Context, Property } from '@sonata-api/types'
-import { isLeft, unwrapEither, left, getValueFromPath } from '@sonata-api/common'
+import type { Context } from '@sonata-api/types'
+import { isLeft, unwrapEither, left } from '@sonata-api/common'
 import { validate, validator } from '@sonata-api/validation'
 
 import path from 'path'
@@ -9,9 +9,6 @@ import { createHash } from 'crypto'
 const [FileMetadata, validateFileMetadata] = validator({
   type: 'object',
   properties: {
-    ref: {
-      type: 'string',
-    },
     filename: {
       type: 'string',
     },
@@ -64,23 +61,18 @@ export const upload = async <TContext extends Context>(_props: unknown, context:
 
   const metadata = unwrapEither(metadataEither)
 
-  const property: Property = getValueFromPath(context.description, `properties.${metadata.ref}`)
-  if( !property || !('$ref' in property) || property.$ref !== 'file' ) {
-    return left('invalid property')
-  }
-
   const path = await streamToFs(metadata, context)
-  const file = await context.collections.fileTemp.model.insertOne({
+  const file = await context.collections.tempFile.model.insertOne({
+    created_at: new Date(),
     absolute_path: path,
     size: context.request.headers['content-length'],
+    mime: context.request.headers['content-type'],
     collection: context.description.$id,
-    ref: metadata.ref,
     filename: metadata.filename,
   })
 
   return {
-    path,
-    id: file.insertedId,
+    tempId: file.insertedId,
   }
 }
 

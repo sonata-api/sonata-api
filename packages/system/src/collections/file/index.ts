@@ -2,7 +2,6 @@ import { defineCollection, get } from '@sonata-api/api'
 import { description } from './description'
 import { insert } from './insert'
 import { download } from './download'
-import { remove } from './remove'
 
 export const file = defineCollection({
   description,
@@ -10,6 +9,5 @@ export const file = defineCollection({
     get,
     insert,
     download,
-    remove,
   },
 })

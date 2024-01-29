@@ -22,11 +22,13 @@ export const insert = async <
     : payload
 
   const whatEither = await traverseDocument(query.what, context.description, {
+    recurseDeep: true,
     autoCast: true,
     validate: true,
     validateRequired: payload.what._id
       ? []
       : context.description.required,
+    moveFiles: true,
   })
 
   if( isLeft(whatEither) ) {

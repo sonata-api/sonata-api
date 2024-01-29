@@ -1,19 +1,27 @@
 import { defineCollection } from '@sonata-api/api'
 
-export const fileTemp = defineCollection({
+export const tempFile = defineCollection({
   description: {
-    $id: 'fileTemp',
+    $id: 'tempFile',
+    temporary: {
+      index: 'created_at',
+      expireAfterSeconds: 3600
+    },
     properties: {
+      created_at: {
+        type: 'string',
+        format: 'date-time'
+      },
       absolute_path: {
         type: 'string',
       },
       size: {
         type: 'number',
       },
-      collection: {
-        type: 'string',
+      mime: {
+        type: 'number',
       },
-      ref: {
+      collection: {
         type: 'string',
       },
       filename: {

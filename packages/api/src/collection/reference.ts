@@ -196,7 +196,7 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
 
   const memoize = `${memoizeId}-${project.sort().join('-')}`
 
-  if( memoize && lookupMemo[memoize] ) {
+  if( memoizeId && lookupMemo[memoize] ) {
     const result = lookupMemo[memoize]!
     return project.length > 0
       ? narrowLookupPipelineProjection(result, project)
@@ -334,7 +334,7 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
     }
   }
 
-  if( memoize ) {
+  if( memoizeId ) {
     lookupMemo[memoize] = pipeline
   }
 

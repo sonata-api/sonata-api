@@ -33,7 +33,13 @@ export const fill = <TDocument extends OptionalId<any>>(
   item: TDocument & Record<string, any>,
   description: Pick<Description, 'properties' | 'freshItem'>,
 ) => {
-  return Object.assign(freshItem(description), item)
+  const itemCopy = Object.assign({}, item)
+  for( const key in itemCopy ) {
+    if( itemCopy[key] === null ) {
+      delete itemCopy[key]
+    }
+  }
+  return Object.assign(freshItem(description), itemCopy)
 }
 
 export const prepareInsert = (payload: any,

@@ -18,10 +18,12 @@ export const migrate = async () => {
       ? candidate()
       : candidate
 
-    if( collection.description.search ) {
+    const { description } = collection
+
+    if( description.search ) {
       const model = getDatabaseCollection(collectionName)
       const indexes = await model.indexes()
-      const searchIndexes = collection.description.search.indexes
+      const searchIndexes = description.search.indexes
 
       const textIndex = indexes.find((index) => 'textIndexVersion' in index)
       const invalidated = textIndex && !searchIndexes.every((key) => Object.keys(textIndex.weights).includes(key as string))
@@ -40,13 +42,13 @@ export const migrate = async () => {
       }
     }
 
-    if( collection.description.indexes ) {
+    if( description.indexes ) {
       const model = getDatabaseCollection(collectionName)
       const collIndexes = await model.indexes()
 
       let newIndexes = 0
 
-      for( const index of collection.description.indexes ) {
+      for( const index of description.indexes ) {
         const hasIndex = collIndexes.find((collIndex) => (
           !('textIndexVersion' in collIndex)
           && Object.keys(collIndex.key).length === 1
@@ -64,6 +66,27 @@ export const migrate = async () => {
 
       if( newIndexes ) {
         log('info', `${newIndexes} new indexes created for ${collectionName}`)
+      }
+    }
+
+    if( description.temporary ) {
+      const model = getDatabaseCollection(collectionName)
+      const collIndexes = await model.indexes()
+
+      const { index: temporaryIndex, expireAfterSeconds } = description.temporary
+
+      const hasIndex = collIndexes.some((index) => {
+        return temporaryIndex in index.key && 'expireAfterSeconds' in index
+      })
+
+      if( !hasIndex ) {
+        await model.createIndex({
+          [temporaryIndex]: 1
+        }, {
+          expireAfterSeconds
+        })
+
+        log('info', `temporary index created for ${collectionName}`)
       }
     }
   }

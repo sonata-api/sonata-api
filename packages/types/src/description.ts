@@ -119,6 +119,10 @@ export type Description<TDescription extends Description = any> = JsonSchema<TDe
 
   // modifiers
   owned?: boolean | 'always'
+  temporary?: {
+    index: keyof TDescription['properties']
+    expireAfterSeconds: number
+  }
   timestamps?: false
   immutable?: boolean | ReadonlyArray<string>
 

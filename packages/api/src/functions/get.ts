@@ -63,10 +63,13 @@ export const get = async <
     return null
   }
 
-  return fill(unsafe(await traverseDocument(result, context.description, {
-    getters: true,
-    fromProperties: true,
-    recurseReferences: true,
-  })),
-  context.description) as TDocument
+  return fill(
+    unsafe(await traverseDocument(result, context.description, {
+      getters: true,
+      fromProperties: true,
+      recurseReferences: true,
+      recurseDeep: true,
+    })),
+    context.description
+  ) as TDocument
 }

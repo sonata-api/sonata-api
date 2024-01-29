@@ -5,23 +5,29 @@ import { ValidationErrorCodes } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets'
 import { preloadDescription } from './preload'
+import { getDatabaseCollection } from '../database'
+import fs from 'fs/promises'
+
 export type TraverseOptions = {
   autoCast?: boolean
   getters?: boolean
   validate?: boolean
   validateRequired?: string[]
+  moveFiles?: boolean
   fromProperties?: boolean
   allowOperators?: boolean
+  recurseDeep?: boolean
   recurseReferences?: boolean
 }
 
-export type TraversePipe = {
-  pipe?: (
+export type TraverseNormalized = {
+  description: Description
+  pipe: (
     value: any,
     target: any,
     propName: string,
     property: Property,
-    options: TraverseOptions
+    options: TraverseOptions & TraverseNormalized
   )=> any
 }
 
@@ -52,9 +58,48 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 }
 
-const autoCast = (
-  value: any, target: any, propName: string, property: Property, options?: TraverseOptions,
-): any => {
+const deleteFiles = async (target: any, propName: string, options: TraverseOptions & TraverseNormalized) => {
+  const doc = await getDatabaseCollection(options.description.$id).findOne({
+    _id: new ObjectId(target._id)
+  }, {
+    projection: {
+      [propName]: 1
+    }
+  })
+
+  console.log({
+    target,
+    id: options.description.$id,
+    propName,
+    doc
+  })
+
+  if( !doc ) {
+    return left('invalid document id')
+  }
+
+  const fileFilters = {
+    _id: {
+      $in: Array.isArray(doc[propName])
+        ? doc[propName]
+        : [doc[propName]]
+    }
+  }
+
+  const files = await getDatabaseCollection('file').find(fileFilters, {
+    projection: {
+      absolute_path: 1
+    }
+  }).toArray()
+
+  for( const file of files ) {
+    await fs.unlink(file.absolute_path)
+  }
+
+  return getDatabaseCollection('file').deleteMany(fileFilters)
+}
+
+const autoCast = (value: any, target: any, propName: string, property: Property, options: TraverseOptions): any => {
   switch( typeof value ) {
     case 'boolean': {
       return !!value
@@ -96,33 +141,36 @@ const autoCast = (
         return value
       }
 
-      if( Array.isArray(value) ) {
-        return value.map((v) => autoCast(
-          v, target, propName, property, options,
-        ))
-      }
-
-      if( Object.keys(value).length > 0 ) {
-        const entries: [string, any][] = []
-        for( const [k, v] of Object.entries(value) ) {
-          const subProperty = !k.startsWith('$')
-            ? getProperty(k, property)
-            : property
-
-          if( !subProperty ) {
-            continue
-          }
-
-          entries.push([
-            k,
-            autoCast(
-              v, target, propName, subProperty, options,
-            ),
-          ])
+      if( !options.recurseDeep ) {
+        if( Array.isArray(value) ) {
+          return value.map((v) => autoCast(
+            v, target, propName, property, options,
+          ))
         }
 
-        return Object.fromEntries(entries)
+        if( Object.keys(value).length > 0 ) {
+          const entries: [string, any][] = []
+          for( const [k, v] of Object.entries(value) ) {
+            const subProperty = !k.startsWith('$')
+              ? getProperty(k, property)
+              : property
+
+            if( !subProperty ) {
+              continue
+            }
+
+            entries.push([
+              k,
+              autoCast(
+                v, target, propName, subProperty, options,
+              ),
+            ])
+          }
+
+          return Object.fromEntries(entries)
+        }
       }
+
     }
   }
 
@@ -149,10 +197,85 @@ const validate = (value: any, _target: any, propName: string, property: Property
   return value
 }
 
+const moveFiles = async (
+  value: any,
+  target: any,
+  propName: string,
+  property: Property,
+  options: TraverseOptions & TraverseNormalized
+) => {
+  console.log({
+    propName,
+    property,
+    value
+  })
+
+  if( !('$ref' in property) || property.$ref !== 'file' || value instanceof ObjectId ) {
+    return value
+  }
+
+  if( !value ) {
+    if( target._id ) {
+      await deleteFiles(target, propName, options)
+    }
+
+    return null
+  }
+
+  const tempFile = await getDatabaseCollection('tempFile').findOne({
+    _id: new ObjectId(value.tempId)
+  })
+
+  if( !tempFile ) {
+    return left('invalid tempfile')
+  }
+
+  if( target._id ) {
+    await deleteFiles(target, propName, options)
+  }
+
+  delete tempFile._id
+  
+  const file = await getDatabaseCollection('file').insertOne(tempFile)
+  return file.insertedId
+}
+
+const recurseDeep = async (
+  value: any,
+  target: any,
+  propName: string,
+  property: Property,
+  options: TraverseOptions & TraverseNormalized
+) => {
+  if( 'properties' in property ) {
+    const resultEither = await recurse(value, property, options)
+    return unwrapEither(resultEither)
+  }
+
+  if( 'items' in property ) {
+    const items = []
+    for( const item of value ) {
+      const result = await options.pipe(
+        item,
+        target,
+        propName,
+        property.items,
+        options
+      )
+
+      items.push(result)
+    }
+
+    return items
+  }
+
+  return value
+}
+
 const recurse = async <TRecursionTarget extends Record<string, any>>(
   target: TRecursionTarget,
   parent: Property | Description,
-  options: TraverseOptions & TraversePipe = {},
+  options: TraverseOptions & TraverseNormalized
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
@@ -273,8 +396,12 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
       entries.push([
         propName,
-        await options.pipe!(
-          value, target, propName, property, options,
+        await options.pipe(
+          value,
+          target,
+          propName,
+          property,
+          options,
         ),
       ])
     }
@@ -286,13 +413,19 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 export const traverseDocument = async <const TWhat extends Record<string, any>>(
   what: TWhat,
   description: Description,
-  options: TraverseOptions & TraversePipe,
+  _options: TraverseOptions
 ) => {
+  const options = Object.assign({}, _options) as TraverseOptions & TraverseNormalized
   const functions = []
+
   let validationError: ValidationError | null = null
 
   if( !options.validate && Object.keys(what).length === 0 ) {
     return right({})
+  }
+
+  if( options.recurseDeep ) {
+    functions.push(recurseDeep)
   }
 
   if( options.autoCast ) {
@@ -317,6 +450,11 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     functions.push(validate)
   }
 
+  if( options.moveFiles ) {
+    functions.push(moveFiles)
+  }
+
+  options.description = description
   options.pipe = pipe(functions, {
     returnFirst: (value) => {
       if( value?._tag === 'Left' ) {
@@ -338,3 +476,4 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     }))
     : right(unwrapEither(resultEither) as any)
 }
+
