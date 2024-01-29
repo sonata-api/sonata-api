@@ -4,7 +4,6 @@ import { defineDescription } from '@sonata-api/api'
  * This description complies with JWT claims specified in RFC-7519.
  * Reference: https://www.iana.org/assignments/jwt/jwt.xhtml#claims
  */
-
 export const description = defineDescription({
   $id: 'user',
   required: [
@@ -69,7 +68,7 @@ export const description = defineDescription({
     picture: {
       getter: (value: any) => {
         return value.picture_file?.link
-      }
+      },
     },
     group: {
       type: 'string',

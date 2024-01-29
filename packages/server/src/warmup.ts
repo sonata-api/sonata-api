@@ -5,24 +5,24 @@ if( process.env.NODE_ENV !== 'production' ) {
   require('dotenv').config()
 }
 
-const colors = {
+const ANSI_COLORS = {
   green: '\x1b[32m',
   blue: '\x1b[36m',
   red: '\x1b[31m',
   white: '\x1b[37m',
 }
 
-const colorizedRoute = (color: keyof typeof colors, roles?: string[]) =>
+const colorizedRoute = (color: keyof typeof ANSI_COLORS, roles?: string[]) =>
   (verb: string, collectionName: string, path?: string|null, parameters?: string[]) => {
 
-    let line = `\x1b[1m${colors[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
+    let line = `\x1b[1m${ANSI_COLORS[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
     line += `/\x1b[1m${collectionName}\x1b[0m`
 
     if( path ) {
       line += `/${path}`
     }
     if( parameters ) {
-      line += `/${parameters.map((p) => `{${colors.green}${p}\x1b[0m}`).join('/')}`
+      line += `/${parameters.map((p) => `{${ANSI_COLORS.green}${p}\x1b[0m}`).join('/')}`
     }
     if( roles ) {
       line += ` \x1b[90m[${roles.join('|')}]\x1b[0m`
