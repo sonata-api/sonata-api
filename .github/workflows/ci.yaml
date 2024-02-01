@@ -33,7 +33,7 @@ jobs:
           pnpm --no-bail --filter='./packages/security' build
           pnpm --no-bail --filter='./packages/mailing' build
           pnpm --no-bail --filter='./packages/api' build
-          pnpm --no-bail --filter='./packages/system' build
+          pnpm --no-bail --filter='./packages/builtins' build
           pnpm --no-bail --filter='./packages/server' build
           pnpm --no-bail --filter='./packages/sonata-api' build
           pnpm --no-bail --filter='./packages/sonata-build' build
