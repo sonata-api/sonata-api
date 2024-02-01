@@ -42,6 +42,7 @@ router.GET('/get-people', async (context) => {
   response: [
     leftSchema({
       type: 'object',
+      variable: true,
     }),
     {
       type: 'array',

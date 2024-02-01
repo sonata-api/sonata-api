@@ -70,10 +70,9 @@ export type FixedObjectProperty = {
   required?: ReadonlyArray<string>
 }
 
-export type VariableObjectProperty = {
-  properties: never
-  additionalProperties?: Property
-}
+export type VariableObjectProperty =
+  | { variable: true }
+  | { additionalProperties: Property }
 
 export type ObjectProperty = (FixedObjectProperty | VariableObjectProperty) & {
   type: 'object'
