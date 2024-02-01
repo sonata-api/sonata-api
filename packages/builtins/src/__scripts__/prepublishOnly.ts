@@ -2,9 +2,9 @@ import * as presets from '@sonata-api/api/presets'
 import { writeFile } from 'fs/promises'
 import { collections } from '..'
 import path from 'path'
-import { extractIcons, iconsContent, iconsDtsContent } from '../utils'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../utils'
 
-const iconsJson = async () => {
+const writeIcons = async () => {
   const base = path.join(process.cwd(), 'dist')
   const icons = []
 
@@ -19,8 +19,9 @@ const iconsJson = async () => {
   }
 
   const uniqueIcons = [...new Set(icons)]
-  await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
+  await writeFile(path.join(base, 'icons.mjs'), iconsEsmContent(uniqueIcons))
+  await writeFile(path.join(base, 'icons.cjs'), iconsCjsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 }
 
-iconsJson()
+writeIcons()

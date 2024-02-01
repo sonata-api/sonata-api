@@ -4,7 +4,7 @@ import { log } from './log'
 import { bundle } from './bundle'
 import { compile } from './compile'
 import { migrate } from './migrate'
-import { extractIcons, iconsContent, iconsDtsContent } from '@sonata-api/system'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '@sonata-api/builtins'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 
 const DATA_PATH = '.sonata'
@@ -40,7 +40,8 @@ async function compilationPhase() {
   }
 
   const uniqueIcons = [...new Set(icons)]
-  await writeFile(path.join(base, 'icons.js'), iconsContent(uniqueIcons))
+  await writeFile(path.join(base, 'icons.mjs'), iconsEsmContent(uniqueIcons))
+  await writeFile(path.join(base, 'icons.cjs'), iconsCjsContent(uniqueIcons))
   await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
 
   return right('compilation succeeded')

@@ -2,7 +2,7 @@
 import type {} from '@sonata-api/types'
 
 declare global {
-  type SystemCollections = typeof import('@sonata-api/system/collections')
+  type SystemCollections = typeof import('@sonata-api/builtins/collections')
   type UserCollections = typeof import('./src').collections
 
   type Collections = {

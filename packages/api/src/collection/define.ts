@@ -8,9 +8,7 @@ export const defineCollection = <
       | 'functions'
     >
     : never,
-  const TDescription extends Description<TDescription> & {
-    properties: Description['properties']
-  },
+  const TDescription extends Description<TDescription>,
   const TFunctions extends {
     [P: string]: (payload: any, context: Context<TDescription>, ...args: any[])=> any
   },

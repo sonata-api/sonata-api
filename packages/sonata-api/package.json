@@ -31,7 +31,7 @@
     "@sonata-api/node-http": "*",
     "@sonata-api/security": "*",
     "@sonata-api/server": "*",
-    "@sonata-api/system": "*",
+    "@sonata-api/builtins": "*",
     "@sonata-api/types": "*",
     "@sonata-api/validation": "*"
   }

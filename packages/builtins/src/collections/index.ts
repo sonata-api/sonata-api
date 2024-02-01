@@ -1,5 +1,4 @@
 export * from './file'
-export * from './tempFile'
 export * from './log'
 export * from './resourceUsage'
 export * from './user'

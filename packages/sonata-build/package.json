@@ -38,7 +38,7 @@
   "peerDependencies": {
     "@sonata-api/api": "*",
     "@sonata-api/common": "*",
-    "@sonata-api/system": "*",
+    "@sonata-api/builtins": "*",
     "@sonata-api/types": "*"
   }
 }

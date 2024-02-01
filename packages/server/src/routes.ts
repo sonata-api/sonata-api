@@ -1,7 +1,7 @@
 import type { Context } from '@sonata-api/types'
 import { createRouter } from '@sonata-api/http'
 import { createContext } from '@sonata-api/api'
-import { systemFunctions } from '@sonata-api/system'
+import { systemFunctions } from '@sonata-api/builtins'
 import {
   safeHandle,
   regularVerb,

@@ -32,7 +32,7 @@
     "@sonata-api/entrypoint": "*",
     "@sonata-api/http": "*",
     "@sonata-api/server": "*",
-    "@sonata-api/system": "*",
+    "@sonata-api/builtins": "*",
     "@sonata-api/types": "*",
     "mongodb": "^6.1.0"
   },

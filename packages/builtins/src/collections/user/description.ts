@@ -17,7 +17,7 @@ export const description = defineDescription({
     'roles',
     'email',
     'phone_number',
-    'picture',
+    'picture_file',
   ],
   indexes: ['name'],
   freshItem: {
@@ -43,7 +43,10 @@ export const description = defineDescription({
     roles: {
       type: 'array',
       items: {
-        enum: [],
+        enum: [
+          'root',
+          'guest',
+        ],
       },
       uniqueItems: true,
     },
@@ -77,13 +80,13 @@ export const description = defineDescription({
       type: 'boolean',
       readOnly: true,
     },
-    resources_usage: {
-      type: 'object',
-      additionalProperties: {
-        $ref: 'resourceUsage',
-        inline: true,
-      },
-    },
+    // resources_usage: {
+    //   type: 'object',
+    //   additionalProperties: {
+    //     $ref: 'resourceUsage',
+    //     inline: true,
+    //   },
+    // },
     updated_at: {
       type: 'string',
       format: 'date-time',
@@ -99,7 +102,7 @@ export const description = defineDescription({
     options: {
       title: 'name',
       badge: 'roles',
-      picture: 'picture',
+      picture: 'picture_file',
       information: 'email',
       active: 'active',
       translateBadge: true,
@@ -126,7 +129,7 @@ export const description = defineDescription({
   table: [
     'name',
     'roles',
-    'picture',
+    'picture_file',
     'active',
     'updated_at',
   ],

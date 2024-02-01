@@ -19,9 +19,9 @@ export const log = defineCollection({
       message: {
         type: 'string',
       },
-      details: {
-        type: 'object',
-      },
+      // details: {
+      //   type: 'object',
+      // },
       created_at: {
         type: 'string',
         format: 'date-time',

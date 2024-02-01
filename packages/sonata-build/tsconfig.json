@@ -12,8 +12,8 @@
       "@sonata-api/types": [
         "../types/dist"
       ],
-      "@sonata-api/system": [
-        "../system/dist"
+      "@sonata-api/builtins": [
+        "../builtins/dist"
       ]
     }
   },

@@ -71,6 +71,7 @@ export type FixedObjectProperty = {
 }
 
 export type VariableObjectProperty = {
+  properties: never
   additionalProperties?: Property
 }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@sonata-api/system",
+  "name": "@sonata-api/builtins",
   "version": "1.0.20",
   "description": "## Installation",
   "main": "dist/index.js",
@@ -20,7 +20,11 @@
   "exports": {
     ".": "./dist/index.js",
     "./collections": "./dist/collections/index.js",
-    "./icons": "./dist/icons.js",
+    "./icons": {
+      "types": "./dist/icons.d.ts",
+      "import": "./dist/icons.mjs",
+      "require": "./dist/icons.cjs"
+    },
     "./*": "./dist/*"
   },
   "typesVersions": {

@@ -1,4 +1,7 @@
-import { defineCollection } from '@sonata-api/api'
+import { defineCollection, get } from '@sonata-api/api'
+import { description } from './description'
+import { insert } from './insert'
+import { download } from './download'
 
 export const tempFile = defineCollection({
   description: {
@@ -30,3 +33,13 @@ export const tempFile = defineCollection({
     },
   },
 })
+
+export const file = defineCollection({
+  description,
+  functions: {
+    get,
+    insert,
+    download,
+  },
+})
+

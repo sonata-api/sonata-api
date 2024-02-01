@@ -33,8 +33,8 @@
       "@sonata-api/server": [
         "../server/dist"
       ],
-      "@sonata-api/system": [
-        "../system/dist"
+      "@sonata-api/builtins": [
+        "../builtins/dist"
       ],
       "@sonata-api/types": [
         "../types/dist"

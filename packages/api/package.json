@@ -36,7 +36,7 @@
     "@sonata-api/http": "*",
     "@sonata-api/mailing": "*",
     "@sonata-api/security": "*",
-    "@sonata-api/system": "*",
+    "@sonata-api/builtins": "*",
     "@sonata-api/types": "*",
     "@sonata-api/validation": "*",
     "jsonwebtoken": "^8.5.1",

@@ -1,18 +1,10 @@
 import type { Description, SchemaWithId } from '@sonata-api/types'
 
-export const defineDescription = <
-  const TDescription extends Description<TDescription> & {
-    properties: Description['properties']
-  },
->(description: TDescription) => {
+export const defineDescription = <const TDescription extends Description<TDescription>>(description: TDescription) => {
   return description
 }
 
-export const defineDescriptionTuple = <
-  const TDescription extends Description<TDescription> & {
-    properties: Description['properties']
-  },
->(description: Partial<TDescription>) => [
+export const defineDescriptionTuple = <const TDescription extends Description<TDescription>>(description: Partial<TDescription>) => [
   {},
   description,
 ] as unknown as [

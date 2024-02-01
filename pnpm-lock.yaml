@@ -65,6 +65,9 @@ importers:
       '@sonata-api/access-control':
         specifier: '*'
         version: link:../access-control
+      '@sonata-api/builtins':
+        specifier: '*'
+        version: link:../builtins
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
@@ -80,9 +83,6 @@ importers:
       '@sonata-api/security':
         specifier: '*'
         version: link:../security
-      '@sonata-api/system':
-        specifier: '*'
-        version: link:../system
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
@@ -103,6 +103,37 @@ importers:
       '@types/jsonwebtoken':
         specifier: ^8.5.6
         version: 8.5.9
+
+  packages/builtins:
+    dependencies:
+      '@sonata-api/access-control':
+        specifier: '*'
+        version: link:../access-control
+      '@sonata-api/api':
+        specifier: '*'
+        version: link:../api
+      '@sonata-api/common':
+        specifier: '*'
+        version: link:../common
+      '@sonata-api/entrypoint':
+        specifier: '*'
+        version: link:../entrypoint
+      '@sonata-api/types':
+        specifier: '*'
+        version: link:../types
+      '@sonata-api/validation':
+        specifier: '*'
+        version: link:../validation
+      bcrypt:
+        specifier: ^5.1.0
+        version: 5.1.1
+    devDependencies:
+      '@types/bcrypt':
+        specifier: ^5.0.0
+        version: 5.0.2
+      mongodb:
+        specifier: ^6.1.0
+        version: 6.3.0
 
   packages/common:
     dependencies:
@@ -177,6 +208,9 @@ importers:
       '@sonata-api/api':
         specifier: '*'
         version: link:../api
+      '@sonata-api/builtins':
+        specifier: '*'
+        version: link:../builtins
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
@@ -189,9 +223,6 @@ importers:
       '@sonata-api/server':
         specifier: '*'
         version: 'link:'
-      '@sonata-api/system':
-        specifier: '*'
-        version: link:../system
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
@@ -215,6 +246,9 @@ importers:
       '@sonata-api/api':
         specifier: '*'
         version: link:../api
+      '@sonata-api/builtins':
+        specifier: '*'
+        version: link:../builtins
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
@@ -236,9 +270,6 @@ importers:
       '@sonata-api/server':
         specifier: '*'
         version: link:../server
-      '@sonata-api/system':
-        specifier: '*'
-        version: link:../system
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
@@ -266,12 +297,12 @@ importers:
       '@sonata-api/api':
         specifier: '*'
         version: link:../api
+      '@sonata-api/builtins':
+        specifier: '*'
+        version: link:../builtins
       '@sonata-api/common':
         specifier: '*'
         version: link:../common
-      '@sonata-api/system':
-        specifier: '*'
-        version: link:../system
       '@sonata-api/types':
         specifier: '*'
         version: link:../types
@@ -287,37 +318,6 @@ importers:
       tslib:
         specifier: ^2.5.0
         version: 2.6.2
-
-  packages/system:
-    dependencies:
-      '@sonata-api/access-control':
-        specifier: '*'
-        version: link:../access-control
-      '@sonata-api/api':
-        specifier: '*'
-        version: link:../api
-      '@sonata-api/common':
-        specifier: '*'
-        version: link:../common
-      '@sonata-api/entrypoint':
-        specifier: '*'
-        version: link:../entrypoint
-      '@sonata-api/types':
-        specifier: '*'
-        version: link:../types
-      '@sonata-api/validation':
-        specifier: '*'
-        version: link:../validation
-      bcrypt:
-        specifier: ^5.1.0
-        version: 5.1.1
-    devDependencies:
-      '@types/bcrypt':
-        specifier: ^5.0.0
-        version: 5.0.2
-      mongodb:
-        specifier: ^6.1.0
-        version: 6.3.0
 
   packages/types:
     devDependencies:
@@ -2345,6 +2345,7 @@ packages:
   /agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
+    requiresBuild: true
     dependencies:
       debug: 4.3.4(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -4967,6 +4968,7 @@ packages:
   /semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
     hasBin: true
+    requiresBuild: true
     dev: false
 
   /semver@7.5.4:
