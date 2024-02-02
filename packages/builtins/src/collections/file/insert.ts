@@ -4,17 +4,15 @@ import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
 import { insert as originalInsert } from '@sonata-api/api'
 
-export const insert = async (
-  payload: {
-    what: { content: string } & Pick<SchemaWithId<typeof description>,
+export const insert = async (payload: {
+  what: { content: string } & Pick<SchemaWithId<typeof description>,
       | '_id'
       | 'filename'
       | 'owner'
       | 'absolute_path'
-    >
-  },
-  context: Context<typeof description>
-) => {
+  >
+},
+context: Context<typeof description>) => {
   if( !context.token.authenticated ) {
     throw new Error('')
   }

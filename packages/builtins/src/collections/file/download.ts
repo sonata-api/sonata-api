@@ -11,11 +11,11 @@ export enum FileReadError {
 
 export const download = async (payload: {
   fileId: string
-  noHeaders: boolean
   options: readonly (
       | 'picture'
       | 'download'
   )[]
+  noHeaders?: boolean
 },
 context: Context<typeof description>) => {
   const { fileId, options = [] } = payload
