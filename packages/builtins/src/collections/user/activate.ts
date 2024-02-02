@@ -10,12 +10,10 @@ export enum ActivationErrors {
   InvalidLink = 'INVALID_LINK',
 }
 
-export const activate = async (
-  payload: {
-    password: string
-  },
-  context: Context<typeof description>
-) => {
+export const activate = async (payload: {
+  password: string
+},
+context: Context<typeof description>) => {
   const {
     u: userId,
     t: token,

@@ -1,24 +1,25 @@
-import type { Context, PackReferences } from '@sonata-api/types'
-import type { user } from '.'
+import type { Context, SchemaWithId, PackReferences } from '@sonata-api/types'
+import type { description } from './description'
 import * as bcrypt from 'bcrypt'
 import { functions } from '@sonata-api/api'
 
-type Props = {
-  what: Omit<PackReferences<typeof user.item>, 'roles'>
-}
-
-export const insert = async (props: Props, context: Context) => {
+export const insert = async (
+  payload: {
+    what: Omit<PackReferences<SchemaWithId<typeof description>>, 'roles'>
+  },
+  context: Context
+) => {
   const { apiConfig } = context
-  props.what.group = apiConfig.group
+  payload.what.group = apiConfig.group
 
-  if( props.what.password ) {
-    props.what.password = await bcrypt.hash(props.what.password, 10)
+  if( payload.what.password ) {
+    payload.what.password = await bcrypt.hash(payload.what.password, 10)
   }
 
-  if( props.what.password === null ) {
-    delete props.what.password
+  if( payload.what.password === null ) {
+    delete payload.what.password
   }
 
-  return functions.insert(props, context)
+  return functions.insert(payload, context)
 }
 

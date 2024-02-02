@@ -6,7 +6,7 @@ import { serialize, isLeft, left, unwrapEither } from '@sonata-api/common'
 import { getAvailableRoles } from '@sonata-api/access-control'
 import { authenticate } from '../collections/user/authenticate'
 
-type Props = {
+type Payload = {
   collections?: string[]
   noSerialize?: boolean
   roles?: boolean
@@ -24,7 +24,7 @@ export const describe = async (context: Context): Promise<any> => {
     router?: any
   }
 
-  const props: Props = context.request.payload
+  const props: Payload = context.request.payload
 
   if( props.revalidate ) {
     const authEither = await authenticate({

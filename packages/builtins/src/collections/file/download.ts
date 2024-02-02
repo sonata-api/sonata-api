@@ -9,18 +9,16 @@ export enum FileReadError {
   FileNotFound = 'FILE_NOT_FOUND',
 }
 
-export const download = async (
-  payload: {
-    fileId: string
-    noHeaders: boolean
-    options: readonly (
+export const download = async (payload: {
+  fileId: string
+  noHeaders: boolean
+  options: readonly (
       | 'picture'
       | 'download'
-    )[]
-  },
-  context: Context<typeof description>
-) => {
-  const { fileId, options = [], } = payload
+  )[]
+},
+context: Context<typeof description>) => {
+  const { fileId, options = [] } = payload
   const file = await context.collection.model.findOne({
     _id: new ObjectId(fileId),
   }, {

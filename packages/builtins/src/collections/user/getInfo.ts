@@ -10,13 +10,11 @@ export enum ActivationErrors {
   InvalidLink = 'INVALID_LINK',
 }
 
-export const getInfo = async (
-  payload: {
-    userId: string
-    token: string
-  },
-  context: Context<typeof description>
-) => {
+export const getInfo = async (payload: {
+  userId: string
+  token: string
+},
+context: Context<typeof description>) => {
   const {
     userId,
     token,
