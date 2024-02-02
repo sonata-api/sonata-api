@@ -10,11 +10,12 @@ export enum ActivationErrors {
   InvalidLink = 'INVALID_LINK',
 }
 
-type Props = {
-  password: string
-}
-
-export const activate = async (props: Props, context: Context<typeof description>) => {
+export const activate = async (
+  payload: {
+    password: string
+  },
+  context: Context<typeof description>
+) => {
   const {
     u: userId,
     t: token,
@@ -43,7 +44,7 @@ export const activate = async (props: Props, context: Context<typeof description
   }
 
   if( !user.password ) {
-    if( !props.password ) {
+    if( !payload.password ) {
       return context.response.writeHead(302, {
         location: `/user/activation?step=password&u=${userId}&t=${token}`,
       })
@@ -55,7 +56,7 @@ export const activate = async (props: Props, context: Context<typeof description
     {
       $set: {
         active: true,
-        password: await bcrypt.hash(props.password, 10),
+        password: await bcrypt.hash(payload.password, 10),
       },
     })
 

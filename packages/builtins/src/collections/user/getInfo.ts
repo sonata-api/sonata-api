@@ -10,16 +10,17 @@ export enum ActivationErrors {
   InvalidLink = 'INVALID_LINK',
 }
 
-type Props = {
-  userId: string
-  token: string
-}
-
-export const getInfo = async (props: Props, context: Context<typeof description>) => {
+export const getInfo = async (
+  payload: {
+    userId: string
+    token: string
+  },
+  context: Context<typeof description>
+) => {
   const {
     userId,
     token,
-  } = props
+  } = payload
 
   if( !userId || !token ) {
     return left(ActivationErrors.InvalidLink)

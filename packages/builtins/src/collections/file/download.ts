@@ -9,20 +9,18 @@ export enum FileReadError {
   FileNotFound = 'FILE_NOT_FOUND',
 }
 
-type Props = {
-  fileId: string
-  options: readonly (
-    | 'picture'
-    | 'download'
-  )[]
-}
-
-export const download = async (props: Props, context: Context<typeof description>) => {
-  const {
-    fileId,
-    options = [],
-  } = props
-
+export const download = async (
+  payload: {
+    fileId: string
+    noHeaders: boolean
+    options: readonly (
+      | 'picture'
+      | 'download'
+    )[]
+  },
+  context: Context<typeof description>
+) => {
+  const { fileId, options = [], } = payload
   const file = await context.collection.model.findOne({
     _id: new ObjectId(fileId),
   }, {
@@ -32,9 +30,11 @@ export const download = async (props: Props, context: Context<typeof description
   })
 
   if( !file || !file.absolute_path ) {
-    context.response.writeHead(404, {
-      'content-type': 'application/json',
-    })
+    if( !payload.noHeaders ) {
+      context.response.writeHead(404, {
+        'content-type': 'application/json',
+      })
+    }
     return left(FileReadError.DocumentNotFound)
   }
 
@@ -58,15 +58,17 @@ export const download = async (props: Props, context: Context<typeof description
 
     const chunkSize = (end - start) + 1
 
-    context.response.writeHead(206, {
-      'accept-ranges': 'bytes',
-      'content-range': `bytes ${start}-${end}/${stat.size}`,
-      'content-length': chunkSize,
-      'content-type': file.mime,
-      'content-disposition': `${options.includes('download')
-        ? 'attachment; '
-        : ''}filename=${encodeURI(file.filename)}`,
-    })
+    if( !payload.noHeaders ) {
+      context.response.writeHead(206, {
+        'accept-ranges': 'bytes',
+        'content-range': `bytes ${start}-${end}/${stat.size}`,
+        'content-length': chunkSize,
+        'content-type': file.mime,
+        'content-disposition': `${options.includes('download')
+          ? 'attachment; '
+          : ''}filename=${encodeURI(file.filename)}`,
+      })
+    }
 
     return fs.createReadStream(file.absolute_path, {
       start,
@@ -74,12 +76,14 @@ export const download = async (props: Props, context: Context<typeof description
     })
   }
 
-  context.response.writeHead(200, {
-    'content-type': file.mime,
-    'content-disposition': `${options.includes('download')
-      ? 'attachment; '
-      : ''}filename=${encodeURI(file.filename)}`,
-  })
+  if( !payload.noHeaders ) {
+    context.response.writeHead(200, {
+      'content-type': file.mime,
+      'content-disposition': `${options.includes('download')
+        ? 'attachment; '
+        : ''}filename=${encodeURI(file.filename)}`,
+    })
+  }
 
   return fs.createReadStream(file.absolute_path)
 }

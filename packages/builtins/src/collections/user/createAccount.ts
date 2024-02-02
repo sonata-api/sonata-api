@@ -5,10 +5,11 @@ import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import bcrypt from 'bcrypt'
 
-type Props = Omit<Schema<typeof description>, 'roles'>
-
-export const createAccount = async (props: Props, context: Context<typeof description>) => {
-  const user = Object.assign({}, props)
+export const createAccount = async (
+  payload: Omit<Schema<typeof description>, 'roles'>,
+  context: Context<typeof description>
+) => {
+  const user = Object.assign({}, payload)
 
   if( !context.apiConfig.allowSignup ) {
     throw new Error('signup disallowed')

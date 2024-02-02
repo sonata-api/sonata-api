@@ -26,7 +26,7 @@ type UnionFunctions<TFunctions, TSchema extends CollectionDocument<any>> = {
   [P in keyof TFunctions]: P extends keyof CollectionFunctions<any>
     ? CollectionFunctions<TSchema>[P] extends infer CollFunction
       ? CollFunction extends (...args: any[])=> any
-        ? Parameters<CollFunction>[0] extends undefined
+        ? Extract<undefined, Parameters<CollFunction>[0]> extends never
           ? (payload: Parameters<CollFunction>[0], ...args: RestParameters<TFunctions[P]>)=> ReturnType<CollFunction>
           : (payload?: Parameters<CollFunction>[0], ...args: RestParameters<TFunctions[P]>)=> ReturnType<CollFunction>
         : never
