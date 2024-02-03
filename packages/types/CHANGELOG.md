@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.34
+
+### Patch Changes
+
+- Releases
+
 ## 0.1.33
 
 ### Patch Changes

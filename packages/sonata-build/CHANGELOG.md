@@ -1,5 +1,16 @@
 # sonata-build
 
+## 1.0.13
+
+### Patch Changes
+
+- Releases
+- Updated dependencies
+  - @sonata-api/api@1.0.33
+  - @sonata-api/builtins@1.0.21
+  - @sonata-api/common@0.1.18
+  - @sonata-api/types@0.1.34
+
 ## 1.0.12
 
 ### Patch Changes
