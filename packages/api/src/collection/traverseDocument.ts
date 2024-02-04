@@ -62,11 +62,6 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
 }
 
 const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[] } = {}) => {
-  console.log({
-    ctx,
-    options,
-  })
-
   if( !options.fromIds && Array.isArray(ctx.target[ctx.propName]) ) {
     return
   }
