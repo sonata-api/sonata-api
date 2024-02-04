@@ -1,4 +1,4 @@
-import type { Context, SchemaWithId } from '@sonata-api/types'
+import type { Context, SchemaWithId, ObjectId } from '@sonata-api/types'
 import type { description } from './description'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
@@ -13,12 +13,13 @@ type Props = {
 
 type Return = {
   user: Pick<SchemaWithId<typeof description>,
-    | '_id'
     | 'name'
     | 'email'
     | 'roles'
     | 'active'
-  >
+  > & {
+    _id: ObjectId | null
+  }
   token: {
     type: 'bearer'
     content: string
@@ -127,9 +128,11 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     email: props.email,
   },
   {
-    email: 1,
-    password: 1,
-    active: 1,
+    projection: {
+      email: 1,
+      password: 1,
+      active: 1,
+    },
   })
 
   if( !user || !user.password || !await bcryptCompare(props.password, user.password) ) {

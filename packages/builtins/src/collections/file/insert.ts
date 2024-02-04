@@ -1,11 +1,11 @@
-import type { Context, SchemaWithId } from '@sonata-api/types'
+import type { Context, SchemaWithId, PackReferences } from '@sonata-api/types'
 import type { description } from './description'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
 import { insert as originalInsert } from '@sonata-api/api'
 
 export const insert = async (payload: {
-  what: { content: string } & Pick<SchemaWithId<typeof description>,
+  what: { content: string } & Pick<PackReferences<SchemaWithId<typeof description>>,
       | '_id'
       | 'filename'
       | 'owner'
@@ -30,7 +30,9 @@ context: Context<typeof description>) => {
     _id: payload.what._id,
   },
   {
-    absolute_path: 1,
+    projection: {
+      absolute_path: 1,
+    },
   })
 
   if( oldFile && oldFile.absolute_path ) {

@@ -26,7 +26,9 @@ context: Context<typeof description>) => {
   const user = await context.collection.model.findOne({
     _id: new ObjectId(userId),
   }, {
-    password: 1,
+    projection: {
+      password: 1,
+    },
   })
 
   if( !user ) {

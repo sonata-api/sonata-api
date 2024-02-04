@@ -18,12 +18,13 @@ export type Reference = {
 export type ReferenceMap = Record<string, Reference | undefined>
 
 export type BuildLookupOptions = {
+  properties: NonNullable<FixedObjectProperty['properties']>
   parent?: string
   depth?: number
   maxDepth?: number
   memoize?: string
   project?: string[]
-  properties: NonNullable<FixedObjectProperty['properties']>
+  skipGroupPhase?: boolean
 }
 
 const referenceMemo: Record<string, ReferenceMap | {} | undefined> = {}
@@ -45,6 +46,58 @@ const narrowLookupPipelineProjection = (pipeline: Record<string, any>[], project
 
     return true
   })
+}
+
+const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<FixedObjectProperty['properties']>) => {
+  const $group = Object.keys(properties).reduce((a, propName) => {
+    const refMap = referenceMap[propName] || {}
+    const groupType = !refMap.referencedCollection && refMap.isArray
+      ? 'push'
+      : 'first'
+
+    return {
+      ...a,
+      [propName]: {
+        [`$${groupType}`]: `$${propName}`,
+      },
+    }
+  }, {
+    _id: '$_id',
+  })
+
+  return {
+    $group,
+  }
+}
+
+const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
+  const $set = Object.entries(referenceMap).reduce((a, [refName, refMap]) => {
+    if( !refMap!.isArray || refMap!.referencedCollection ) {
+      return a
+    }
+
+    return {
+      ...a,
+      [refName]: {
+        $filter: {
+          input: `$${refName}`,
+          as: `${refName}_elem`,
+          cond: {
+            $ne: [
+              `$$${refName}_elem`,
+              {},
+            ],
+          },
+        },
+      },
+    }
+  }, {})
+
+  return Object.keys($set).length > 0
+    ? {
+      $set,
+    }
+    : null
 }
 
 export const getReferences = async (properties: NonNullable<FixedObjectProperty['properties']>,
@@ -134,12 +187,13 @@ export const getReferences = async (properties: NonNullable<FixedObjectProperty[
 
 export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, options: BuildLookupOptions): Promise<any[]> => {
   const {
+    properties,
     parent,
     depth = 0,
     maxDepth = 3,
     memoize: memoizeId,
     project = [],
-    properties,
+    skipGroupPhase,
   } = options
 
   const memoize = `${memoizeId}-${project.sort().join('-')}`
@@ -158,6 +212,8 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   }
 
   const pipeline: any[] = []
+  let hasDeepReferences = false
+
   if( parent ) {
     pipeline.push({
       $unwind: {
@@ -246,6 +302,8 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
         })
       }
     } else if( reference.deepReferences && depth <= maxDepth ) {
+      hasDeepReferences = true
+
       for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
         const sourceProps = reference.referencedCollection
           ? unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
@@ -264,8 +322,18 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
           depth: depth + 1,
           parent: withParent(refName),
           properties: refProperties,
+          skipGroupPhase: true,
         }))
       }
+    }
+  }
+
+  if( !skipGroupPhase && hasDeepReferences ) {
+    pipeline.push(buildGroupPhase(referenceMap, properties))
+
+    const arrayCleanupPhase = buildArrayCleanupPhase(referenceMap)
+    if( arrayCleanupPhase ) {
+      pipeline.push(arrayCleanupPhase)
     }
   }
 

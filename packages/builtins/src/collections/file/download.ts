@@ -22,9 +22,11 @@ context: Context<typeof description>) => {
   const file = await context.collection.model.findOne({
     _id: new ObjectId(fileId),
   }, {
-    absolute_path: 1,
-    filename: 1,
-    mime: 1,
+    projection: {
+      absolute_path: 1,
+      filename: 1,
+      mime: 1,
+    },
   })
 
   if( !file || !file.absolute_path ) {

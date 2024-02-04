@@ -61,8 +61,13 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 }
 
-const deleteFiles = async (ctx: PhaseContext) => {
-  if( Array.isArray(ctx.target[ctx.propName]) ) {
+const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[] } = {}) => {
+  console.log({
+    ctx,
+    options,
+  })
+
+  if( !options.fromIds && Array.isArray(ctx.target[ctx.propName]) ) {
     return
   }
 
@@ -77,42 +82,26 @@ const deleteFiles = async (ctx: PhaseContext) => {
     },
   })
 
-  const fileId = getValueFromPath(doc, ctx.propPath)
   if( !doc ) {
     return left('invalid document id')
   }
 
-  const fileFilters = {
-    _id: {
-      $in: Array.isArray(fileId)
-        ? fileId
-        : [fileId],
-    },
+  let fileIds = getValueFromPath(doc, ctx.propPath)
+  if( options.fromIds ) {
+    fileIds = fileIds.filter((id: ObjectId | null) => !options.fromIds!.some((fromId) => {
+      return !id || id.equals(fromId)
+    }))
+
+    console.log({
+      fileIds,
+    })
   }
-
-  const files = await fileCollection.find(fileFilters, {
-    projection: {
-      absolute_path: 1,
-    },
-  }).toArray()
-
-  for( const file of files ) {
-    try {
-      await fs.unlink(file.absolute_path)
-    } catch( err ) {
-      console.trace(err)
-    }
-  }
-
-  return fileCollection.deleteMany(fileFilters)
-}
-
-const bulkDeleteFiles = async (fileIds: ObjectId[]) => {
-  const fileCollection = getDatabaseCollection('file')
 
   const fileFilters = {
     _id: {
-      $nin: fileIds,
+      $in: Array.isArray(fileIds)
+        ? fileIds
+        : [fileIds],
     },
   }
 
@@ -237,7 +226,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
 
   if( !value ) {
     if( ctx.root._id ) {
-      await deleteFiles(ctx)
+      await disposeOldFiles(ctx)
     }
     return null
   }
@@ -251,7 +240,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
   }
 
   if( ctx.root._id ) {
-    await deleteFiles(ctx)
+    await disposeOldFiles(ctx)
   }
 
   /* eslint-disable-next-line */
@@ -278,7 +267,9 @@ const recurseDeep = async (value: any, ctx: PhaseContext) => {
     }
 
     if( ctx.options.moveFiles && '$ref' in ctx.property.items && ctx.property.items.$ref === 'file' ) {
-      await bulkDeleteFiles(items)
+      await disposeOldFiles(ctx, {
+        fromIds: items,
+      })
     }
 
     return items

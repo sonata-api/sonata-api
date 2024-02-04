@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.34
+
+### Patch Changes
+
+- Proper disposal of old files
+
 ## 1.0.33
 
 ### Patch Changes
