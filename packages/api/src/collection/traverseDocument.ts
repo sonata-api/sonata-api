@@ -254,7 +254,8 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     await deleteFiles(ctx)
   }
 
-  delete (tempFile)._id
+  /* eslint-disable-next-line */
+  delete (<any>tempFile)._id
   const file = await getDatabaseCollection('file').insertOne(tempFile)
   return file.insertedId
 }

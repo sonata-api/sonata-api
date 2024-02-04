@@ -246,8 +246,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
         })
       }
     } else if( reference.deepReferences && depth <= maxDepth ) {
-      hasDeepReferences = true
-
       for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
         const sourceProps = reference.referencedCollection
           ? unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
