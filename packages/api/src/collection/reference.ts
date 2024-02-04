@@ -47,58 +47,6 @@ const narrowLookupPipelineProjection = (pipeline: Record<string, any>[], project
   })
 }
 
-const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<FixedObjectProperty['properties']>) => {
-  const $group = Object.keys(properties).reduce((a, propName) => {
-    const refMap = referenceMap[propName] || {}
-    const groupType = !refMap.referencedCollection && refMap.isArray
-      ? 'push'
-      : 'first'
-
-    return {
-      ...a,
-      [propName]: {
-        [`$${groupType}`]: `$${propName}`,
-      },
-    }
-  }, {
-    _id: '$_id',
-  })
-
-  return {
-    $group,
-  }
-}
-
-const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
-  const $set = Object.entries(referenceMap).reduce((a, [refName, refMap]) => {
-    if( !refMap!.isArray || refMap!.referencedCollection ) {
-      return a
-    }
-
-    return {
-      ...a,
-      [refName]: {
-        $filter: {
-          input: `$${refName}`,
-          as: `${refName}_elem`,
-          cond: {
-            $ne: [
-              `$$${refName}_elem`,
-              {},
-            ],
-          },
-        },
-      },
-    }
-  }, {})
-
-  return Object.keys($set).length > 0
-    ? {
-      $set,
-    }
-    : null
-}
-
 export const getReferences = async (properties: NonNullable<FixedObjectProperty['properties']>,
   options?: GetReferenceOptions) => {
   const {
@@ -210,8 +158,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   }
 
   const pipeline: any[] = []
-  let hasDeepReferences = false
-
   if( parent ) {
     pipeline.push({
       $unwind: {
@@ -322,15 +268,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
           properties: refProperties,
         }))
       }
-    }
-  }
-
-  if( hasDeepReferences ) {
-    pipeline.push(buildGroupPhase(referenceMap, properties))
-
-    const arrayCleanupPhase = buildArrayCleanupPhase(referenceMap)
-    if( arrayCleanupPhase ) {
-      pipeline.push(arrayCleanupPhase)
     }
   }
 

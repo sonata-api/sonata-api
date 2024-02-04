@@ -1,5 +1,5 @@
 import type { Description, Property, Either, ACErrors, ValidationError } from '@sonata-api/types'
-import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference } from '@sonata-api/common'
+import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueFromPath } from '@sonata-api/common'
 import { validateProperty, validateWholeness, makeValidationError } from '@sonata-api/validation'
 import { ValidationErrorCodes } from '@sonata-api/types'
 import { ObjectId } from 'mongodb'
@@ -27,7 +27,9 @@ export type TraverseNormalized = {
 
 type PhaseContext = {
   target: any
+  root: any
   propName: string
+  propPath: string
   property: Property
   options: TraverseOptions & TraverseNormalized
 }
@@ -60,37 +62,75 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
 }
 
 const deleteFiles = async (ctx: PhaseContext) => {
-  const doc = await getDatabaseCollection(ctx.options.description.$id).findOne({
-    _id: new ObjectId(ctx.target._id),
+  if( Array.isArray(ctx.target[ctx.propName]) ) {
+    return
+  }
+
+  const fileCollection = getDatabaseCollection('file')
+  const collection = getDatabaseCollection(ctx.options.description.$id)
+
+  const doc = await collection.findOne({
+    _id: new ObjectId(ctx.root._id),
   }, {
     projection: {
-      [ctx.propName]: 1,
+      [ctx.propPath]: 1,
     },
   })
 
+  const fileId = getValueFromPath(doc, ctx.propPath)
   if( !doc ) {
     return left('invalid document id')
   }
 
   const fileFilters = {
     _id: {
-      $in: Array.isArray(doc[ctx.propName])
-        ? doc[ctx.propName]
-        : [doc[ctx.propName]],
+      $in: Array.isArray(fileId)
+        ? fileId
+        : [fileId],
     },
   }
 
-  const files = await getDatabaseCollection('file').find(fileFilters, {
+  const files = await fileCollection.find(fileFilters, {
     projection: {
       absolute_path: 1,
     },
   }).toArray()
 
   for( const file of files ) {
-    await fs.unlink(file.absolute_path)
+    try {
+      await fs.unlink(file.absolute_path)
+    } catch( err ) {
+      console.trace(err)
+    }
   }
 
-  return getDatabaseCollection('file').deleteMany(fileFilters)
+  return fileCollection.deleteMany(fileFilters)
+}
+
+const bulkDeleteFiles = async (fileIds: ObjectId[]) => {
+  const fileCollection = getDatabaseCollection('file')
+
+  const fileFilters = {
+    _id: {
+      $nin: fileIds,
+    },
+  }
+
+  const files = await fileCollection.find(fileFilters, {
+    projection: {
+      absolute_path: 1,
+    },
+  }).toArray()
+
+  for( const file of files ) {
+    try {
+      await fs.unlink(file.absolute_path)
+    } catch( err ) {
+      console.trace(err)
+    }
+  }
+
+  return fileCollection.deleteMany(fileFilters)
 }
 
 const autoCast = (value: any, ctx: Omit<PhaseContext, 'options'> & { options: (TraverseOptions & TraverseNormalized) | {} }): any => {
@@ -196,10 +236,9 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
   }
 
   if( !value ) {
-    if( ctx.target._id ) {
+    if( ctx.root._id ) {
       await deleteFiles(ctx)
     }
-
     return null
   }
 
@@ -211,19 +250,18 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     return left('invalid tempfile')
   }
 
-  if( ctx.target._id ) {
+  if( ctx.root._id ) {
     await deleteFiles(ctx)
   }
 
-  delete tempFile._id
-  
+  delete (tempFile)._id
   const file = await getDatabaseCollection('file').insertOne(tempFile)
   return file.insertedId
 }
 
 const recurseDeep = async (value: any, ctx: PhaseContext) => {
   if( 'properties' in ctx.property ) {
-    const resultEither = await recurse(value, ctx.property, ctx.options)
+    const resultEither = await recurse(value, ctx)
     return unwrapEither(resultEither)
   }
 
@@ -238,6 +276,10 @@ const recurseDeep = async (value: any, ctx: PhaseContext) => {
       items.push(result)
     }
 
+    if( ctx.options.moveFiles && '$ref' in ctx.property.items && ctx.property.items.$ref === 'file' ) {
+      await bulkDeleteFiles(items)
+    }
+
     return items
   }
 
@@ -246,40 +288,45 @@ const recurseDeep = async (value: any, ctx: PhaseContext) => {
 
 const recurse = async <TRecursionTarget extends Record<string, any>>(
   target: TRecursionTarget,
-  parent: Property | Description,
-  options: TraverseOptions & TraverseNormalized,
+  ctx: Pick<
+    PhaseContext,
+      | 'root'
+      | 'options'
+      | 'property'
+      | 'propPath'
+  >,
 
 ): Promise<Either<ValidationError | ACErrors, TRecursionTarget>> => {
   const entries = []
-  const entrypoint = options.fromProperties && 'properties' in parent
+  const entrypoint = ctx.options.fromProperties && 'properties' in ctx.property
     ? {
       _id: null,
-      ...parent.properties,
+      ...ctx.property.properties,
     }
     : target
 
-  if( !parent ) {
+  if( !ctx.property ) {
     return right({} as TRecursionTarget)
   }
 
   for( const propName in entrypoint ) {
     const value = target[propName]
-    const property = getProperty(propName, parent)
+    const property = getProperty(propName, ctx.property)
 
-    if( value === undefined && !(options.getters && property && 'getter' in property) ) {
+    if( value === undefined && !(ctx.options.getters && property && 'getter' in property) ) {
       continue
     }
 
-    if( options.autoCast && propName === '_id' ) {
+    if( ctx.options.autoCast && propName === '_id' ) {
       entries.push([
         propName,
         autoCast(value, {
+          ...ctx,
           target,
           propName,
           property: {
             $ref: '',
           },
-          options: {},
         }),
       ])
 
@@ -290,7 +337,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
       // if first propName is preceded by '$' we assume
       // it contains MongoDB query operators
       if( Object.keys(value)[0]?.startsWith('$') ) {
-        if( options.allowOperators ) {
+        if( ctx.options.allowOperators ) {
           entries.push([
             propName,
             value,
@@ -303,7 +350,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
       if( Array.isArray(value) ) {
         const operations = []
         for( const operation of value ) {
-          const operatorEither = await recurse(operation, parent, options)
+          const operatorEither = await recurse(operation, ctx)
           if( isLeft(operatorEither) ) {
             return left(unwrapEither(operatorEither))
           }
@@ -318,7 +365,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
         continue
       }
 
-      const operatorEither = await recurse(value, parent, options)
+      const operatorEither = await recurse(value, ctx)
       if( isLeft(operatorEither) ) {
         return left(unwrapEither(operatorEither))
       }
@@ -330,7 +377,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     }
 
     if( property ) {
-      if( options.recurseReferences ) {
+      if( ctx.options.recurseReferences ) {
         const propCast = 'items' in property
           ? property.items
           : property
@@ -342,7 +389,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
             const documents = []
 
             for( const elem of value ) {
-              const documentEither = await traverseDocument(elem, targetDescription, options)
+              const documentEither = await traverseDocument(elem, targetDescription, ctx.options)
               if( isLeft(documentEither) ) {
                 return left(unwrapEither(documentEither))
               }
@@ -357,7 +404,7 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
             continue
           }
 
-          const documentEither = await traverseDocument(value, targetDescription, options)
+          const documentEither = await traverseDocument(value, targetDescription, ctx.options)
           if( isLeft(documentEither) ) {
             return left(unwrapEither(documentEither))
           }
@@ -372,11 +419,14 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
 
       entries.push([
         propName,
-        await options.pipe(value, {
+        await ctx.options.pipe(value, {
+          ...ctx,
           target,
           propName,
+          propPath: ctx.propPath
+            ? `${ctx.propPath}.${propName}`
+            : propName,
           property,
-          options,
         }),
       ])
     }
@@ -439,7 +489,13 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     },
   })
 
-  const resultEither = await recurse(what, description, options)
+  const resultEither = await recurse(what, {
+    root: what,
+    property: description as Property,
+    propPath: '',
+    options,
+  })
+
   if( isLeft(resultEither) ) {
     return left(unwrapEither(resultEither))
   }
