@@ -86,10 +86,6 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     fileIds = fileIds.filter((id: ObjectId | null) => !options.fromIds!.some((fromId) => {
       return !id || id.equals(fromId)
     }))
-
-    console.log({
-      fileIds,
-    })
   }
 
   const fileFilters = {
