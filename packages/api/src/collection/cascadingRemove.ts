@@ -65,10 +65,7 @@ const internalCascadingRemove = async (target: Record<string, any>, refMap: Refe
   }
 }
 
-export const cascadingRemove = async <TContext extends Context>(
-  target: Record<string, any>,
-  context: TContext,
-) => {
+export const cascadingRemove = async (target: Record<string, any>, context: Context) => {
   const refMap = await getReferences(context.description.properties)
   return internalCascadingRemove(target, refMap, context)
 }
