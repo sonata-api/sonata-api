@@ -1,5 +1,26 @@
 # @sonata-api/api
 
+## 1.0.37
+
+### Patch Changes
+
+- Remove leftover console.log
+
+## 1.0.36
+
+### Patch Changes
+
+- Bug fixes
+
+## 1.0.35
+
+### Patch Changes
+
+- Bug fixes
+- Updated dependencies
+  - @sonata-api/builtins@1.0.24
+  - @sonata-api/types@0.1.35
+
 ## 1.0.34
 
 ### Patch Changes
