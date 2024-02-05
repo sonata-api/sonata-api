@@ -16,7 +16,7 @@ export type Reference = {
   populatedProperties?: string[]
 }
 
-export type ReferenceMap = Record<string, Reference>
+export type ReferenceMap = Record<string, Reference | undefined>
 
 export type BuildLookupOptions = {
   properties: FixedObjectProperty['properties']
@@ -283,6 +283,10 @@ const buildLookupStages = async (reference: Reference,  propName: string, option
     refHasDeepReferences = true
 
     for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
+      if( !refMap ) {
+        continue
+      }
+
       if( refMap.referencedCollection ) {
         const description = unsafe(await getCollectionAsset(refMap.referencedCollection, 'description'))
         const { stages: result } = await buildLookupStages(refMap, refName, {
@@ -347,6 +351,10 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   }
 
   for( const [propName, reference] of Object.entries(referenceMap) ) {
+    if( !reference ) {
+      continue
+    }
+
     const {
       stages,
       refHasDeepReferences,

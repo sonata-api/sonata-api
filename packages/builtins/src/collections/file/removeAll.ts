@@ -1,4 +1,4 @@
-import type { Context, SchemaWithId, PackReferences, RemoveAllPayload, ObjectId, } from '@sonata-api/types'
+import type { Context, SchemaWithId, PackReferences, RemoveAllPayload, ObjectId } from '@sonata-api/types'
 import type { description } from './description'
 import { removeAll as originalRemoveAll } from '@sonata-api/api'
 import fs from 'fs/promises'
@@ -6,18 +6,18 @@ import fs from 'fs/promises'
 export const removeAll = async (payload: RemoveAllPayload, context: Context<typeof description>) => {
   const files = context.collection.model.find({
     _id: {
-      $in: payload.filters as ObjectId[]
-    }
+      $in: payload.filters as ObjectId[],
+    },
   }, {
     projection: {
-      absolute_path: 1
-    }
+      absolute_path: 1,
+    },
   })
 
   let file: PackReferences<SchemaWithId<typeof description>> | null
   while( file = await files.next() ) {
     try {
-      await fs.unlink(file.absolute_path!)
+      await fs.unlink(file.absolute_path)
     } catch( err ) {
       console.trace(err)
     }

@@ -29,7 +29,7 @@ context: Context<typeof description>) => {
     },
   })
 
-  if( !file || !file.absolute_path ) {
+  if( !file ) {
     if( !payload.noHeaders ) {
       context.response.writeHead(404, {
         'content-type': 'application/json',

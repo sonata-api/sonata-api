@@ -12,12 +12,6 @@ export const description = defineDescription({
   $id: 'file',
   owned: 'always',
   presets: ['owned'],
-  required: [
-    'size',
-    'last_modified',
-    'filename',
-    'mime',
-  ],
   indexes: [
     'filename',
     'link',

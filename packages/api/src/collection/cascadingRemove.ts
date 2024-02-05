@@ -14,7 +14,7 @@ const preferredRemove = async (targetId: ObjectId | ObjectId[], reference: Refer
   const coll = getDatabaseCollection(reference.referencedCollection)
   const context = await createContext({
     parentContext,
-    collectionName: reference.referencedCollection
+    collectionName: reference.referencedCollection,
   })
 
   if( Array.isArray(targetId) ) {
@@ -38,7 +38,7 @@ const preferredRemove = async (targetId: ObjectId | ObjectId[], reference: Refer
     const remove = unwrapEither(removeEither)
     return remove({
       filters: {
-        _id: targetId
+        _id: targetId,
       },
     }, context)
   }
@@ -50,11 +50,11 @@ const preferredRemove = async (targetId: ObjectId | ObjectId[], reference: Refer
 
 const internalCascadingRemove = async (target: Record<string, any>, refMap: ReferenceMap, context: Context) => {
   for( const refName in refMap ) {
-    if( !target[refName] ) {
+    const reference = refMap[refName]
+    if( !reference || !target[refName] ) {
       continue
     }
 
-    const reference = refMap[refName]!
     if( reference.isInline || reference.referencedCollection === 'file' ) {
       await preferredRemove(target[refName], reference, context)
     }

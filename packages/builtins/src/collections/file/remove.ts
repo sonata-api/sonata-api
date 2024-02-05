@@ -5,11 +5,11 @@ import fs from 'fs/promises'
 
 export const remove = async (payload: RemovePayload<SchemaWithId<typeof description>>, context: Context<typeof description>) => {
   const file = await context.collection.model.findOne({
-    _id: payload.filters._id
+    _id: payload.filters._id,
   }, {
     projection: {
-      absolute_path: 1
-    }
+      absolute_path: 1,
+    },
   })
 
   if( !file ) {
@@ -17,7 +17,7 @@ export const remove = async (payload: RemovePayload<SchemaWithId<typeof descript
   }
 
   try {
-    await fs.unlink(file.absolute_path!)
+    await fs.unlink(file.absolute_path)
   } catch( err ) {
     console.trace(err)
   }

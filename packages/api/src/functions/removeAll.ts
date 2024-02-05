@@ -6,7 +6,7 @@ export const removeAll = async <TContext extends Context>(payload: RemoveAllPayl
   const filtersWithId = {
     ...payload.filters,
     _id: {
-      $in: payload.filters
+      $in: payload.filters,
     },
   }
 
