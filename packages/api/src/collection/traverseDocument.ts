@@ -373,6 +373,11 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
             const documents = []
 
             for( const elem of value ) {
+              if( elem instanceof ObjectId ) {
+                documents.push(elem)
+                continue
+              }
+
               const documentEither = await traverseDocument(elem, targetDescription, ctx.options)
               if( isLeft(documentEither) ) {
                 return left(unwrapEither(documentEither))

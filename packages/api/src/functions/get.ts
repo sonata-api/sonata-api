@@ -68,7 +68,6 @@ export const get = async <
     fromProperties: true,
     recurseReferences: true,
     recurseDeep: true,
-  })),
-  context.description) as TDocument
+  })), context.description) as TDocument
 }
 

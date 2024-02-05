@@ -26,6 +26,8 @@ export const getAll = async <
   const security = useSecurity(context)
   const payload = _payload || {}
 
+  console.log(payload.filters?.products)
+
   const {
     filters = {},
     limit = DEFAULT_PAGINATION_LIMIT,
