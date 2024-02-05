@@ -189,7 +189,7 @@ export const getReferences = async (properties: FixedObjectProperty['properties'
   return references
 }
 
-const buildLookupStages = async (reference: Reference,  propName: string, options: BuildLookupOptions) => {
+const buildLookupStages = async (reference: Reference, propName: string, options: BuildLookupOptions) => {
   const {
     parent,
     properties,
@@ -316,7 +316,7 @@ const buildLookupStages = async (reference: Reference,  propName: string, option
 
   return {
     stages,
-    refHasDeepReferences
+    refHasDeepReferences,
   }
 }
 
