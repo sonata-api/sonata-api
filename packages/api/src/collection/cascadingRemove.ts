@@ -1,42 +1,24 @@
-import type { Context, Description } from '@sonata-api/types'
+import type { Context } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
 import { isRight, unwrapEither } from '@sonata-api/common'
+import { createContext } from '../context'
 import { getFunction } from '../assets'
 import { getDatabaseCollection } from '../database'
+import { getReferences, type ReferenceMap, type Reference } from './reference'
 
-type CascadingRemoveSubject = {
-  propertyName: string
-  collectionName: string
-}
-
-type CascadingRemove = CascadingRemoveSubject[]
-
-const cascadingRemoveMemo: Record<string, CascadingRemove | undefined> = {}
-
-const getCascade = (description: Description) => {
-  if( cascadingRemoveMemo[description.$id] ) {
-    return cascadingRemoveMemo[description.$id]!
+const preferredRemove = async (targetId: ObjectId | ObjectId[], reference: Reference, parentContext: Context) => {
+  if( !reference.referencedCollection ) {
+    return
   }
 
-  const cascade: CascadingRemove = []
-  for( const [propertyName, property] of Object.entries(description.properties) ) {
-    if( '$ref' in property && property.inline ) {
-      cascade.push({
-        propertyName,
-        collectionName: property.$ref,
-      })
-    }
-  }
-
-  cascadingRemoveMemo[description.$id] = cascade
-  return cascade
-}
-
-const preferredRemove = async (subject: CascadingRemoveSubject, targetId: ObjectId | ObjectId[], context: Context) => {
-  const coll = getDatabaseCollection(subject.collectionName)
+  const coll = getDatabaseCollection(reference.referencedCollection)
+  const context = await createContext({
+    parentContext,
+    collectionName: reference.referencedCollection
+  })
 
   if( Array.isArray(targetId) ) {
-    const removeAllEither = await getFunction(subject.collectionName, 'removeAll')
+    const removeAllEither = await getFunction(reference.referencedCollection, 'removeAll')
     if( isRight(removeAllEither) ) {
       const removeAll = unwrapEither(removeAllEither)
       return removeAll({
@@ -51,11 +33,13 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
     })
   }
 
-  const removeEither = await getFunction(subject.collectionName, 'remove')
+  const removeEither = await getFunction(reference.referencedCollection, 'remove')
   if( isRight(removeEither) ) {
     const remove = unwrapEither(removeEither)
     return remove({
-      filters: targetId,
+      filters: {
+        _id: targetId
+      },
     }, context)
   }
 
@@ -64,15 +48,28 @@ const preferredRemove = async (subject: CascadingRemoveSubject, targetId: Object
   })
 }
 
-export const cascadingRemove = async <TContext extends Context>(
-  doc: Record<string, any>,
-  context: TContext,
-) => {
-  const cascade = getCascade(context.description)
-  for( const subject of cascade ) {
-    const targetId = doc[subject.propertyName]
-    if( targetId && (!Array.isArray(targetId) || targetId.length > 0) ) {
-      await preferredRemove(subject, targetId, context as Context)
+const internalCascadingRemove = async (target: Record<string, any>, refMap: ReferenceMap, context: Context) => {
+  for( const refName in refMap ) {
+    if( !target[refName] ) {
+      continue
+    }
+
+    const reference = refMap[refName]!
+    if( reference.isInline || reference.referencedCollection === 'file' ) {
+      await preferredRemove(target[refName], reference, context)
+    }
+
+    if( reference.deepReferences ) {
+      await internalCascadingRemove(target[refName], reference.deepReferences, context)
     }
   }
 }
+
+export const cascadingRemove = async <TContext extends Context>(
+  target: Record<string, any>,
+  context: TContext,
+) => {
+  const refMap = await getReferences(context.description.properties)
+  return internalCascadingRemove(target, refMap, context)
+}
+

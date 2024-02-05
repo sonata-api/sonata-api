@@ -1,4 +1,4 @@
-import type { FixedObjectProperty, RefProperty } from '@sonata-api/types'
+import type { FixedObjectProperty } from '@sonata-api/types'
 import { unsafe, getReferenceProperty } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets'
 import { prepareCollectionName } from '../database'
@@ -10,21 +10,21 @@ export type GetReferenceOptions = {
 
 export type Reference = {
   isArray?: boolean
-  deepReferences?: Record<string, ReferenceMap>
+  isInline?: boolean
+  deepReferences?: ReferenceMap
   referencedCollection?: string
   populatedProperties?: string[]
 }
 
-export type ReferenceMap = Record<string, Reference | undefined>
+export type ReferenceMap = Record<string, Reference>
 
 export type BuildLookupOptions = {
-  properties: NonNullable<FixedObjectProperty['properties']>
+  properties: FixedObjectProperty['properties']
   parent?: string
   depth?: number
   maxDepth?: number
   memoize?: string
   project?: string[]
-  skipGroupPhase?: boolean
 }
 
 const referenceMemo: Record<string, ReferenceMap | {} | undefined> = {}
@@ -48,7 +48,7 @@ const narrowLookupPipelineProjection = (pipeline: Record<string, any>[], project
   })
 }
 
-const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<FixedObjectProperty['properties']>) => {
+const buildGroupStages = (referenceMap: ReferenceMap, properties: FixedObjectProperty['properties']) => {
   const $group = Object.keys(properties).reduce((a, propName) => {
     const refMap = referenceMap[propName] || {}
     const groupType = !refMap.referencedCollection && refMap.isArray
@@ -70,7 +70,7 @@ const buildGroupPhase = (referenceMap: ReferenceMap, properties: NonNullable<Fix
   }
 }
 
-const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
+const buildArrayCleanupStages = (referenceMap: ReferenceMap) => {
   const $set = Object.entries(referenceMap).reduce((a, [refName, refMap]) => {
     if( !refMap!.isArray || refMap!.referencedCollection ) {
       return a
@@ -100,8 +100,7 @@ const buildArrayCleanupPhase = (referenceMap: ReferenceMap) => {
     : null
 }
 
-export const getReferences = async (properties: NonNullable<FixedObjectProperty['properties']>,
-  options?: GetReferenceOptions) => {
+export const getReferences = async (properties: FixedObjectProperty['properties'], options?: GetReferenceOptions) => {
   const {
     depth = 0,
     memoize,
@@ -139,7 +138,7 @@ export const getReferences = async (properties: NonNullable<FixedObjectProperty[
 
         if( Object.keys(deepReferences).length > 0 ) {
           reference.deepReferences ??= {}
-          reference.deepReferences[propName] = deepReferences
+          reference.deepReferences = deepReferences
         }
       }
 
@@ -171,8 +170,13 @@ export const getReferences = async (properties: NonNullable<FixedObjectProperty[
       reference.isArray = true
     }
 
-    if( refProperty?.$ref ) {
-      reference.referencedCollection = refProperty.$ref
+    if( refProperty ) {
+      if( refProperty.$ref ) {
+        reference.referencedCollection = refProperty.$ref
+      }
+      if( refProperty.inline ) {
+        reference.isInline = true
+      }
     }
 
     references[propName] = reference
@@ -185,15 +189,139 @@ export const getReferences = async (properties: NonNullable<FixedObjectProperty[
   return references
 }
 
+const buildLookupStages = async (reference: Reference,  propName: string, options: BuildLookupOptions) => {
+  const {
+    parent,
+    properties,
+    depth = 0,
+    maxDepth = 3,
+  } = options
+
+  const stages: any[] = []
+  let refHasDeepReferences = false
+
+  const withParent = (propName: string) => {
+    return parent
+      ? `${parent}.${propName}`
+      : propName
+  }
+
+  if( reference.referencedCollection ) {
+    if( !reference.populatedProperties ) {
+      stages.push({
+        $lookup: {
+          from: prepareCollectionName(reference.referencedCollection),
+          foreignField: '_id',
+          localField: withParent(propName),
+          as: withParent(propName),
+        },
+      })
+
+    } else {
+      const subPipeline: any[] = []
+      if( reference.deepReferences ) {
+        const subProperties = unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
+        subPipeline.push(...await buildLookupPipeline(reference.deepReferences, {
+          project: reference.populatedProperties,
+          properties: subProperties,
+        }))
+      }
+
+      if( reference.populatedProperties.length > 0 ) {
+        subPipeline.push({
+          $project: Object.fromEntries(reference.populatedProperties.map((index) => [
+            index,
+            1,
+          ])),
+        })
+      }
+
+      stages.push({
+        $lookup: {
+          from: prepareCollectionName(reference.referencedCollection),
+          let: {
+            'ids': !reference.isArray
+              ? `$${withParent(propName)}`
+              : {
+                $ifNull: [
+                  `$${withParent(propName)}`,
+                  [],
+                ],
+              },
+          },
+          as: withParent(propName),
+          pipeline: [
+            {
+              $match: {
+                $expr: {
+                  [
+                  reference.isArray
+                    ? '$in'
+                    : '$eq'
+                  ]: [
+                    '$_id',
+                    '$$ids',
+                  ],
+                },
+              },
+            },
+            ...subPipeline,
+          ],
+        },
+      })
+    }
+
+    if( !reference.isArray ) {
+      stages.push({
+        $unwind: {
+          path: `$${withParent(propName)}`,
+          preserveNullAndEmptyArrays: true,
+        },
+      })
+    }
+  } else if( reference.deepReferences && depth <= maxDepth ) {
+    refHasDeepReferences = true
+
+    for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
+      if( refMap.referencedCollection ) {
+        const description = unsafe(await getCollectionAsset(refMap.referencedCollection, 'description'))
+        const { stages: result } = await buildLookupStages(refMap, refName, {
+          depth: depth + 1,
+          parent: withParent(propName),
+          properties: description.properties,
+        })
+
+        stages.push(...result)
+        continue
+      }
+
+      const refProperties = properties[propName]
+      if( !('properties' in refProperties) ) {
+        throw new Error()
+      }
+
+      const { stages: result } = await buildLookupStages(refMap, refName, {
+        depth: depth + 1,
+        parent: withParent(propName),
+        properties: refProperties.properties,
+      })
+
+      stages.push(...result)
+    }
+  }
+
+  return {
+    stages,
+    refHasDeepReferences
+  }
+}
+
 export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, options: BuildLookupOptions): Promise<any[]> => {
   const {
     properties,
     parent,
-    depth = 0,
-    maxDepth = 3,
     memoize: memoizeId,
     project = [],
-    skipGroupPhase,
   } = options
 
   const memoize = `${memoizeId}-${project.sort().join('-')}`
@@ -205,14 +333,9 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
       : result
   }
 
-  const withParent = (propName: string) => {
-    return parent
-      ? `${parent}.${propName}`
-      : propName
-  }
+  let hasDeepReferences = false
 
   const pipeline: any[] = []
-  let hasDeepReferences = false
 
   if( parent ) {
     pipeline.push({
@@ -224,116 +347,21 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   }
 
   for( const [propName, reference] of Object.entries(referenceMap) ) {
-    if( !reference ) {
-      continue
-    }
+    const {
+      stages,
+      refHasDeepReferences,
+    } = await buildLookupStages(reference, propName, options)
 
-    if( reference.referencedCollection ) {
-      if( !reference.populatedProperties ) {
-        pipeline.push({
-          $lookup: {
-            from: prepareCollectionName(reference.referencedCollection),
-            foreignField: '_id',
-            localField: withParent(propName),
-            as: withParent(propName),
-          },
-        })
-
-      } else {
-        const subPipeline: any[] = []
-        if( reference.deepReferences ) {
-          const subProperties = unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
-          subPipeline.push(...await buildLookupPipeline(reference.deepReferences, {
-            project: reference.populatedProperties,
-            properties: subProperties,
-          }))
-        }
-
-        if( reference.populatedProperties.length > 0 ) {
-          subPipeline.push({
-            $project: Object.fromEntries(reference.populatedProperties.map((index) => [
-              index,
-              1,
-            ])),
-          })
-        }
-
-        pipeline.push({
-          $lookup: {
-            from: prepareCollectionName(reference.referencedCollection),
-            let: {
-              'ids': !reference.isArray
-                ? `$${withParent(propName)}`
-                : {
-                  $ifNull: [
-                    `$${withParent(propName)}`,
-                    [],
-                  ],
-                },
-            },
-            as: withParent(propName),
-            pipeline: [
-              {
-                $match: {
-                  $expr: {
-                    [
-                    reference.isArray
-                      ? '$in'
-                      : '$eq'
-                    ]: [
-                      '$_id',
-                      '$$ids',
-                    ],
-                  },
-                },
-              },
-              ...subPipeline,
-            ],
-          },
-        })
-      }
-
-      if( !reference.isArray ) {
-        pipeline.push({
-          $unwind: {
-            path: `$${withParent(propName)}`,
-            preserveNullAndEmptyArrays: true,
-          },
-        })
-      }
-    } else if( reference.deepReferences && depth <= maxDepth ) {
-      hasDeepReferences = true
-
-      for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
-        const sourceProps = reference.referencedCollection
-          ? unsafe(await getCollectionAsset(reference.referencedCollection, 'description')).properties
-          : properties
-
-        /* eslint-disable-next-line */
-        const sourceProperty = (refName in sourceProps
-          ? sourceProps[refName]
-          : sourceProps) as FixedObjectProperty | (RefProperty & { items: FixedObjectProperty })
-
-        const refProperties = 'items' in sourceProperty
-          ? sourceProperty.items.properties
-          : sourceProperty.properties
-
-        pipeline.push(...await buildLookupPipeline(refMap, {
-          depth: depth + 1,
-          parent: withParent(refName),
-          properties: refProperties,
-          skipGroupPhase: true,
-        }))
-      }
-    }
+    hasDeepReferences = hasDeepReferences || refHasDeepReferences
+    pipeline.push(...stages)
   }
 
-  if( !skipGroupPhase && hasDeepReferences ) {
-    pipeline.push(buildGroupPhase(referenceMap, properties))
+  if( hasDeepReferences ) {
+    pipeline.push(buildGroupStages(referenceMap, properties))
 
-    const arrayCleanupPhase = buildArrayCleanupPhase(referenceMap)
-    if( arrayCleanupPhase ) {
-      pipeline.push(arrayCleanupPhase)
+    const arrayCleanupStages = buildArrayCleanupStages(referenceMap)
+    if( arrayCleanupStages ) {
+      pipeline.push(arrayCleanupStages)
     }
   }
 

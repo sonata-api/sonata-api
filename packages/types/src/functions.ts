@@ -1,4 +1,4 @@
-import type { FilterOperators, UpdateFilter, WithId, OptionalId } from 'mongodb'
+import type { FilterOperators, UpdateFilter, WithId, OptionalId, ObjectId } from 'mongodb'
 import type { PackReferences, Either, ValidationError } from '.'
 
 export type UploadAuxProps = {
@@ -33,7 +33,7 @@ export type CountPayload<TDocument extends CollectionDocument<OptionalId<any>>> 
 }
 
 export type GetPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  filters?: Filters<TDocument>
+  filters: Filters<TDocument>
   project?: Projection<TDocument>
   populate?: (keyof TDocument & string)[]
 }
@@ -56,8 +56,8 @@ export type RemovePayload<TDocument extends CollectionDocument<OptionalId<any>>>
   filters: Filters<TDocument>
 }
 
-export type RemoveAllPayload<TDocument extends CollectionDocument<OptionalId<any>>> = {
-  filters: Filters<TDocument>
+export type RemoveAllPayload = {
+  filters: (string | ObjectId)[]
 }
 
 export type RemoveFilePayload = UploadAuxProps & {
@@ -72,7 +72,7 @@ export type CollectionFunctions<TDocument extends CollectionDocument<OptionalId<
   getAll: (payload?: GetAllPayload<TDocument>)=> Promise<TDocument[]>
   insert: (payload: InsertPayload<TDocument>)=> Promise<Either<ValidationError, TDocument>>
   remove: (payload: RemovePayload<TDocument>)=> Promise<TDocument>
-  removeAll: (payload: RemoveAllPayload<TDocument>)=> Promise<any>
+  removeAll: (payload: RemoveAllPayload)=> Promise<any>
   removeFile: (payload: RemoveFilePayload)=> Promise<any>
 }
 

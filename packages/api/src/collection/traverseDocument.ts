@@ -96,13 +96,14 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     },
   }
 
-  const files = await fileCollection.find(fileFilters, {
+  const files = fileCollection.find(fileFilters, {
     projection: {
       absolute_path: 1,
     },
-  }).toArray()
+  })
 
-  for( const file of files ) {
+  let file: any
+  while( file = await files.next() ) {
     try {
       await fs.unlink(file.absolute_path)
     } catch( err ) {
