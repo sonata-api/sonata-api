@@ -28,12 +28,12 @@ type TestType<T> = T & Record<string, any>
 export type InferProperty<T> = T extends TestType<{ format: 'date' | 'date-time' }>
   ? Date : T extends TestType<{ enum: ReadonlyArray<infer K> }>
     ? K : T extends TestType<{ type: 'string' }>
-    ? string : T extends TestType<{ type: 'number' }>
-      ? number : T extends TestType<{ type: 'boolean' }>
-        ? boolean : T extends TestType<{ properties: any }>
-          ? Schema<T & { timestamps: false }> : T extends TestType<{ type: 'object' }>
-            ? any : T extends TestType<{ literal: infer K }>
-              ? K : T extends TestType<{ items: infer K }>
+      ? string : T extends TestType<{ type: 'number' }>
+        ? number : T extends TestType<{ type: 'boolean' }>
+          ? boolean : T extends TestType<{ properties: any }>
+            ? Schema<T & { timestamps: false }> : T extends TestType<{ type: 'object' }>
+              ? any : T extends TestType<{ literal: infer K }>
+                ? K : T extends TestType<{ items: infer K }>
                   ? InferProperty<K>[] : never
 
 export type InferSchema<TSchema> = MergeReferences<TSchema> extends infer MappedTypes
