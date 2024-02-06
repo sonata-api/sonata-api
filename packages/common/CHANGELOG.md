@@ -1,5 +1,13 @@
 # @sonata-api/common
 
+## 0.1.19
+
+### Patch Changes
+
+- Bug fixes
+- Updated dependencies
+  - @sonata-api/types@0.1.36
+
 ## 0.1.18
 
 ### Patch Changes

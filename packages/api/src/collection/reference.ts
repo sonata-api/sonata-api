@@ -134,7 +134,10 @@ export const getReferences = async (properties: FixedObjectProperty['properties'
       // }
 
       if( 'properties' in entrypoint ) {
-        const deepReferences = await getReferences(entrypoint.properties)
+        const deepReferences = await getReferences(entrypoint.properties, {
+          depth: depth + 1,
+          memoize: `${memoize}.${propName}`
+        })
 
         if( Object.keys(deepReferences).length > 0 ) {
           reference.deepReferences ??= {}
@@ -146,6 +149,7 @@ export const getReferences = async (properties: FixedObjectProperty['properties'
       const description = unsafe(await getCollectionAsset(refProperty.$ref, 'description'))
       const deepReferences = await getReferences(description.properties, {
         depth: depth + 1,
+        memoize: `${memoize}.${propName}`
       })
 
       if( Object.keys(deepReferences).length > 0 ) {
@@ -282,6 +286,13 @@ const buildLookupStages = async (reference: Reference, propName: string, options
   } else if( reference.deepReferences && depth <= maxDepth ) {
     refHasDeepReferences = true
 
+    stages.push({
+      $unwind: {
+        path: `$${withParent(propName)}`,
+        preserveNullAndEmptyArrays: true,
+      },
+    })
+
     for( const [refName, refMap] of Object.entries(reference.deepReferences) ) {
       if( !refMap ) {
         continue
@@ -323,7 +334,6 @@ const buildLookupStages = async (reference: Reference, propName: string, options
 export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, options: BuildLookupOptions): Promise<any[]> => {
   const {
     properties,
-    parent,
     memoize: memoizeId,
     project = [],
   } = options
@@ -340,15 +350,6 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   let hasDeepReferences = false
 
   const pipeline: any[] = []
-
-  if( parent ) {
-    pipeline.push({
-      $unwind: {
-        path: `$${parent}`,
-        preserveNullAndEmptyArrays: true,
-      },
-    })
-  }
 
   for( const [propName, reference] of Object.entries(referenceMap) ) {
     if( !reference ) {
