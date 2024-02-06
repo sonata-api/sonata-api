@@ -1,5 +1,10 @@
 import { defineDescription } from '@sonata-api/api'
 
+// type IsString<T extends string> = T extends `${T}${T}` ? true : false
+
+// const a: IsString<'oi'> = false
+// const b: IsString<string> = false
+
 /**
  * This description complies with JWT claims specified in RFC-7519.
  * Reference: https://www.iana.org/assignments/jwt/jwt.xhtml#claims
@@ -43,10 +48,7 @@ export const description = defineDescription({
     roles: {
       type: 'array',
       items: {
-        enum: [
-          'root',
-          'guest',
-        ],
+        type: 'string',
       },
       uniqueItems: true,
     },

@@ -64,10 +64,12 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
   return error as ValidationError
 }
 
-export const validateProperty = (propName: string,
+export const validateProperty = (
+  propName: string,
   what: any,
   property: Property,
-  options: ValidateOptions = {}): PropertyValidationError | undefined => {
+  options: ValidateOptions = {}
+): PropertyValidationError | undefined => {
   const { extraneous } = options
   if( what === undefined ) {
     return
@@ -135,6 +137,12 @@ export const validateProperty = (propName: string,
     let i = 0
     for( const elem of what ) {
       const result = validateProperty(propName, elem, property.items, options) 
+
+      console.trace(JSON.stringify({
+        propName,
+        elem,
+        what
+      }, null, 2))
 
       if( result ) {
         result.index = i

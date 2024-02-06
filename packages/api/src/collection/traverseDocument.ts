@@ -200,6 +200,12 @@ const getters = (value: any, ctx: PhaseContext) => {
 }
 
 const validate = (value: any, ctx: PhaseContext) => {
+  if( ctx.options.recurseDeep ) {
+    if( 'items' in ctx.property || 'properties' in ctx.property ) {
+      return value
+    }
+  }
+
   const error = validateProperty(ctx.propName, value, ctx.property)
 
   if( error ) {
