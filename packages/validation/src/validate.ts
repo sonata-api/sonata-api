@@ -136,12 +136,6 @@ export const validateProperty = (propName: string,
     for( const elem of what ) {
       const result = validateProperty(propName, elem, property.items, options) 
 
-      console.trace(JSON.stringify({
-        propName,
-        elem,
-        what,
-      }, null, 2))
-
       if( result ) {
         result.index = i
         return result

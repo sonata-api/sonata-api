@@ -248,6 +248,10 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
 }
 
 const recurseDeep = async (value: any, ctx: PhaseContext) => {
+  if( !value ) {
+    return value
+  }
+
   if( 'properties' in ctx.property ) {
     const resultEither = await recurse(value, ctx)
     return unwrapEither(resultEither)

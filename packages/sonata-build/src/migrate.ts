@@ -1,6 +1,6 @@
 import type { Collection } from '@sonata-api/types'
 import { right } from '@sonata-api/common'
-import { getDatabase, getDatabaseCollection } from '@sonata-api/api'
+import { getDatabase, prepareCollectionName, getDatabaseCollection } from '@sonata-api/api'
 import { log } from './log'
 import path from 'path'
 
@@ -12,6 +12,22 @@ export const migrate = async () => {
 
   const session = await getDatabase()
 
+  const createCollection = async (name: string) => {
+    if( !session.db ) {
+      throw new Error()
+    }
+
+    const collectionName = prepareCollectionName(name)
+    const collection = await session.db.listCollections({
+      name: collectionName
+    }).next()
+
+    if( !collection ) {
+      await session.db.createCollection(collectionName)
+    }
+  }
+
+
   for( const collectionName in collections ) {
     const candidate = collections[collectionName ]
     const collection = typeof candidate === 'function'
@@ -19,6 +35,7 @@ export const migrate = async () => {
       : candidate
 
     const { description } = collection
+    await createCollection(collectionName)
 
     if( description.search ) {
       const model = getDatabaseCollection(collectionName)

@@ -136,7 +136,7 @@ export const getReferences = async (properties: FixedObjectProperty['properties'
       if( 'properties' in entrypoint ) {
         const deepReferences = await getReferences(entrypoint.properties, {
           depth: depth + 1,
-          memoize: `${memoize}.${propName}`
+          memoize: `${memoize}.${propName}`,
         })
 
         if( Object.keys(deepReferences).length > 0 ) {
@@ -149,7 +149,7 @@ export const getReferences = async (properties: FixedObjectProperty['properties'
       const description = unsafe(await getCollectionAsset(refProperty.$ref, 'description'))
       const deepReferences = await getReferences(description.properties, {
         depth: depth + 1,
-        memoize: `${memoize}.${propName}`
+        memoize: `${memoize}.${propName}`,
       })
 
       if( Object.keys(deepReferences).length > 0 ) {

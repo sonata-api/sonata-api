@@ -1,5 +1,13 @@
 # @sonata-api/api
 
+## 1.0.39
+
+### Patch Changes
+
+- Fix traverseDocument bug
+- Updated dependencies
+  - @sonata-api/types@0.1.37
+
 ## 1.0.38
 
 ### Patch Changes
