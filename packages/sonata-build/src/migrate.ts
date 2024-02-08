@@ -19,14 +19,13 @@ export const migrate = async () => {
 
     const collectionName = prepareCollectionName(name)
     const collection = await session.db.listCollections({
-      name: collectionName
+      name: collectionName,
     }).next()
 
     if( !collection ) {
       await session.db.createCollection(collectionName)
     }
   }
-
 
   for( const collectionName in collections ) {
     const candidate = collections[collectionName ]
