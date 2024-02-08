@@ -12,7 +12,7 @@ import { registerRoutes } from './routes'
 type InitOptions = {
   collections: Record<string, Collection>
   config?: ApiConfig
-  callback?: (context: Context) => any
+  callback?: (context: Context)=> any
 }
 
 export const getDecodedToken = async (request: GenericRequest, context: Context) => {
@@ -105,7 +105,7 @@ export const init = async <const TInitOptions extends InitOptions>( options: TIn
 
       server.listen()
       return server
-    }
+    },
   }
 }
 
