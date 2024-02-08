@@ -7,7 +7,11 @@ const compileAndSpawn = async () => {
   const result = await compile()
 
   if( result.success ) {
-    const api = spawn('node', ['dist/index.js'])
+    const api = spawn('node', [
+      '-r',
+      'sonata-api/loader',
+      'dist/index.js',
+    ])
     api.stdout.on('data', (data) => {
       process.stdout.write(data)
     })

@@ -1,4 +1,4 @@
-import type { Context, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
+import type { Context, Collection, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
 import { right, left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
@@ -8,6 +8,12 @@ import { getDatabase } from '@sonata-api/api'
 import { DEFAULT_API_CONFIG } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
+
+type InitOptions = {
+  collections: Record<string, Collection>
+  config?: ApiConfig
+  callback?: (context: Context) => any
+}
 
 export const getDecodedToken = async (request: GenericRequest, context: Context) => {
   if( !request.headers.authorization ) {
@@ -37,74 +43,69 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   }
 }
 
-export const dryInit = async (_apiConfig?: ApiConfig | null,
-  cb?: (context: Context)=> any) => {
+export const init = async <const TInitOptions extends InitOptions>( options: TInitOptions) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, DEFAULT_API_CONFIG)
-  if( _apiConfig ) {
-    Object.assign(apiConfig, _apiConfig)
+  if( options.config ) {
+    Object.assign(apiConfig, options.config)
   }
 
-  const parentContext = await createContext({
-    apiConfig,
-  })
-
-  console.time('warmup')
-  await warmup()
-
-  console.log()
-  console.timeEnd('warmup')
-
-  const serverOptions = defineServerOptions()
-  const apiRouter = registerRoutes()
-
-  const server = registerServer(serverOptions, async (request, response) => {
-    if( cors(request, response) === null ) {
-      return
-    }
-
-    await wrapRouteExecution(response, async () => {
-      const tokenEither = await getDecodedToken(request, parentContext)
-      if( isLeft(tokenEither) ) {
-        return tokenEither
-      }
-
-      const token = unwrapEither(tokenEither)
-      const context = await createContext({
-        parentContext,
-        token,
+  return {
+    options,
+    listen: async () => {
+      const parentContext = await createContext({
+        apiConfig,
       })
 
-      Object.assign(context, {
-        request,
-        response,
-      })
+      console.time('warmup')
+      await warmup()
 
-      if( cb ) {
-        const result = await cb(context)
-        if( result !== undefined ) {
-          return result
+      console.log()
+      console.timeEnd('warmup')
+
+      const serverOptions = defineServerOptions()
+      const apiRouter = registerRoutes()
+
+      const server = registerServer(serverOptions, async (request, response) => {
+        if( cors(request, response) === null ) {
+          return
         }
+
+        await wrapRouteExecution(response, async () => {
+          const tokenEither = await getDecodedToken(request, parentContext)
+          if( isLeft(tokenEither) ) {
+            return tokenEither
+          }
+
+          const token = unwrapEither(tokenEither)
+          const context = await createContext({
+            parentContext,
+            token,
+          })
+
+          Object.assign(context, {
+            request,
+            response,
+          })
+
+          if( options.callback ) {
+            const result = await options.callback(context)
+            if( result !== undefined ) {
+              return result
+            }
+          }
+
+          return apiRouter.install(context)
+        })
+      })
+
+      if( !options.config?.noDatabase ) {
+        await getDatabase()
       }
 
-      return apiRouter.install(context)
-    })
-  })
-
-  return server
+      server.listen()
+      return server
+    }
+  }
 }
 
-export const initWithDatabase = async (...args: Parameters<typeof dryInit>) => {
-  await getDatabase()
-  return dryInit(...args)
-}
-
-export const initThenStart = async (...args: Parameters<typeof dryInit>) => {
-  const server = await dryInit(...args)
-  server.listen()
-}
-
-export const init = async (...args: Parameters<typeof dryInit>) => {
-  const server = await initWithDatabase(...args)
-  server.listen()
-}

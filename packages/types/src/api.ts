@@ -36,6 +36,8 @@ export type DecodedToken =
   }
 
 export type ApiConfig = {
+  mongodbUrl?: string
+  noDatabase?: boolean
   port?: number
   group?: string
 

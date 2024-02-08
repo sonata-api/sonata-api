@@ -136,9 +136,9 @@ export type Description<TDescription extends Description = any> = JsonSchema<TDe
   filtersPresets?: Record<string, FiltersPreset<TDescription>>
   freshItem?: Partial<Record<PropertiesWithId<TDescription>, any>>
 
-  form?: ReadonlyArray<PropertiesWithId<TDescription>>|Record<PropertiesWithId<TDescription>, string[]>
+  form?: ReadonlyArray<PropertiesWithId<TDescription>> | Record<PropertiesWithId<TDescription>, string[]>
   writable?: ReadonlyArray<PropertiesWithId<TDescription>>
-  filters?: ReadonlyArray<PropertiesWithId<TDescription>|{
+  filters?: ReadonlyArray<PropertiesWithId<TDescription> | {
     property: PropertiesWithId<TDescription>
     default: string
   }>

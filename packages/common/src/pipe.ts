@@ -5,10 +5,8 @@ export type PipeOptions = {
 export const pipe = <TFunction extends (...args: any)=> any>(functions: TFunction[], options?: PipeOptions) => {
   const { returnFirst } = options || {}
 
-  return async (
-    value: Parameters<TFunction>[0],
-    ...args: Parameters<TFunction> extends [unknown, ...infer Tail] ? Tail : []
-  ) => {
+  return async (value: Parameters<TFunction>[0],
+    ...args: Parameters<TFunction> extends [unknown, ...infer Tail] ? Tail : []) => {
     let ret: ReturnType<TFunction> = value
 
     for( const fn of functions ) {
