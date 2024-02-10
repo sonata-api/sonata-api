@@ -44,23 +44,21 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
 
 export const init = <
   const TInitOptions extends InitOptions,
-  const TCollections
+  const TCollections,
 >(
-  options: TInitOptions & {
+  _options: TInitOptions & {
     collections: TCollections
-  }
+  },
 ) => {
-  const apiConfig: ApiConfig = {}
-  Object.assign(apiConfig, DEFAULT_API_CONFIG)
-  if( options.config ) {
-    Object.assign(apiConfig, deepMerge(DEFAULT_API_CONFIG, options.config))
-  }
+  const options = Object.assign({}, _options)
+  options.config ??= {}
+  Object.assign(options.config, deepMerge(DEFAULT_API_CONFIG, options.config))
 
   return {
     options,
     listen: async () => {
       const parentContext = await createContext({
-        apiConfig,
+        apiConfig: options.config,
       })
 
       console.time('warmup')
