@@ -44,11 +44,11 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
 
 export const init = <
   const TInitOptions extends InitOptions,
-  const TCollections
+  const TCollections,
 >(
   _options: TInitOptions & {
     collections: TCollections
-  }
+  },
 ) => {
   const options = Object.assign({}, _options)
   options.config ??= {}

@@ -4,7 +4,7 @@ import type {
   Description,
   SecurityPolicy,
   AccessControl,
-  PackReferences
+  PackReferences,
 
 } from '.'
 
