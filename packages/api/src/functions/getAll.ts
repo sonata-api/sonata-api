@@ -83,6 +83,7 @@ export const getAll = async <
   pipeline.push({
     $limit: limit,
   })
+
   const projection = normalizeProjection(project, context.description)
   if( projection ) {
     pipeline.push({

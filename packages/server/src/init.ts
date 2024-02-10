@@ -42,7 +42,14 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   }
 }
 
-export const init = async <const TInitOptions extends InitOptions>( options: TInitOptions) => {
+export const init = <
+  const TInitOptions extends InitOptions,
+  const TCollections
+>(
+  options: TInitOptions & {
+    collections: TCollections
+  }
+) => {
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, DEFAULT_API_CONFIG)
   if( options.config ) {
