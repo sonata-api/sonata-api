@@ -28,7 +28,6 @@
     "@sonata-api/common": "*",
     "@sonata-api/entrypoint": "*",
     "@sonata-api/http": "*",
-    "@sonata-api/mailing": "*",
     "@sonata-api/node-http": "*",
     "@sonata-api/security": "*",
     "@sonata-api/server": "*",

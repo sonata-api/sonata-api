@@ -2,6 +2,7 @@ import type { Context, SchemaWithId, ObjectId } from '@sonata-api/types'
 import type { description } from './description'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
+import { getConfig } from '@sonata-api/entrypoint'
 import { left, right } from '@sonata-api/common'
 
 type Props = {
@@ -98,30 +99,31 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     return left(AuthenticationErrors.InvalidCredentials)
   }
 
-  if(
-    props.email === process.env.GODMODE_USERNAME
-  && props.password === process.env.GODMODE_PASSWORD
-  ) {
-    const token = await signToken({
-      user: {
-        _id: null,
-        roles: ['root'],
-      },
-    })
+  const config = await getConfig()
 
-    return right(<Return>{
-      user: {
-        _id: null,
-        name: 'God Mode',
-        email: '',
-        roles: ['root'],
-        active: true,
-      },
-      token: {
-        type: 'bearer',
-        content: token,
-      },
-    })
+  if( config.defaultUser ) {
+    if( props.email === config.defaultUser.username && props.password === config.defaultUser.password ) {
+      const token = await signToken({
+        user: {
+          _id: null,
+          roles: ['root'],
+        },
+      })
+
+      return right(<Return>{
+        user: {
+          _id: null,
+          name: 'God Mode',
+          email: '',
+          roles: ['root'],
+          active: true,
+        },
+        token: {
+          type: 'bearer',
+          content: token,
+        },
+      })
+    }
   }
 
   const user = await context.collection.model.findOne({

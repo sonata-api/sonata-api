@@ -35,23 +35,3 @@ export type DecodedToken =
     }
   }
 
-export type ApiConfig = {
-  mongodbUrl?: string
-  noDatabase?: boolean
-  port?: number
-  group?: string
-
-  allowSignup?: boolean
-  signupDefaults?: Partial<{
-    roles: string[]
-    active: boolean
-  }>
-
-  logSuccessfulAuthentications?: boolean
-  tokenUserProperties?: string[]
-
-  errorHandler?: <TError extends Error>(
-    context: Context,
-    error: TError
-  )=> any|Promise<any>
-}

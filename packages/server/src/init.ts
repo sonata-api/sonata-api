@@ -1,5 +1,5 @@
-import type { Context, Collection, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
-import { right, left, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
+import type { Context, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
+import { right, left, isLeft, unwrapEither, unsafe, deepMerge } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
 
@@ -10,7 +10,6 @@ import { warmup } from './warmup'
 import { registerRoutes } from './routes'
 
 type InitOptions = {
-  collections: Record<string, Collection>
   config?: ApiConfig
   callback?: (context: Context)=> any
 }
@@ -47,7 +46,7 @@ export const init = async <const TInitOptions extends InitOptions>( options: TIn
   const apiConfig: ApiConfig = {}
   Object.assign(apiConfig, DEFAULT_API_CONFIG)
   if( options.config ) {
-    Object.assign(apiConfig, options.config)
+    Object.assign(apiConfig, deepMerge(DEFAULT_API_CONFIG, options.config))
   }
 
   return {

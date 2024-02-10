@@ -21,9 +21,6 @@
       "@sonata-api/http": [
         "../http/dist"
       ],
-      "@sonata-api/mailing": [
-        "../mailing/dist"
-      ],
       "@sonata-api/node-http": [
         "../node-http/dist"
       ],

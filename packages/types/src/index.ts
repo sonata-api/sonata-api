@@ -1,6 +1,7 @@
 export * from './accessControl'
 export * from './api'
 export * from './condition'
+export * from './config'
 export * from './context'
 export * from './description'
 export * from './either'

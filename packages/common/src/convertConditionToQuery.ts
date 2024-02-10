@@ -1,7 +1,7 @@
-import type { Condition, ExistsCondition, FinalCondition } from '@sonata-api/types'
+import type { Condition, TruthyCondition, FinalCondition } from '@sonata-api/types'
 import { getValueFromPath } from './getValueFromPath'
 
-const convertExpression = (condition: ExistsCondition<any> | FinalCondition<any>, subject?: any) => {
+const convertExpression = (condition: TruthyCondition<any> | FinalCondition<any>, subject?: any) => {
   const term2 = 'term2' in condition
     ? typeof condition.term2 === 'string' && condition.term2.startsWith('$.')
       ? getValueFromPath(subject, condition.term2.split('$.')[1])
@@ -9,7 +9,7 @@ const convertExpression = (condition: ExistsCondition<any> | FinalCondition<any>
     : null
 
   switch( condition.operator ) {
-    case 'exists': return {
+    case 'truthy': return {
       $ne: [
         null,
         undefined,

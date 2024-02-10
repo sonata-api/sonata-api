@@ -18,9 +18,6 @@
       "@sonata-api/entrypoint": [
         "../entrypoint/dist"
       ],
-      "@sonata-api/mailing": [
-        "../mailing/dist"
-      ],
       "@sonata-api/types": [
         "../types/dist"
       ],

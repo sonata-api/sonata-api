@@ -15,8 +15,8 @@ export type FinalCondition<TDescription extends Description> = {
   else?: any
 }
 
-export type ExistsCondition<TDescription extends Description> = {
-  operator: 'exists'
+export type TruthyCondition<TDescription extends Description> = {
+  operator: 'truthy'
   term1: PropertiesWithId<TDescription>
 }
 
@@ -34,7 +34,7 @@ export type NotCondition<TDescription extends Description> = {
 
 export type Condition<TDescription extends Description> =
   | FinalCondition<TDescription>
-  | ExistsCondition<TDescription>
+  | TruthyCondition<TDescription>
   | AndCondition<TDescription>
   | OrCondition<TDescription>
   | NotCondition<TDescription>

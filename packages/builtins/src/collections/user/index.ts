@@ -5,6 +5,7 @@ import { activate } from './activate'
 import { insert } from './insert'
 import { createAccount } from './createAccount'
 import { getInfo } from './getInfo'
+import { getActivationLink } from './getActivationLink'
 
 export const user = defineCollection({
   description,
@@ -16,9 +17,10 @@ export const user = defineCollection({
     removeFile,
     insert,
     authenticate,
+    activate,
     createAccount,
     getInfo,
-    activate,
+    getActivationLink,
   },
   accessControl: {
     roles: {

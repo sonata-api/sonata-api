@@ -22,7 +22,7 @@ const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
     }
 
     const term1 = subject[condition.term1]
-    if( condition.operator === 'exists' ) {
+    if( condition.operator === 'truthy' ) {
       return !!term1
     }
 

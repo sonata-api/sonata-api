@@ -1,7 +1,9 @@
 import { defineDescription } from '@sonata-api/api'
+import { getConfig } from '@sonata-api/entrypoint'
 
-const link = (_id: string) => {
-  return `${process.env.API_URL}/file/${_id}`
+const link = async (_id: string) => {
+  const config = await getConfig()
+  return `${config.apiUrl || ''}/file/${_id}`
 }
 
 const timestamp = (lastModified: Date | undefined) => lastModified
@@ -41,13 +43,13 @@ export const description = defineDescription({
       type: 'boolean',
     },
     link: {
-      getter: (value: any) => {
-        return `${link(value._id)}/${timestamp(value.last_modified)}`
+      getter: async (value: any) => {
+        return `${await link(value._id)}/${timestamp(value.last_modified)}`
       },
     },
     download_link: {
-      getter: (value: any) => {
-        return `${link(value._id)}/download/${timestamp(value.last_modified)}`
+      getter: async (value: any) => {
+        return `${await link(value._id)}/download/${timestamp(value.last_modified)}`
       },
     },
   },

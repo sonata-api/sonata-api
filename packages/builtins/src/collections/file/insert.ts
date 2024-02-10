@@ -2,6 +2,7 @@ import type { Context, SchemaWithId, PackReferences } from '@sonata-api/types'
 import type { description } from './description'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
+import { getConfig } from '@sonata-api/entrypoint'
 import { insert as originalInsert } from '@sonata-api/api'
 
 export const insert = async (payload: {
@@ -19,9 +20,19 @@ context: Context<typeof description>) => {
 
   const what = Object.assign({}, payload.what)
   what.owner = context.token.user._id
-  const { STORAGE_PATH } = process.env
 
+  const config = await getConfig()
   const extension = what.filename?.split('.').pop()
+
+  if( !config.storage ) {
+    throw new Error('config.storage is not set')
+  }
+
+  const tempPath = config.storage.tempFs || config.storage.fs
+  if( !config.storage ) {
+    throw new Error('config.storage.fs and config.storage.tempFs are not set')
+  }
+
   if( !extension ) {
     throw new Error('filename lacks extension')
   }
@@ -43,7 +54,7 @@ context: Context<typeof description>) => {
     .update(what.filename! + Date.now())
     .digest('hex')
 
-  what.absolute_path = `${STORAGE_PATH}/${filenameHash}.${extension}`
+  what.absolute_path = `${tempPath}/${filenameHash}.${extension}`
   await writeFile(what.absolute_path, Buffer.from(what.content.split(',').pop()!, 'base64'))
 
   return originalInsert({
