@@ -89,7 +89,7 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
 
   if( id ) {
     requestCopy.payload.filters = {
-      ...requestCopy.payload.filters||{},
+      ...requestCopy.payload.filters || {},
       _id: id,
     }
 

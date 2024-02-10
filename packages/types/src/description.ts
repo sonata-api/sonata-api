@@ -38,7 +38,7 @@ export type CollectionAction<TDescription extends Description> = Readonly<{
 }>
 
 export type CollectionActions<TDescription extends Description> =
-  Record<string, null|CollectionAction<TDescription>>
+  Record<string, null | CollectionAction<TDescription>>
 
 export type FormLayout<TDescription extends Description> = {
   fields?: Partial<Record<PropertiesWithId<TDescription>, FormLayoutField<TDescription>>>

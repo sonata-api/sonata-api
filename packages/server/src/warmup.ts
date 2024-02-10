@@ -1,10 +1,6 @@
 import { getCollections } from '@sonata-api/entrypoint'
 import { grantedFor } from '@sonata-api/access-control'
 
-if( process.env.NODE_ENV !== 'production' ) {
-  require('dotenv').config()
-}
-
 const ANSI_COLORS = {
   green: '\x1b[32m',
   blue: '\x1b[36m',
@@ -13,7 +9,7 @@ const ANSI_COLORS = {
 }
 
 const colorizedRoute = (color: keyof typeof ANSI_COLORS, roles?: string[]) =>
-  (verb: string, collectionName: string, path?: string|null, parameters?: string[]) => {
+  (verb: string, collectionName: string, path?: string | null, parameters?: string[]) => {
 
     let line = `\x1b[1m${ANSI_COLORS[color]}${verb}\x1b[0m\t\x1b[90m/api\x1b[0m`
     line += `/\x1b[1m${collectionName}\x1b[0m`

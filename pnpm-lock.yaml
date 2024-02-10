@@ -25,7 +25,7 @@ importers:
         version: 20.11.5
       eslint-config-aeria:
         specifier: latest
-        version: 0.0.15(@stylistic/eslint-plugin@1.5.4)(@typescript-eslint/eslint-plugin@6.19.1)(@typescript-eslint/parser@6.19.1)
+        version: 0.0.17(@stylistic/eslint-plugin@1.5.4)(@typescript-eslint/eslint-plugin@6.19.1)(@typescript-eslint/parser@6.19.1)
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -77,9 +77,6 @@ importers:
       '@sonata-api/http':
         specifier: '*'
         version: link:../http
-      '@sonata-api/mailing':
-        specifier: '*'
-        version: link:../mailing
       '@sonata-api/security':
         specifier: '*'
         version: link:../security
@@ -165,23 +162,6 @@ importers:
         specifier: '*'
         version: link:../validation
 
-  packages/mailing:
-    dependencies:
-      '@sonata-api/common':
-        specifier: '*'
-        version: link:../common
-      '@sonata-api/types':
-        specifier: '*'
-        version: link:../types
-    optionalDependencies:
-      nodemailer:
-        specifier: ^6.9.4
-        version: 6.9.8
-    devDependencies:
-      '@types/nodemailer':
-        specifier: ^6.4.9
-        version: 6.4.14
-
   packages/node-http:
     dependencies:
       '@sonata-api/http':
@@ -258,9 +238,6 @@ importers:
       '@sonata-api/http':
         specifier: '*'
         version: link:../http
-      '@sonata-api/mailing':
-        specifier: '*'
-        version: link:../mailing
       '@sonata-api/node-http':
         specifier: '*'
         version: link:../node-http
@@ -2141,12 +2118,6 @@ packages:
     resolution: {integrity: sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==}
     dev: true
 
-  /@types/nodemailer@6.4.14:
-    resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
-    dependencies:
-      '@types/node': 20.11.5
-    dev: true
-
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: true
@@ -3095,8 +3066,8 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /eslint-config-aeria@0.0.15(@stylistic/eslint-plugin@1.5.4)(@typescript-eslint/eslint-plugin@6.19.1)(@typescript-eslint/parser@6.19.1):
-    resolution: {integrity: sha512-tjf/FfuIkRNjzcK4PblrciY1s2v/5dFRo9YOn+3BSrAOwtYsfp2i9hf/9yxn2tdaabZhC9wsR89oUelscOY82g==}
+  /eslint-config-aeria@0.0.17(@stylistic/eslint-plugin@1.5.4)(@typescript-eslint/eslint-plugin@6.19.1)(@typescript-eslint/parser@6.19.1):
+    resolution: {integrity: sha512-qAXYJC04dkz9H9HZU//2mPdberVsm3tdXSrPFUR1PnJ2qTGeWgFEoA7376F05eYKaIPvMimrkH2HU/yvgiMFvg==}
     peerDependencies:
       '@stylistic/eslint-plugin': ^1.5.1
       '@typescript-eslint/eslint-plugin': ^6.16.0
@@ -4543,13 +4514,6 @@ packages:
     dependencies:
       whatwg-url: 5.0.0
     dev: false
-
-  /nodemailer@6.9.8:
-    resolution: {integrity: sha512-cfrYUk16e67Ks051i4CntM9kshRYei1/o/Gi8K1d+R34OIs21xdFnW7Pt7EucmVKA0LKtqUGNcjMZ7ehjl49mQ==}
-    engines: {node: '>=6.0.0'}
-    requiresBuild: true
-    dev: false
-    optional: true
 
   /nopt@5.0.0:
     resolution: {integrity: sha512-Tbj67rffqceeLpcRXrT7vKAN8CwfPeIBgM7E6iBkmKLV7bEMwpGgYLGv0jACUsECaa/vuxP0IjEont6umdMgtQ==}

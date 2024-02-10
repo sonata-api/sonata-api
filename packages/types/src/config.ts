@@ -31,6 +31,6 @@ export type ApiConfig = {
   errorHandler?: <TError extends Error>(
     context: Context,
     error: TError
-  )=> any|Promise<any>
+  )=> any | Promise<any>
 }
 

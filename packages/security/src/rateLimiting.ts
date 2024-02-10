@@ -60,7 +60,7 @@ export const limitRate = async <TDescription extends Description>(
     return right(null)
   }
 
-  if( scale && (new Date().getTime()/1000 - usage.updated_at!.getTime()/1000 < scale) ) {
+  if( scale && (new Date().getTime() / 1000 - usage.updated_at!.getTime() / 1000 < scale) ) {
     return left(RateLimitingErrors.LimitReached)
   }
 

@@ -69,7 +69,7 @@ const abstractTransaction = async ($req: http.IncomingMessage, $res: http.Server
   }
 }
 
-export const registerServer = (options: ServerOptions, cb: (req: GenericRequest, res: GenericResponse)=> void|Promise<void>) => {
+export const registerServer = (options: ServerOptions, cb: (req: GenericRequest, res: GenericResponse)=> void | Promise<void>) => {
   const server = http.createServer(async ($req, $res) => {
     const {
       req,
