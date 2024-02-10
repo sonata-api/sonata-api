@@ -98,7 +98,7 @@ export const init = async <const TInitOptions extends InitOptions>( options: TIn
         })
       })
 
-      if( !options.config?.noDatabase ) {
+      if( !options.config?.database?.noDatabase ) {
         await getDatabase()
       }
 

@@ -5,18 +5,21 @@ export type ApiConfig = {
   apiUrl?: string
   port?: number
 
-  mongodbUrl?: string
-  noDatabase?: boolean
   paginationLimit?: number
 
-  defaultUser?: {
-    username: string
-    password: string
+  database?: {
+    mongodbUrl?: string
+    noDatabase?: boolean
   }
 
   storage?: {
     fs?: string
     tempFs?: string
+  }
+
+  defaultUser?: {
+    username: string
+    password: string
   }
 
   allowSignup?: boolean

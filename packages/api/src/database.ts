@@ -14,7 +14,7 @@ export const getDatabase = async () => {
   if( !dbMemo.db ) {
     const mongodbUri = await (async () => {
       const config = await getConfig()
-      const envUri = config.mongodbUrl
+      const envUri = config.database?.mongodbUrl
 
       if( !envUri ) {
         console.warn('mongo URI wasn\'t supplied, fallbacking to memory storage (this means your data will only be alive during runtime)')
