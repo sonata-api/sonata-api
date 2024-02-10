@@ -31,7 +31,6 @@ jobs:
           pnpm --no-bail --filter='./packages/node-http' build
           pnpm --no-bail --filter='./packages/access-control' build
           pnpm --no-bail --filter='./packages/security' build
-          pnpm --no-bail --filter='./packages/mailing' build
           pnpm --no-bail --filter='./packages/api' build
           pnpm --no-bail --filter='./packages/builtins' build
           pnpm --no-bail --filter='./packages/server' build
