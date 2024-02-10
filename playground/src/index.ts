@@ -1,5 +1,5 @@
 import { init, createRouter, isLeft, unwrapEither, leftSchema } from 'sonata-api'
-export * as collections from './collections'
+import * as collections from './collections'
 
 const router = createRouter({
   exhaust: true,
@@ -53,7 +53,8 @@ router.GET('/get-people', async (context) => {
   ],
 })
 
-init({
+export default init({
+  collections,
   callback: (context) => {
     return router.install(context)
   },

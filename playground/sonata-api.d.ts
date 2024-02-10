@@ -2,15 +2,12 @@
 import type {} from '@sonata-api/types'
 
 declare global {
-  type SystemCollections = typeof import('@sonata-api/builtins/collections')
-  type UserCollections = typeof import('./src').collections
-
-  type Collections = {
-    [K in keyof (SystemCollections & UserCollections)]: (SystemCollections & UserCollections)[K] extends infer CollCandidate
-      ? CollCandidate extends () => infer Coll
-        ? Coll
-        : CollCandidate
+  type Collections = typeof import('./src').default extends infer Entrypoint
+    ? 'options' extends keyof Entrypoint
+      ? 'collections' extends keyof Entrypoint['options']
+        ? Entrypoint['options']['collections']
+        : never
       : never
-  }
+    : never
 }
 //
