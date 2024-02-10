@@ -30,6 +30,10 @@ export type JsonSchema<TJsonSchema extends JsonSchema = any> = {
   properties: Record<string, Property>
 }
 
+export type NonCircularJsonSchema<TJsonSchema extends NonCircularJsonSchema = any> = Omit<JsonSchema<TJsonSchema>, 'properties'> & {
+  properties: Record<string, NonCircularProperty>
+}
+
 export type RefProperty = {
   $ref: Exclude<keyof Collections, 'file'> & string
 
@@ -41,6 +45,10 @@ export type RefProperty = {
   purge?: boolean
 
   constraints?: Condition<any>
+}
+
+export type NonCircularRefProperty = Omit<RefProperty, '$ref'> & {
+  $ref: string
 }
 
 export type FileProperty = Omit<RefProperty, '$ref'> & {
@@ -135,6 +143,18 @@ export type MixedProperty =
   | LiteralProperty
   | GetterProperty
 
+export type NonCircularMixedProperty =
+  | NonCircularRefProperty
+  | FileProperty
+  | EnumProperty
+  | ArrayProperty
+  | ObjectProperty
+  | StringProperty
+  | NumberProperty
+  | BooleanProperty
+  | LiteralProperty
+  | GetterProperty
+
 export type PropertyBase = {
   description?: string
   readOnly?: boolean
@@ -153,5 +173,7 @@ export type PropertyBase = {
   isTimestamp?: boolean
 }
 
-export type Property = MixedProperty & PropertyBase
+export type Property = PropertyBase & MixedProperty
+
+export type NonCircularProperty = PropertyBase & NonCircularMixedProperty
 

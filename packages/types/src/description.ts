@@ -1,5 +1,5 @@
 import type { IconStyle, PhosphorIcon } from '@phosphor-icons/core'
-import type { JsonSchema } from './property'
+import type { JsonSchema, NonCircularJsonSchema } from './property'
 import type { Condition } from './condition'
 
 export type PropertiesWithId<TDescription extends Description> =
@@ -101,7 +101,7 @@ export type SearchOptions<TDescription extends Description> = {
   indexes: readonly (keyof TDescription['properties'])[]
 }
 
-export type Description<TDescription extends Description = any> = JsonSchema<TDescription> & {
+export type DescriptionBase<TDescription extends Description | NonCircularDescription> = {
   // unused
   title?: string
   categories?: string[]
@@ -153,4 +153,10 @@ export type Description<TDescription extends Description = any> = JsonSchema<TDe
 
   search?: SearchOptions<TDescription>
 }
+
+export type Description<TDescription extends Description = any> =
+  DescriptionBase<TDescription> & JsonSchema<TDescription>
+
+export type NonCircularDescription<TDescription extends NonCircularDescription = any> =
+  DescriptionBase<TDescription> & NonCircularJsonSchema<TDescription>
 

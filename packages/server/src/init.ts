@@ -1,4 +1,4 @@
-import type { Context, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
+import type { Context, NonCircularCollection, GenericRequest, ApiConfig, DecodedToken } from '@sonata-api/types'
 import { right, left, isLeft, unwrapEither, unsafe, deepMerge } from '@sonata-api/common'
 import { defineServerOptions, cors, wrapRouteExecution } from '@sonata-api/http'
 import { registerServer } from '@sonata-api/node-http'
@@ -10,6 +10,7 @@ import { warmup } from './warmup'
 import { registerRoutes } from './routes'
 
 type InitOptions = {
+  collections?: Record<string, NonCircularCollection>
   config?: ApiConfig
   callback?: (context: Context)=> any
 }
@@ -42,14 +43,7 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   }
 }
 
-export const init = <
-  const TInitOptions extends InitOptions,
-  const TCollections,
->(
-  _options: TInitOptions & {
-    collections: TCollections
-  },
-) => {
+export const init = <const TInitOptions extends InitOptions>(_options: TInitOptions) => {
   const options = Object.assign({}, _options)
   options.config ??= {}
   Object.assign(options.config, deepMerge(DEFAULT_API_CONFIG, options.config))

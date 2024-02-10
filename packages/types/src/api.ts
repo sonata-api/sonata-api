@@ -1,11 +1,28 @@
-import type { ObjectId, Context, Description, SecurityPolicy, AccessControl, PackReferences } from '.'
+import type {
+  ObjectId,
+  Context,
+  Description,
+  NonCircularDescription,
+  SecurityPolicy,
+  AccessControl,
+  PackReferences
 
-export type Collection<TCollection extends Collection = any> = {
-  description: Description
+} from '.'
+
+export type CollectionBase<TCollection extends Collection | NonCircularCollection> = {
   item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
+}
+
+export type Collection<TCollection extends Collection = any> = CollectionBase<TCollection> & {
+  description: Description
   functions?: Record<string, (payload: any, context: Context, ...args: any[])=> any>
+}
+
+export type NonCircularCollection<TCollection extends NonCircularCollection = any> = CollectionBase<TCollection> & {
+  description: NonCircularDescription
+  functions?: Record<string, (...args: any[]) => any>
 }
 
 export type AssetType = keyof Collection
