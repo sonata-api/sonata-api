@@ -2,7 +2,6 @@ import type { Context, SchemaWithId, PackReferences } from '@sonata-api/types'
 import type { description } from './description'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
-import { getConfig } from '@sonata-api/entrypoint'
 import { insert as originalInsert } from '@sonata-api/api'
 
 export const insert = async (payload: {
@@ -21,15 +20,14 @@ context: Context<typeof description>) => {
   const what = Object.assign({}, payload.what)
   what.owner = context.token.user._id
 
-  const config = await getConfig()
   const extension = what.filename?.split('.').pop()
 
-  if( !config.storage ) {
+  if( !context.apiConfig.storage ) {
     throw new Error('config.storage is not set')
   }
 
-  const tempPath = config.storage.tempFs || config.storage.fs
-  if( !config.storage ) {
+  const tempPath = context.apiConfig.storage.tempFs || context.apiConfig.storage.fs
+  if( !tempPath ) {
     throw new Error('config.storage.fs and config.storage.tempFs are not set')
   }
 

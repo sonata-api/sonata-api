@@ -2,7 +2,6 @@ import type { Context, SchemaWithId, ObjectId } from '@sonata-api/types'
 import type { description } from './description'
 import { compare as bcryptCompare } from 'bcrypt'
 import { signToken } from '@sonata-api/api'
-import { getConfig } from '@sonata-api/entrypoint'
 import { left, right } from '@sonata-api/common'
 
 type Props = {
@@ -99,10 +98,8 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     return left(AuthenticationErrors.InvalidCredentials)
   }
 
-  const config = await getConfig()
-
-  if( config.defaultUser ) {
-    if( props.email === config.defaultUser.username && props.password === config.defaultUser.password ) {
+  if( context.apiConfig.defaultUser ) {
+    if( props.email === context.apiConfig.defaultUser.username && props.password === context.apiConfig.defaultUser.password ) {
       const token = await signToken({
         user: {
           _id: null,
