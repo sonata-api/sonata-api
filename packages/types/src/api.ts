@@ -8,14 +8,12 @@ import type {
 
 } from '.'
 
-export type CollectionBase<TCollection extends Collection> = {
+
+export type Collection<TCollection extends Collection = any> = {
   description: Description
   item?: any
   security?: SecurityPolicy
   accessControl?: AccessControl<TCollection>
-}
-
-export type Collection<TCollection extends Collection = any> = CollectionBase<TCollection> & {
   functions?: Record<string, (payload: any, context: Context, ...args: any[])=> any>
 }
 

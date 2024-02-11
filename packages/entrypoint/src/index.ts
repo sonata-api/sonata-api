@@ -9,7 +9,11 @@ export const getEntrypoint = async () => {
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
   const entrypoint = await getEntrypoint()
-  return Object.assign({}, entrypoint.default.options.collections)
+  const collections = entrypoint.collections
+    ? entrypoint.collections
+    : entrypoint.default.options.collections
+
+  return Object.assign({}, collections)
 }
 
 export const getCollections = async () => {
