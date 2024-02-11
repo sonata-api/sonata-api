@@ -31,7 +31,7 @@ export const watch = async () => {
     './src',
     './package.json',
     './tsconfig.json',
-    './.env'
+    './.env',
   ])
 
   srcWatcher.on('change', async (path) => {
