@@ -5,6 +5,16 @@ import { log } from './log'
 import path from 'path'
 
 export const migrate = async () => {
+  if(
+    process.env.GITHUB_ACTIONS
+    || process.env.TRAVIS
+    || process.env.CIRCLECI
+    || process.env.GITLAB_CI
+    || process.env.IS_CI
+  ) {
+    return right('skipping (continuos integration detected)')
+  }
+
   const collections = require(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
     | Collection
     | (()=> Collection)

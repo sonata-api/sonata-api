@@ -1,4 +1,5 @@
 import { parseArgs } from 'node:util'
+import { config as loadEnv } from 'dotenv'
 import { bundle } from './bundle'
 import { compile } from './compile'
 import { watch } from './watch'
@@ -35,6 +36,8 @@ const mode = () => {
 }
 
 async function main() {
+  loadEnv()
+
   switch( mode() ) {
     case 'compile':
       return compile()

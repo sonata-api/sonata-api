@@ -4,7 +4,7 @@ let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefi
 const collectionMemo: Record<string, Collection> = {}
 
 export const getEntrypoint = async () => {
-  return import(process.argv[1])
+  return import(process.cwd())
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
@@ -55,7 +55,7 @@ export const getConfig = async (): Promise<ApiConfig> => {
   const entrypoint = await getEntrypoint()
 
   return entrypoint.default
-    ? (await entrypoint.default).options.config
+    ? entrypoint.default.options.config
     : {}
 }
 
