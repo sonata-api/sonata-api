@@ -21,7 +21,7 @@ export type Projection<TDocument extends Record<string, any>> =
       : string[]
     : never
 
-export type QuerySort<TDocument> = Record<keyof WithId<TDocument>, 1 | -1>
+export type QuerySort<TDocument> = Partial<Record<keyof WithId<TDocument>, 1 | -1>>
 
 export type CollectionDocument<TDocument> = Pick<
   TDocument,

@@ -1,5 +1,14 @@
 # sonata-build
 
+## 1.0.15
+
+### Patch Changes
+
+- New entrypoints feature
+- Updated dependencies
+  - @sonata-api/types@0.1.38
+  - @sonata-api/api@1.0.40
+
 ## 1.0.14
 
 ### Patch Changes

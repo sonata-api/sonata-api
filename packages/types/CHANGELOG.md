@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.38
+
+### Patch Changes
+
+- New entrypoints feature
+
 ## 0.1.37
 
 ### Patch Changes
