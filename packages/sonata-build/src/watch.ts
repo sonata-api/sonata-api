@@ -10,6 +10,8 @@ const compileAndSpawn = async () => {
     const api = spawn('node', [
       '-r',
       'sonata-api/loader',
+      '--env-file',
+      '.env',
       'dist/index.js',
     ])
     api.stdout.on('data', (data) => {
@@ -25,7 +27,12 @@ const compileAndSpawn = async () => {
 
 export const watch = async () => {
   let runningApi = await compileAndSpawn()
-  const srcWatcher = chokidar.watch('./src')
+  const srcWatcher = chokidar.watch([
+    './src',
+    './package.json',
+    './tsconfig.json',
+    './.env'
+  ])
 
   srcWatcher.on('change', async (path) => {
     if( runningApi ) {
