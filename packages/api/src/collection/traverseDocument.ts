@@ -52,10 +52,6 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
     return parentProperty.additionalProperties
   }
 
-  if( '$id' in parentProperty ) {
-    return parentProperty.properties?.[propertyName]
-  }
-
   if( 'properties' in parentProperty ) {
     return parentProperty.properties?.[propertyName]
   }
