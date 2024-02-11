@@ -1,5 +1,11 @@
 # sonata-api
 
+## 1.0.12
+
+### Patch Changes
+
+- Release
+
 ## 1.0.11
 
 ### Patch Changes

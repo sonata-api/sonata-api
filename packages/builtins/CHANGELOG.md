@@ -1,5 +1,11 @@
 # @sonata-api/system
 
+## 1.0.26
+
+### Patch Changes
+
+- Release builtins
+
 ## 1.0.25
 
 ### Patch Changes
