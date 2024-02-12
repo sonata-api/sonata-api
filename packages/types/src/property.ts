@@ -1,5 +1,5 @@
 import type { PhosphorIcon } from '@phosphor-icons/core'
-import type { Condition, } from '.'
+import type { Condition } from '.'
 
 export type PropertyArrayElement =
   | 'checkbox'

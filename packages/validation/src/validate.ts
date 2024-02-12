@@ -110,7 +110,11 @@ export const validateProperty = (propName: string,
     return
   }
 
-  if( actualType !== expectedType && !('items' in property && actualType === 'array') ) {
+  if(
+    actualType !== expectedType
+    && !('items' in property && actualType === 'array')
+    && !(actualType === 'number' && expectedType === 'integer')
+  ) {
     if( expectedType === 'datetime' && what instanceof Date ) {
       return
     }

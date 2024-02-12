@@ -1,5 +1,11 @@
 # @sonata-api/validation
 
+## 1.0.14
+
+### Patch Changes
+
+- Fix integer validation bug
+
 ## 1.0.13
 
 ### Patch Changes
