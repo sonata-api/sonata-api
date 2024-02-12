@@ -1,10 +1,10 @@
 import { parseArgs } from 'node:util'
 import { config as loadEnv } from 'dotenv'
-import { bundle } from './bundle'
-import { compile } from './compile'
-import { watch } from './watch'
-import { migrate } from './migrate'
-import { pipeline } from './pipeline'
+import { bundle } from './bundle.js'
+import { compile } from './compile.js'
+import { watch } from './watch.js'
+import { migrate } from './migrate.js'
+import { pipeline } from './pipeline.js'
 
 const { values: opts } = parseArgs({
   options: {

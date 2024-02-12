@@ -2,9 +2,9 @@ import type { Description, Property, Either, ACErrors, ValidationError } from '@
 import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueFromPath } from '@sonata-api/common'
 import { validateProperty, validateWholeness } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
-import { getCollectionAsset } from '../assets'
-import { getDatabaseCollection } from '../database'
-import { preloadDescription } from './preload'
+import { getCollectionAsset } from '../assets.js'
+import { getDatabaseCollection } from '../database.js'
+import { preloadDescription } from './preload.js'
 import fs from 'fs/promises'
 
 export type TraverseOptions = {

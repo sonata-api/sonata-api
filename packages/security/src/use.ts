@@ -12,7 +12,7 @@ import {
   checkOwnershipRead,
   checkOwnershipWrite,
   checkPagination,
-} from '.'
+} from './index.js'
 
 const chainFunctions = async <
   TContext,

@@ -1,7 +1,7 @@
 import chokidar from 'chokidar'
 import { spawn } from 'child_process'
-import { compile } from './compile'
-import { log } from './log'
+import { compile } from './compile.js'
+import { log } from './log.js'
 
 const compileAndSpawn = async () => {
   const result = await compile()

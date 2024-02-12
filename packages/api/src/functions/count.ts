@@ -1,7 +1,7 @@
 import type { Context, SchemaWithId, CountPayload } from '@sonata-api/types'
 import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
-import { traverseDocument } from '../collection'
+import { traverseDocument } from '../collection/index.js'
 
 export const count = async <TContext extends Context>(
   payload: CountPayload<SchemaWithId<Context['description']>>,

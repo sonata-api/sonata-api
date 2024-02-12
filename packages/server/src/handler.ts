@@ -3,7 +3,7 @@ import type { functions } from '@sonata-api/api'
 import { createContext, getFunction } from '@sonata-api/api'
 import { ACErrors } from '@sonata-api/types'
 import { isLeft, unwrapEither, pipe } from '@sonata-api/common'
-import { appendPagination } from './appendPagination'
+import { appendPagination } from './appendPagination.js'
 
 const postPipe = pipe([appendPagination])
 

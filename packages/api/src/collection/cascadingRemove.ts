@@ -1,10 +1,10 @@
 import type { Context } from '@sonata-api/types'
 import type { ObjectId } from 'mongodb'
 import { isRight, unwrapEither } from '@sonata-api/common'
-import { createContext } from '../context'
-import { getFunction } from '../assets'
-import { getDatabaseCollection } from '../database'
-import { getReferences, type ReferenceMap, type Reference } from './reference'
+import { createContext } from '../context.js'
+import { getFunction } from '../assets.js'
+import { getDatabaseCollection } from '../database.js'
+import { getReferences, type ReferenceMap, type Reference } from './reference.js'
 
 const preferredRemove = async (targetId: ObjectId | ObjectId[], reference: Reference, parentContext: Context) => {
   if( !reference.referencedCollection ) {

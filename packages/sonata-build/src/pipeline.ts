@@ -1,11 +1,11 @@
 import path from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import { log } from './log'
-import { bundle } from './bundle'
-import { compile } from './compile'
-import { migrate } from './migrate'
 import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '@sonata-api/builtins'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
+import { log } from './log.js'
+import { bundle } from './bundle.js'
+import { compile } from './compile.js'
+import { migrate } from './migrate.js'
 
 const DATA_PATH = '.sonata'
 

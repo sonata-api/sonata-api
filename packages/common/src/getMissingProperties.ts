@@ -1,5 +1,6 @@
 import type { JsonSchema } from '@sonata-api/types'
-import { checkForUndefined, evaluateCondition } from '.'
+import { checkForUndefined } from './checkForUndefined'
+import { evaluateCondition } from './evaluateCondition'
 
 export const getMissingProperties = (what: Record<string, any>,
   schema: Omit<JsonSchema, '$id'>,

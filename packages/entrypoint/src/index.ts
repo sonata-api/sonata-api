@@ -4,7 +4,7 @@ let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefi
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
-  return import(process.cwd())
+  return import(process.argv[1])
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {

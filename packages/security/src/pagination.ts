@@ -1,4 +1,4 @@
-import type { SecurityCheckProps, SecurityCheckReadPayload } from './types'
+import type { SecurityCheckProps, SecurityCheckReadPayload } from './types.js'
 import { ACErrors } from '@sonata-api/types'
 import { left, right } from '@sonata-api/common'
 

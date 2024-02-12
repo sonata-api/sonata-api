@@ -1,5 +1,5 @@
 import type { Context, SchemaWithId, PackReferences, RemoveAllPayload, ObjectId } from '@sonata-api/types'
-import type { description } from './description'
+import type { description } from './description.js'
 import { removeAll as originalRemoveAll } from '@sonata-api/api'
 import fs from 'fs/promises'
 

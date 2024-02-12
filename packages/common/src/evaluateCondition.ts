@@ -1,5 +1,5 @@
 import type { Condition, Description } from '@sonata-api/types'
-import { arraysIntersects } from './arraysIntersects'
+import { arraysIntersects } from './arraysIntersects.js'
 
 const equalOrContains = (term1: any, term2: any) => {
   if( Array.isArray(term1) && Array.isArray(term2) ) {

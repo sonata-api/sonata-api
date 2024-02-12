@@ -1,5 +1,5 @@
 type EntryType =
-  'info'
+  | 'info'
   | 'error'
   | 'success'
   | 'warning'

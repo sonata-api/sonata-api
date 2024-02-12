@@ -3,7 +3,7 @@ import path from 'path'
 import glob from 'glob'
 import { readFile } from 'fs/promises'
 import { deepMerge } from '@sonata-api/common'
-import { log } from './log'
+import { log } from './log.js'
 
 export const compile = async () => {
   const fileList = glob.sync('**/*.ts', {

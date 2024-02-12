@@ -1,6 +1,6 @@
 import type { Context, RemoveAllPayload } from '@sonata-api/types'
 import { unsafe } from '@sonata-api/common'
-import { traverseDocument, cascadingRemove } from '../collection'
+import { traverseDocument, cascadingRemove } from '../collection/index.js'
 
 export const removeAll = async <TContext extends Context>(payload: RemoveAllPayload, context: TContext) => {
   const filtersWithId = {

@@ -1,5 +1,5 @@
 import type { Context, Schema } from '@sonata-api/types'
-import type { description } from './description'
+import type { description } from './description.js'
 import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import bcrypt from 'bcrypt'

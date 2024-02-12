@@ -1,6 +1,6 @@
 import type { Context, SchemaWithId, RemovePayload } from '@sonata-api/types'
 import { left, unsafe } from '@sonata-api/common'
-import { traverseDocument, cascadingRemove } from '../collection'
+import { traverseDocument, cascadingRemove } from '../collection/index.js'
 
 export const remove = async <TContext extends Context>(
   payload: RemovePayload<SchemaWithId<TContext['description']>>,

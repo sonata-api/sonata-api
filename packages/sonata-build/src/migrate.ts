@@ -1,7 +1,7 @@
 import type { Collection } from '@sonata-api/types'
 import { right } from '@sonata-api/common'
 import { getDatabase, prepareCollectionName, getDatabaseCollection } from '@sonata-api/api'
-import { log } from './log'
+import { log } from './log.js'
 import path from 'path'
 
 export const migrate = async () => {

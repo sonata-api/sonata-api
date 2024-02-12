@@ -1,5 +1,5 @@
 import type { Context } from '@sonata-api/types'
-import type { description } from './description'
+import type { description } from './description.js'
 import { ObjectId } from '@sonata-api/api'
 import { left, right } from '@sonata-api/common'
 import bcrypt from 'bcrypt'

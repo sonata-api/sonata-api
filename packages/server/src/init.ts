@@ -5,9 +5,9 @@ import { registerServer } from '@sonata-api/node-http'
 
 import { createContext, decodeToken, traverseDocument } from '@sonata-api/api'
 import { getDatabase } from '@sonata-api/api'
-import { DEFAULT_API_CONFIG } from './constants'
-import { warmup } from './warmup'
-import { registerRoutes } from './routes'
+import { DEFAULT_API_CONFIG } from './constants.js'
+import { warmup } from './warmup.js'
+import { registerRoutes } from './routes.js'
 
 export type InitOptions = {
   config?: ApiConfig

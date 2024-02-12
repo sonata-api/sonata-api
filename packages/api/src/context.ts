@@ -9,8 +9,8 @@ import type {
 
 import { unsafe } from '@sonata-api/common'
 import { getCollections } from '@sonata-api/entrypoint'
-import { getDatabaseCollection } from './database'
-import { preloadDescription } from './collection/preload'
+import { getDatabaseCollection } from './database.js'
+import { preloadDescription } from './collection/preload.js'
 
 const indepthCollection = (collectionName: string, collections: Record<string, Collection | (()=> Collection)>, parentContext: Context) => {
   const candidate = collections[collectionName]
@@ -49,7 +49,7 @@ export const internalCreateContext = async (options: ContextOptions<any>, parent
     token = {} as DecodedToken,
   } = options
 
-  const { getCollectionAsset } = await import('./assets')
+  const { getCollectionAsset } = await import('./assets.js')
   const collections = await getCollections()
 
   const context = Object.assign({}, parentContext)

@@ -1,6 +1,6 @@
 import type { Property } from '@sonata-api/types'
-import { formatDateTime } from './date'
-import { getReferenceProperty } from '.'
+import { formatDateTime } from './date.js'
+import { getReferenceProperty } from './getReferenceProperty'
 
 export const formatValue = (value: any, key: string, property?: Property, index?: string): string => {
   if( Array.isArray(value) ) {

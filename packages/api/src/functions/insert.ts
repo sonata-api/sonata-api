@@ -1,7 +1,7 @@
 import type { Context, SchemaWithId, InsertPayload } from '@sonata-api/types'
 import { useSecurity } from '@sonata-api/security'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
-import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
+import { traverseDocument, normalizeProjection, prepareInsert } from '../collection/index.js'
 
 export type InsertOptions = {
   bypassSecurity?: boolean

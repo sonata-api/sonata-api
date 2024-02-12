@@ -2,14 +2,14 @@ import type { Context, SchemaWithId, GetAllPayload } from '@sonata-api/types'
 import type { Document } from 'mongodb'
 import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
-import { DEFAULT_PAGINATION_LIMIT } from '../constants'
+import { DEFAULT_PAGINATION_LIMIT } from '../constants.js'
 import {
   traverseDocument,
   normalizeProjection,
   getReferences,
   buildLookupPipeline,
   fill,
-} from '../collection'
+} from '../collection/index.js'
 
 export type GetAllOptions = {
   bypassSecurity?: boolean

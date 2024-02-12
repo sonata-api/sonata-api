@@ -25,9 +25,9 @@
       "types": "./dist/index.d.ts"
     },
     "./loader": {
-      "import": "./dist/loader.js",
-      "require": "./dist/cjs/loader.js",
-      "types": "./dist/dts/index.dts"
+      "import": "./dist/loader.mjs",
+      "require": "./dist/loader.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [

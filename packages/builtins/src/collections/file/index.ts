@@ -1,9 +1,9 @@
 import { defineCollection, get } from '@sonata-api/api'
-import { description } from './description'
-import { insert } from './insert'
-import { download } from './download'
-import { remove } from './remove'
-import { removeAll } from './removeAll'
+import { description } from './description.js'
+import { insert } from './insert.js'
+import { download } from './download.js'
+import { remove } from './remove.js'
+import { removeAll } from './removeAll.js'
 
 export const tempFile = defineCollection({
   description: {

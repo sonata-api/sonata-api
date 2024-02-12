@@ -1,7 +1,7 @@
 import type { FixedObjectProperty } from '@sonata-api/types'
 import { unsafe, getReferenceProperty } from '@sonata-api/common'
-import { getCollectionAsset } from '../assets'
-import { prepareCollectionName } from '../database'
+import { getCollectionAsset } from '../assets.js'
+import { prepareCollectionName } from '../database.js'
 
 export type GetReferenceOptions = {
   memoize?: string

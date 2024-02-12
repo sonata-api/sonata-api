@@ -1,5 +1,5 @@
 import type { Condition, TruthyCondition, FinalCondition } from '@sonata-api/types'
-import { getValueFromPath } from './getValueFromPath'
+import { getValueFromPath } from './getValueFromPath.js'
 
 const convertExpression = (condition: TruthyCondition<any> | FinalCondition<any>, subject?: any) => {
   const term2 = 'term2' in condition

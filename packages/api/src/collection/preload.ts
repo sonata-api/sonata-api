@@ -1,7 +1,7 @@
 import type { Description, Property } from '@sonata-api/types'
 import { getReferenceProperty, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
-import { getCollectionAsset } from '../assets'
-import * as presets from '../presets'
+import { getCollectionAsset } from '../assets.js'
+import * as presets from '../presets/index.js'
 
 export type PreloadOptions = {
   serialize?: boolean

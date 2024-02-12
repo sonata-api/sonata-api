@@ -1,5 +1,5 @@
 import type { Description, Condition } from '@sonata-api/types'
-import { evaluateCondition } from './evaluateCondition'
+import { evaluateCondition } from './evaluateCondition.js'
 
 export const isRequired = (propName: string, required: NonNullable<Description['required']>, subject: any) => {
   if( Array.isArray(required) ) {
