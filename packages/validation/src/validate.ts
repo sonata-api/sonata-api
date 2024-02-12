@@ -66,7 +66,7 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 
 export const validateProperty = (propName: string,
   what: any,
-  property: Property,
+  property: Property | undefined,
   options: ValidateOptions = {}): PropertyValidationError | undefined => {
   const { extraneous } = options
   if( what === undefined ) {

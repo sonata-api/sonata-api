@@ -9,7 +9,7 @@ export type PreloadOptions = {
   timestamps?: boolean
 }
 
-const preloadMemo: Record<string, Partial<Description>> = {}
+const preloadMemo: Record<string, Partial<Description> | undefined> = {}
 
 const recurseProperty = async (_property: Property, propertyName: string, description: Partial<Description>): Promise<Property> => {
   const property = Object.assign({}, _property)
@@ -82,7 +82,7 @@ export const preloadDescription = async <
   } = options || {}
 
   if( memoize && preloadMemo[originalDescription.$id!] ) {
-    const description = preloadMemo[originalDescription.$id!]
+    const description = preloadMemo[originalDescription.$id!]!
     return (options?.serialize
       ? serialize(description)
       : description) as Return

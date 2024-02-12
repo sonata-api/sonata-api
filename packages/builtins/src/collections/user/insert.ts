@@ -11,10 +11,6 @@ context: Context) => {
     payload.what.password = await bcrypt.hash(payload.what.password, 10)
   }
 
-  if( payload.what.password === null ) {
-    delete payload.what.password
-  }
-
   return functions.insert(payload, context)
 }
 

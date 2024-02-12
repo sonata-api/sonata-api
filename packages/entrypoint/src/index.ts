@@ -1,13 +1,13 @@
 import type { Collection, ApiConfig } from '@sonata-api/types'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefined
-const collectionMemo: Record<string, Collection> = {}
+const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
   return import(process.cwd())
 }
 
-const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
+const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection) | undefined>> => {
   const entrypoint = await getEntrypoint()
   const collections = entrypoint.collections
     ? entrypoint.collections

@@ -1,7 +1,6 @@
 import type { Description, Property, Either, ACErrors, ValidationError } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueFromPath } from '@sonata-api/common'
-import { validateProperty, validateWholeness, makeValidationError } from '@sonata-api/validation'
-import { ValidationErrorCodes } from '@sonata-api/types'
+import { validateProperty, validateWholeness } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets'
 import { getDatabaseCollection } from '../database'
@@ -41,11 +40,8 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
     }
   }
 
-  if( 'items' in parentProperty && 'properties' in parentProperty.items ) {
-    const property = parentProperty.items.properties[propertyName]
-    if( property ) {
-      return property
-    }
+  if( 'items' in parentProperty && 'properties' in parentProperty.items && propertyName in parentProperty.items.properties ) {
+    return parentProperty.items.properties[propertyName]
   }
 
   if( 'additionalProperties' in parentProperty ) {
@@ -295,10 +291,6 @@ const recurse = async <TRecursionTarget extends Record<string, any>>(
     }
     : target
 
-  if( !ctx.property ) {
-    return right({} as TRecursionTarget)
-  }
-
   for( const propName in entrypoint ) {
     const value = target[propName]
     const property = getProperty(propName, ctx.property)
@@ -438,8 +430,6 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
   const options = Object.assign({}, _options) as TraverseOptions & TraverseNormalized
   const functions = []
 
-  let validationError: ValidationError | null = null
-
   if( !options.validate && Object.keys(what).length === 0 ) {
     return right({})
   }
@@ -478,7 +468,6 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
   options.pipe = pipe(functions, {
     returnFirst: (value) => {
       if( value?._tag === 'Left' ) {
-        validationError = value.value
         return value
       }
     },
@@ -495,11 +484,6 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     return left(unwrapEither(resultEither))
   }
 
-  return validationError
-    ? left(makeValidationError({
-      code: ValidationErrorCodes.InvalidProperties,
-      errors: validationError,
-    }))
-    : right(unwrapEither(resultEither) as any)
+  return right(unwrapEither(resultEither) as any)
 }
 

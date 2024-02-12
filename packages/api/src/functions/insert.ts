@@ -1,4 +1,4 @@
-import type { Context, SchemaWithId, InsertPayload, ObjectId } from '@sonata-api/types'
+import type { Context, SchemaWithId, InsertPayload } from '@sonata-api/types'
 import { useSecurity } from '@sonata-api/security'
 import { left, right, isLeft, unwrapEither, unsafe } from '@sonata-api/common'
 import { traverseDocument, normalizeProjection, prepareInsert } from '../collection'
@@ -47,7 +47,7 @@ export const insert = async <
     ? normalizeProjection(payload.project, context.description)
     : {}
 
-  let newId: ObjectId = docId
+  let newId = docId
 
   if( !newId ) {
     const now = new Date()
