@@ -3,19 +3,28 @@
   "version": "0.0.11",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "test": "echo skipping",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],

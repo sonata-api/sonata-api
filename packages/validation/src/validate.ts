@@ -61,7 +61,7 @@ const makePropertyError = <
 }
 
 export const makeValidationError = <TValidationError extends ValidationError> (error: TValidationError) => {
-  return error as ValidationError
+  return error
 }
 
 export const validateProperty = (propName: string,
@@ -106,7 +106,7 @@ export const validateProperty = (propName: string,
   const expectedType = getPropertyType(property)!
   const actualType = getValueType(what)
 
-  if( 'enum' in property && property.enum?.length === 0 ) {
+  if( 'enum' in property && property.enum.length === 0 ) {
     return
   }
 
@@ -239,7 +239,7 @@ export const validate = <
   for( const propName in what ) {
     const result = validateProperty(propName,
       what[propName],
-      schema.properties?.[propName],
+      schema.properties[propName],
       options)
 
     if( result ) {

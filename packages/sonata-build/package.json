@@ -3,18 +3,24 @@
   "version": "1.0.16",
   "description": "",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "echo skipping",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs",
     "prepublishOnly": "pnpm build"
   },
   "bin": {
     "sonata-build": "bin/index.js"
   },
   "exports": {
-    ".": "./dist/index.js",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
     "./config/*": "./dist/config/*"
   },
   "files": [

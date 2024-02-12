@@ -20,7 +20,7 @@ context: Context<typeof description>) => {
   const what = Object.assign({}, payload.what)
   what.owner = context.token.user._id
 
-  const extension = what.filename?.split('.').pop()
+  const extension = what.filename.split('.').pop()
 
   if( !context.apiConfig.storage ) {
     throw new Error('config.storage is not set')
@@ -49,7 +49,7 @@ context: Context<typeof description>) => {
   }
 
   const filenameHash = createHash('sha1')
-    .update(what.filename! + Date.now())
+    .update(what.filename + Date.now())
     .digest('hex')
 
   what.absolute_path = `${tempPath}/${filenameHash}.${extension}`

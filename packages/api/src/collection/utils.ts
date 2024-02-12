@@ -14,7 +14,7 @@ export const normalizeProjection = <
   }
 
   const projection = target.reduce((a, key) => {
-    if( description.properties[key]?.hidden ) {
+    if( description.properties[key].hidden ) {
       return a
     }
 
@@ -58,7 +58,7 @@ export const prepareInsert = (payload: any,
   delete rest.updated_at
 
   const forbidden = (key: string) => {
-    return description.properties[key]?.readOnly
+    return description.properties[key].readOnly
       || (description.writable && !description.writable.includes(key)
       )
   }

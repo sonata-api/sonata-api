@@ -92,7 +92,7 @@ export const createContext = async <TContextOptions>(
     : never,
 ) => {
   const options = _options as ContextOptions<Context>
-  const context = Object.assign({}, options?.parentContext || {}) as Context
+  const context = Object.assign({}, options.parentContext || {}) as Context
 
   Object.assign(context, await internalCreateContext(options, context))
   return context

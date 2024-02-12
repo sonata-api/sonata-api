@@ -42,7 +42,7 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 
   if( 'items' in parentProperty && 'properties' in parentProperty.items ) {
-    const property = parentProperty.items.properties?.[propertyName]
+    const property = parentProperty.items.properties[propertyName]
     if( property ) {
       return property
     }
@@ -53,7 +53,7 @@ const getProperty = (propertyName: string, parentProperty: Property | Descriptio
   }
 
   if( 'properties' in parentProperty ) {
-    return parentProperty.properties?.[propertyName]
+    return parentProperty.properties[propertyName]
   }
 }
 

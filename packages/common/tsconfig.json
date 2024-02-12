@@ -1,11 +1,15 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/cjs",
+    "outDir": "dist",
     "paths": {
       "@sonata-api/types": [
         "../types/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "@types/*.d.ts",
+    "src"
+  ]
 }

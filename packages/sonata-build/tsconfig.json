@@ -7,7 +7,7 @@
         "../api/dist"
       ],
       "@sonata-api/common": [
-        "../common/dist/cjs"
+        "../common/dist"
       ],
       "@sonata-api/types": [
         "../types/dist"

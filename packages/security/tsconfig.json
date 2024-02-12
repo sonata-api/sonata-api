@@ -10,11 +10,15 @@
         "../api/dist/*"
       ],
       "@sonata-api/common": [
-        "../common/dist/cjs"
+        "../common/dist"
       ],
       "@sonata-api/types": [
         "../types/dist"
       ]
     }
-  }
+  },
+  "include": [
+    "@types/*.d.ts",
+    "src"
+  ]
 }

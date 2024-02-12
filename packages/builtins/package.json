@@ -3,14 +3,16 @@
   "version": "1.0.26",
   "description": "## Installation",
   "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "test": "echo skipping",
-    "build": "tsc",
-    "watch": "tsc --watch",
+    "build": "pnpm build:cjs && pnpm build:esm",
+    "build:cjs": "tsc",
+    "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs",
     "writeIcons": "NODE_PATH=../../playground/node_modules node dist/__scripts__/prepublishOnly.js",
     "prepublishOnly": "pnpm build && pnpm writeIcons"
   },
@@ -18,42 +20,22 @@
   "author": "",
   "license": "ISC",
   "exports": {
-    ".": "./dist/index.js",
-    "./collections": "./dist/collections/index.js",
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./collections": {
+      "import": "./dist/collections/index.mjs",
+      "require": "./dist/collections/index.js",
+      "types": "./dist/collections/index.d.ts"
+    },
     "./icons": {
-      "types": "./dist/icons.d.ts",
       "import": "./dist/icons.mjs",
-      "require": "./dist/icons.cjs"
+      "require": "./dist/icons.cjs",
+      "types": "./dist/icons.d.ts"
     },
     "./*": "./dist/*"
-  },
-  "typesVersions": {
-    "*": {
-      "collections": [
-        "dist/collections/index.d.ts"
-      ],
-      "collections/*": [
-        "dist/collections/*/index.d.ts"
-      ],
-      "collections/apiKey/index.js": [
-        "dist/collections/apiKey/index.d.ts"
-      ],
-      "collections/file/index.js": [
-        "dist/collections/file/index.d.ts"
-      ],
-      "collections/log/index.js": [
-        "dist/collections/log/index.d.ts"
-      ],
-      "collections/resourceUsage/index.js": [
-        "dist/collections/resourceUsage/index.d.ts"
-      ],
-      "collections/user/index.js": [
-        "dist/collections/user/index.d.ts"
-      ],
-      "icons": [
-        "dist/icons.d.ts"
-      ]
-    }
   },
   "files": [
     "dist"

@@ -7,7 +7,7 @@
         "../access-control/dist"
       ],
       "@sonata-api/common": [
-        "../common/dist/cjs"
+        "../common/dist"
       ],
       "@sonata-api/common/*": [
         "../common/dist/*"

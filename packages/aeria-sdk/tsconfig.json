@@ -1,11 +1,10 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/cjs",
-    "module": "commonjs",
+    "outDir": "dist",
     "paths": {
       "@sonata-api/common": [
-        "../common/dist/cjs"
+        "../common/dist"
       ],
       "@sonata-api/types": [
         "../types/dist"

@@ -36,3 +36,4 @@ export const unsafe = <L, R>(either: Either<L, R>, message?: any) => {
 
   return either.value
 }
+
