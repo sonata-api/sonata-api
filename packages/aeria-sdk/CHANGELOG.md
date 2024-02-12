@@ -1,5 +1,14 @@
 # aeria-sdk
 
+## 0.0.8
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+  - @sonata-api/common@0.1.20
+
 ## 0.0.7
 
 ### Patch Changes

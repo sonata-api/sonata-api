@@ -1,5 +1,13 @@
 # @sonata-api/common
 
+## 0.1.20
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+
 ## 0.1.19
 
 ### Patch Changes

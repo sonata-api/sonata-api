@@ -1,5 +1,15 @@
 # @sonata-api/access-control
 
+## 1.0.16
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+  - @sonata-api/common@0.1.20
+  - @sonata-api/entrypoint@0.0.12
+
 ## 1.0.15
 
 ### Patch Changes

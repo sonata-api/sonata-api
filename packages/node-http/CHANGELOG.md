@@ -1,5 +1,13 @@
 # @sonata-api/node-http
 
+## 1.0.12
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/http@1.0.20
+
 ## 1.0.11
 
 ### Patch Changes

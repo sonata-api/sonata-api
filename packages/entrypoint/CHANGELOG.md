@@ -1,5 +1,19 @@
 # @sonata-api/entrypoint
 
+## 0.0.13
+
+### Patch Changes
+
+- fix entrypoint
+
+## 0.0.12
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+
 ## 0.0.11
 
 ### Patch Changes

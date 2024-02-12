@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/builtins",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "## Installation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

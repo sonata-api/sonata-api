@@ -9,9 +9,13 @@ export const getEntrypoint = async () => {
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
   const entrypoint = await getEntrypoint()
+  const entrypointDefault = entrypoint.default.default
+    ? entrypoint.default.default
+    : entrypoint.default
+
   const collections = entrypoint.collections
     ? entrypoint.collections
-    : entrypoint.default.options.collections
+    : entrypointDefault.options.collections
 
   return Object.assign({}, collections)
 }
@@ -52,9 +56,12 @@ export const getRouter = async () => {
 
 export const getConfig = async (): Promise<ApiConfig> => {
   const entrypoint = await getEntrypoint()
+  const entrypointDefault = entrypoint.default
+    ? entrypoint.default.default
+    : entrypoint.default
 
-  return entrypoint.default
-    ? entrypoint.default.options.config
+  return entrypointDefault
+    ? entrypointDefault.options.config
     : {}
 }
 

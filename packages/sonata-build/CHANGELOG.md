@@ -1,5 +1,16 @@
 # sonata-build
 
+## 1.0.17
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+  - @sonata-api/api@1.0.41
+  - @sonata-api/builtins@1.0.27
+  - @sonata-api/common@0.1.20
+
 ## 1.0.16
 
 ### Patch Changes

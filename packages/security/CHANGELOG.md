@@ -1,5 +1,15 @@
 # @sonata-api/security
 
+## 1.0.15
+
+### Patch Changes
+
+- ESM extensions
+- Updated dependencies
+  - @sonata-api/types@0.1.41
+  - @sonata-api/api@1.0.41
+  - @sonata-api/common@0.1.20
+
 ## 1.0.14
 
 ### Patch Changes

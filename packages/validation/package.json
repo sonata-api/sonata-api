@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/validation",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "## Installation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
