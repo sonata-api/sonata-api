@@ -1,4 +1,4 @@
-import type { Description, PropertiesWithId } from './description'
+import type { JsonSchema, PropertiesWithId } from './property'
 
 export type FinalOperator =
   | 'equal'
@@ -8,34 +8,34 @@ export type FinalOperator =
   | 'gte'
   | 'lte'
 
-export type FinalCondition<TDescription extends Description> = {
+export type FinalCondition<TSchema extends JsonSchema> = {
   operator: FinalOperator
-  term1: PropertiesWithId<TDescription>
+  term1: PropertiesWithId<TSchema>
   term2: any
   else?: any
 }
 
-export type TruthyCondition<TDescription extends Description> = {
+export type TruthyCondition<TSchema extends JsonSchema> = {
   operator: 'truthy'
-  term1: PropertiesWithId<TDescription>
+  term1: PropertiesWithId<TSchema>
 }
 
-export type OrCondition<TDescription extends Description> = {
-  or: readonly Condition<TDescription>[]
+export type OrCondition<TSchema extends JsonSchema> = {
+  or: readonly Condition<TSchema>[]
 }
 
-export type AndCondition<TDescription extends Description> = {
-  and: readonly Condition<TDescription>[]
+export type AndCondition<TSchema extends JsonSchema> = {
+  and: readonly Condition<TSchema>[]
 }
 
-export type NotCondition<TDescription extends Description> = {
-  not: Condition<TDescription>
+export type NotCondition<TSchema extends JsonSchema> = {
+  not: Condition<TSchema>
 }
 
-export type Condition<TDescription extends Description> =
-  | FinalCondition<TDescription>
-  | TruthyCondition<TDescription>
-  | AndCondition<TDescription>
-  | OrCondition<TDescription>
-  | NotCondition<TDescription>
+export type Condition<TSchema extends JsonSchema> =
+  | FinalCondition<TSchema>
+  | TruthyCondition<TSchema>
+  | AndCondition<TSchema>
+  | OrCondition<TSchema>
+  | NotCondition<TSchema>
 

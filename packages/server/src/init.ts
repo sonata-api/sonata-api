@@ -9,9 +9,12 @@ import { DEFAULT_API_CONFIG } from './constants'
 import { warmup } from './warmup'
 import { registerRoutes } from './routes'
 
-type InitOptions = {
+export type InitOptions = {
   config?: ApiConfig
   callback?: (context: Context)=> any
+  collections?: Record<string, {
+    description: NonCircularJsonSchema
+  }>
 }
 
 export const getDecodedToken = async (request: GenericRequest, context: Context) => {
@@ -42,18 +45,7 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   }
 }
 
-export const init = <
-  const TInitOptions extends InitOptions,
-  const TCollections extends {
-    [collectionName: string]: {
-      description: NonCircularJsonSchema
-    }
-  },
->(
-  _options: TInitOptions & {
-    collections?: TCollections
-  },
-) => {
+export const init = <const TInitOptions extends InitOptions>(_options: TInitOptions) => {
   const options = Object.assign({}, _options)
   options.config ??= {}
   Object.assign(options.config, deepMerge(DEFAULT_API_CONFIG, options.config))

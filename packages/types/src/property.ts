@@ -1,5 +1,5 @@
 import type { PhosphorIcon } from '@phosphor-icons/core'
-import type { Description, Condition, PropertiesWithId } from '.'
+import type { Condition, } from '.'
 
 export type PropertyArrayElement =
   | 'checkbox'
@@ -18,9 +18,12 @@ export type PropertyFormat =
   | 'date'
   | 'date-time'
 
-export type RequiredProperties<TDescription extends Description> = ReadonlyArray<PropertiesWithId<TDescription>> | Partial<Record<
-  PropertiesWithId<TDescription>,
-  Condition<TDescription> | boolean
+export type PropertiesWithId<TSchema extends JsonSchema> =
+  keyof TSchema['properties'] | '_id'
+
+export type RequiredProperties<TSchema extends JsonSchema> = ReadonlyArray<PropertiesWithId<TSchema>> | Partial<Record<
+  PropertiesWithId<TSchema>,
+  Condition<TSchema> | boolean
 >>
 
 export type JsonSchema<TJsonSchema extends JsonSchema = any> = {

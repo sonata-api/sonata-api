@@ -1,9 +1,6 @@
 import type { IconStyle, PhosphorIcon } from '@phosphor-icons/core'
-import type { JsonSchema } from './property'
+import type { JsonSchema, PropertiesWithId, } from './property'
 import type { Condition } from './condition'
-
-export type PropertiesWithId<TDescription extends Description> =
-  keyof TDescription['properties'] | '_id'
 
 export type CollectionPresets = 
   | 'crud'
