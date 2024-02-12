@@ -7,7 +7,7 @@ export const getEntrypoint = async () => {
   return import(process.cwd())
 }
 
-const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection) | undefined>> => {
+const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
   const entrypoint = await getEntrypoint()
   const collections = entrypoint.collections
     ? entrypoint.collections
@@ -31,7 +31,6 @@ export const getCollection = async (collectionName: string): Promise<Collection 
   }
 
   const collections = await getCollections()
-
   const candidate = collections[collectionName]
   if( !candidate ) {
     return
