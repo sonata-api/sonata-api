@@ -4,6 +4,11 @@ let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefi
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
+  try {
+    return require(process.argv[1])
+  } catch( err ) {
+  }
+
   return import(process.argv[1])
 }
 
@@ -56,7 +61,7 @@ export const getRouter = async () => {
 
 export const getConfig = async (): Promise<ApiConfig> => {
   const entrypoint = await getEntrypoint()
-  const entrypointDefault = entrypoint.default
+  const entrypointDefault = entrypoint.default.default
     ? entrypoint.default.default
     : entrypoint.default
 

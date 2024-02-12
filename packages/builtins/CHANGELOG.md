@@ -1,5 +1,31 @@
 # @sonata-api/system
 
+## 1.0.29
+
+### Patch Changes
+
+- esm hack
+- Updated dependencies
+  - @sonata-api/access-control@1.0.18
+  - @sonata-api/entrypoint@0.0.15
+  - @sonata-api/validation@1.0.17
+  - @sonata-api/common@0.1.22
+  - @sonata-api/types@0.1.43
+  - @sonata-api/api@1.0.43
+
+## 1.0.28
+
+### Patch Changes
+
+- Target commonjs
+- Updated dependencies
+  - @sonata-api/access-control@1.0.17
+  - @sonata-api/api@1.0.42
+  - @sonata-api/common@0.1.21
+  - @sonata-api/entrypoint@0.0.14
+  - @sonata-api/types@0.1.42
+  - @sonata-api/validation@1.0.16
+
 ## 1.0.27
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # @sonata-api/types
 
+## 0.1.43
+
+### Patch Changes
+
+- esm hack
+
+## 0.1.42
+
+### Patch Changes
+
+- Target commonjs
+
 ## 0.1.41
 
 ### Patch Changes

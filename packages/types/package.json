@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/types",
-  "version": "0.1.41",
+  "version": "0.1.43",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

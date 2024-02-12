@@ -1,5 +1,23 @@
 # aeria-sdk
 
+## 0.0.10
+
+### Patch Changes
+
+- esm hack
+- Updated dependencies
+  - @sonata-api/common@0.1.22
+  - @sonata-api/types@0.1.43
+
+## 0.0.9
+
+### Patch Changes
+
+- Target commonjs
+- Updated dependencies
+  - @sonata-api/common@0.1.21
+  - @sonata-api/types@0.1.42
+
 ## 0.0.8
 
 ### Patch Changes

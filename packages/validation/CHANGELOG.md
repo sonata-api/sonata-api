@@ -1,5 +1,23 @@
 # @sonata-api/validation
 
+## 1.0.17
+
+### Patch Changes
+
+- esm hack
+- Updated dependencies
+  - @sonata-api/common@0.1.22
+  - @sonata-api/types@0.1.43
+
+## 1.0.16
+
+### Patch Changes
+
+- Target commonjs
+- Updated dependencies
+  - @sonata-api/common@0.1.21
+  - @sonata-api/types@0.1.42
+
 ## 1.0.15
 
 ### Patch Changes

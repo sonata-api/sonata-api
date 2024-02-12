@@ -1,5 +1,21 @@
 # @sonata-api/node-http
 
+## 1.0.14
+
+### Patch Changes
+
+- esm hack
+- Updated dependencies
+  - @sonata-api/http@1.0.22
+
+## 1.0.13
+
+### Patch Changes
+
+- Target commonjs
+- Updated dependencies
+  - @sonata-api/http@1.0.21
+
 ## 1.0.12
 
 ### Patch Changes

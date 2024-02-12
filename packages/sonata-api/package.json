@@ -1,6 +1,6 @@
 {
   "name": "sonata-api",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,8 +24,7 @@
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
-    "./loader": "./dist/loader.js",
-    "./loader-esm": "./dist/loader-esm.js"
+    "./loader": "./dist/loader.js"
   },
   "files": [
     "dist"

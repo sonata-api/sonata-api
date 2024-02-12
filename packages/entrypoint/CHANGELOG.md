@@ -1,5 +1,21 @@
 # @sonata-api/entrypoint
 
+## 0.0.15
+
+### Patch Changes
+
+- esm hack
+- Updated dependencies
+  - @sonata-api/types@0.1.43
+
+## 0.0.14
+
+### Patch Changes
+
+- Target commonjs
+- Updated dependencies
+  - @sonata-api/types@0.1.42
+
 ## 0.0.13
 
 ### Patch Changes
