@@ -1,5 +1,5 @@
 import path from 'path'
-import { mirror } from './mirror'
+import { mirror } from './mirror.js'
 
 const main = async () => {
   const { aeriaSdk } = require(path.join(process.cwd(), 'package.json'))

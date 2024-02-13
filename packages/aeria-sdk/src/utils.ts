@@ -1,4 +1,4 @@
-import type { InstanceConfig } from './types'
+import type { InstanceConfig } from './types.js'
 
 export const apiUrl = (config: InstanceConfig) => {
   if( typeof config.apiUrl === 'string' ) {

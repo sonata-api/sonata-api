@@ -1,8 +1,8 @@
-import type { InstanceConfig } from './types'
+import type { InstanceConfig } from './types.js'
 import { isRight, unwrapEither } from '@sonata-api/common'
-import { request } from './http'
-import { apiUrl } from './utils'
-import { getStorage } from './storage'
+import { request } from './http.js'
+import { apiUrl } from './utils.js'
+import { getStorage } from './storage.js'
 
 export type AuthenticationResult = {
   user: Collections['user']['item']

@@ -1,9 +1,9 @@
 import type { RequestConfig } from '@sonata-api/common'
-import type { InstanceConfig } from './types'
-import { type RequestMethod } from '@sonata-api/types'
-import { authenticate, signout, type AuthenticationPayload } from './auth'
-import { request } from './http'
-import { apiUrl } from './utils'
+import type { RequestMethod } from '@sonata-api/types'
+import type { InstanceConfig } from './types.js'
+import { authenticate, signout, type AuthenticationPayload } from './auth.js'
+import { request } from './http.js'
+import { apiUrl } from './utils.js'
 
 type UserFunctions = {
   user: TLOFunctions & {

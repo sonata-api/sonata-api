@@ -2,8 +2,8 @@ import type { InstanceConfig } from './types'
 import path from 'path'
 import { deserialize } from '@sonata-api/common'
 import { writeFile, mkdir } from 'fs/promises'
-import { topLevel } from './topLevel'
-import { apiUrl } from './utils'
+import { topLevel } from './topLevel.js'
+import { apiUrl } from './utils.js'
 
 const mirrorDts = (mirrorObj: any) => {
   const collections = mirrorObj.descriptions

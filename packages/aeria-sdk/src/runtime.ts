@@ -1,5 +1,5 @@
-import type { InstanceConfig } from './types'
-import type { getStorage } from './storage'
+import type { InstanceConfig } from './types.js'
+import type { getStorage } from './storage.js'
 
 export const instanceConfig = {} as InstanceConfig
 export const url = ''

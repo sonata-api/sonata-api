@@ -1,5 +1,5 @@
-import type { InstanceConfig } from './types'
-import type { AuthenticationResult } from './auth'
+import type { InstanceConfig } from './types.js'
+import type { AuthenticationResult } from './auth.js'
 
 export const storageMemo: Record<string, string> = {}
 

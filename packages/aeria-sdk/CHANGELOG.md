@@ -1,5 +1,11 @@
 # aeria-sdk
 
+## 0.0.15
+
+### Patch Changes
+
+- Esm extensions
+
 ## 0.0.14
 
 ### Patch Changes
