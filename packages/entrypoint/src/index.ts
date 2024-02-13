@@ -1,14 +1,16 @@
 import type { Collection, ApiConfig } from '@sonata-api/types'
+import { dynamicImport } from '@sonata-api/common'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefined
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
-  return import(process.argv[1])
+  return dynamicImport(process.argv[1])
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
   const entrypoint = await getEntrypoint()
+
   const collections = entrypoint.collections
     ? entrypoint.collections
     : entrypoint.default.options.collections
@@ -52,12 +54,8 @@ export const getRouter = async () => {
 
 export const getConfig = async (): Promise<ApiConfig> => {
   const entrypoint = await getEntrypoint()
-  const entrypointDefault = entrypoint.default.default
-    ? entrypoint.default.default
-    : entrypoint.default
-
-  return entrypointDefault
-    ? entrypointDefault.options.config
+  return entrypoint.default
+    ? entrypoint.default.options.config
     : {}
 }
 

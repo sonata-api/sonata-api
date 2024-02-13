@@ -1,6 +1,6 @@
 {
   "name": "aeria-sdk",
-  "version": "0.0.12",
+  "version": "0.0.14",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -31,6 +31,16 @@
       "import": "./dist/index.mjs",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
+    },
+    "./storage": {
+      "import": "./dist/storage.mjs",
+      "require": "./dist/storage.js",
+      "types": "./dist/storage.d.ts"
+    },
+    "./topLevel": {
+      "import": "./dist/topLevel.mjs",
+      "require": "./dist/topLevel.js",
+      "types": "./dist/topLevel.d.ts"
     }
   },
   "peerDependencies": {

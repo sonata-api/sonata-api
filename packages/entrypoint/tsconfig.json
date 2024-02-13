@@ -3,6 +3,9 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
+      "@sonata-api/common": [
+        "../common/dist"
+      ],
       "@sonata-api/types": [
         "../types/dist"
       ]

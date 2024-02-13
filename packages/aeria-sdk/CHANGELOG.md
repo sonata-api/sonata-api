@@ -1,5 +1,17 @@
 # aeria-sdk
 
+## 0.0.14
+
+### Patch Changes
+
+- Add missing exports
+
+## 0.0.13
+
+### Patch Changes
+
+- Fix mirror bug
+
 ## 0.0.12
 
 ### Patch Changes

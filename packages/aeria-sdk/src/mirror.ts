@@ -102,7 +102,7 @@ export const mirror = async (config: InstanceConfig) => {
     recursive: true,
   })
   await writeFile(path.join(process.cwd(), 'aeria-sdk.d.ts'), mirrorDts(mirror))
-  await writeFile(path.join(runtimeBase, '..', 'cjs', 'runtime.js'), runtimeCjs(config))
-  await writeFile(path.join(runtimeBase, '..', 'esm', 'runtime.js'), runtimeEsm(config))
+  await writeFile(path.join(runtimeBase, 'runtime.js'), runtimeCjs(config))
+  await writeFile(path.join(runtimeBase, 'runtime.mjs'), runtimeEsm(config))
 }
 

@@ -1,5 +1,24 @@
 # @sonata-api/common
 
+## 0.1.27
+
+### Patch Changes
+
+- Fix dynamicImport
+
+## 0.1.26
+
+### Patch Changes
+
+- Fix bug
+- fix dynamicImport
+
+## 0.1.25
+
+### Patch Changes
+
+- new dynamicImport
+
 ## 0.1.24
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/entrypoint",
-  "version": "0.0.17",
+  "version": "0.0.20",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -30,6 +30,7 @@
     "dist"
   ],
   "peerDependencies": {
+    "@sonata-api/common": "*",
     "@sonata-api/types": "*"
   }
 }

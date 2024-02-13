@@ -1,5 +1,31 @@
 # @sonata-api/entrypoint
 
+## 0.0.20
+
+### Patch Changes
+
+- Fix dynamicImport
+- Updated dependencies
+  - @sonata-api/common@0.1.27
+
+## 0.0.19
+
+### Patch Changes
+
+- Fix bug
+- fix dynamicImport
+- Updated dependencies
+- Updated dependencies
+  - @sonata-api/common@0.1.26
+
+## 0.0.18
+
+### Patch Changes
+
+- new dynamicImport
+- Updated dependencies
+  - @sonata-api/common@0.1.25
+
 ## 0.0.17
 
 ### Patch Changes
