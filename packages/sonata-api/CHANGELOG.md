@@ -1,5 +1,41 @@
 # sonata-api
 
+## 1.0.18
+
+### Patch Changes
+
+- Fix esm builds
+- Updated dependencies
+  - @sonata-api/access-control@1.0.20
+  - @sonata-api/entrypoint@0.0.17
+  - @sonata-api/validation@1.0.19
+  - @sonata-api/node-http@1.0.16
+  - @sonata-api/builtins@1.0.31
+  - @sonata-api/security@1.0.19
+  - @sonata-api/common@0.1.24
+  - @sonata-api/server@1.0.23
+  - @sonata-api/types@0.1.45
+  - @sonata-api/http@1.0.24
+  - @sonata-api/api@1.0.45
+
+## 1.0.17
+
+### Patch Changes
+
+- Entrypoint import fix
+- Updated dependencies
+  - @sonata-api/entrypoint@0.0.16
+  - @sonata-api/access-control@1.0.19
+  - @sonata-api/api@1.0.44
+  - @sonata-api/builtins@1.0.30
+  - @sonata-api/common@0.1.23
+  - @sonata-api/http@1.0.23
+  - @sonata-api/node-http@1.0.15
+  - @sonata-api/security@1.0.18
+  - @sonata-api/server@1.0.22
+  - @sonata-api/types@0.1.44
+  - @sonata-api/validation@1.0.18
+
 ## 1.0.16
 
 ### Patch Changes

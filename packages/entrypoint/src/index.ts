@@ -4,23 +4,14 @@ let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefi
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
-  try {
-    return require(process.argv[1])
-  } catch( err ) {
-  }
-
   return import(process.argv[1])
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {
   const entrypoint = await getEntrypoint()
-  const entrypointDefault = entrypoint.default.default
-    ? entrypoint.default.default
-    : entrypoint.default
-
   const collections = entrypoint.collections
     ? entrypoint.collections
-    : entrypointDefault.options.collections
+    : entrypoint.default.options.collections
 
   return Object.assign({}, collections)
 }

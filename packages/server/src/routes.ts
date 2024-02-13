@@ -6,7 +6,7 @@ import {
   safeHandle,
   regularVerb,
   customVerbs,
-} from './handler'
+} from './handler.js'
 
 export const registerRoutes = () => {
   const defaultHandler = (fn: ReturnType<typeof regularVerb>) => {

@@ -1,5 +1,21 @@
 # @sonata-api/common
 
+## 0.1.24
+
+### Patch Changes
+
+- Fix esm builds
+- Updated dependencies
+  - @sonata-api/types@0.1.45
+
+## 0.1.23
+
+### Patch Changes
+
+- Entrypoint import fix
+- Updated dependencies
+  - @sonata-api/types@0.1.44
+
 ## 0.1.22
 
 ### Patch Changes

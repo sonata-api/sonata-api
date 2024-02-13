@@ -1,5 +1,21 @@
 # @sonata-api/node-http
 
+## 1.0.16
+
+### Patch Changes
+
+- Fix esm builds
+- Updated dependencies
+  - @sonata-api/http@1.0.24
+
+## 1.0.15
+
+### Patch Changes
+
+- Entrypoint import fix
+- Updated dependencies
+  - @sonata-api/http@1.0.23
+
 ## 1.0.14
 
 ### Patch Changes

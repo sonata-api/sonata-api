@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/security",
-  "version": "1.0.17",
+  "version": "1.0.19",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -12,7 +12,8 @@
     "test": "echo skipping",
     "build": "pnpm build:cjs && pnpm build:esm",
     "build:cjs": "tsc",
-    "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs",
+    "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs && pnpm build:esm-transform",
+    "build:esm-transform": "pnpm -w esm-transform $PWD/dist",
     "prepublishOnly": "pnpm build"
   },
   "keywords": [],

@@ -1,7 +1,7 @@
 import type { AccessControl, Role, ACProfile } from '@sonata-api/types'
 import { getCollection, getCollections } from '@sonata-api/entrypoint'
 import { deepMerge } from '@sonata-api/common'
-import { DEFAULT_ACCESS_CONTROL } from './constants'
+import { DEFAULT_ACCESS_CONTROL } from './constants.js'
 
 let availableRolesMemo: string[] | undefined
 

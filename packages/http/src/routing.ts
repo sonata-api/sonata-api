@@ -11,10 +11,10 @@ import type { Contract } from './contract.js'
 
 import { REQUEST_METHODS } from '@sonata-api/types'
 import { Stream } from 'stream'
-import { DEFAULT_BASE_URI } from './constants'
 import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
 import { validate } from '@sonata-api/validation'
 import { safeJson } from './payload.js'
+import { DEFAULT_BASE_URI } from './constants.js'
 
 export type RouteUri = `/${string}`
 

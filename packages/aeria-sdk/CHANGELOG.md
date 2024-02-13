@@ -1,5 +1,23 @@
 # aeria-sdk
 
+## 0.0.12
+
+### Patch Changes
+
+- Fix esm builds
+- Updated dependencies
+  - @sonata-api/common@0.1.24
+  - @sonata-api/types@0.1.45
+
+## 0.0.11
+
+### Patch Changes
+
+- Entrypoint import fix
+- Updated dependencies
+  - @sonata-api/common@0.1.23
+  - @sonata-api/types@0.1.44
+
 ## 0.0.10
 
 ### Patch Changes

@@ -1,5 +1,23 @@
 # @sonata-api/validation
 
+## 1.0.19
+
+### Patch Changes
+
+- Fix esm builds
+- Updated dependencies
+  - @sonata-api/common@0.1.24
+  - @sonata-api/types@0.1.45
+
+## 1.0.18
+
+### Patch Changes
+
+- Entrypoint import fix
+- Updated dependencies
+  - @sonata-api/common@0.1.23
+  - @sonata-api/types@0.1.44
+
 ## 1.0.17
 
 ### Patch Changes

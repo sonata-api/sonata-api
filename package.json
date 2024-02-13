@@ -5,7 +5,8 @@
   "scripts": {
     "postinstall": "husky install; rm -rf packages/*/node_modules/@sonata-api",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "esm-transform": "ts-node --swc scripts/transform-import-extensions.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
@@ -15,10 +16,10 @@
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.10.4",
     "eslint-config-aeria": "latest",
+    "glob": "^9.3.0",
     "husky": "^8.0.3",
     "mocha": "^10.2.0",
     "ts-node": "^10.9.1",
-    "tsup": "^8.0.2",
     "typescript": "^5.1.6"
   }
 }
