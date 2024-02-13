@@ -8,7 +8,7 @@ const renameExtensions = () => new Transform({
       .replace(/\.js(['"])/g, (_, m1) => `.mjs${m1}`)
 
     callback(null, transformedChunk)
-  }
+  },
 })
 
 const main = async () => {
@@ -18,7 +18,7 @@ const main = async () => {
 
     await new Promise<void>((resolve) => {
       const writerStream = fs.createWriteStream(tempPath, {
-        flags: 'w'
+        flags: 'w',
       })
 
       fs.createReadStream(file)

@@ -31,7 +31,7 @@ export const getCollection = async (collectionName: string): Promise<Collection 
   }
 
   const collections = await getCollections()
-  const candidate = collections[collectionName]
+  const candidate: any = collections[collectionName]
   if( !candidate ) {
     return
   }
