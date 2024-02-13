@@ -1,18 +1,12 @@
 import type { init } from '@sonata-api/server'
-
-const dynamicImport = async () => {
-  const fn = new Function('return import(process.argv[1])')
-  const m = await fn()
-
-  return m.default.default
-    ? m.default.default
-    : m.default
-}
+import { dynamicImport } from '@sonata-api/common'
 
 const main = async () => {
-  const entrypoint: ReturnType<typeof init> = await dynamicImport()
+  const entrypoint: {
+    default: ReturnType<typeof init>
+  } = await dynamicImport(process.argv[1])
 
-  entrypoint.listen()
+  entrypoint.default.listen()
 }
 
 main()
