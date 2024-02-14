@@ -1,5 +1,13 @@
 # sonata-build
 
+## 1.0.22
+
+### Patch Changes
+
+- Fix upload
+- Updated dependencies
+  - @sonata-api/api@1.0.46
+
 ## 1.0.21
 
 ### Patch Changes

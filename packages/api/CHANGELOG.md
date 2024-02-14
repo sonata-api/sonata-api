@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.46
+
+### Patch Changes
+
+- Fix upload
+
 ## 1.0.45
 
 ### Patch Changes

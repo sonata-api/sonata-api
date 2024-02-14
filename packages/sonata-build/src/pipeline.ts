@@ -22,7 +22,7 @@ async function compilationPhase() {
     return left(`typescript compilation produced ${result.diagnostics.length} errors, please fix them`)
   }
 
-  const collections = require(path.join(process.cwd(), 'dist', 'collections'))
+  const collections = await import(path.join(process.cwd(), 'dist', 'collections'))
   const base = path.join(process.cwd(), 'node_modules', DATA_PATH)
   const icons = []
 

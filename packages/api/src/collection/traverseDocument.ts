@@ -1,4 +1,4 @@
-import type { Description, Property, Either, ACErrors, ValidationError } from '@sonata-api/types'
+import type { Description, Property, Either, ACErrors, ValidationError, Context } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueFromPath } from '@sonata-api/common'
 import { validateProperty, validateWholeness } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
@@ -17,6 +17,7 @@ export type TraverseOptions = {
   allowOperators?: boolean
   recurseDeep?: boolean
   recurseReferences?: boolean
+  context?: Context
 }
 
 export type TraverseNormalized = {
@@ -214,6 +215,10 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     return value
   }
 
+  if( !ctx.options.context ) {
+    throw new Error()
+  }
+
   if( !value ) {
     if( ctx.root._id ) {
       await disposeOldFiles(ctx)
@@ -233,9 +238,11 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     await disposeOldFiles(ctx)
   }
 
-  /* eslint-disable-next-line */
-  delete (<any>tempFile)._id
-  const file = await getDatabaseCollection('file').insertOne(tempFile)
+  const { _id, ...newFile } = tempFile
+  newFile.absolute_path = `${ctx.options.context.apiConfig.storage!.fs}/${tempFile.absolute_path.split('/').pop()}`
+  await fs.rename(tempFile.absolute_path, newFile.absolute_path)
+
+  const file = await getDatabaseCollection('file').insertOne(newFile)
   return file.insertedId
 }
 

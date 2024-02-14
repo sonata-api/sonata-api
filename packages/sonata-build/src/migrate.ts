@@ -15,7 +15,7 @@ export const migrate = async () => {
     return right('skipping (continuos integration detected)')
   }
 
-  const collections = require(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
+  const collections = await import(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
     | Collection
     | (()=> Collection)
   >
