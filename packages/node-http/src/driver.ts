@@ -18,7 +18,7 @@ export const abstractRequest = async (request: http.IncomingMessage) => {
   const req: GenericRequest = {
     url,
     method: (request.method || '') as RequestMethod,
-    headers: request.headers || {},
+    headers: request.headers,
     body: request.headers['x-stream-request']
       ? undefined
       : await getBody(request),

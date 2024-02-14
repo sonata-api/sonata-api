@@ -1,8 +1,8 @@
 import path from 'path'
 import { writeFile } from 'fs/promises'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'
 import * as presets from '../packages/api/dist/presets/index.js'
 import * as collections from '../packages/builtins/dist/collections/index.js'
-import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'
 
 const writeIcons = async () => {
   const base = path.resolve('./packages/builtins/dist')
