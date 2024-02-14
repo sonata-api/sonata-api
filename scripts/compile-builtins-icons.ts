@@ -1,11 +1,11 @@
-import * as presets from '@sonata-api/api/presets'
-import { writeFile } from 'fs/promises'
-import { collections } from '..'
 import path from 'path'
-import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../utils'
+import { writeFile } from 'fs/promises'
+import * as presets from '../packages/api/dist/presets/index.js'
+import * as collections from '../packages/builtins/dist/collections/index.js'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'
 
 const writeIcons = async () => {
-  const base = path.join(process.cwd(), 'dist')
+  const base = path.resolve('./packages/builtins/dist')
   const icons = []
 
   for( const collectionName in collections ) {
@@ -25,3 +25,4 @@ const writeIcons = async () => {
 }
 
 writeIcons()
+

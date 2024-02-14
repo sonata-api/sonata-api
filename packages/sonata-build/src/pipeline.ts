@@ -1,6 +1,6 @@
 import path from 'path'
 import { writeFile, mkdir } from 'fs/promises'
-import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '@sonata-api/builtins'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from './icons'
 import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
 import { log } from './log.js'
 import { bundle } from './bundle.js'

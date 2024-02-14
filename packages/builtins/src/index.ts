@@ -1,7 +1,6 @@
 import type {} from 'mongodb'
 import type {} from '@sonata-api/validation'
 export * from './collections/index.js'
-export * from './utils/index.js'
 export * as systemFunctions from './functions/index.js'
 
 import {
