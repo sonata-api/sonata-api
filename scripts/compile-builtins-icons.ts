@@ -1,3 +1,5 @@
+#!/usr/bin/env -S pnpm ts-node --swc
+
 import path from 'path'
 import { writeFile } from 'fs/promises'
 import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'

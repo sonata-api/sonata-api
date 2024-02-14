@@ -6,8 +6,8 @@
     "postinstall": "husky install; rm -rf packages/*/node_modules/@sonata-api",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "esm-transform": "ts-node --swc scripts/transform-import-extensions.ts",
-    "write-icons": "NODE_PATH=./playground/node_modules ts-node --swc scripts/compile-builtins-icons.ts"
+    "esm-transform": "./scripts/transform-import-extensions.ts",
+    "write-icons": "NODE_PATH=./playground/node_modules ./scripts/compile-builtins-icons.ts"
   },
   "devDependencies": {
     "@changesets/cli": "^2.26.2",
