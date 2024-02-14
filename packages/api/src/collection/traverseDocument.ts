@@ -238,7 +238,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     await disposeOldFiles(ctx)
   }
 
-  const { _id, ...newFile } = tempFile
+  const { _id: fileId, ...newFile } = tempFile
   newFile.absolute_path = `${ctx.options.context.apiConfig.storage!.fs}/${tempFile.absolute_path.split('/').pop()}`
   await fs.rename(tempFile.absolute_path, newFile.absolute_path)
 

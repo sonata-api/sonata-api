@@ -24,7 +24,7 @@ const streamToFs = (metadata: typeof FileMetadata, context: Context) => {
     ? metadata.filename.split('.').pop()
     : 'bin'
 
-  const absolutePath = path.join(context.apiConfig.storage!.tempFs!, `${filenameHash}.${extension}`)
+  const absolutePath = path.join(context.apiConfig.storage!.tempFs, `${filenameHash}.${extension}`)
 
   return new Promise<string>((resolve, reject) => {
     const stream = createWriteStream(absolutePath)
