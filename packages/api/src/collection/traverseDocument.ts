@@ -25,7 +25,7 @@ export type TraverseNormalized = {
 }
 
 export enum TraverseErrors {
-  InvalidDocumentId = 'INVALID_DOCUMENT_ID'
+  InvalidDocumentId = 'INVALID_DOCUMENT_ID',
 }
 
 type PhaseContext = {
