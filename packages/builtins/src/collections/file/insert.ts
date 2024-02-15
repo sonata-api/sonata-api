@@ -18,7 +18,7 @@ context: Context<typeof description>) => {
   }
 
   const what = Object.assign({}, payload.what)
-  what.owner = context.token.user._id
+  what.owner = context.token.sub
 
   const extension = what.filename.split('.').pop()
 

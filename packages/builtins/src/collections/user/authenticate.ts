@@ -32,11 +32,13 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (user: Pick<SchemaWithId<typeof description>, '_id'>,
-  context: Context<typeof description, Collections['user']['functions']>): Promise<Return> => {
+const getUser = async (
+  userId: ObjectId,
+  context: Context<typeof description, Collections['user']['functions']>
+): Promise<Return> => {
   const leanUser = await context.collection.functions.get({
     filters: {
-      _id: user._id,
+      _id: userId,
     },
     populate: ['picture_file'],
   })
@@ -46,10 +48,9 @@ const getUser = async (user: Pick<SchemaWithId<typeof description>, '_id'>,
   }
 
   const tokenContent = {
-    user: {
-      _id: leanUser._id,
-      roles: leanUser.roles,
-    },
+    sub: leanUser._id,
+    roles: leanUser.roles,
+    userinfo: {},
   }
 
   if( context.apiConfig.logSuccessfulAuthentications ) {
@@ -72,8 +73,7 @@ const getUser = async (user: Pick<SchemaWithId<typeof description>, '_id'>,
       }
     }, {})
 
-    Object.assign(leanUser, pick(leanUser, context.apiConfig.tokenUserProperties))
-    Object.assign(tokenContent.user, leanUser)
+    tokenContent.userinfo = pick(leanUser, context.apiConfig.tokenUserProperties)
   }
 
   const token = await signToken(tokenContent)
@@ -90,7 +90,7 @@ const getUser = async (user: Pick<SchemaWithId<typeof description>, '_id'>,
 export const authenticate = async (props: Props, context: Context<typeof description>) => {
   if( 'revalidate' in props ) {
     return context.token.authenticated
-      ? right(await getUser(context.token.user, context))
+      ? right(await getUser(context.token.sub, context))
       : left(AuthenticationErrors.Unauthenticated)
   }
 
@@ -101,10 +101,8 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
   if( context.apiConfig.defaultUser ) {
     if( props.email === context.apiConfig.defaultUser.username && props.password === context.apiConfig.defaultUser.password ) {
       const token = await signToken({
-        user: {
-          _id: null,
-          roles: ['root'],
-        },
+        _id: null,
+        roles: ['root'],
       })
 
       return right(<Return>{
@@ -142,5 +140,6 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     return left(AuthenticationErrors.InactiveUser)
   }
 
-  return right(await getUser(user, context))
+  return right(await getUser(user._id, context))
 }
+

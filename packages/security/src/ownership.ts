@@ -8,8 +8,8 @@ export const checkOwnershipRead = async (props: SecurityCheckProps<SecurityCheck
   const payload = Object.assign({}, props.payload)
 
   if( token.authenticated && description.owned ) {
-    if( !token.user.roles.includes('root') ) {
-      payload.filters.owner = token.user._id
+    if( !token.roles.includes('root') ) {
+      payload.filters.owner = token.sub
     }
   }
 
@@ -24,7 +24,7 @@ export const checkOwnershipWrite = async (props: SecurityCheckProps<InsertPayloa
 
   if( token.authenticated && description.owned ) {
     if( !payload.what._id || description.owned === 'always' ) {
-      payload.what.owner = token.user._id
+      payload.what.owner = token.sub
     } else {
       return right(payload)
     }

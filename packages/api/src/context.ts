@@ -61,8 +61,8 @@ export const internalCreateContext = async (options: ContextOptions<any>, parent
       details,
       context: collectionName,
       owner: token.authenticated
-        ? token.user._id
-        : options.parentContext?.token.user._id,
+        ? token.sub
+        : options.parentContext?.token.sub,
       created_at: new Date,
     })
   }

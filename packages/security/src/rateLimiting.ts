@@ -12,7 +12,7 @@ const getUser = <TDescription extends Description>(context: Context<TDescription
   }
 
   return context.collections.user.model.findOne({
-    _id: context.token.user._id,
+    _id: context.token.sub,
   },
   {
     resources_usage: 1,

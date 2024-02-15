@@ -58,7 +58,7 @@ export const customVerbs = () => async (parentContext: Context) => {
   const fnEither = await getFunction(collectionName,
     functionName,
     context.token.authenticated
-      ? context.token.user
+      ? context.token
       : {})
 
   if( isLeft(fnEither) ) {
@@ -101,7 +101,7 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
   const fnEither = await getFunction(collectionName,
     functionName,
     context.token.authenticated
-      ? context.token.user
+      ? context.token
       : {})
 
   if( isLeft(fnEither) ) {

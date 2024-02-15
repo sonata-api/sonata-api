@@ -26,6 +26,7 @@ export type TraverseNormalized = {
 
 export enum TraverseErrors {
   InvalidDocumentId = 'INVALID_DOCUMENT_ID',
+  InvalidTempfile = 'INVALID_TEMPFILE',
 }
 
 type PhaseContext = {
@@ -233,7 +234,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
   })
 
   if( !tempFile ) {
-    return left('invalid tempfile')
+    return left(TraverseErrors.InvalidTempfile)
   }
 
   if( ctx.root._id ) {

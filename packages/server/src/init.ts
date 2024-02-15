@@ -21,18 +21,16 @@ export const getDecodedToken = async (request: GenericRequest, context: Context)
   if( !request.headers.authorization ) {
     return right(<DecodedToken>{
       authenticated: false,
-      user: {
-        _id: null,
-      },
+      sub: null,
     })
   }
 
   try {
     const decodedToken: DecodedToken = await decodeToken(request.headers.authorization.split('Bearer ').pop() || '')
     decodedToken.authenticated = true
-    decodedToken.user = unsafe(await traverseDocument(decodedToken.user, context.collections.user.description, {
+    Object.assign(decodedToken, unsafe(await traverseDocument(decodedToken, context.collections.user.description, {
       autoCast: true,
-    }))
+    })))
 
     return right(decodedToken)
 

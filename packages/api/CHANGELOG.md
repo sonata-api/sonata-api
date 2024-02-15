@@ -1,5 +1,15 @@
 # @sonata-api/api
 
+## 1.0.49
+
+### Patch Changes
+
+- Update jwt
+- Updated dependencies
+  - @sonata-api/builtins@1.0.32
+  - @sonata-api/security@1.0.20
+  - @sonata-api/types@0.1.46
+
 ## 1.0.48
 
 ### Patch Changes

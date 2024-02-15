@@ -1,5 +1,11 @@
 # @sonata-api/types
 
+## 0.1.46
+
+### Patch Changes
+
+- Update jwt
+
 ## 0.1.45
 
 ### Patch Changes

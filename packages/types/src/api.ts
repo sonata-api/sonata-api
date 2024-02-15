@@ -27,19 +27,13 @@ export type UserACProfile = {
 export type DecodedToken =
   | {
     authenticated: true
-    user: PackReferences<Collections['user']['item']> & {
-      _id: ObjectId
-      roles: string[]
-    }
-    extra?: Record<string, any>
+    sub: ObjectId
+    roles: string[]
+    userinfo: PackReferences<Collections['user']['item']> 
     allowed_functions?: FunctionPath[]
-    key_id?: string
-    key_name?: string
   }
   | {
     authenticated: false
-    user: {
-      _id: null
-    }
+    sub: null
   }
 
