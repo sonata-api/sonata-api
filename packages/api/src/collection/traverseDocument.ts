@@ -3,7 +3,6 @@ import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueF
 import { validateProperty, validateWholeness } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets.js'
-import { getDatabaseCollection } from '../database.js'
 import { preloadDescription } from './preload.js'
 import fs from 'fs/promises'
 
@@ -59,10 +58,9 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     return
   }
 
-  const fileCollection = getDatabaseCollection('file')
-  const collection = getDatabaseCollection(ctx.options.description.$id)
+  const context = ctx.options.context!
 
-  const doc = await collection.findOne({
+  const doc = await context.collections[ctx.options.description.$id].model.findOne({
     _id: new ObjectId(ctx.root._id),
   }, {
     projection: {
@@ -89,7 +87,7 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     },
   }
 
-  const files = fileCollection.find(fileFilters, {
+  const files = context.collections.file.find(fileFilters, {
     projection: {
       absolute_path: 1,
     },
@@ -104,7 +102,7 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     }
   }
 
-  return fileCollection.deleteMany(fileFilters)
+  return context.collections.file.deleteMany(fileFilters)
 }
 
 const autoCast = (value: any, ctx: Omit<PhaseContext, 'options'> & { options: (TraverseOptions & TraverseNormalized) | {} }): any => {
@@ -226,7 +224,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
     return null
   }
 
-  const tempFile = await getDatabaseCollection('tempFile').findOne({
+  const tempFile = await ctx.options.context.collections.tempFile.model.findOne({
     _id: new ObjectId(value.tempId),
   })
 
@@ -242,7 +240,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
   newFile.absolute_path = `${ctx.options.context.apiConfig.storage!.fs}/${tempFile.absolute_path.split('/').pop()}`
   await fs.rename(tempFile.absolute_path, newFile.absolute_path)
 
-  const file = await getDatabaseCollection('file').insertOne(newFile)
+  const file = await ctx.options.context.collections.file.model.insertOne(newFile)
   return file.insertedId
 }
 
