@@ -24,6 +24,10 @@ export type TraverseNormalized = {
   pipe: (value: any, phaseContext: PhaseContext)=> any
 }
 
+export enum TraverseErrors {
+  InvalidDocumentId = 'INVALID_DOCUMENT_ID'
+}
+
 type PhaseContext = {
   target: any
   root: any
@@ -69,7 +73,7 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
   })
 
   if( !doc ) {
-    return left('invalid document id')
+    return left(TraverseErrors.InvalidDocumentId)
   }
 
   let fileIds = getValueFromPath(doc, ctx.propPath)
