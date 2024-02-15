@@ -47,7 +47,7 @@ export type RefProperty = {
   form?: ReadonlyArray<string>
   purge?: boolean
 
-  constraints?: Condition<any>
+  constraints?: Condition
 }
 
 export type NonCircularRefProperty = Omit<RefProperty, '$ref'> & {

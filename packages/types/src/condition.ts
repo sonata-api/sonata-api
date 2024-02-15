@@ -8,31 +8,31 @@ export type FinalOperator =
   | 'gte'
   | 'lte'
 
-export type FinalCondition<TSchema extends JsonSchema> = {
+export type FinalCondition<TSchema extends JsonSchema = any> = {
   operator: FinalOperator
   term1: PropertiesWithId<TSchema>
   term2: any
   else?: any
 }
 
-export type TruthyCondition<TSchema extends JsonSchema> = {
+export type TruthyCondition<TSchema extends JsonSchema = any> = {
   operator: 'truthy'
   term1: PropertiesWithId<TSchema>
 }
 
-export type OrCondition<TSchema extends JsonSchema> = {
+export type OrCondition<TSchema extends JsonSchema = any> = {
   or: readonly Condition<TSchema>[]
 }
 
-export type AndCondition<TSchema extends JsonSchema> = {
+export type AndCondition<TSchema extends JsonSchema = any> = {
   and: readonly Condition<TSchema>[]
 }
 
-export type NotCondition<TSchema extends JsonSchema> = {
+export type NotCondition<TSchema extends JsonSchema = any> = {
   not: Condition<TSchema>
 }
 
-export type Condition<TSchema extends JsonSchema> =
+export type Condition<TSchema extends JsonSchema = any> =
   | FinalCondition<TSchema>
   | TruthyCondition<TSchema>
   | AndCondition<TSchema>

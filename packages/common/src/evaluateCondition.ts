@@ -1,4 +1,4 @@
-import type { Condition, Description } from '@sonata-api/types'
+import type { Condition } from '@sonata-api/types'
 import { arraysIntersects } from './arraysIntersects.js'
 
 const equalOrContains = (term1: any, term2: any) => {
@@ -15,7 +15,7 @@ const equalOrContains = (term1: any, term2: any) => {
   }
 }
 
-const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
+const evaluatesToTrue = (subject: any, condition: Condition): boolean => {
   if( 'term1' in condition ) {
     if( !subject ) {
       return false
@@ -52,7 +52,7 @@ const evaluatesToTrue = (subject: any, condition: Condition<any>): boolean => {
   return false
 }
 
-export const evaluateCondition = <TDescription extends Description=any>(subject: any, condition: Condition<TDescription>) => {
+export const evaluateCondition = (subject: any, condition: Condition) => {
   const result = {
     satisfied: false,
     else: null,

@@ -15,5 +15,5 @@ export const isRequired = (propName: string, required: NonNullable<Description['
     return requiredProp
   }
 
-  return evaluateCondition(subject, requiredProp as Condition<any>).satisfied
+  return evaluateCondition(subject, requiredProp as Condition).satisfied
 }
