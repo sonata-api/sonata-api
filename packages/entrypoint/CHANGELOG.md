@@ -1,5 +1,11 @@
 # @sonata-api/entrypoint
 
+## 0.0.21
+
+### Patch Changes
+
+- Fixes
+
 ## 0.0.20
 
 ### Patch Changes

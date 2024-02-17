@@ -1,11 +1,13 @@
 import type { Collection, ApiConfig } from '@sonata-api/types'
 import { dynamicImport } from '@sonata-api/common'
+import path from 'path'
 
 let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefined
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
-  return dynamicImport(process.argv[1])
+  const { main } = await dynamicImport(path.join(process.cwd(), 'package.json'))
+  return dynamicImport(path.join(process.cwd(), main))
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {

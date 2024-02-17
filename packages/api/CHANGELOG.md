@@ -1,5 +1,14 @@
 # @sonata-api/api
 
+## 1.0.50
+
+### Patch Changes
+
+- Fixes
+- Updated dependencies
+  - @sonata-api/entrypoint@0.0.21
+  - @sonata-api/builtins@1.0.33
+
 ## 1.0.49
 
 ### Patch Changes

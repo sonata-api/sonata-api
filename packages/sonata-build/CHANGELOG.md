@@ -1,5 +1,14 @@
 # sonata-build
 
+## 1.0.23
+
+### Patch Changes
+
+- Fixes
+- Updated dependencies
+  - @sonata-api/builtins@1.0.33
+  - @sonata-api/api@1.0.50
+
 ## 1.0.22
 
 ### Patch Changes

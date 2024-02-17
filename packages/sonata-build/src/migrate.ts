@@ -1,6 +1,7 @@
 import type { Collection } from '@sonata-api/types'
 import { right } from '@sonata-api/common'
 import { getDatabase, prepareCollectionName, getDatabaseCollection } from '@sonata-api/api'
+import { config as loadEnv } from 'dotenv'
 import { log } from './log.js'
 import path from 'path'
 
@@ -14,6 +15,8 @@ export const migrate = async () => {
   ) {
     return right('skipping (continuos integration detected)')
   }
+
+  loadEnv()
 
   const collections = await import(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
     | Collection

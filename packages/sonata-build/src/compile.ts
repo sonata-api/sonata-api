@@ -1,5 +1,4 @@
 import ts from 'typescript'
-import path from 'path'
 import glob from 'glob'
 import { readFile } from 'fs/promises'
 import { deepMerge } from '@sonata-api/common'
@@ -13,7 +12,7 @@ export const compile = async () => {
   const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) 
 
   if( tsConfig.extends ) {
-    const resolvedPath = require.resolve(path.join(process.cwd(), tsConfig.extends))
+    const resolvedPath = require.resolve(tsConfig.extends)
 
     Object.assign(tsConfig, deepMerge(tsConfig,
       JSON.parse((await readFile(resolvedPath)).toString())))

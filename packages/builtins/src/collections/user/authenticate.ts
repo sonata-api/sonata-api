@@ -32,10 +32,8 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (
-  userId: ObjectId,
-  context: Context<typeof description, Collections['user']['functions']>
-): Promise<Return> => {
+const getUser = async (userId: ObjectId,
+  context: Context<typeof description, Collections['user']['functions']>): Promise<Return> => {
   const leanUser = await context.collection.functions.get({
     filters: {
       _id: userId,

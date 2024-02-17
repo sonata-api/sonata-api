@@ -92,7 +92,7 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     },
   }
 
-  const files = context.collections.file.find(fileFilters, {
+  const files = context.collections.file.model.find(fileFilters, {
     projection: {
       absolute_path: 1,
     },
@@ -107,7 +107,7 @@ const disposeOldFiles = async (ctx: PhaseContext, options: { fromIds?: ObjectId[
     }
   }
 
-  return context.collections.file.deleteMany(fileFilters)
+  return context.collections.file.model.deleteMany(fileFilters)
 }
 
 const autoCast = (value: any, ctx: Omit<PhaseContext, 'options'> & { options: (TraverseOptions & TraverseNormalized) | {} }): any => {
