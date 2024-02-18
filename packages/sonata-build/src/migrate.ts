@@ -16,7 +16,9 @@ export const migrate = async () => {
     return right('skipping (continuos integration detected)')
   }
 
-  loadEnv()
+  if( process.env.NODE_ENV !== 'production' ) {
+    loadEnv()
+  }
 
   const collections = await import(path.join(process.cwd(), 'dist', 'collections')) as Record<string,
     | Collection

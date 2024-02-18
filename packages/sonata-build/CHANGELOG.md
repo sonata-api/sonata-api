@@ -1,5 +1,17 @@
 # sonata-build
 
+## 1.0.25
+
+### Patch Changes
+
+- Fixes
+
+## 1.0.24
+
+### Patch Changes
+
+- Update build
+
 ## 1.0.23
 
 ### Patch Changes
