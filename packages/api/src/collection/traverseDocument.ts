@@ -1,6 +1,6 @@
-import type { Description, Property, Either, ACErrors, ValidationError, Context } from '@sonata-api/types'
+import { type Description, type Property, type Either, type ACErrors, type ValidationError, type Context, ValidationErrorCodes } from '@sonata-api/types'
 import { left, right, isLeft, unwrapEither, unsafe, pipe, isReference, getValueFromPath } from '@sonata-api/common'
-import { validateProperty, validateWholeness } from '@sonata-api/validation'
+import { makeValidationError, validateProperty, validateWholeness } from '@sonata-api/validation'
 import { ObjectId } from 'mongodb'
 import { getCollectionAsset } from '../assets.js'
 import { preloadDescription } from './preload.js'
@@ -474,10 +474,13 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     functions.push(moveFiles)
   }
 
+  let validationError: ValidationError | null = null
+
   options.description = description
   options.pipe = pipe(functions, {
     returnFirst: (value) => {
       if( value?._tag === 'Left' ) {
+        validationError = value.value
         return value
       }
     },
@@ -492,6 +495,13 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
 
   if( isLeft(resultEither) ) {
     return left(unwrapEither(resultEither))
+  }
+
+  if( validationError ) {
+    return left(makeValidationError({
+      code: ValidationErrorCodes.InvalidProperties,
+      errors: validationError,
+    }))
   }
 
   return right(unwrapEither(resultEither) as any)

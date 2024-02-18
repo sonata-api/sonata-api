@@ -1,5 +1,17 @@
 # sonata-build
 
+## 1.0.27
+
+### Patch Changes
+
+- Update sonata-build cli
+
+## 1.0.26
+
+### Patch Changes
+
+- Add icons extraction phase
+
 ## 1.0.25
 
 ### Patch Changes

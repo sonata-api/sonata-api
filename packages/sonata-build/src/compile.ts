@@ -1,7 +1,7 @@
 import ts from 'typescript'
 import glob from 'glob'
 import { readFile } from 'fs/promises'
-import { deepMerge } from '@sonata-api/common'
+import { left, right, deepMerge } from '@sonata-api/common'
 import { log } from './log.js'
 
 export const compile = async () => {
@@ -67,3 +67,14 @@ export const compile = async () => {
     program,
   }
 }
+
+export const compilationPhase = async () => {
+  const result = await compile()
+
+  if( !result.success ) {
+    return left(`typescript compilation produced ${result.diagnostics.length} errors, please fix them`)
+  }
+
+  return right('compilation succeeded')
+}
+

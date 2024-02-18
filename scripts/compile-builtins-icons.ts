@@ -1,14 +1,18 @@
 #!/usr/bin/env -S pnpm ts-node --swc
 
 import path from 'path'
-import { writeFile } from 'fs/promises'
 import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'
+import * as fs from 'fs/promises'
 import * as presets from '../packages/api/dist/presets/index.js'
 import * as collections from '../packages/builtins/dist/collections/index.js'
 
+const DIST_PATH = path.resolve('./packages/builtins-icons/dist')
+
 const writeIcons = async () => {
-  const base = path.resolve('./packages/builtins/dist')
   const icons = []
+  await fs.mkdir(DIST_PATH, {
+    recursive: true,
+  })
 
   for( const collectionName in collections ) {
     const collection = collections[collectionName as keyof typeof collections]
@@ -21,9 +25,9 @@ const writeIcons = async () => {
   }
 
   const uniqueIcons = [...new Set(icons)]
-  await writeFile(path.join(base, 'icons.mjs'), iconsEsmContent(uniqueIcons))
-  await writeFile(path.join(base, 'icons.cjs'), iconsCjsContent(uniqueIcons))
-  await writeFile(path.join(base, 'icons.d.ts'), iconsDtsContent(uniqueIcons))
+  await fs.writeFile(path.join(DIST_PATH, 'index.mjs'), iconsEsmContent(uniqueIcons))
+  await fs.writeFile(path.join(DIST_PATH, 'index.js'), iconsCjsContent(uniqueIcons))
+  await fs.writeFile(path.join(DIST_PATH, 'index.d.ts'), iconsDtsContent(uniqueIcons))
 }
 
 writeIcons()

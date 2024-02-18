@@ -30,7 +30,7 @@ export const iconsCjsContent = (icons: string[]) => {
 export const iconsDtsContent = (icons: string[]) => {
   const types = icons.map((icon) => `  | '${icon}'`)
   const lines = [
-    `export type UsedIcons = \n${types.join('\n')};`,
+    `export type UsedIcons = (\n${types.join('\n')})[];`,
     'export declare const icons: UsedIcons;',
   ]
 

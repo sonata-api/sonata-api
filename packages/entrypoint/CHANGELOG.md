@@ -1,5 +1,11 @@
 # @sonata-api/entrypoint
 
+## 0.0.23
+
+### Patch Changes
+
+- Add icons extraction phase
+
 ## 0.0.22
 
 ### Patch Changes

@@ -8,7 +8,7 @@ const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
   const { main } = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), {
-    encoding: 'utf8'
+    encoding: 'utf8',
   }))
 
   return dynamicImport(path.join(process.cwd(), main))

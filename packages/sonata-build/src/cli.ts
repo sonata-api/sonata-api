@@ -1,9 +1,12 @@
+import type { Either } from '@sonata-api/types'
 import { parseArgs } from 'node:util'
+import { isLeft, unwrapEither } from '@sonata-api/common'
+import { log } from './log.js'
 import { bundle } from './bundle.js'
-import { compile } from './compile.js'
+import { compilationPhase } from './compile.js'
 import { watch } from './watch.js'
 import { migrate } from './migrate.js'
-import { pipeline } from './pipeline.js'
+import { iconsExtraction } from './iconsExtraction.js'
 
 const { values: opts } = parseArgs({
   options: {
@@ -11,45 +14,64 @@ const { values: opts } = parseArgs({
       type: 'boolean',
       short: 'w',
     },
-    mode: {
-      type: 'string',
-      short: 'm',
+    compile: {
+      type: 'boolean',
+      short: 'c',
+    },
+    icons: {
+      type: 'boolean',
+      short: 'i',
     },
     migrate: {
       type: 'boolean',
-      short: 'M',
+      short: 'm',
+    },
+    bundle: {
+      type: 'boolean',
+      short: 'b',
     },
   },
 })
 
-const mode = () => {
+const phases: (() => Promise<Either<string, string>>)[] = []
+
+async function main() {
   if( opts.watch ) {
-    return 'watch'
+    return watch()
+  }
+
+  if( opts.compile ) {
+    phases.push(compilationPhase)
+  }
+
+  if( opts.icons ) {
+    phases.push(iconsExtraction)
   }
 
   if( opts.migrate ) {
-    return 'migrate'
+    phases.push(migrate)
   }
 
-  return opts.mode || 'pipeline'
-}
-
-async function main() {
-  switch( mode() ) {
-    case 'compile':
-      return compile()
-    case 'bundle':
-      return bundle()
-    case 'pipeline':
-      return pipeline()
-    case 'watch':
-      return watch()
-    case 'migrate':
-      return migrate()
-
-    default:
-      throw new Error(`mode ${mode} not found`)
+  if( opts.bundle ) {
+    phases.push(bundle)
   }
+
+  return phases.reduce(async (a: any, phase) => {
+    if( !await a ) {
+      return
+    }
+
+    const resultEither = await phase()
+    if( isLeft(resultEither) ) {
+      log('error', unwrapEither(resultEither))
+      log('info', 'pipeline aborted')
+      return
+    }
+
+    const result = unwrapEither(resultEither)
+    log('info', result)
+    return true
+  }, true)
 }
 
 main()

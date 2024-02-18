@@ -1,5 +1,11 @@
 # @sonata-api/system
 
+## 1.0.34
+
+### Patch Changes
+
+- New builtins-icons package
+
 ## 1.0.33
 
 ### Patch Changes
