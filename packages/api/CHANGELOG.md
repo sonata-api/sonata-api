@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.53
+
+### Patch Changes
+
+- Fix windows path separator bug
+
 ## 1.0.52
 
 ### Patch Changes

@@ -17,7 +17,7 @@ export const createAccount = async (payload: Omit<Schema<typeof description>, 'r
     required: [
       'name',
       'email',
-      'phone',
+      'phone_number',
     ],
     properties: {
       name: {
@@ -26,7 +26,7 @@ export const createAccount = async (payload: Omit<Schema<typeof description>, 'r
       email: {
         type: 'string',
       },
-      phone: {
+      phone_number: {
         type: 'string',
       },
       password: {
