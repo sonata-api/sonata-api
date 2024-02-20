@@ -1,5 +1,5 @@
-import { writeFile } from 'fs/promises'
 import path from 'path'
+import * as fs from 'fs/promises'
 
 const DTS_FILENAME = 'sonata-api.d.ts'
 
@@ -15,7 +15,7 @@ declare global {
       : never
   }
 
-  type Collections = typeof import('./src') extends infer EntrypointModule
+  type Collections = typeof import('.') extends infer EntrypointModule
     ? 'collections' extends keyof EntrypointModule
       ? UnpackCollections<EntrypointModule['collections']>
       : 'default' extends keyof EntrypointModule
@@ -32,20 +32,20 @@ declare global {
 //`
 
 const install = async () => {
-  const base = path.join(process.cwd(), '..', '..', '..')
-
-  try {
-    // prevent the script from installing the dts on @sonata-api/* packages
-    const { name } = require(path.join(base, 'package.json'))
-    if( name.startsWith('@sonata-api/') ) {
-      return
-    }
-
-  } catch( e ) {
-    //
+  const base = process.env.INIT_CWD
+  if( !base ) {
+    throw new Error('must run as a script')
   }
 
-  await writeFile(path.join(base, DTS_FILENAME), dts)
+  const { name } = JSON.parse(await fs.readFile(path.join(base, 'package.json'), {
+    encoding: 'utf8',
+  }))
+
+  if( name.startsWith('@sonata-api/') ) {
+    return
+  }
+
+  await fs.writeFile(path.join(base, DTS_FILENAME), dts)
 }
 
 install()

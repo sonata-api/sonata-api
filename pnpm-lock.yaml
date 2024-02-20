@@ -138,6 +138,8 @@ importers:
         specifier: ^6.1.0
         version: 6.3.0
 
+  packages/builtins-icons: {}
+
   packages/common:
     dependencies:
       '@sonata-api/types':

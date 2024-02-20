@@ -1,5 +1,11 @@
 # @sonata-api/api
 
+## 1.0.52
+
+### Patch Changes
+
+- Update postinstall script
+
 ## 1.0.51
 
 ### Patch Changes

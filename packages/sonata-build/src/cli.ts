@@ -33,7 +33,7 @@ const { values: opts } = parseArgs({
   },
 })
 
-const phases: (() => Promise<Either<string, string>>)[] = []
+const phases: (()=> Promise<Either<string, string>>)[] = []
 
 async function main() {
   if( opts.watch ) {
