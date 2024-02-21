@@ -16,7 +16,7 @@ export const compile = async () => {
 
   if( tsConfig.extends ) {
     const extendsPath = tsConfig.extends
-    const resolvedPath = extendsPath.startsWith('./')
+    const resolvedPath = /^\.{1,2}\//.test(extendsPath)
       ? path.join(process.cwd(), extendsPath)
       : require.resolve(extendsPath)
 
