@@ -116,5 +116,5 @@ describe('Validate', () => {
 
     assert(isLeft(invalidEither))
   })
-
 })
+

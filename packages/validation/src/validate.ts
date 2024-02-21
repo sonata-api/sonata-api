@@ -90,8 +90,8 @@ export const validateProperty = (propName: string,
     const resultEither = validate(what, property, options)
 
     return isLeft(resultEither)
-      ? unwrapEither(resultEither)
-      : undefined
+      ? resultEither
+      : right(what)
   }
 
   if( 'literal' in property ) {
