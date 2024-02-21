@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "paths": {
+      "@sonata-api/common": [
+        "../../common/dist"
+      ],
+      "@sonata-api/types": [
+        "../../types/dist"
+      ]
+    }
+  }
+}

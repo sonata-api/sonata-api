@@ -41,7 +41,7 @@ describe('Validate', () => {
 
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)
-    assert(error.code === 'INVALID_PROPERTIES')
+    assert('code' in error && error.code === 'INVALID_PROPERTIES')
   })
 
   it('returns null with silent validator', () => {
@@ -61,7 +61,7 @@ describe('Validate', () => {
 
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)
-    assert(error.code === 'INVALID_PROPERTIES')
+    assert('code' in error && error.code === 'INVALID_PROPERTIES')
   })
 
   it('validates deep object', () => {
@@ -79,7 +79,7 @@ describe('Validate', () => {
 
     assert(isLeft(validationEither))
     const error = unwrapEither(validationEither)
-    assert(error.code === 'INVALID_PROPERTIES')
+    assert('code' in error && error.code === 'INVALID_PROPERTIES')
   })
 
   it('conditional required', () => {
