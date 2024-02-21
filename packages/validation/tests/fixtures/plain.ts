@@ -5,7 +5,7 @@ export const plainCandidate = {
   age: 50,
 }
 
-export const plainDescription: Omit<Description, '$id'> = {
+export const plainDescription = {
   properties: {
     name: {
       type: 'string',
@@ -14,5 +14,5 @@ export const plainDescription: Omit<Description, '$id'> = {
       type: 'number',
     },
   },
-}
+} satisfies Omit<Description, '$id'> 
 

@@ -11,6 +11,8 @@ import {
   personValidator,
   personSilentValidator,
   personCandidate,
+  coercionDescription,
+
 } from './fixtures'
 
 describe('Validate', () => {
@@ -88,6 +90,31 @@ describe('Validate', () => {
       id: 9,
     }, conditionalDescription)
     assert(isRight(validEither))
+    assert(isLeft(invalidEither))
+  })
+
+  it('coercion during validation', () => {
+    const validEither = validate({
+      age: '10',
+      weight: '10.5',
+
+    }, coercionDescription, {
+      coerce: true
+    })
+
+    const invalidEither = validate({
+      age: '10.8',
+      weight: 'ten',
+
+    }, coercionDescription, {
+      coerce: true
+    })
+
+
+    assert(isRight(validEither))
+    validEither.value.age === 10
+    validEither.value.weight === 10.5
+
     assert(isLeft(invalidEither))
   })
 

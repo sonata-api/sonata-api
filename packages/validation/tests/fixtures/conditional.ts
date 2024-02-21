@@ -1,6 +1,6 @@
 import type { Description } from '@sonata-api/types'
 
-export const conditionalDescription: Omit<Description, '$id'> = {
+export const conditionalDescription = {
   required: {
     id: true,
     name: {
@@ -26,5 +26,5 @@ export const conditionalDescription: Omit<Description, '$id'> = {
       type: 'string',
     },
   },
-}
+} satisfies Omit<Description, '$id'> 
 

@@ -1,4 +1,5 @@
 import type {
+  Either,
   JsonSchema,
   Property,
   InferSchema,
@@ -15,6 +16,7 @@ import { ValidationErrorCodes } from '@sonata-api/types'
 export type ValidateOptions = {
   extraneous?: string[] | boolean
   throwOnError?: boolean
+  coerce?: boolean
 }
 
 const getValueType = (value: any) => {
@@ -67,21 +69,21 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 export const validateProperty = (propName: string,
   what: any,
   property: Property | undefined,
-  options: ValidateOptions = {}): PropertyValidationError | undefined => {
-  const { extraneous } = options
+  options: ValidateOptions = {}): Either<PropertyValidationError, any> => {
+  const { extraneous, coerce } = options
   if( what === undefined ) {
-    return
+    return right(what)
   }
 
   if( !property ) {
     if( extraneous || (Array.isArray(extraneous) && extraneous.includes(propName)) ) {
-      return
+      return right(what)
     }
 
-    return makePropertyError('extraneous', {
+    return left(makePropertyError('extraneous', {
       expected: 'undefined',
       got: getValueType(what),
-    })
+    }))
   }
 
   if( 'properties' in property ) {
@@ -94,20 +96,20 @@ export const validateProperty = (propName: string,
 
   if( 'literal' in property ) {
     if( what !== property.literal ) {
-      return makePropertyError('unmatching', {
+      return left(makePropertyError('unmatching', {
         expected: property.literal ,
         got: what,
-      })
+      }))
     }
 
-    return
+    return right(what)
   }
 
   const expectedType = getPropertyType(property)!
   const actualType = getValueType(what)
 
   if( 'enum' in property && property.enum.length === 0 ) {
-    return
+    return right(what)
   }
 
   if(
@@ -116,33 +118,53 @@ export const validateProperty = (propName: string,
     && !(actualType === 'number' && expectedType === 'integer')
   ) {
     if( expectedType === 'datetime' && what instanceof Date ) {
-      return
+      return right(what)
     }
 
     if( expectedType === 'boolean' && !what ) {
-      return
+      return right(what)
     }
 
     if( '$ref' in property && actualType === 'string' ) {
       if( ObjectId.isValid(what) ) {
-        return
+        return right(what)
       }
     }
 
-    return makePropertyError('unmatching', {
+    if( coerce ) {
+      if( expectedType === 'number' && actualType === 'string' ) {
+        const coerced = parseFloat(what)
+        if( !isNaN(coerced) ) {
+          return right(coerced)
+        }
+      }
+      if( expectedType === 'integer' && actualType === 'string' ) {
+        const coerced = parseInt(what)
+        if( !isNaN(coerced) ) {
+          return right(coerced)
+        }
+      }
+      if( expectedType === 'string' && actualType === 'number' ) {
+        return right(String(what))
+      }
+
+    }
+
+    return left(makePropertyError('unmatching', {
       expected: expectedType,
       got: actualType,
-    })
+    }))
   }
 
   if( 'items' in property ) {
     let i = 0
     for( const elem of what ) {
-      const result = validateProperty(propName, elem, property.items, options) 
+      const resultEither = validateProperty(propName, elem, property.items, options) 
 
-      if( result ) {
+      if( isLeft(resultEither) ) {
+        const result = unwrapEither(resultEither)
         result.index = i
-        return result
+        return left(result)
       }
 
       i++
@@ -150,10 +172,10 @@ export const validateProperty = (propName: string,
   } else if( 'type' in property ) {
     if( property.type === 'integer' ) {
       if( !Number.isInteger(what) ) {
-        return makePropertyError('numeric_constraint', {
+        return left(makePropertyError('numeric_constraint', {
           expected: 'integer',
           got: 'invalid_number',
-        })
+        }))
       }
     }
 
@@ -164,25 +186,27 @@ export const validateProperty = (propName: string,
       || (property.exclusiveMaximum && property.exclusiveMaximum <= what)
       || (property.exclusiveMinimum && property.exclusiveMinimum >= what)
       ) {
-        return makePropertyError('numeric_constraint', {
+        return left(makePropertyError('numeric_constraint', {
           expected: 'number',
           got: 'invalid_number',
-        })
+        }))
       }
     }
   } else if( 'enum' in property ) {
     if( !property.enum.includes(what) ) {
-      return makePropertyError('extraneous_element', {
+      return left(makePropertyError('extraneous_element', {
         expected: property.enum,
         got: what,
-      })
+      }))
     }
   } else if( 'getter' in property ) {
-    return makePropertyError('unmatching', {
+    return left(makePropertyError('unmatching', {
       expected: 'getters are read-only',
       got: actualType,
-    })
+    }))
   }
+
+  return right(what)
 }
 
 export const validateWholeness = (what: Record<string, any>, schema: Omit<JsonSchema, '$id'>) => {
@@ -235,16 +259,20 @@ export const validate = <
   }
 
   const errors: Record<string, PropertyValidationError | ValidationError> = {}
+  const resultCopy: Record<string, any> = {}
 
   for( const propName in what ) {
-    const result = validateProperty(propName,
+    const resultEither = validateProperty(propName,
       what[propName],
       schema.properties[propName],
       options)
 
-    if( result ) {
+    if( isLeft(resultEither) ) {
+      const result = unwrapEither(resultEither)
       errors[propName] = result
     }
+
+    resultCopy[propName] = unwrapEither(resultEither)
   }
 
   if( Object.keys(errors).length > 0 ) {
@@ -262,7 +290,7 @@ export const validate = <
     }))
   }
 
-  return right(what as InferSchema<TJsonSchema>)
+  return right(resultCopy as InferSchema<TJsonSchema>)
 }
 
 export const validateSilently = <
