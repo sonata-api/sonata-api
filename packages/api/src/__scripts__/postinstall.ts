@@ -41,7 +41,7 @@ const install = async () => {
     encoding: 'utf8',
   }))
 
-  if( name.startsWith('@sonata-api/') ) {
+  if( name.startsWith('@sonata-api/') || name === 'aeria-monorepo' ) {
     return
   }
 

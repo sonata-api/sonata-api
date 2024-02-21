@@ -1,5 +1,5 @@
 {
-  "name": "sonata-api-monorepo",
+  "name": "aeria-monorepo",
   "private": true,
   "packageManager": "pnpm@8.7.6",
   "scripts": {
