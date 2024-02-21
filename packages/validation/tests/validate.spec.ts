@@ -99,7 +99,7 @@ describe('Validate', () => {
       weight: '10.5',
 
     }, coercionDescription, {
-      coerce: true
+      coerce: true,
     })
 
     const invalidEither = validate({
@@ -107,9 +107,8 @@ describe('Validate', () => {
       weight: 'ten',
 
     }, coercionDescription, {
-      coerce: true
+      coerce: true,
     })
-
 
     assert(isRight(validEither))
     validEither.value.age === 10
