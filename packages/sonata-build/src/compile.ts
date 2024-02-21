@@ -1,5 +1,6 @@
 import ts from 'typescript'
 import glob from 'glob'
+import path from 'path'
 import { readFile } from 'fs/promises'
 import { left, right, deepMerge } from '@sonata-api/common'
 import { log } from './log.js'
@@ -9,13 +10,21 @@ export const compile = async () => {
     ignore: ['node_modules/**/*.ts'],
   })
 
-  const tsConfig = JSON.parse((await readFile(`${process.cwd()}/tsconfig.json`)).toString()) 
+  const tsConfig = JSON.parse(await readFile(`${process.cwd()}/tsconfig.json`, {
+    encoding: 'utf-8',
+  })) 
 
   if( tsConfig.extends ) {
-    const resolvedPath = require.resolve(tsConfig.extends)
+    const extendsPath = tsConfig.extends
+    const resolvedPath = extendsPath.startsWith('./')
+      ? path.join(process.cwd(), extendsPath)
+      : require.resolve(extendsPath)
 
-    Object.assign(tsConfig, deepMerge(tsConfig,
-      JSON.parse((await readFile(resolvedPath)).toString())))
+    Object.assign(tsConfig,
+      deepMerge(tsConfig,
+        JSON.parse(await readFile(resolvedPath, {
+          encoding: 'utf-8', 
+        }))))
   }
 
   const compilerOptions = tsConfig.compilerOptions as unknown
