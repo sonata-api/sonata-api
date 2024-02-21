@@ -132,7 +132,10 @@ export const registerRoute = async <TCallback extends (context: Context)=> any>(
       }
 
       if( 'query' in contract && contract.query ) {
-        const validationEither = validate(context.request.query, contract.query)
+        const validationEither = validate(context.request.query, contract.query, {
+          coerce: true
+        })
+
         const error = checkUnprocessable(validationEither)
         if( error ) {
           return error
