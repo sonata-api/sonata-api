@@ -202,11 +202,11 @@ const validate = (value: any, ctx: PhaseContext) => {
     }
   }
 
-  const error = validateProperty(ctx.propName, value, ctx.property)
+  const validationEither = validateProperty(ctx.propName, value, ctx.property)
 
-  if( error ) {
+  if( isLeft(validationEither) ) {
     return left({
-      [ctx.propName]: error,
+      [ctx.propName]: validationEither,
     })
   }
 

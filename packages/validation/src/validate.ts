@@ -69,7 +69,7 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
 export const validateProperty = (propName: string,
   what: any,
   property: Property | undefined,
-  options: ValidateOptions = {}): Either<PropertyValidationError, any> => {
+  options: ValidateOptions = {}): Either<PropertyValidationError | ValidationError, any> => {
   const { extraneous, coerce } = options
   if( what === undefined ) {
     return right(what)
@@ -163,6 +163,10 @@ export const validateProperty = (propName: string,
 
       if( isLeft(resultEither) ) {
         const result = unwrapEither(resultEither)
+        if( 'errors' in result ) {
+          continue
+        }
+
         result.index = i
         return left(result)
       }
@@ -247,9 +251,9 @@ export const validate = <
   }
 
   if( !('properties' in schema) ) {
-    const result: any = validateProperty('', what, schema)
-    return result
-      ? left(result)
+    const resultEither = validateProperty('', what, schema)
+    return isLeft(resultEither)
+      ? resultEither
       : right(what as InferSchema<TJsonSchema>)
   }
 
@@ -301,10 +305,10 @@ export const validateSilently = <
   schema: TJsonSchema,
   options: ValidateOptions = {},
 ) => {
-  const result = validate(what, schema, options)
-  return isLeft(result)
+  const resultEither = validate(what, schema, options)
+  return isLeft(resultEither)
     ? null
-    : result.value
+    : unwrapEither(resultEither)
 }
 
 export const validator = <const TJsonSchema extends Omit<Description, '$id'> | Property>(

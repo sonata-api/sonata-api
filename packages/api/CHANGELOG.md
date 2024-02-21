@@ -1,5 +1,25 @@
 # @sonata-api/api
 
+## 1.0.56
+
+### Patch Changes
+
+- Fix validation bug
+- Updated dependencies
+  - @sonata-api/validation@1.0.21
+
+## 1.0.55
+
+### Patch Changes
+
+- Fix traverseDocument bug
+
+## 1.0.54
+
+### Patch Changes
+
+- Fix traverseDocument bug
+
 ## 1.0.53
 
 ### Patch Changes
