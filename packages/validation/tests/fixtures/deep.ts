@@ -18,7 +18,7 @@ export const deepCandidate = {
       },
     },
   },
-} satisfies Omit<Description, '$id'> 
+}
 
 export const deepDescription = {
   properties: {
