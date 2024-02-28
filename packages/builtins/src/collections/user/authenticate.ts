@@ -32,8 +32,10 @@ export enum AuthenticationErrors {
   InactiveUser = 'INACTIVE_USER',
 }
 
-const getUser = async (userId: ObjectId,
-  context: Context<typeof description, Collections['user']['functions']>): Promise<Return> => {
+const getUser = async (
+  userId: ObjectId,
+  context: Context<typeof description, Collections['user']['functions']>,
+): Promise<Return> => {
   const leanUser = await context.collection.functions.get({
     filters: {
       _id: userId,
@@ -119,16 +121,18 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     }
   }
 
-  const user = await context.collection.model.findOne({
-    email: props.email,
-  },
-  {
-    projection: {
-      email: 1,
-      password: 1,
-      active: 1,
+  const user = await context.collection.model.findOne(
+    {
+      email: props.email,
     },
-  })
+    {
+      projection: {
+        email: 1,
+        password: 1,
+        active: 1,
+      },
+    },
+  )
 
   if( !user || !user.password || !await bcryptCompare(props.password, user.password) ) {
     return left(AuthenticationErrors.InvalidCredentials)

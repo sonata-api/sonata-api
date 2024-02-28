@@ -54,7 +54,7 @@ export const fromLiteral = <
     type: 'object',
     required,
     properties,
-  } as ObjectToSchema<TObject, TRequired> 
+  } as ObjectToSchema<TObject, TRequired>
 }
 
 export const leftSchema = <const TObject extends Property>(object: TObject) => {

@@ -102,7 +102,7 @@ export type FilterReadonlyProperties<TProperties> = {
 type MapReferences<TSchema> = TSchema extends { properties: infer Properties }
   ? {
     -readonly [
-    P in keyof Properties as Properties[P] extends 
+    P in keyof Properties as Properties[P] extends
         | TestType<{ $ref: string }>
         | TestType<{ items: { $ref: string } }>
       ? P

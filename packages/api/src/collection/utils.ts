@@ -42,14 +42,16 @@ export const fill = <TDocument extends OptionalId<any>>(
   return Object.assign(freshItem(description), itemCopy)
 }
 
-export const prepareInsert = (payload: any,
+export const prepareInsert = (
+  payload: any,
   description: Pick<Description,
     | 'properties'
     | 'form'
     | 'writable'
     | 'owned'
     | 'defaults'
-  >) => {
+  >,
+) => {
   const rest = Object.assign({}, payload)
   const docId = payload._id
 

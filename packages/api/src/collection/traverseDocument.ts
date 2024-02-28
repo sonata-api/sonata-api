@@ -474,7 +474,7 @@ export const traverseDocument = async <const TWhat extends Record<string, any>>(
     functions.push(moveFiles)
   }
 
-  let validationError: ValidationError | null = null
+  let validationError: Record<string, ValidationError> | undefined
 
   options.description = description
   options.pipe = pipe(functions, {

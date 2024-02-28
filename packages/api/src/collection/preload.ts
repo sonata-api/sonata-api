@@ -53,9 +53,11 @@ const recurseProperty = async (_property: Property, propertyName: string, descri
   return property
 }
 
-export const applyPreset = (entry: Partial<Description> | Description['properties'],
+export const applyPreset = (
+  entry: Partial<Description> | Description['properties'],
   presetName: keyof typeof presets,
-  parentName?: string) => {
+  parentName?: string,
+) => {
   const preset = presets[presetName]
   const presetObject = Object.assign({}, parentName
     ? preset[parentName as keyof typeof preset]
@@ -104,8 +106,10 @@ export const preloadDescription = async <
   }
 
   if( descriptionPresets.length > 0 ) {
-    const merge = descriptionPresets.reduce((a, presetName) => applyPreset(a, presetName),
-      description)
+    const merge = descriptionPresets.reduce(
+      (a, presetName) => applyPreset(a, presetName),
+      description,
+    )
 
     Object.assign(description, merge)
   }

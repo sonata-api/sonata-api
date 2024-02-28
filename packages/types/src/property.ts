@@ -14,7 +14,7 @@ export type PropertyInputType =
   | 'time'
   | 'month'
 
-export type PropertyFormat = 
+export type PropertyFormat =
   | 'date'
   | 'date-time'
 

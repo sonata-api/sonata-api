@@ -53,8 +53,10 @@ export const useSecurity = <TDescription extends Description>(context: Context<T
     newPayload.filters ??= {}
 
     if( options.queryPreset ) {
-      Object.assign(newPayload, deepMerge(newPayload,
-        options.queryPreset))
+      Object.assign(newPayload, deepMerge(
+        newPayload,
+        options.queryPreset,
+      ))
     }
 
     const props = {

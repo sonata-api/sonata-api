@@ -2,7 +2,7 @@ import type { IconStyle, PhosphorIcon } from '@phosphor-icons/core'
 import type { JsonSchema, PropertiesWithId } from './property'
 import type { Condition } from './condition'
 
-export type CollectionPresets = 
+export type CollectionPresets =
   | 'crud'
   | 'duplicate'
   | 'remove'
@@ -44,6 +44,10 @@ export type FormLayout<TDescription extends Description> = {
 export type FormLayoutField<TDescription extends Description> = {
   span?: number
   verticalSpacing?: number
+  separator?:
+    | true
+    | 'top'
+    | 'bottom'
   if?: Condition<TDescription>
   component?: {
     name: string
@@ -61,7 +65,7 @@ export type TableLayout<TDescription extends Description> = {
 export type FiltersPreset<TDescription extends Description> = {
   name?: string
   icon?: Icon
-  filters: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
+  filters?: Partial<Record<PropertiesWithId<TDescription> | `$${string}`, any>>
   table?: readonly PropertiesWithId<TDescription>[]
   badgeFunction?: string
   default?: boolean

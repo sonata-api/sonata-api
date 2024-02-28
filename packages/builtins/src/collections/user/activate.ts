@@ -10,10 +10,12 @@ export enum ActivationErrors {
   InvalidLink = 'INVALID_LINK',
 }
 
-export const activate = async (payload: {
-  password: string
-},
-context: Context<typeof description>) => {
+export const activate = async (
+  payload: {
+    password: string
+  },
+  context: Context<typeof description>,
+) => {
   const {
     u: userId,
     t: token,
@@ -50,27 +52,31 @@ context: Context<typeof description>) => {
       })
     }
 
-    await context.collection.model.updateOne({
+    await context.collection.model.updateOne(
+      {
+        _id: user._id,
+      },
+      {
+        $set: {
+          active: true,
+          password: await bcrypt.hash(payload.password, 10),
+        },
+      },
+    )
+
+    return right(true)
+  }
+
+  await context.collection.model.updateOne(
+    {
       _id: user._id,
     },
     {
       $set: {
         active: true,
-        password: await bcrypt.hash(payload.password, 10),
       },
-    })
-
-    return right(true)
-  }
-
-  await context.collection.model.updateOne({
-    _id: user._id,
-  },
-  {
-    $set: {
-      active: true,
     },
-  })
+  )
 
   return context.response.writeHead(302, {
     location: '/user/activation',

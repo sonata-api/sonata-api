@@ -2,7 +2,7 @@ import type { PackReferences } from '@sonata-api/types'
 import { getConfig } from '@sonata-api/entrypoint'
 import { MongoClient } from 'mongodb'
 export {
-  ObjectId, 
+  ObjectId,
 } from 'mongodb'
 
 const dbMemo = {} as {

@@ -12,7 +12,7 @@ export const compile = async () => {
 
   const tsConfig = JSON.parse(await readFile(`${process.cwd()}/tsconfig.json`, {
     encoding: 'utf-8',
-  })) 
+  }))
 
   if( tsConfig.extends ) {
     const extendsPath = tsConfig.extends
@@ -20,11 +20,15 @@ export const compile = async () => {
       ? path.join(process.cwd(), extendsPath)
       : require.resolve(extendsPath)
 
-    Object.assign(tsConfig,
-      deepMerge(tsConfig,
+    Object.assign(
+      tsConfig,
+      deepMerge(
+        tsConfig,
         JSON.parse(await readFile(resolvedPath, {
-          encoding: 'utf-8', 
-        }))))
+          encoding: 'utf-8',
+        })),
+      ),
+    )
   }
 
   const compilerOptions = tsConfig.compilerOptions as unknown
@@ -50,8 +54,10 @@ export const compile = async () => {
   if( diagnostics.length ) {
     diagnostics.forEach((diagnostic) => {
       if( diagnostic.file && diagnostic.start ) {
-        const { line, character } = ts.getLineAndCharacterOfPosition(diagnostic.file,
-          diagnostic.start)
+        const { line, character } = ts.getLineAndCharacterOfPosition(
+          diagnostic.file,
+          diagnostic.start,
+        )
 
         const message = ts.flattenDiagnosticMessageText(diagnostic.messageText, '\n')
         log('error', `${diagnostic.file.fileName} (${line + 1},${character + 1}): ${message}`)

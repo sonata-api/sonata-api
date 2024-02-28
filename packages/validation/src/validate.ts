@@ -66,10 +66,12 @@ export const makeValidationError = <TValidationError extends ValidationError> (e
   return error
 }
 
-export const validateProperty = (propName: string,
+export const validateProperty = (
+  propName: string,
   what: any,
   property: Property | undefined,
-  options: ValidateOptions = {}): Either<PropertyValidationError | ValidationError, any> => {
+  options: ValidateOptions = {},
+): Either<PropertyValidationError | ValidationError, any> => {
   const { extraneous, coerce } = options
   if( what === undefined ) {
     return right(what)
@@ -159,7 +161,7 @@ export const validateProperty = (propName: string,
   if( 'items' in property ) {
     let i = 0
     for( const elem of what ) {
-      const resultEither = validateProperty(propName, elem, property.items, options) 
+      const resultEither = validateProperty(propName, elem, property.items, options)
 
       if( isLeft(resultEither) ) {
         const result = unwrapEither(resultEither)
@@ -266,10 +268,12 @@ export const validate = <
   const resultCopy: Record<string, any> = {}
 
   for( const propName in what ) {
-    const resultEither = validateProperty(propName,
+    const resultEither = validateProperty(
+      propName,
       what[propName],
       schema.properties[propName],
-      options)
+      options,
+    )
 
     if( isLeft(resultEither) ) {
       const result = unwrapEither(resultEither)

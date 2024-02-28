@@ -2,16 +2,20 @@ import type { JsonSchema } from '@sonata-api/types'
 import { checkForUndefined } from './checkForUndefined.js'
 import { evaluateCondition } from './evaluateCondition.js'
 
-export const getMissingProperties = (what: Record<string, any>,
+export const getMissingProperties = (
+  what: Record<string, any>,
   schema: Omit<JsonSchema, '$id'>,
-  required: JsonSchema['required']) => {
+  required: JsonSchema['required'],
+) => {
   const missingProps: string[] = []
-  
+
   if( Array.isArray(required) ) {
     for( const propName of required ) {
-      const isMissing = checkForUndefined(schema.properties[propName],
+      const isMissing = checkForUndefined(
+        schema.properties[propName],
         propName,
-        what)
+        what,
+      )
 
       if( isMissing ) {
         missingProps.push(propName)
@@ -33,9 +37,11 @@ export const getMissingProperties = (what: Record<string, any>,
         }
       }
 
-      const isMissing = checkForUndefined(schema.properties[propName],
+      const isMissing = checkForUndefined(
+        schema.properties[propName],
         propName,
-        what)
+        what,
+      )
 
       if( isMissing ) {
         missingProps.push(propName)

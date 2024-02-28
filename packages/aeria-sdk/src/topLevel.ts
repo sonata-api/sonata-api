@@ -52,10 +52,12 @@ export const topLevel = (config: InstanceConfig) => {
           }
         }
 
-        const response = await request(config,
+        const response = await request(
+          config,
           `${apiUrl(config)}/${endpoint}`,
           payload,
-          requestConfig)
+          requestConfig,
+        )
 
         return response.data
       }

@@ -6,7 +6,7 @@ import { DEFAULT_ACCESS_CONTROL } from './constants.js'
 let availableRolesMemo: string[] | undefined
 
 const applyInheritance = async (accessControl: AccessControl, targetRole: Role) => {
-  const role = Object.assign({}, targetRole) 
+  const role = Object.assign({}, targetRole)
 
   if( role.inherit ) {
     for( const roleName of role.inherit ) {
@@ -51,9 +51,11 @@ export const getAvailableRoles = async () => {
   return availableRolesMemo
 }
 
-export const isGranted = async (collectionName: keyof Collections,
+export const isGranted = async (
+  collectionName: keyof Collections,
   functionName: string,
-  acProfile: ACProfile) => {
+  acProfile: ACProfile,
+) => {
   const accessControl = await getAccessControl(collectionName)
   if( !accessControl ) {
     return false

@@ -12,8 +12,8 @@ export * from './schema.js'
 export * from './security.js'
 export * from './validation.js'
 export {
-  ObjectId, 
+  ObjectId,
 } from 'mongodb'
 export type {
-  WithId, OptionalId, 
+  WithId, OptionalId,
 } from 'mongodb'

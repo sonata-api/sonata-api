@@ -6,7 +6,7 @@ export const formatValue = (value: any, key: string, property?: Property, index?
   if( Array.isArray(value) ) {
     return value.map((v) => formatValue(v, key, property, index)).join(', ')
   }
-  
+
   const firstValue = (() => {
     if( !property ) {
       return value
@@ -17,7 +17,7 @@ export const formatValue = (value: any, key: string, property?: Property, index?
       const firstIndex = index || refProperty.indexes?.[0]
       return firstIndex && value?.[firstIndex]
     }
-    
+
     if( value instanceof Object ) {
       return Object.values(value)[0]
     }

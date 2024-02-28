@@ -1,6 +1,6 @@
 {
   "name": "@sonata-api/types",
-  "version": "0.1.46",
+  "version": "0.1.47",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -10,11 +10,12 @@
   },
   "scripts": {
     "test": "echo skipping",
+    "lint": "eslint src",
     "build": "pnpm build:cjs && pnpm build:esm",
     "build:cjs": "tsc",
     "build:esm": "swc src/* -d dist --strip-leading-paths -C module.type=es6 --out-file-extension=mjs && pnpm build:esm-transform",
     "build:esm-transform": "pnpm -w esm-transform $PWD/dist",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "pnpm lint && pnpm build"
   },
   "exports": {
     ".": {

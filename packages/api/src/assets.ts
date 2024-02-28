@@ -6,7 +6,7 @@ import { isGranted } from '@sonata-api/access-control'
 import { getCollection } from '@sonata-api/entrypoint'
 
 const assetsMemo: {
-  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>> | undefined> 
+  assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>> | undefined>
 } = {
   assets: {},
 }
@@ -74,7 +74,7 @@ export const getFunction = async <
     return functionsEither
   }
 
-  const functions = unwrapEither(functionsEither) 
+  const functions = unwrapEither(functionsEither)
   if( !(functionName in functions) ) {
     return left(ACErrors.FunctionNotFound)
   }

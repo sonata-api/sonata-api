@@ -11,12 +11,14 @@ const getUser = <TDescription extends Description>(context: Context<TDescription
     throw new Error()
   }
 
-  return context.collections.user.model.findOne({
-    _id: context.token.sub,
-  },
-  {
-    resources_usage: 1,
-  })
+  return context.collections.user.model.findOne(
+    {
+      _id: context.token.sub,
+    },
+    {
+      resources_usage: 1,
+    },
+  )
 }
 
 export const limitRate = async <TDescription extends Description>(
@@ -48,14 +50,16 @@ export const limitRate = async <TDescription extends Description>(
       hits: increment,
     })
 
-    await context.collections.user.model.updateOne({
-      _id: user._id,
-    },
-    {
-      $set: {
-        [`resources_usage.${context.functionPath}`]: entry.insertedId,
+    await context.collections.user.model.updateOne(
+      {
+        _id: user._id,
       },
-    })
+      {
+        $set: {
+          [`resources_usage.${context.functionPath}`]: entry.insertedId,
+        },
+      },
+    )
 
     return right(null)
   }
@@ -70,10 +74,12 @@ export const limitRate = async <TDescription extends Description>(
     }
   }
 
-  await context.collections.resourceUsage.model.updateOne({
-    _id: usage._id,
-  },
-  payload)
+  await context.collections.resourceUsage.model.updateOne(
+    {
+      _id: usage._id,
+    },
+    payload,
+  )
 
   return right(null)
 }

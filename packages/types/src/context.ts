@@ -21,7 +21,7 @@ type OmitContextParameter<TFunction> = TFunction extends (payload: infer Payload
 type RestParameters<TFunction> = TFunction extends (payload: any, context: Context, ...args: infer Rest)=> any
   ? Rest
   : never
-    
+
 type UnionFunctions<TFunctions, TSchema extends CollectionDocument<any>> = {
   [P in keyof TFunctions]: P extends keyof CollectionFunctions<any>
     ? CollectionFunctions<TSchema>[P] extends infer CollFunction

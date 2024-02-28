@@ -29,7 +29,7 @@ export type DecodedToken =
     authenticated: true
     sub: ObjectId
     roles: string[]
-    userinfo: PackReferences<Collections['user']['item']> 
+    userinfo: PackReferences<Collections['user']['item']>
     allowed_functions?: FunctionPath[]
   }
   | {

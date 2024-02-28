@@ -7,8 +7,10 @@ import { appendPagination } from './appendPagination.js'
 
 const postPipe = pipe([appendPagination])
 
-export const safeHandle = (fn: (context: Context)=> Promise<object>,
-  context: Context) => async () => {
+export const safeHandle = (
+  fn: (context: Context)=> Promise<object>,
+  context: Context,
+) => async () => {
   try {
     const response = await fn(context)
     return response
@@ -55,11 +57,13 @@ export const customVerbs = () => async (parentContext: Context) => {
     collectionName,
   })
 
-  const fnEither = await getFunction(collectionName,
+  const fnEither = await getFunction(
+    collectionName,
     functionName,
     context.token.authenticated
       ? context.token
-      : {})
+      : {},
+  )
 
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
@@ -98,11 +102,13 @@ export const regularVerb = (functionName: keyof typeof functions) => async (pare
     }
   }
 
-  const fnEither = await getFunction(collectionName,
+  const fnEither = await getFunction(
+    collectionName,
     functionName,
     context.token.authenticated
       ? context.token
-      : {})
+      : {},
+  )
 
   if( isLeft(fnEither) ) {
     const error = unwrapEither(fnEither)
