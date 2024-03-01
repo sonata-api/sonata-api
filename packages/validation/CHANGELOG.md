@@ -1,5 +1,11 @@
 # @sonata-api/validation
 
+## 1.0.23
+
+### Patch Changes
+
+- Fix getter property validation
+
 ## 1.0.22
 
 ### Patch Changes

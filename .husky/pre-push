@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-pnpm lint
+pnpm -r lint
 
 if test -d playground/node_modules; then
   rm pnpm-lock.yaml

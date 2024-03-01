@@ -4,8 +4,6 @@
   "packageManager": "pnpm@8.7.6",
   "scripts": {
     "postinstall": "husky; rm -rf packages/*/node_modules/@sonata-api",
-    "lint": "pnpm -r lint",
-    "lint:fix": "pnpm -r lint --fix",
     "esm-transform": "./scripts/transform-import-extensions.ts",
     "write-icons": "NODE_PATH=./playground/node_modules ./scripts/compile-builtins-icons.ts"
   },

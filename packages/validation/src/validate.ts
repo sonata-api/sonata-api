@@ -88,6 +88,10 @@ export const validateProperty = (
     }))
   }
 
+  if( 'getter' in property ) {
+    return right(undefined)
+  }
+
   if( 'properties' in property ) {
     const resultEither = validate(what, property, options)
 
@@ -205,11 +209,6 @@ export const validateProperty = (
         got: what,
       }))
     }
-  } else if( 'getter' in property ) {
-    return left(makePropertyError('unmatching', {
-      expected: 'getters are read-only',
-      got: actualType,
-    }))
   }
 
   return right(what)
