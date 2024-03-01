@@ -2,7 +2,6 @@ import type { Context, SchemaWithId, GetAllPayload } from '@sonata-api/types'
 import type { Document } from 'mongodb'
 import { useSecurity } from '@sonata-api/security'
 import { unsafe } from '@sonata-api/common'
-import { DEFAULT_PAGINATION_LIMIT } from '../constants.js'
 import {
   traverseDocument,
   normalizeProjection,
@@ -28,7 +27,7 @@ export const getAll = async <
 
   const {
     filters = {},
-    limit = DEFAULT_PAGINATION_LIMIT,
+    limit = context.apiConfig.paginationLimit!,
     sort,
     project = [],
     offset = 0,
