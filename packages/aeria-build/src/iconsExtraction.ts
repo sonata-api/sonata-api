@@ -3,7 +3,7 @@ import path from 'path'
 import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from './icons'
 import { right } from '@aeriajs/common'
 
-const DATA_PATH = '.sonata'
+const DATA_PATH = '.aeria'
 
 export const iconsExtraction = async () => {
   const collections = await import(path.join(process.cwd(), 'dist', 'collections'))

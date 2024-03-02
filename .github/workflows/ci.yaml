@@ -34,14 +34,14 @@ jobs:
             && pnpm --no-bail --filter='./packages/api' build \
             && pnpm --no-bail --filter='./packages/builtins' build \
             && pnpm --no-bail --filter='./packages/server' build \
-            && pnpm --no-bail --filter='./packages/sonata-api' build \
-            && pnpm --no-bail --filter='./packages/sonata-build' build:build
+            && pnpm --no-bail --filter='./packages/aeria' build \
+            && pnpm --no-bail --filter='./packages/aeria-build' build:build
 
       - name: Patch node_modules
         run: |
           find packages -mindepth 1 -maxdepth 1 \
-            -exec bash -c 'a={}; cp -r $a/dist node_modules/@sonata-api/${a//packages\//} 2>/dev/null || true' \;
-          cp -r packages node_modules/@sonata-api
+            -exec bash -c 'a={}; cp -r $a/dist node_modules/@aeriajs/${a//packages\//} 2>/dev/null || true' \;
+          cp -r packages node_modules/@aeriajs
 
       - name: Build playground
         run: |

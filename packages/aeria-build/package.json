@@ -1,5 +1,5 @@
 {
-  "name": "sonata-build",
+  "name": "aeria-build",
   "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -16,7 +16,7 @@
     "prepublishOnly": "pnpm lint && pnpm build"
   },
   "bin": {
-    "sonata-build": "bin/index.js"
+    "aeria": "bin/index.js"
   },
   "exports": {
     ".": {

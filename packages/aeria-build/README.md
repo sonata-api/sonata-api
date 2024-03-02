@@ -1,11 +1,11 @@
-# `sonata-build`
+# `aeria-build`
 
 ## Installation
 
 ```sh
-$ yarn add sonata-build
+$ yarn add aeria-build
 # or
-$ npm install sonata-build
+$ npm install aeria-build
 ```
 
 ## Usage

@@ -1,7 +1,7 @@
 #!/usr/bin/env -S pnpm ts-node --swc
 
 import path from 'path'
-import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/sonata-build/dist/index.js'
+import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from '../packages/aeria-build/dist/index.js'
 import * as fs from 'fs/promises'
 import * as presets from '../packages/api/dist/presets/index.js'
 import * as collections from '../packages/builtins/dist/collections/index.js'
