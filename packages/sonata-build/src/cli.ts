@@ -1,6 +1,6 @@
-import type { Either } from '@sonata-api/types'
+import type { Either } from '@aeriajs/types'
 import { parseArgs } from 'node:util'
-import { isLeft, unwrapEither } from '@sonata-api/common'
+import { isLeft, unwrapEither } from '@aeriajs/common'
 import { log } from './log.js'
 import { bundle } from './bundle.js'
 import { compilationPhase } from './compile.js'

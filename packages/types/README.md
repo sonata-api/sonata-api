@@ -1,11 +1,11 @@
-# `@sonata-api/types`
+# `@aeriajs/types`
 
 ## Installation
 
 ```sh
-$ yarn add @sonata-api/types
+$ yarn add @aeriajs/types
 # or
-$ npm install @sonata-api/types
+$ npm install @aeriajs/types
 ```
 
 ## Usage

@@ -1,5 +1,5 @@
 import type {} from 'mongodb'
-import type {} from '@sonata-api/validation'
+import type {} from '@aeriajs/validation'
 export * from './collections/index.js'
 export * as systemFunctions from './functions/index.js'
 

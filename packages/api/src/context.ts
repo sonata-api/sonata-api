@@ -5,10 +5,10 @@ import type {
   IndepthCollections,
   DecodedToken,
   Collection,
-} from '@sonata-api/types'
+} from '@aeriajs/types'
 
-import { unsafe } from '@sonata-api/common'
-import { getCollections } from '@sonata-api/entrypoint'
+import { unsafe } from '@aeriajs/common'
+import { getCollections } from '@aeriajs/entrypoint'
 import { getDatabaseCollection } from './database.js'
 import { preloadDescription } from './collection/preload.js'
 

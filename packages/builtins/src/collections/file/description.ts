@@ -1,5 +1,5 @@
-import { defineDescription } from '@sonata-api/api'
-import { getConfig } from '@sonata-api/entrypoint'
+import { defineDescription } from '@aeriajs/api'
+import { getConfig } from '@aeriajs/entrypoint'
 
 const link = async (_id: string) => {
   const config = await getConfig()

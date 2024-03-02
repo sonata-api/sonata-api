@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { unwrapEither, isLeft, isRight } from '@sonata-api/common'
+import { unwrapEither, isLeft, isRight } from '@aeriajs/common'
 import { validate } from '../dist'
 
 import {

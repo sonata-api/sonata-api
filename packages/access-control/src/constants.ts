@@ -1,4 +1,4 @@
-import type { AccessControl } from '@sonata-api/types'
+import type { AccessControl } from '@aeriajs/types'
 
 export const DEFAULT_ACCESS_CONTROL = <const>{
   roles: {

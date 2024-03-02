@@ -1,4 +1,4 @@
-import type { ApiConfig } from '@sonata-api/types'
+import type { ApiConfig } from '@aeriajs/types'
 
 export const DEFAULT_API_CONFIG = {
   port: 3000,

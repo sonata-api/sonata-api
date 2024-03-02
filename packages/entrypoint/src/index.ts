@@ -1,5 +1,5 @@
-import type { Collection, ApiConfig } from '@sonata-api/types'
-import { dynamicImport } from '@sonata-api/common'
+import type { Collection, ApiConfig } from '@aeriajs/types'
+import { dynamicImport } from '@aeriajs/common'
 import path from 'path'
 import fs from 'fs/promises'
 

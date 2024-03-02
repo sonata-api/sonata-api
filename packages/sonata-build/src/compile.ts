@@ -2,7 +2,7 @@ import ts from 'typescript'
 import glob from 'glob'
 import path from 'path'
 import { readFile } from 'fs/promises'
-import { left, right, deepMerge } from '@sonata-api/common'
+import { left, right, deepMerge } from '@aeriajs/common'
 import { log } from './log.js'
 
 export const compile = async () => {

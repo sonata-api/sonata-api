@@ -1,4 +1,4 @@
-import type { Condition, TruthyCondition, FinalCondition } from '@sonata-api/types'
+import type { Condition, TruthyCondition, FinalCondition } from '@aeriajs/types'
 import { getValueFromPath } from './getValueFromPath.js'
 
 const convertExpression = (condition: TruthyCondition | FinalCondition, subject?: any) => {

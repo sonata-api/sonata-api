@@ -1,4 +1,4 @@
-import { init, createRouter, isLeft, unwrapEither, leftSchema } from 'sonata-api'
+import { init, createRouter, isLeft, unwrapEither, leftSchema } from 'aeria'
 export * as collections from './collections'
 
 const router = createRouter({

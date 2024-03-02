@@ -3,19 +3,19 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@sonata-api/api": [
+      "@aeriajs/api": [
         "../api/dist"
       ],
-      "@sonata-api/access-control": [
+      "@aeriajs/access-control": [
         "../access-control/dist"
       ],
-      "@sonata-api/common": [
+      "@aeriajs/common": [
         "../common/dist"
       ],
-      "@sonata-api/types": [
+      "@aeriajs/types": [
         "../types/dist"
       ],
-      "@sonata-api/validation": [
+      "@aeriajs/validation": [
         "../validation/dist"
       ]
     }

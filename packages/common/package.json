@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/common",
-  "version": "0.1.27",
+  "name": "@aeriajs/common",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,7 +32,7 @@
     }
   },
   "peerDependencies": {
-    "@sonata-api/types": "*",
+    "@aeriajs/types": "^0.0.0",
     "bson": "^5.4.0"
   }
 }

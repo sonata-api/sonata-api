@@ -1,5 +1,5 @@
-import type { Context, RemoveAllPayload } from '@sonata-api/types'
-import { unsafe } from '@sonata-api/common'
+import type { Context, RemoveAllPayload } from '@aeriajs/types'
+import { unsafe } from '@aeriajs/common'
 import { traverseDocument, cascadingRemove } from '../collection/index.js'
 
 export const removeAll = async <TContext extends Context>(payload: RemoveAllPayload, context: TContext) => {

@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/security",
-  "version": "1.0.20",
+  "name": "@aeriajs/security",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,8 +32,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "@sonata-api/api": "*",
-    "@sonata-api/common": "*",
-    "@sonata-api/types": "*"
+    "@aeriajs/api": "^0.0.0",
+    "@aeriajs/common": "^0.0.0",
+    "@aeriajs/types": "^0.0.0"
   }
 }

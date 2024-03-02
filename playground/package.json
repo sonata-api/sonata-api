@@ -14,7 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "api": "link:",
-    "sonata-api": "file:../packages/sonata-api"
+    "aeria": "file:../packages/aeria"
   },
   "devDependencies": {
     "typescript": "^5.1.3"

@@ -1,4 +1,4 @@
-import type { Description } from '@sonata-api/types'
+import type { Description } from '@aeriajs/types'
 
 const freshProperties = (properties: Description['properties']): Record<string, any> => Object.entries(properties).reduce((a, [key, property]) => {
   const value = (() => {

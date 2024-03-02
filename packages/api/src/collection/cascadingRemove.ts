@@ -1,6 +1,6 @@
-import type { Context } from '@sonata-api/types'
+import type { Context } from '@aeriajs/types'
 import type { ObjectId } from 'mongodb'
-import { isRight, unwrapEither } from '@sonata-api/common'
+import { isRight, unwrapEither } from '@aeriajs/common'
 import { createContext } from '../context.js'
 import { getFunction } from '../assets.js'
 import { getDatabaseCollection } from '../database.js'

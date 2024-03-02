@@ -1,11 +1,11 @@
-import { deepMerge, right, isLeft, unwrapEither } from '@sonata-api/common'
+import { deepMerge, right, isLeft, unwrapEither } from '@aeriajs/common'
 import type { SecurityCheck, SecurityCheckProps } from './types'
 import type {
   Context,
   Description,
   GetAllPayload,
   InsertPayload,
-} from '@sonata-api/types'
+} from '@aeriajs/types'
 
 import {
   checkImmutability,

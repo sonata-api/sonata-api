@@ -1,4 +1,4 @@
-import { defineCollection, get, getAll, insert } from 'sonata-api'
+import { defineCollection, get, getAll, insert } from 'aeria'
 
 export const person = defineCollection({
   description: {

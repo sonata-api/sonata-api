@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/access-control",
-  "version": "1.0.20",
+  "name": "@aeriajs/access-control",
+  "version": "0.0.0",
   "description": "## Instalation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,8 +32,8 @@
     "dist"
   ],
   "peerDependencies": {
-    "@sonata-api/common": "*",
-    "@sonata-api/entrypoint": "*",
-    "@sonata-api/types": "*"
+    "@aeriajs/common": "^0.0.0",
+    "@aeriajs/entrypoint": "^0.0.0",
+    "@aeriajs/types": "^0.0.0"
   }
 }

@@ -1,9 +1,9 @@
-import type { AssetType, Context, Collection, ACProfile } from '@sonata-api/types'
-import { ACErrors } from '@sonata-api/types'
-import { left, right, isLeft, unwrapEither } from '@sonata-api/common'
-import { limitRate } from '@sonata-api/security'
-import { isGranted } from '@sonata-api/access-control'
-import { getCollection } from '@sonata-api/entrypoint'
+import type { AssetType, Context, Collection, ACProfile } from '@aeriajs/types'
+import { ACErrors } from '@aeriajs/types'
+import { left, right, isLeft, unwrapEither } from '@aeriajs/common'
+import { limitRate } from '@aeriajs/security'
+import { isGranted } from '@aeriajs/access-control'
+import { getCollection } from '@aeriajs/entrypoint'
 
 const assetsMemo: {
   assets: Record<string, Record<string, Awaited<ReturnType<typeof internalGetCollectionAsset>>> | undefined>

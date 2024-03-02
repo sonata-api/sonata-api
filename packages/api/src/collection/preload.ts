@@ -1,5 +1,5 @@
-import type { Description, Property } from '@sonata-api/types'
-import { getReferenceProperty, deepMerge, serialize, isLeft, unwrapEither } from '@sonata-api/common'
+import type { Description, Property } from '@aeriajs/types'
+import { getReferenceProperty, deepMerge, serialize, isLeft, unwrapEither } from '@aeriajs/common'
 import { getCollectionAsset } from '../assets.js'
 import * as presets from '../presets/index.js'
 

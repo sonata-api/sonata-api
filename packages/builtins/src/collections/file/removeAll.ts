@@ -1,6 +1,6 @@
-import type { Context, SchemaWithId, PackReferences, RemoveAllPayload, ObjectId } from '@sonata-api/types'
+import type { Context, SchemaWithId, PackReferences, RemoveAllPayload, ObjectId } from '@aeriajs/types'
 import type { description } from './description.js'
-import { removeAll as originalRemoveAll } from '@sonata-api/api'
+import { removeAll as originalRemoveAll } from '@aeriajs/api'
 import fs from 'fs/promises'
 
 export const removeAll = async (payload: RemoveAllPayload, context: Context<typeof description>) => {

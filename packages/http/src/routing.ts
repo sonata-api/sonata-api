@@ -6,13 +6,13 @@ import type {
   InferProperty,
   InferResponse,
   PackReferences,
-} from '@sonata-api/types'
+} from '@aeriajs/types'
 import type { Contract } from './contract.js'
 
-import { REQUEST_METHODS } from '@sonata-api/types'
+import { REQUEST_METHODS } from '@aeriajs/types'
 import { Stream } from 'stream'
-import { pipe, left, isLeft, unwrapEither, deepMerge } from '@sonata-api/common'
-import { validate } from '@sonata-api/validation'
+import { pipe, left, isLeft, unwrapEither, deepMerge } from '@aeriajs/common'
+import { validate } from '@aeriajs/validation'
 import { safeJson } from './payload.js'
 import { DEFAULT_BASE_URI } from './constants.js'
 

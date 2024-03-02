@@ -3,10 +3,10 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@sonata-api/http": [
+      "@aeriajs/http": [
         "../http/dist"
       ],
-      "@sonata-api/types": [
+      "@aeriajs/types": [
         "../types/dist"
       ]
     }

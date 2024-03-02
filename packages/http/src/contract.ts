@@ -1,4 +1,4 @@
-import type { Property } from '@sonata-api/types'
+import type { Property } from '@aeriajs/types'
 
 export type Contract =
   | { response: Property | Property[] }

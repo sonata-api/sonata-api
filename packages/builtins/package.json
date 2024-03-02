@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/builtins",
-  "version": "1.0.35",
+  "name": "@aeriajs/builtins",
+  "version": "0.0.0",
   "description": "## Installation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -51,11 +51,11 @@
     "mongodb": "^6.1.0"
   },
   "peerDependencies": {
-    "@sonata-api/api": "*",
-    "@sonata-api/access-control": "*",
-    "@sonata-api/entrypoint": "*",
-    "@sonata-api/common": "*",
-    "@sonata-api/types": "*",
-    "@sonata-api/validation": "*"
+    "@aeriajs/api": "^0.0.0",
+    "@aeriajs/access-control": "^0.0.0",
+    "@aeriajs/entrypoint": "^0.0.0",
+    "@aeriajs/common": "^0.0.0",
+    "@aeriajs/types": "^0.0.0",
+    "@aeriajs/validation": "^0.0.0"
   }
 }

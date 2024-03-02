@@ -1,7 +1,7 @@
-import type { Context, SchemaWithId, GetPayload } from '@sonata-api/types'
+import type { Context, SchemaWithId, GetPayload } from '@aeriajs/types'
 import type { Document } from 'mongodb'
-import { useSecurity } from '@sonata-api/security'
-import { unsafe } from '@sonata-api/common'
+import { useSecurity } from '@aeriajs/security'
+import { unsafe } from '@aeriajs/common'
 import {
   traverseDocument,
   normalizeProjection,

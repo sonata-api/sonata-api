@@ -1,5 +1,5 @@
-import type { Context, Description, RateLimitingParams } from '@sonata-api/types'
-import { left, right } from '@sonata-api/common'
+import type { Context, Description, RateLimitingParams } from '@aeriajs/types'
+import { left, right } from '@aeriajs/common'
 
 export enum RateLimitingErrors {
   Unauthenticated = 'UNAUTHENTICATED',

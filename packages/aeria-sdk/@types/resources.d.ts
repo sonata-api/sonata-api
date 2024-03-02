@@ -1,4 +1,4 @@
-import type { Collection } from '@sonata-api/types'
+import type { Collection } from '@aeriajs/types'
 
 declare global {
   type Collections = Record<string, Collection>

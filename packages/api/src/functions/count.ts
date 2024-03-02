@@ -1,6 +1,6 @@
-import type { Context, SchemaWithId, CountPayload } from '@sonata-api/types'
-import { useSecurity } from '@sonata-api/security'
-import { unsafe } from '@sonata-api/common'
+import type { Context, SchemaWithId, CountPayload } from '@aeriajs/types'
+import { useSecurity } from '@aeriajs/security'
+import { unsafe } from '@aeriajs/common'
 import { traverseDocument } from '../collection/index.js'
 
 export const count = async <TContext extends Context>(

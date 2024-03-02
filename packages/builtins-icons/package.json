@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/builtins-icons",
-  "version": "0.0.3",
+  "name": "@aeriajs/builtins-icons",
+  "version": "0.0.0",
   "description": "## Installation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

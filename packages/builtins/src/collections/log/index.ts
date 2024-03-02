@@ -1,4 +1,4 @@
-import { defineCollection, get, getAll, insert } from '@sonata-api/api'
+import { defineCollection, get, getAll, insert } from '@aeriajs/api'
 
 export const log = defineCollection({
   description: {

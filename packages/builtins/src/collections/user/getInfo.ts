@@ -1,7 +1,7 @@
-import type { Context } from '@sonata-api/types'
+import type { Context } from '@aeriajs/types'
 import type { description } from './description'
-import { ObjectId } from '@sonata-api/api'
-import { left, right } from '@sonata-api/common'
+import { ObjectId } from '@aeriajs/api'
+import { left, right } from '@aeriajs/common'
 import bcrypt from 'bcrypt'
 
 export enum ActivationErrors {

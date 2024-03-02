@@ -1,9 +1,9 @@
-import type { Context, Either } from '@sonata-api/types'
-import type { Description } from '@sonata-api/types'
-import { createContext, preloadDescription } from '@sonata-api/api'
-import { getCollections, getRouter } from '@sonata-api/entrypoint'
-import { serialize, isLeft, left, unwrapEither } from '@sonata-api/common'
-import { getAvailableRoles } from '@sonata-api/access-control'
+import type { Context, Either } from '@aeriajs/types'
+import type { Description } from '@aeriajs/types'
+import { createContext, preloadDescription } from '@aeriajs/api'
+import { getCollections, getRouter } from '@aeriajs/entrypoint'
+import { serialize, isLeft, left, unwrapEither } from '@aeriajs/common'
+import { getAvailableRoles } from '@aeriajs/access-control'
 import { authenticate } from '../collections/user/authenticate.js'
 
 type Payload = {

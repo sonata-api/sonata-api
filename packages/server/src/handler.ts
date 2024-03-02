@@ -1,8 +1,8 @@
-import type { Context } from '@sonata-api/types'
-import type { functions } from '@sonata-api/api'
-import { createContext, getFunction } from '@sonata-api/api'
-import { ACErrors } from '@sonata-api/types'
-import { isLeft, unwrapEither, pipe } from '@sonata-api/common'
+import type { Context } from '@aeriajs/types'
+import type { functions } from '@aeriajs/api'
+import { createContext, getFunction } from '@aeriajs/api'
+import { ACErrors } from '@aeriajs/types'
+import { isLeft, unwrapEither, pipe } from '@aeriajs/common'
 import { appendPagination } from './appendPagination.js'
 
 const postPipe = pipe([appendPagination])

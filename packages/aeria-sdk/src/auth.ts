@@ -1,5 +1,5 @@
 import type { InstanceConfig } from './types.js'
-import { isRight, unwrapEither } from '@sonata-api/common'
+import { isRight, unwrapEither } from '@aeriajs/common'
 import { request } from './http.js'
 import { apiUrl } from './utils.js'
 import { getStorage } from './storage.js'

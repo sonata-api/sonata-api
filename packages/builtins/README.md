@@ -1,4 +1,4 @@
-# `@sonata-api/system`
+# `@aeriajs/system`
 
 ## Introduction
 

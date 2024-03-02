@@ -1,6 +1,6 @@
 import type { InstanceConfig } from './types'
 import path from 'path'
-import { deserialize } from '@sonata-api/common'
+import { deserialize } from '@aeriajs/common'
 import { writeFile, mkdir } from 'fs/promises'
 import { topLevel } from './topLevel.js'
 import { apiUrl } from './utils.js'
@@ -16,7 +16,7 @@ const mirrorDts = (mirrorObj: any) => {
   RequestMethod,
   CollectionFunctions
 
-} from '@sonata-api/types'
+} from '@aeriajs/types'
 
 declare type MirrorDescriptions = ${JSON.stringify(collections, null, 2)}\n
 

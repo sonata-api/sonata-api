@@ -1,4 +1,4 @@
-import { defineCollection } from '@sonata-api/api'
+import { defineCollection } from '@aeriajs/api'
 
 export const resourceUsage = defineCollection({
   description: {

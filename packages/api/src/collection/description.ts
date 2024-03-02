@@ -1,4 +1,4 @@
-import type { Description, SchemaWithId } from '@sonata-api/types'
+import type { Description, SchemaWithId } from '@aeriajs/types'
 
 export const defineDescription = <const TDescription extends Description<TDescription>>(description: TDescription) => {
   return description

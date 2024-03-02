@@ -1,5 +1,5 @@
-import type { Description, OptionalId } from '@sonata-api/types'
-import { freshItem } from '@sonata-api/common'
+import type { Description, OptionalId } from '@aeriajs/types'
+import { freshItem } from '@aeriajs/common'
 
 export const normalizeProjection = <
   TDescription extends Pick<Description, 'properties'>,

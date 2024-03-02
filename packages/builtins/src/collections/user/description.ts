@@ -1,4 +1,4 @@
-import { defineDescription } from '@sonata-api/api'
+import { defineDescription } from '@aeriajs/api'
 
 /**
  * This description complies with JWT claims specified in RFC-7519.

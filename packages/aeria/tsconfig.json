@@ -3,40 +3,40 @@
   "compilerOptions": {
     "outDir": "dist",
     "paths": {
-      "@sonata-api/access-control": [
+      "@aeriajs/access-control": [
         "../access-control/dist"
       ],
-      "@sonata-api/api": [
+      "@aeriajs/api": [
         "../api/dist"
       ],
-      "@sonata-api/api/*": [
+      "@aeriajs/api/*": [
         "../api/dist/*"
       ],
-      "@sonata-api/common": [
+      "@aeriajs/common": [
         "../common/dist"
       ],
-      "@sonata-api/entrypoint": [
+      "@aeriajs/entrypoint": [
         "../entrypoint/dist"
       ],
-      "@sonata-api/http": [
+      "@aeriajs/http": [
         "../http/dist"
       ],
-      "@sonata-api/node-http": [
+      "@aeriajs/node-http": [
         "../node-http/dist"
       ],
-      "@sonata-api/security": [
+      "@aeriajs/security": [
         "../security/dist"
       ],
-      "@sonata-api/server": [
+      "@aeriajs/server": [
         "../server/dist"
       ],
-      "@sonata-api/builtins": [
+      "@aeriajs/builtins": [
         "../builtins/dist"
       ],
-      "@sonata-api/types": [
+      "@aeriajs/types": [
         "../types/dist"
       ],
-      "@sonata-api/validation": [
+      "@aeriajs/validation": [
         "../validation/dist"
       ]
     }

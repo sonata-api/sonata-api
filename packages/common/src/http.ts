@@ -1,4 +1,4 @@
-import type { RequestMethod } from '@sonata-api/types'
+import type { RequestMethod } from '@aeriajs/types'
 
 export type RequestParams = Omit<RequestInit, 'headers'> & {
   method: RequestMethod

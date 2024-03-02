@@ -1,4 +1,4 @@
-import type { GenericRequest, GenericResponse } from '@sonata-api/types'
+import type { GenericRequest, GenericResponse } from '@aeriajs/types'
 
 export const cors = (req: GenericRequest, res: GenericResponse) => {
   const allowedHeaders = [

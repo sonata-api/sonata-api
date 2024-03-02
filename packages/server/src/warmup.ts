@@ -1,5 +1,5 @@
-import { getCollections } from '@sonata-api/entrypoint'
-import { grantedFor } from '@sonata-api/access-control'
+import { getCollections } from '@aeriajs/entrypoint'
+import { grantedFor } from '@aeriajs/access-control'
 
 const ANSI_COLORS = {
   green: '\x1b[32m',

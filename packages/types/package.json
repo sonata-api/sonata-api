@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/types",
-  "version": "0.1.47",
+  "name": "@aeriajs/types",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

@@ -1,11 +1,11 @@
-# `@sonata-api/node-http`
+# `@aeriajs/node-http`
 
 ## Installation
 
 ```sh
-$ yarn add @sonata-api/node-http
+$ yarn add @aeriajs/node-http
 # or
-$ npm install @sonata-api/node-http
+$ npm install @aeriajs/node-http
 ```
 
 ## Usage

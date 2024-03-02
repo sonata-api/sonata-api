@@ -1,6 +1,6 @@
-import type { AccessControl, Role, ACProfile } from '@sonata-api/types'
-import { getCollection, getCollections } from '@sonata-api/entrypoint'
-import { deepMerge } from '@sonata-api/common'
+import type { AccessControl, Role, ACProfile } from '@aeriajs/types'
+import { getCollection, getCollections } from '@aeriajs/entrypoint'
+import { deepMerge } from '@aeriajs/common'
 import { DEFAULT_ACCESS_CONTROL } from './constants.js'
 
 let availableRolesMemo: string[] | undefined

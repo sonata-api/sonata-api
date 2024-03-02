@@ -1,4 +1,4 @@
-import type { Condition } from '@sonata-api/types'
+import type { Condition } from '@aeriajs/types'
 import { arraysIntersects } from './arraysIntersects.js'
 
 const equalOrContains = (term1: any, term2: any) => {

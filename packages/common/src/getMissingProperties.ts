@@ -1,4 +1,4 @@
-import type { JsonSchema } from '@sonata-api/types'
+import type { JsonSchema } from '@aeriajs/types'
 import { checkForUndefined } from './checkForUndefined.js'
 import { evaluateCondition } from './evaluateCondition.js'
 

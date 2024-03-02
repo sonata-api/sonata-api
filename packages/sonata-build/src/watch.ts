@@ -9,7 +9,7 @@ const compileAndSpawn = async () => {
   if( result.success ) {
     const api = spawn('node', [
       '-r',
-      'sonata-api/loader',
+      'aeria/loader',
       '--env-file',
       '.env',
       'dist/index.js',

@@ -1,11 +1,11 @@
-# `@sonata-api/entrypoint`
+# `@aeriajs/entrypoint`
 
 ## Installation
 
 ```sh
-$ yarn add @sonata-api/entrypoint
+$ yarn add @aeriajs/entrypoint
 # or
-$ npm install @sonata-api/entrypoint
+$ npm install @aeriajs/entrypoint
 ```
 
 ## Usage

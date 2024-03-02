@@ -1,5 +1,5 @@
 import type { InstanceConfig } from './types.js'
-import { request as originalRequest, defaultRequestTransformer, type RequestConfig } from '@sonata-api/common'
+import { request as originalRequest, defaultRequestTransformer, type RequestConfig } from '@aeriajs/common'
 import { getStorage } from './storage.js'
 
 export const request = <Return = any>(config: InstanceConfig, url: string, payload?: any, _requestConfig?: RequestConfig) => {

@@ -1,7 +1,7 @@
-import type { Context, Schema } from '@sonata-api/types'
+import type { Context, Schema } from '@aeriajs/types'
 import type { description } from './description.js'
-import { isLeft, unwrapEither, left, right } from '@sonata-api/common'
-import { validate } from '@sonata-api/validation'
+import { isLeft, unwrapEither, left, right } from '@aeriajs/common'
+import { validate } from '@aeriajs/validation'
 import bcrypt from 'bcrypt'
 
 export const createAccount = async (

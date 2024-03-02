@@ -1,8 +1,8 @@
-import type { Context } from '@sonata-api/types'
+import type { Context } from '@aeriajs/types'
 import type { SecurityCheckProps, SecurityCheckReadPayload, SecurityCheckWritePayload } from './types.js'
 
-import { ACErrors, ObjectId } from '@sonata-api/types'
-import { left, right, isLeft } from '@sonata-api/common'
+import { ACErrors, ObjectId } from '@aeriajs/types'
+import { left, right, isLeft } from '@aeriajs/common'
 
 const internalCheckImmutability = async (
   props: SecurityCheckProps<SecurityCheckReadPayload | SecurityCheckWritePayload>,

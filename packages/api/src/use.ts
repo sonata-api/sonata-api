@@ -1,4 +1,4 @@
-import { getConfig } from '@sonata-api/entrypoint'
+import { getConfig } from '@aeriajs/entrypoint'
 import { createContext } from './context.js'
 import { getDatabase } from './database.js'
 

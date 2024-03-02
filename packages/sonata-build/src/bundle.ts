@@ -1,5 +1,5 @@
 import { rollup, type InputOptions, type OutputOptions } from 'rollup'
-import { right } from '@sonata-api/common'
+import { right } from '@aeriajs/common'
 import commonjs from '@rollup/plugin-commonjs'
 import nodeResolve from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser'

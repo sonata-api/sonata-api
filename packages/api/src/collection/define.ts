@@ -1,4 +1,4 @@
-import type { SchemaWithId, Collection, Context, Description } from '@sonata-api/types'
+import type { SchemaWithId, Collection, Context, Description } from '@aeriajs/types'
 
 export const defineCollection = <
   TCollection extends Collection<TCollection extends Collection ? TCollection : never> extends infer Coll

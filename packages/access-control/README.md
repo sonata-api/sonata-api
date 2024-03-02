@@ -1,4 +1,4 @@
-# `@sonata-api/access-control`
+# `@aeriajs/access-control`
 
 ## Introduction
 

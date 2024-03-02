@@ -1,6 +1,6 @@
-import type { Context } from '@sonata-api/types'
-import { isLeft, unwrapEither, left } from '@sonata-api/common'
-import { validate, validator } from '@sonata-api/validation'
+import type { Context } from '@aeriajs/types'
+import { isLeft, unwrapEither, left } from '@aeriajs/common'
+import { validate, validator } from '@aeriajs/validation'
 
 import path from 'path'
 import { createWriteStream } from 'fs'

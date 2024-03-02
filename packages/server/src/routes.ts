@@ -1,7 +1,7 @@
-import type { Context } from '@sonata-api/types'
-import { createRouter } from '@sonata-api/http'
-import { createContext } from '@sonata-api/api'
-import { systemFunctions } from '@sonata-api/builtins'
+import type { Context } from '@aeriajs/types'
+import { createRouter } from '@aeriajs/http'
+import { createContext } from '@aeriajs/api'
+import { systemFunctions } from '@aeriajs/builtins'
 import {
   safeHandle,
   regularVerb,

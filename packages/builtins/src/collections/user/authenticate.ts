@@ -1,8 +1,8 @@
-import type { Context, SchemaWithId, ObjectId } from '@sonata-api/types'
+import type { Context, SchemaWithId, ObjectId } from '@aeriajs/types'
 import type { description } from './description.js'
 import { compare as bcryptCompare } from 'bcrypt'
-import { signToken } from '@sonata-api/api'
-import { left, right } from '@sonata-api/common'
+import { signToken } from '@aeriajs/api'
+import { left, right } from '@aeriajs/common'
 
 type Props = {
   email: string

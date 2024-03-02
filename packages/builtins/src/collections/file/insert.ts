@@ -1,8 +1,8 @@
-import type { Context, SchemaWithId, PackReferences } from '@sonata-api/types'
+import type { Context, SchemaWithId, PackReferences } from '@aeriajs/types'
 import type { description } from './description.js'
 import { createHash } from 'crypto'
 import { writeFile, unlink } from 'fs/promises'
-import { insert as originalInsert } from '@sonata-api/api'
+import { insert as originalInsert } from '@aeriajs/api'
 
 export const insert = async (
   payload: {

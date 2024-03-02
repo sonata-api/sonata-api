@@ -1,4 +1,4 @@
-import type { Description } from '@sonata-api/types'
+import type { Description } from '@aeriajs/types'
 
 export const duplicate = <const>{
   individualActions: {

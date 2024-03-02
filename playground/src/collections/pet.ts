@@ -1,4 +1,4 @@
-import { defineCollection } from 'sonata-api'
+import { defineCollection } from 'aeria'
 
 export const pet = defineCollection({
   description: {

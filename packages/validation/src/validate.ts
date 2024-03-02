@@ -7,11 +7,11 @@ import type {
   PropertyValidationErrorType,
   PropertyValidationError,
   ValidationError,
-} from '@sonata-api/types'
+} from '@aeriajs/types'
 
-import { ObjectId } from '@sonata-api/types'
-import { isLeft, left, right, unwrapEither, getMissingProperties } from '@sonata-api/common'
-import { ValidationErrorCodes } from '@sonata-api/types'
+import { ObjectId } from '@aeriajs/types'
+import { isLeft, left, right, unwrapEither, getMissingProperties } from '@aeriajs/common'
+import { ValidationErrorCodes } from '@aeriajs/types'
 
 export type ValidateOptions = {
   extraneous?: string[] | boolean

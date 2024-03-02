@@ -1,5 +1,5 @@
-import type { init } from '@sonata-api/server'
-import { dynamicImport } from '@sonata-api/common'
+import type { init } from '@aeriajs/server'
+import { dynamicImport } from '@aeriajs/common'
 
 const main = async () => {
   const entrypoint = await dynamicImport(process.argv[1])

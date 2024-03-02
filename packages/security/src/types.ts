@@ -1,4 +1,4 @@
-import type { Context, Either, GetAllPayload, InsertPayload, ACErrors } from '@sonata-api/types'
+import type { Context, Either, GetAllPayload, InsertPayload, ACErrors } from '@aeriajs/types'
 
 export type SecurityCheckReadPayload = {
   filters: Record<string, any>

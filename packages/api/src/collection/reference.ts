@@ -1,5 +1,5 @@
-import type { FixedObjectProperty, Description } from '@sonata-api/types'
-import { unsafe, getReferenceProperty } from '@sonata-api/common'
+import type { FixedObjectProperty, Description } from '@aeriajs/types'
+import { unsafe, getReferenceProperty } from '@aeriajs/common'
 import { getCollectionAsset } from '../assets.js'
 import { prepareCollectionName } from '../database.js'
 

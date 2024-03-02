@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/validation",
-  "version": "1.0.23",
+  "name": "@aeriajs/validation",
+  "version": "0.0.0",
   "description": "## Installation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,8 +32,8 @@
     }
   },
   "peerDependencies": {
-    "@sonata-api/common": "*",
-    "@sonata-api/types": "*",
-    "mongodb": "*"
+    "@aeriajs/common": "^0.0.0",
+    "@aeriajs/types": "^0.0.0",
+    "mongodb": "^6.1.0"
   }
 }

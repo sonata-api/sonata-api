@@ -1,5 +1,5 @@
 import assert from 'assert'
-import { isRight } from '@sonata-api/common'
+import { isRight } from '@aeriajs/common'
 import { traverseDocument, ObjectId } from '../dist'
 
 describe('Traverse document', () => {

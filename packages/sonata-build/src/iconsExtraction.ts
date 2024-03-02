@@ -1,7 +1,7 @@
 import * as fs from 'fs/promises'
 import path from 'path'
 import { extractIcons, iconsEsmContent, iconsCjsContent, iconsDtsContent } from './icons'
-import { right } from '@sonata-api/common'
+import { right } from '@aeriajs/common'
 
 const DATA_PATH = '.sonata'
 

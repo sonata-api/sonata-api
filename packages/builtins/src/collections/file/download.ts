@@ -1,7 +1,7 @@
-import type { Context } from '@sonata-api/types'
+import type { Context } from '@aeriajs/types'
 import type { description } from './description.js'
 import { ObjectId } from 'mongodb'
-import { left } from '@sonata-api/common'
+import { left } from '@aeriajs/common'
 import fs from 'fs'
 
 export enum FileReadError {

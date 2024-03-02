@@ -1,4 +1,4 @@
-import type { SecurityPolicy } from '@sonata-api/types'
+import type { SecurityPolicy } from '@aeriajs/types'
 
 export const defineSecurityPolicy = <const TSecurityPolicy extends SecurityPolicy>(policy: TSecurityPolicy) => {
   return policy

@@ -1,5 +1,5 @@
 // this file will be overwritten
-import type {} from '@sonata-api/types'
+import type {} from 'aeria'
 
 declare global {
   type UnpackCollections<TCollections> =  {

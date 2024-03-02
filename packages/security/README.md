@@ -1,4 +1,4 @@
-# `@sonata-api/security`
+# `@aeriajs/security`
 
 ## Introduction
 

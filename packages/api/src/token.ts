@@ -1,5 +1,5 @@
 import { promisify } from 'util'
-import { getConfig } from '@sonata-api/entrypoint'
+import { getConfig } from '@aeriajs/entrypoint'
 import jwt, { type Secret, type SignOptions } from 'jsonwebtoken'
 
 const asyncSign = promisify<string | object | Buffer, Secret, SignOptions>(jwt.sign)

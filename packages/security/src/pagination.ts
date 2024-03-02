@@ -1,6 +1,6 @@
 import type { SecurityCheckProps, SecurityCheckReadPayload } from './types.js'
-import { ACErrors } from '@sonata-api/types'
-import { left, right } from '@sonata-api/common'
+import { ACErrors } from '@aeriajs/types'
+import { left, right } from '@aeriajs/common'
 
 export const checkPagination = async (props: SecurityCheckProps<SecurityCheckReadPayload>) => {
   const { payload } = props

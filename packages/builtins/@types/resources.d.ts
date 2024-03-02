@@ -1,4 +1,4 @@
-import type { Collection } from '@sonata-api/types'
+import type { Collection } from '@aeriajs/types'
 
 declare global {
   type Collections = typeof import('../src/collections')

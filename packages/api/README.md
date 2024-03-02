@@ -1,11 +1,11 @@
-# `@sonata-api/api`
+# `@aeriajs/api`
 
 ## Installation
 
 ```sh
-$ yarn add @sonata-api/api
+$ yarn add @aeriajs/api
 # or
-$ npm install @sonata-api/api
+$ npm install @aeriajs/api
 ```
 
 ## Usage

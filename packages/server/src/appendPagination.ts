@@ -1,6 +1,6 @@
-import type { Context } from '@sonata-api/types'
-import { functions } from '@sonata-api/api'
-import { getConfig } from '@sonata-api/entrypoint'
+import type { Context } from '@aeriajs/types'
+import { functions } from '@aeriajs/api'
+import { getConfig } from '@aeriajs/entrypoint'
 
 export const appendPagination = async (result: any, context: Context) => {
   if( Array.isArray(result) ) {

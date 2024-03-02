@@ -1,10 +1,10 @@
 import path from 'path'
 import * as fs from 'fs/promises'
 
-const DTS_FILENAME = 'sonata-api.d.ts'
+const DTS_FILENAME = 'aeria.d.ts'
 
 const dts = `// this file will be overwritten
-import type {} from '@sonata-api/types'
+import type {} from '@aeriajs/types'
 
 declare global {
   type UnpackCollections<TCollections> =  {
@@ -30,8 +30,8 @@ declare global {
     : never
 }
 
-declare module 'sonata-api' {
-  import type { Context } from 'sonata-api'
+declare module 'aeria' {
+  import type { Context } from 'aeria'
   export const useAeria: () => Promise<Context>
   export const aeria: Context
 }
@@ -47,7 +47,7 @@ const install = async () => {
     encoding: 'utf8',
   }))
 
-  if( name.startsWith('@sonata-api/') || name === 'aeria-monorepo' ) {
+  if( name.startsWith('@aeriajs/') || name === 'aeria-monorepo' ) {
     return
   }
 

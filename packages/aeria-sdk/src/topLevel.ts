@@ -1,5 +1,5 @@
-import type { RequestConfig } from '@sonata-api/common'
-import type { RequestMethod } from '@sonata-api/types'
+import type { RequestConfig } from '@aeriajs/common'
+import type { RequestMethod } from '@aeriajs/types'
 import type { InstanceConfig } from './types.js'
 import { authenticate, signout, type AuthenticationPayload } from './auth.js'
 import { request } from './http.js'

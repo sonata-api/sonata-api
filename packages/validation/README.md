@@ -1,4 +1,4 @@
-# `@sonata-api/validation`
+# `@aeriajs/validation`
 
 ## Introduction
 

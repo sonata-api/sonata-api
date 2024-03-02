@@ -1,6 +1,6 @@
 {
-  "name": "@sonata-api/api",
-  "version": "1.0.56",
+  "name": "@aeriajs/api",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,14 +42,14 @@
     "@types/jsonwebtoken": "^8.5.6"
   },
   "peerDependencies": {
-    "@sonata-api/access-control": "*",
-    "@sonata-api/common": "*",
-    "@sonata-api/entrypoint": "*",
-    "@sonata-api/http": "*",
-    "@sonata-api/security": "*",
-    "@sonata-api/builtins": "*",
-    "@sonata-api/types": "*",
-    "@sonata-api/validation": "*",
+    "@aeriajs/access-control": "^0.0.0",
+    "@aeriajs/common": "^0.0.0",
+    "@aeriajs/entrypoint": "^0.0.0",
+    "@aeriajs/http": "^0.0.0",
+    "@aeriajs/security": "^0.0.0",
+    "@aeriajs/builtins": "^0.0.0",
+    "@aeriajs/types": "^0.0.0",
+    "@aeriajs/validation": "^0.0.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^6.1.0"
   },

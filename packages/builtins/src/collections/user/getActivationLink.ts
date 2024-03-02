@@ -1,5 +1,5 @@
-import type { ObjectId } from '@sonata-api/types'
-import { getConfig } from '@sonata-api/entrypoint'
+import type { ObjectId } from '@aeriajs/types'
+import { getConfig } from '@aeriajs/entrypoint'
 import bcrypt from 'bcrypt'
 
 export const getActivationLink = async (userId: ObjectId) => {

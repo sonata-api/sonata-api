@@ -1,4 +1,4 @@
-import { type Property, type ObjectToSchema } from '@sonata-api/types'
+import { type Property, type ObjectToSchema } from '@aeriajs/types'
 
 const mapValueToProperty = (value: any): any => {
   if( value.constructor === Object ) {

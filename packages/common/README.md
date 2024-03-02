@@ -1,11 +1,11 @@
-# `@sonata-api/common`
+# `@aeriajs/common`
 
 ## Installation
 
 ```sh
-$ yarn add @sonata-api/common
+$ yarn add @aeriajs/common
 # or
-$ npm install @sonata-api/common
+$ npm install @aeriajs/common
 ```
 
 ## Usage

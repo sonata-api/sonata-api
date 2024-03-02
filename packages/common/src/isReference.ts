@@ -1,4 +1,4 @@
-import type { Property, RefProperty, ArrayOfRefs } from '@sonata-api/types'
+import type { Property, RefProperty, ArrayOfRefs } from '@aeriajs/types'
 
 export const isReference = (property: Property): property is RefProperty | ArrayOfRefs => {
   return 'items' in property

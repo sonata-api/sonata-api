@@ -1,7 +1,7 @@
-import type { Context, InsertPayload } from '@sonata-api/types'
+import type { Context, InsertPayload } from '@aeriajs/types'
 import type { SecurityCheckProps, SecurityCheckReadPayload } from './types.js'
-import { ACErrors } from '@sonata-api/types'
-import { left, right } from '@sonata-api/common'
+import { ACErrors } from '@aeriajs/types'
+import { left, right } from '@aeriajs/common'
 
 export const checkOwnershipRead = async (props: SecurityCheckProps<SecurityCheckReadPayload>, context: Context) => {
   const { token, description } = context

@@ -1,4 +1,4 @@
-import type { Description, Condition } from '@sonata-api/types'
+import type { Description, Condition } from '@aeriajs/types'
 import { evaluateCondition } from './evaluateCondition.js'
 
 export const isRequired = (propName: string, required: NonNullable<Description['required']>, subject: any) => {
