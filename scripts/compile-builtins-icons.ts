@@ -8,7 +8,7 @@ import * as collections from '../packages/builtins/dist/collections/index.js'
 
 const DIST_PATH = path.resolve('./packages/builtins-icons/dist')
 
-const writeIcons = async () => {
+const main = async () => {
   const icons = []
   await fs.mkdir(DIST_PATH, {
     recursive: true,
@@ -30,5 +30,5 @@ const writeIcons = async () => {
   await fs.writeFile(path.join(DIST_PATH, 'index.d.ts'), iconsDtsContent(uniqueIcons))
 }
 
-writeIcons()
+main()
 

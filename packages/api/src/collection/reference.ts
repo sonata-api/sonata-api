@@ -385,10 +385,10 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
 
 export const getLookupPipeline = (
   description: Description,
-  _options?: Omit<BuildLookupOptions, 'properties'>
+  _options?: Omit<BuildLookupOptions, 'properties'>,
 ) => {
   const options = Object.assign(_options || {}, {
-    properties: description.properties
+    properties: description.properties,
   })
 
   const references = getReferences(description.properties)

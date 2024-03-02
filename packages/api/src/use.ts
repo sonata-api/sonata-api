@@ -3,7 +3,7 @@ import { createContext } from './context.js'
 import { getDatabase } from './database.js'
 
 export const useAeria = async () => {
-  await getDatabase()
+  void await getDatabase()
 
   const context = await createContext({
     config: await getConfig(),

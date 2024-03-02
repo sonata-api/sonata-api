@@ -33,6 +33,7 @@ declare global {
 declare module 'sonata-api' {
   import type { Context } from 'sonata-api'
   export const useAeria: () => Promise<Context>
+  export const aeria: Context
 }
 //`
 
