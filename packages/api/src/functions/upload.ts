@@ -24,8 +24,8 @@ const streamToFs = (metadata: typeof FileMetadata, context: Context) => {
     ? metadata.filename.split('.').pop()
     : 'bin'
 
-  const tmpPath = context.apiConfig.storage
-    ? context.apiConfig.storage.tempFs || context.apiConfig.storage.fs
+  const tmpPath = context.config.storage
+    ? context.config.storage.tempFs || context.config.storage.fs
     : null
 
   if( !tmpPath ) {

@@ -27,7 +27,7 @@ export const getAll = async <
 
   const {
     filters = {},
-    limit = context.apiConfig.paginationLimit!,
+    limit = context.config.paginationLimit!,
     sort,
     project = [],
     offset = 0,

@@ -24,11 +24,11 @@ export const insert = async (
 
   const extension = what.filename.split('.').pop()
 
-  if( !context.apiConfig.storage ) {
+  if( !context.config.storage ) {
     throw new Error('config.storage is not set')
   }
 
-  const tempPath = context.apiConfig.storage.tempFs || context.apiConfig.storage.fs
+  const tempPath = context.config.storage.tempFs || context.config.storage.fs
   if( !tempPath ) {
     throw new Error('config.storage.fs and config.storage.tempFs are not set')
   }

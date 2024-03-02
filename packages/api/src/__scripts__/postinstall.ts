@@ -29,6 +29,11 @@ declare global {
         : never
     : never
 }
+
+declare module 'sonata-api' {
+  import type { Context } from 'sonata-api'
+  export const useAeria: () => Promise<Context>
+}
 //`
 
 const install = async () => {

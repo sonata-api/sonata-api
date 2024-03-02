@@ -53,7 +53,7 @@ const getUser = async (
     userinfo: {},
   }
 
-  if( context.apiConfig.logSuccessfulAuthentications ) {
+  if( context.config.logSuccessfulAuthentications ) {
     await context.log('successful authentication', {
       email: leanUser.email,
       roles: leanUser.roles,
@@ -61,7 +61,7 @@ const getUser = async (
     })
   }
 
-  if( context.apiConfig.tokenUserProperties ) {
+  if( context.config.tokenUserProperties ) {
     const pick = (obj: any, properties: string[]) => properties.reduce((a, prop) => {
       if( 'prop' in obj ) {
         return a
@@ -73,7 +73,7 @@ const getUser = async (
       }
     }, {})
 
-    tokenContent.userinfo = pick(leanUser, context.apiConfig.tokenUserProperties)
+    tokenContent.userinfo = pick(leanUser, context.config.tokenUserProperties)
   }
 
   const token = await signToken(tokenContent)
@@ -98,8 +98,8 @@ export const authenticate = async (props: Props, context: Context<typeof descrip
     return left(AuthenticationErrors.InvalidCredentials)
   }
 
-  if( context.apiConfig.defaultUser ) {
-    if( props.email === context.apiConfig.defaultUser.username && props.password === context.apiConfig.defaultUser.password ) {
+  if( context.config.defaultUser ) {
+    if( props.email === context.config.defaultUser.username && props.password === context.config.defaultUser.password ) {
       const token = await signToken({
         _id: null,
         roles: ['root'],

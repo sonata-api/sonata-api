@@ -52,7 +52,7 @@ export type IndepthCollections = {
 }
 
 export type ContextOptions<TContext> = {
-  apiConfig?: ApiConfig
+  config?: ApiConfig
   parentContext?: TContext
   collectionName?: string
   token?: DecodedToken
@@ -74,6 +74,6 @@ export type Context<TDescription extends Description = any, TFunctions = any> = 
   response: GenericResponse
 
   log: (message: string, details?: any)=> Promise<any>
-  apiConfig: ApiConfig
+  config: ApiConfig
 }
 

@@ -1,4 +1,4 @@
-import type { FixedObjectProperty } from '@sonata-api/types'
+import type { FixedObjectProperty, Description } from '@sonata-api/types'
 import { unsafe, getReferenceProperty } from '@sonata-api/common'
 import { getCollectionAsset } from '../assets.js'
 import { prepareCollectionName } from '../database.js'
@@ -381,5 +381,17 @@ export const buildLookupPipeline = async (referenceMap: ReferenceMap | {}, optio
   return project.length > 0
     ? narrowLookupPipelineProjection(pipeline, project)
     : pipeline
+}
+
+export const getLookupPipeline = (
+  description: Description,
+  _options?: Omit<BuildLookupOptions, 'properties'>
+) => {
+  const options = Object.assign(_options || {}, {
+    properties: description.properties
+  })
+
+  const references = getReferences(description.properties)
+  return buildLookupPipeline(references, options)
 }
 

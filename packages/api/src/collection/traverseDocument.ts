@@ -242,7 +242,7 @@ const moveFiles = async (value: any, ctx: PhaseContext) => {
   }
 
   const { _id: fileId, ...newFile } = tempFile
-  newFile.absolute_path = `${ctx.options.context.apiConfig.storage!.fs}/${tempFile.absolute_path.replace(/\\/g, '/').split('/').pop()}`
+  newFile.absolute_path = `${ctx.options.context.config.storage!.fs}/${tempFile.absolute_path.replace(/\\/g, '/').split('/').pop()}`
   await fs.rename(tempFile.absolute_path, newFile.absolute_path)
 
   const file = await ctx.options.context.collections.file.model.insertOne(newFile)

@@ -84,13 +84,7 @@ export const internalCreateContext = async (options: ContextOptions<any>, parent
   return context
 }
 
-export const createContext = async <TContextOptions>(
-  _options?: TContextOptions extends ContextOptions<any>
-    ? TContextOptions & {
-      parentContext?: any
-    }
-    : never,
-) => {
+export const createContext = async (_options?: ContextOptions<any>) => {
   const options = _options as ContextOptions<Context>
   const context = Object.assign({}, options.parentContext || {}) as Context
 

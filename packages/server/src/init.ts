@@ -52,7 +52,7 @@ export const init = <const TInitOptions extends InitOptions>(_options: TInitOpti
     options,
     listen: async () => {
       const parentContext = await createContext({
-        apiConfig: options.config,
+        config: options.config,
       })
 
       console.time('warmup')

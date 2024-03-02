@@ -7,11 +7,11 @@ let collectionsMemo: Awaited<ReturnType<typeof internalGetCollections>> | undefi
 const collectionMemo: Record<string, Collection | undefined> = {}
 
 export const getEntrypoint = async () => {
-  const { main } = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), {
+  const { main, aeriaMain } = JSON.parse(await fs.readFile(path.join(process.cwd(), 'package.json'), {
     encoding: 'utf8',
   }))
 
-  return dynamicImport(path.join(process.cwd(), main))
+  return dynamicImport(path.join(process.cwd(), aeriaMain || main))
 }
 
 const internalGetCollections = async (): Promise<Record<string, Collection | (()=> Collection)>> => {

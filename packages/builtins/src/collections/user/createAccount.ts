@@ -10,7 +10,7 @@ export const createAccount = async (
 ) => {
   const user = Object.assign({}, payload)
 
-  if( !context.apiConfig.allowSignup ) {
+  if( !context.config.allowSignup ) {
     throw new Error('signup disallowed')
   }
 
@@ -47,8 +47,8 @@ export const createAccount = async (
     return left(unwrapEither(validationEither))
   }
 
-  if( context.apiConfig.signupDefaults ) {
-    Object.assign(user, context.apiConfig.signupDefaults)
+  if( context.config.signupDefaults ) {
+    Object.assign(user, context.config.signupDefaults)
   }
 
   if( user.password ) {

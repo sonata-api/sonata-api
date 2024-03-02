@@ -16,8 +16,8 @@ export const safeHandle = (
     return response
 
   } catch(error: any) {
-    if( context.apiConfig.errorHandler ) {
-      return context.apiConfig.errorHandler(context, error)
+    if( context.config.errorHandler ) {
+      return context.config.errorHandler(context, error)
     }
 
     if( process.env.NODE_ENV !== 'production' ) {
