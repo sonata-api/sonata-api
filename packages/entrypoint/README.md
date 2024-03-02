@@ -1,13 +1,6 @@
 # `@aeriajs/entrypoint`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/entrypoint
-# or
-$ npm install @aeriajs/entrypoint
-```
+This package handles dynamic imports.
 
-## Usage
-
-This is an internal utility, not intended for public usage.

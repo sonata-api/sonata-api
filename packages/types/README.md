@@ -1,13 +1,6 @@
 # `@aeriajs/types`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/types
-# or
-$ npm install @aeriajs/types
-```
-
-## Usage
-
-This is an internal utility, not intended for public usage.
+This package exports types used by `@aeriajs/*` packages.
+Many types had to be put separately from their origin packages in order to build Aeria.

@@ -1,13 +1,6 @@
 # `@aeriajs/api`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/api
-# or
-$ npm install @aeriajs/api
-```
+Aeria core functions.
 
-## Usage
-
-TODO: provide basic documentation.

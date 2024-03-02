@@ -1,13 +1,6 @@
 # `@aeriajs/node-http`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/node-http
-# or
-$ npm install @aeriajs/node-http
-```
+This package implements `@aeriajs/http` on top of `node:http`.
 
-## Usage
-
-This is an internal utility, not intended for public usage.

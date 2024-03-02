@@ -1,13 +1,6 @@
 # `@waltz-ui/sdk`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @waltz-ui/sdk
-# or
-$ npm install @waltz-ui/sdk
-```
+Strongly typed SDK for Aeria.
 
-## Usage
-
-TODO: provide basic documentation. 

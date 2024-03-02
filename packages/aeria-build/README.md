@@ -1,13 +1,14 @@
 # `aeria-build`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add aeria-build
-# or
-$ npm install aeria-build
-```
+This package ships the `aeria` command.
 
 ## Usage
 
-TODO: provide basic documentation. 
+- `aeria -w`: watch mode
+- `aeria -c`: compile mode
+- `aeria -i`: extract icons to `node_modules/.aeria` (required by `aeria-ui`)
+- `aeria -m`: migrate mode (create indexes in MongoDB to speed up queries)
+- `aeria -b`: generate a single minified file from the API
+

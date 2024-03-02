@@ -9,7 +9,7 @@
 />
 
 
-An intuitive web framework tuned for security and efficiency.
+A source of truth and REST micro framework.
 
 ```typescript
 router.GET('/get-pets/(\w+)', (context) => {

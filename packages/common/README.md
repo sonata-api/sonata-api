@@ -1,13 +1,6 @@
 # `@aeriajs/common`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/common
-# or
-$ npm install @aeriajs/common
-```
+This package contains a handful of helpers used throughout `@aeriajs/*` packages.
 
-## Usage
-
-This is an internal utility, not intended for public usage.

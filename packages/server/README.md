@@ -1,13 +1,6 @@
 # `@aeriajs/server`
 
-## Installation
+## Introduction
 
-```sh
-$ yarn add @aeriajs/server
-# or
-$ npm install @aeriajs/server
-```
+This package glues `@aeriajs/api` and `@aeriajs/http` together.
 
-## Usage
-
-TODO: provide basic documentation.
